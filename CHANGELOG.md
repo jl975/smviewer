@@ -3,6 +3,7 @@
 - Rainbow/Vivid/Flat arrow colors
 - Arrow color cycle animation
 - Step zone flashing to the beat animation
+- Marvelous flashes when the arrows reach the targets
 
 ## v0.1.0 - 2020-03-20
 - Dropdown of all songs available in DDR A20, linking to .ogg and .sm files hosted on ZiV
