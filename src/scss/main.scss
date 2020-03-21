@@ -1,0 +1,29 @@
+.canvas-container {
+  padding: 30px;
+}
+
+.main-container {
+  display: flex;
+}
+
+.form-container {
+  padding: 30px;
+
+  .form-field {
+    margin-bottom: 15px;
+
+    .form-label {
+      margin-bottom: 8px;
+    }
+
+    .radio {
+      margin-right: 12px;
+      margin-bottom: 5px;
+
+      .box,
+      label {
+        padding-left: 20px;
+      }
+    }
+  }
+}
