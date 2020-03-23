@@ -4,6 +4,7 @@ import Arrow from "../components/chart/canvas/Arrow";
 import StepZone from "../components/chart/canvas/StepZone";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
+import { GLOBAL_OFFSET } from "../constants";
 
 class GameEngine {
   // c: canvas context
@@ -21,7 +22,7 @@ class GameEngine {
     this.currentBeat = 0;
 
     this.drawBackground();
-    this.stepZone = new StepZone({ canvas });
+    this.stepZone = new StepZone();
 
     // init logic
     if (this.sm) {
@@ -166,7 +167,7 @@ class GameEngine {
     let bpm;
 
     // hack to implement global offset of -12 ms
-    this.tl = this.tl.to({}, { duration: 0 }, 0.012);
+    this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
 
     for (let i = 0; i < this.eventList.length; i++) {
       let startEvent = this.eventList[i],
@@ -175,23 +176,33 @@ class GameEngine {
       // delay the animations by the length of the stop, if applicable
       let delay = startEvent.type === "stop" ? startEvent.value : 0;
 
+      // the bpm of this section
+      if (startEvent.type === "bpm") bpm = startEvent.value;
+      else if (startEvent.type === "stop") bpm = startEvent.bpm;
+
       let firstArrowChained = false;
 
       // if there is a bpm change or stop event somewhere ahead of this one
       if (endEvent) {
-        if (startEvent.type === "bpm") bpm = startEvent.value;
-        else if (startEvent.type === "stop") bpm = startEvent.bpm;
+        // number of beats between startEvent and endEvent, i.e. how long this constant bpm section is
+        const sectionBeatLength = endEvent.beat - startEvent.beat;
+
+        // the duration of this constant bpm section in seconds
+        const sectionDuration = (sectionBeatLength / bpm) * 60;
+
+        // flash stepzone on every beat at this bpm for the duration of this section
+        this.tl = this.tl
+          .to(this.stepZone, { beatTick: 0, duration: 0 })
+          .to(this.stepZone, {
+            beatTick: sectionBeatLength,
+            duration: sectionDuration,
+            ease: "none",
+          });
 
         this.arrows.forEach(arrow => {
           let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
           // ignore arrows that have already passed
           if (beatsFromStart < 0) return;
-
-          // number of beats between startEvent and endEvent, i.e. how long this constant bpm section is
-          const sectionBeatLength = endEvent.beat - startEvent.beat;
-
-          // the duration of this constant bpm section in seconds
-          const sectionDuration = (sectionBeatLength / bpm) * 60;
 
           // if arrow exists within this section
           if (endEvent.beat > arrow.originalBeatPosition) {
@@ -199,7 +210,7 @@ class GameEngine {
             this.tl = this.tl.to(
               arrow,
               { currentBeatPosition: 0, duration, ease: "none" },
-              firstArrowChained ? "<" : `>${delay}`
+              firstArrowChained ? "<" : `<${delay}`
             );
           }
           // if arrow comes after this section
@@ -213,7 +224,7 @@ class GameEngine {
                 duration,
                 ease: "none",
               },
-              firstArrowChained ? "<" : `>${delay}`
+              firstArrowChained ? "<" : `<${delay}`
             );
           }
 
@@ -222,8 +233,15 @@ class GameEngine {
       }
       // if this is the last bpm change/stop event, animate remaining arrows to end
       else {
-        if (startEvent.type === "bpm") bpm = startEvent.value;
-        else if (startEvent.type === "stop") bpm = startEvent.bpm;
+        // keep stepzone flashing indefinitely at current bpm
+        this.tl = this.tl
+          .to(this.stepZone, { beatTick: 0, duration: 0 })
+          .to(this.stepZone, {
+            beatTick: 1,
+            duration: (1 / bpm) * 60,
+            ease: "none",
+            repeat: -1,
+          });
 
         this.arrows.forEach(arrow => {
           let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
@@ -234,7 +252,7 @@ class GameEngine {
           this.tl = this.tl.to(
             arrow,
             { currentBeatPosition: 0, duration, ease: "none" },
-            firstArrowChained ? "<" : `>${delay}`
+            firstArrowChained ? "<" : `<${delay}`
           );
           if (!firstArrowChained) firstArrowChained = true;
         });
@@ -244,7 +262,7 @@ class GameEngine {
 
   mainLoop() {
     this.drawBackground();
-    this.stepZone.render(0);
+    this.stepZone.render(this.canvas);
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
     for (let i = this.arrows.length - 1; i >= 0; i--) {
