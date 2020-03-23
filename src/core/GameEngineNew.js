@@ -39,13 +39,12 @@ class GameEngine {
 
   // bpm changes and stops converted to timestamps
   generateEventList(simfile) {
-    // console.log("generateEventList simfile", simfile);
-
     const { bpms, stops } = simfile;
     const eventList = [];
     let bpmPtr = 0,
       stopPtr = 0;
     let currentBpm = bpms[0].value;
+
     while (bpmPtr < bpms.length && stopPtr < stops.length) {
       const bpm = bpms[bpmPtr];
       const stop = stops[stopPtr];
@@ -95,10 +94,8 @@ class GameEngine {
     return eventList;
   }
 
-  generateArrows(simfile, mods, eventList) {
+  generateArrows(simfile, mods) {
     let { chart } = simfile;
-    // console.log("generateArrows eventList", eventList);
-    // console.log("generateArrows mods", mods);
 
     if (Array.isArray(chart[0])) {
       const newChart = [];
@@ -114,6 +111,9 @@ class GameEngine {
       // calculate starting position currentBeatPosition
       const { measureIdx, measureN, measureD } = note;
       note.currentBeatPosition = (measureIdx + measureN / measureD) * 4;
+
+      // save its original position for later reference
+      note.originalBeatPosition = note.currentBeatPosition;
 
       // If the note is the tail of a freeze arrow, calculate the number of beats
       // from the head of the freeze arrow
@@ -146,20 +146,93 @@ class GameEngine {
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
 
+  // Calculate the gsap tweens before playing the chart
   initTimeline() {
-    let tl = this.tl;
+    // console.log("this.eventList", this.eventList);
 
-    let bpm = this.eventList[0].value;
-    // console.log(this.eventList);
+    /*
+      The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
+      For each section, create a sequence of chained tweens including all the notes that have not yet been
+      hit prior to the beginning of the section.
+      For each note in any given section:
+      - If this section contains the note, animate its currentBeatPosition to 0. Set its duration to the
+        length of time between its beat value and the starting beat of the section.
+      - If the note comes after this section is over, set its duration to the length of the section. Animate
+        its currentBeatPosition to its beatValue minus the ending beat of the section.
+    */
+    let bpm;
+    for (let i = 0; i < this.eventList.length; i++) {
+      let startEvent = this.eventList[i],
+        endEvent = this.eventList[i + 1];
 
-    this.arrows.forEach(arrow => {
-      const duration = (arrow.currentBeatPosition / bpm) * 60;
-      tl = tl.to(
-        arrow,
-        { currentBeatPosition: 0, duration, ease: "none" },
-        "<"
-      );
-    });
+      // delay the animations by the length of the stop, if applicable
+      let delay = startEvent.type === "stop" ? startEvent.value : 0;
+
+      let firstArrowChained = false;
+
+      // if there is a bpm change or stop event somewhere ahead of this one
+      if (endEvent) {
+        if (startEvent.type === "bpm") bpm = startEvent.value;
+        else if (startEvent.type === "stop") bpm = startEvent.bpm;
+
+        this.arrows.forEach(arrow => {
+          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
+          // ignore arrows that have already passed
+          if (beatsFromStart < 0) return;
+
+          // number of beats between startEvent and endEvent, i.e. how long this constant bpm section is
+          const sectionBeatLength = endEvent.beat - startEvent.beat;
+
+          // the duration of this constant bpm section in seconds
+          const sectionDuration = (sectionBeatLength / bpm) * 60;
+
+          // if arrow exists within this section
+          if (endEvent.beat > arrow.originalBeatPosition) {
+            const duration = (beatsFromStart / bpm) * 60;
+            this.tl = this.tl.to(
+              arrow,
+              { currentBeatPosition: 0, duration, ease: "none" },
+              firstArrowChained ? "<" : `>${delay}`
+            );
+          }
+          // if arrow comes after this section
+          else {
+            const duration = sectionDuration;
+            const endingBeatValue = arrow.originalBeatPosition - endEvent.beat;
+            this.tl = this.tl.to(
+              arrow,
+              {
+                currentBeatPosition: endingBeatValue,
+                duration,
+                ease: "none",
+              },
+              firstArrowChained ? "<" : `>${delay}`
+            );
+          }
+
+          if (!firstArrowChained) firstArrowChained = true;
+        });
+      }
+      // if this is the last bpm change/stop event, animate remaining arrows to end
+      else {
+        if (startEvent.type === "bpm") bpm = startEvent.value;
+        else if (startEvent.type === "stop") bpm = startEvent.bpm;
+
+        this.arrows.forEach(arrow => {
+          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
+          // ignore arrows that have already passed
+          if (beatsFromStart < 0) return;
+          const duration = (beatsFromStart / bpm) * 60;
+
+          this.tl = this.tl.to(
+            arrow,
+            { currentBeatPosition: 0, duration, ease: "none" },
+            firstArrowChained ? "<" : `>${delay}`
+          );
+          if (!firstArrowChained) firstArrowChained = true;
+        });
+      }
+    }
   }
 
   mainLoop() {

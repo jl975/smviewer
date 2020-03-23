@@ -13,21 +13,31 @@ const parseSimfile = sm => {
   const simfiles = {};
 
   let bpms = "";
-  if (sm.indexOf("#BPMS:") > -1) {
-    bpms = /#BPMS:(.*?);/.exec(sm)[1];
-    bpms = bpms.split(",").map(point => {
-      const [beat, value] = point.split("=");
-      return { beat: parseFloat(beat), value: parseFloat(value) };
-    });
+  // if (sm.indexOf("#BPMS:") > -1) {
+  if (/#BPMS:/i.test(sm)) {
+    bpms = /#BPMS:(.*?)\s*;/i.exec(sm)[1];
+    if (bpms.length) {
+      bpms = bpms.split(",").map(point => {
+        const [beat, value] = point.split("=");
+        return { beat: parseFloat(beat), value: parseFloat(value) };
+      });
+    } else {
+      bpms = [];
+    }
   }
 
   let stops = "";
-  if (sm.indexOf("#STOPS:") > -1) {
-    stops = /#STOPS:(.*?);/.exec(sm)[1];
-    stops = stops.split(",").map(point => {
-      const [beat, value] = point.split("=");
-      return { beat: parseFloat(beat), value: parseFloat(value) };
-    });
+  // if (sm.indexOf("#STOPS:") > -1) {
+  if (/#STOPS:/i.test(sm)) {
+    stops = /#STOPS:(.*?)\s*;/i.exec(sm)[1];
+    if (stops.length) {
+      stops = stops.split(",").map(point => {
+        const [beat, value] = point.split("=");
+        return { beat: parseFloat(beat), value: parseFloat(value) };
+      });
+    } else {
+      stops = [];
+    }
   }
 
   const chartStrs = sm

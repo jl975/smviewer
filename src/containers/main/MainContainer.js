@@ -31,11 +31,22 @@ const MainContainer = props => {
       window.location.origin + "/data/simfiles.tsv"
     );
 
-    const parsedTsv = tsv.split("\n").map(row => {
-      const [hash, title, smUrl] = row.split("\t");
-      const simfilePath = smUrl.replace(/(.sm$)|(.ssc$)/, "");
-      return { hash, title, simfilePath };
-    });
+    const parsedTsv = tsv
+      .split("\n")
+      .map(row => {
+        const [hash, title, smUrl] = row.split("\t");
+        try {
+          const simfilePath = smUrl.replace(/(.sm$)|(.ssc$)/, "");
+          return { hash, title, simfilePath };
+        } catch (error) {
+          console.error(error);
+          console.log("errored on row", row);
+          console.log("result of row.split", hash, title, smUrl);
+          console.log("whats wrong with the tsv", tsv);
+          return null;
+        }
+      })
+      .filter(a => a !== null);
     setSimfileList(parsedTsv);
   };
 

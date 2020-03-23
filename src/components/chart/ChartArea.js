@@ -6,7 +6,7 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngineNew";
 
 const ChartArea = props => {
-  const { selectedSong, selectedDifficulty, sm, mods, selectedAudio } = props;
+  const { selectedDifficulty, sm, mods, selectedAudio } = props;
 
   const [canvas, setCanvas] = useState(null);
   const [gameEngine, setGameEngine] = useState(null);

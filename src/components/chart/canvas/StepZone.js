@@ -1,5 +1,4 @@
 import { DIRECTIONS, ARROW_HEIGHT, ARROW_WIDTH } from "../../../constants";
-import { canvas } from "../ChartArea";
 import { getAssetPath } from "../../../utils";
 
 const flashImages = {};

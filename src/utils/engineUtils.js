@@ -17,17 +17,14 @@ export const applyTurnMods = (chart, mods) => {
     shuffle8: "RULD",
   };
 
+  let turnMod = turn;
+  if (turn === "shuffle") turnMod += shuffle;
+
   return chart.map(row => {
     const note = row.note;
-    let turnedNote = "";
-
-    let turnMod = turn;
-    if (turn === "shuffle") turnMod += shuffle;
-    const mapping = turnMap[turnMod];
-
-    for (let direction of mapping) {
-      turnedNote += note[turnMap.off.indexOf(direction)];
-    }
+    const turnedNote = turnMap[turnMod]
+      .split("")
+      .map(direction => note[turnMap.off.indexOf(direction)]);
 
     return { ...row, note: turnedNote };
   });

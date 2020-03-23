@@ -8,12 +8,18 @@ import { getAssetPath } from "../../../utils";
 
 const arrowImages = {};
 DIRECTIONS.forEach(direction => {
+  arrowImages[`rainbow_${direction}`] = new Image();
+  arrowImages[`rainbow_${direction}`].src = getAssetPath(
+    `rainbow_${direction}.png`
+  );
   arrowImages[`note_${direction}`] = new Image();
   arrowImages[`note_${direction}`].src = getAssetPath(`note_${direction}.png`);
   arrowImages[`vivid_${direction}`] = new Image();
   arrowImages[`vivid_${direction}`].src = getAssetPath(
     `vivid_${direction}.png`
   );
+  arrowImages[`flat_${direction}`] = new Image();
+  arrowImages[`flat_${direction}`].src = getAssetPath(`vivid_${direction}.png`);
 
   arrowImages[`freeze_tail_active_${direction}`] = new Image();
   arrowImages[`freeze_tail_active_${direction}`].src = getAssetPath(
@@ -56,6 +62,7 @@ class Arrow {
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
     this.currentBeatPosition = attrs.currentBeatPosition;
+    this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
   }
 
@@ -83,7 +90,24 @@ class Arrow {
           frameX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
           frameY = 0;
         } else {
-          if (this.noteskin === "note") {
+          if (this.noteskin === "rainbow") {
+            // frameX = frameIndex * ARROW_WIDTH;
+            frameX = 0;
+
+            const beatD = this.measureD / 4;
+            const beatN = this.measureN % beatD;
+            if (beatN === 0) {
+              frameY = 0;
+            } else if (0 < beatN && beatN <= beatD / 4) {
+              frameY = ARROW_HEIGHT;
+            } else if (beatD / 4 < beatN && beatN <= beatD / 2) {
+              frameY = ARROW_HEIGHT * 2;
+            } else if (beatD / 2 < beatN && beatN <= (3 * beatD) / 4) {
+              frameY = ARROW_HEIGHT * 3;
+            } else if ((3 * beatD) / 4 < beatN && beatN < beatD) {
+              frameY = 0;
+            }
+          } else if (this.noteskin === "note") {
             // frameX = frameIndex * ARROW_WIDTH;
             frameX = 0;
 
@@ -118,7 +142,12 @@ class Arrow {
               frameY = ARROW_HEIGHT * 2;
             }
           } else if (this.noteskin === "vivid") {
+            frameX = 0;
+            frameY = 0;
+          } else if (this.noteskin === "flat") {
             // frameX = (frameIndex % 4) * ARROW_WIDTH;
+            arrowImg = arrowImages[`vivid_${direction}`];
+
             frameX = 0;
             frameY = 0;
           }

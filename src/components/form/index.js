@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown, Radio, Button } from "semantic-ui-react";
+import { Dropdown, Radio } from "semantic-ui-react";
 
 import { options } from "./options";
 import { capitalize } from "../../utils";
 
 const MusicListForm = props => {
-  const {
-    simfileList,
-    selectedSong,
-    selectedDifficulty,
-    mods,
-    setMods,
-  } = props;
+  const { simfileList, selectedDifficulty, mods, setMods } = props;
   // console.log("MusicListForm simfileList", simfileList);
 
   const simfileOptions = simfileList.map(song => {
@@ -19,42 +13,31 @@ const MusicListForm = props => {
   });
 
   const [selectedSongOption, setSelectedSongOption] = useState(null);
-  const [currentAudio, setCurrentAudio] = useState(null);
-
-  const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(
-    null
-  );
 
   //temp
   useEffect(() => {
-    // // ORCA
-    // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" });
+    // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" }); // ORCA
 
-    // // DEGRS
-    // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" });
+    // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
 
-    // // einya
-    // onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" });
+    // onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
 
-    // lachryma
-    onSongSelect(null, { value: "bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l" });
+    // onSongSelect(null, { value: "bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l" }); // lachryma
+
+    // onSongSelect(null, { value: "06O0ObdQobq86lPDo6P18dQ1QPdilIQO" }); // ayakashi
+
+    onSongSelect(null, { value: "9bI0dQdb01Dl1bQq1Pq998i0l096D99P" }); // second heaven
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    if (currentAudio) currentAudio.load();
-
-    let audio = new Audio(selectedSong.simfilePath + ".ogg");
-    setCurrentAudio(audio);
-    audio.play();
   };
 
-  const togglePlay = () => {
-    if (!currentAudio) return;
-    if (currentAudio.paused) currentAudio.play();
-    else currentAudio.pause();
-  };
+  // const togglePlay = () => {
+  //   if (!currentAudio) return;
+  //   if (currentAudio.paused) currentAudio.play();
+  //   else currentAudio.pause();
+  // };
 
   const onSongSelect = (e, data) => {
     const songHash = data.value;
