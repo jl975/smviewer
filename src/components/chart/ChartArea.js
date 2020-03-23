@@ -29,7 +29,7 @@ const ChartArea = props => {
       const eventList = ge.generateEventList(simfile);
       ge.generateArrows(simfile, mods, eventList);
       ge.initTimeline();
-      ge.pauseTl();
+      ge.restartTl();
     }
     if (selectedAudio) {
       selectedAudio.load();

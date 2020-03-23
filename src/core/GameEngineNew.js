@@ -45,6 +45,9 @@ class GameEngine {
       stopPtr = 0;
     let currentBpm = bpms[0].value;
 
+    // console.log("generateEventList bpms", bpms);
+    // console.log("generateEventList stops", stops);
+
     while (bpmPtr < bpms.length && stopPtr < stops.length) {
       const bpm = bpms[bpmPtr];
       const stop = stops[stopPtr];
@@ -65,7 +68,7 @@ class GameEngine {
       bpmPtr++;
     }
     while (stopPtr < stops.length) {
-      eventList.push({ ...stops[stopPtr], type: "stop" });
+      eventList.push({ ...stops[stopPtr], bpm: currentBpm, type: "stop" });
       stopPtr++;
     }
 
@@ -148,7 +151,7 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline() {
-    // console.log("this.eventList", this.eventList);
+    console.log("this.eventList", this.eventList);
 
     /*
       The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
@@ -161,6 +164,10 @@ class GameEngine {
         its currentBeatPosition to its beatValue minus the ending beat of the section.
     */
     let bpm;
+
+    // hack to implement global offset of -12 ms
+    this.tl = this.tl.to({}, { duration: 0 }, 0.012);
+
     for (let i = 0; i < this.eventList.length; i++) {
       let startEvent = this.eventList[i],
         endEvent = this.eventList[i + 1];
@@ -257,6 +264,7 @@ class GameEngine {
     this.tl.paused() ? this.tl.play() : this.tl.pause();
   }
   restartTl() {
+    // console.log("call restart");
     this.tl.restart().pause();
   }
   pauseTl() {

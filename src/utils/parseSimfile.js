@@ -13,9 +13,8 @@ const parseSimfile = sm => {
   const simfiles = {};
 
   let bpms = "";
-  // if (sm.indexOf("#BPMS:") > -1) {
   if (/#BPMS:/i.test(sm)) {
-    bpms = /#BPMS:(.*?)\s*;/i.exec(sm)[1];
+    bpms = /#BPMS:([\s\S]*?)\s*;/i.exec(sm)[1];
     if (bpms.length) {
       bpms = bpms.split(",").map(point => {
         const [beat, value] = point.split("=");
@@ -27,9 +26,8 @@ const parseSimfile = sm => {
   }
 
   let stops = "";
-  // if (sm.indexOf("#STOPS:") > -1) {
   if (/#STOPS:/i.test(sm)) {
-    stops = /#STOPS:(.*?)\s*;/i.exec(sm)[1];
+    stops = /#STOPS:([\s\S]*?)\s*;/i.exec(sm)[1];
     if (stops.length) {
       stops = stops.split(",").map(point => {
         const [beat, value] = point.split("=");
@@ -63,26 +61,26 @@ const parseSimfile = sm => {
       .trim()
       .split(",")
       .map((measure, measureIdx) => {
-        const ticks = measure.trim().split("\r\n");
+        const ticks = measure
+          .trim()
+          .split("\r\n")
+          .filter(n => !n.startsWith("//")); // filter out comment lines
+
         const numTicks = ticks.length;
 
         const noteObjects = [];
         ticks.forEach((tick, tickIdx) => {
-          // skip empty ticks
+          // skip empty ticks and comment lines
           if (!tick.split("").filter(n => n !== "0").length) return;
 
           const noteObj = {};
           noteObj.note = tick;
-          // noteObj.beatValue = tickIdx / numTicks;
-
           noteObj.measureIdx = measureIdx; // index of the measure relative to the whole song (starting at 0)
           noteObj.measureN = tickIdx; // numerator of the fraction describing where note falls in this measure
           noteObj.measureD = numTicks; // denominator of the fraction describing where note falls in this measure
 
           noteObjects.push(noteObj);
         });
-
-        // console.log(ticks, noteObjects);
 
         return noteObjects;
       });
