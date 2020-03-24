@@ -157,6 +157,8 @@ class GameEngine {
   initTimeline() {
     console.log("this.eventList", this.eventList);
 
+    this.resetArrows();
+
     /*
       The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
       For each section, create a sequence of chained tweens including all the notes that have not yet been
@@ -274,6 +276,10 @@ class GameEngine {
     }
   }
 
+  resetArrows() {
+    this.arrows.forEach(arrow => arrow.reset());
+  }
+
   mainLoop() {
     this.drawBackground();
     this.stepZone.render(this.canvas, this.globalParams.beatTick);
@@ -302,6 +308,7 @@ class GameEngine {
   restartTl() {
     // console.log("call restart");
     this.tl.restart().pause();
+    this.resetArrows();
   }
   pauseTl() {
     this.tl.pause();

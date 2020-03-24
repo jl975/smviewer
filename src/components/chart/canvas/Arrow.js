@@ -3,6 +3,7 @@ import {
   ARROW_WIDTH,
   ARROW_HEIGHT,
   FREEZE_BODY_HEIGHT,
+  MARVELOUS_FLASH_FRAMES,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 
@@ -45,8 +46,11 @@ DIRECTIONS.forEach(direction => {
   );
 });
 
-arrowImages.freeze_head = new Image();
-arrowImages.freeze_head.src = getAssetPath("freeze_head.png");
+const miscImages = ["freeze_head", "tap_explosion"];
+miscImages.forEach(imageName => {
+  arrowImages[imageName] = new Image();
+  arrowImages[imageName].src = getAssetPath(`${imageName}.png`);
+});
 
 class Arrow {
   constructor(attrs) {
@@ -64,6 +68,12 @@ class Arrow {
     this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
+
+    this.hitFrame = 0; // frame for showing the Marvelous flash
+  }
+
+  reset() {
+    this.hitFrame = 0;
   }
 
   render(canvas, beatTick) {
@@ -184,6 +194,22 @@ class Arrow {
             ARROW_HEIGHT
           );
         }
+        if (destY <= 0) {
+          if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.drawImage(
+              arrowImages.tap_explosion,
+              0,
+              0,
+              ARROW_WIDTH,
+              ARROW_HEIGHT,
+              destX - this.hitFrame,
+              destY - this.hitFrame,
+              ARROW_WIDTH + this.hitFrame * 2,
+              ARROW_HEIGHT + this.hitFrame * 2
+            );
+            this.hitFrame++;
+          }
+        }
       }
 
       // freeze note
@@ -209,6 +235,22 @@ class Arrow {
             ARROW_HEIGHT
           );
         }
+        if (destY <= 0) {
+          if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.drawImage(
+              arrowImages.tap_explosion,
+              0,
+              0,
+              ARROW_WIDTH,
+              ARROW_HEIGHT,
+              destX - this.hitFrame,
+              destY - this.hitFrame,
+              ARROW_WIDTH + this.hitFrame * 2,
+              ARROW_HEIGHT + this.hitFrame * 2
+            );
+            this.hitFrame++;
+          }
+        }
       }
 
       // freeze body and tail
@@ -224,7 +266,7 @@ class Arrow {
         // and line up with the top of the freeze tail.
         // Extend the freeze body upwards using as many repetitions of the 128px height image as needed.
         // Top of freeze body is cut off at the midpoint of the freeze head.
-        const arrowBodyImg = arrowImages[`freeze_body_inactive_${direction}`];
+        let arrowBodyImg = arrowImages[`freeze_body_inactive_${direction}`];
         const totalBodyHeight =
           this.holdBeats[i] * ARROW_HEIGHT * this.speed - ARROW_HEIGHT / 2;
         const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
@@ -232,11 +274,16 @@ class Arrow {
         const originalPartialHeight = partialHeight;
 
         let partialDestY = destY - (totalBodyHeight + ARROW_HEIGHT / 2);
+        let freezeBeingHeld = false;
 
         // shrink in size once it reaches the target
+        // this is also where the freeze starts to be held down
         if (partialDestY < 0) {
           partialHeight += partialDestY;
           partialDestY = 0;
+          arrowImg = arrowImages[`freeze_tail_active_${direction}`];
+          arrowBodyImg = arrowImages[`freeze_body_active_${direction}`];
+          freezeBeingHeld = true;
         }
 
         // draw partial
@@ -316,6 +363,42 @@ class Arrow {
             ARROW_WIDTH,
             tailHeight
           );
+        }
+
+        // render head of held freeze arrow on top of the arrow body
+        if (freezeBeingHeld) {
+          const arrowHeadImg = arrowImages.freeze_head;
+          if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.drawImage(
+              arrowHeadImg,
+              DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
+              ARROW_HEIGHT * 2,
+              ARROW_WIDTH,
+              ARROW_HEIGHT,
+              DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
+              0,
+              ARROW_WIDTH,
+              ARROW_HEIGHT
+            );
+          }
+        }
+
+        // flash at the end of successfully held down freeze
+        if (destY <= 0) {
+          if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.drawImage(
+              arrowImages.tap_explosion,
+              0,
+              0,
+              ARROW_WIDTH,
+              ARROW_HEIGHT,
+              destX - this.hitFrame,
+              destY - this.hitFrame,
+              ARROW_WIDTH + this.hitFrame * 2,
+              ARROW_HEIGHT + this.hitFrame * 2
+            );
+            this.hitFrame++;
+          }
         }
       }
 

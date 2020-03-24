@@ -34,11 +34,11 @@ export const options = {
 };
 
 export const optionDefaultValues = {
-  difficulty: "Difficult",
+  difficulty: "Challenge",
   mods: {
-    speed: 2,
+    speed: 1.5,
     turn: "off",
     shuffle: 1,
-    noteskin: "vivid",
+    noteskin: "note",
   },
 };

@@ -5,3 +5,4 @@ export const FREEZE_BODY_HEIGHT = 128; // height of one repetition of the freeze
 export const DIRECTIONS = ["left", "down", "up", "right"];
 
 export const GLOBAL_OFFSET = 0.012;
+export const MARVELOUS_FLASH_FRAMES = 4;
