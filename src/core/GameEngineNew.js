@@ -24,18 +24,21 @@ class GameEngine {
     this.drawBackground();
     this.stepZone = new StepZone();
 
+    this.globalParams = {
+      /*
+        Use this parameter to keep track of which beat the chart is on at any given point.
+        Animate this one property in the timeline, then reference its value to calculate frames
+        for step zone and arrow animations without having to create separate tweens for them.
+      */
+      beatTick: 0,
+    };
+
     // init logic
     if (this.sm) {
       this.simfiles = parseSimfile(this.sm);
     }
 
-    if (Object.keys(this.simfiles).length) {
-      // console.log("GameEngineNew this.simfiles", this.simfiles);
-    }
-
     this.mainLoop();
-
-    // this.tl.pause();
   }
 
   // bpm changes and stops converted to timestamps
@@ -166,6 +169,23 @@ class GameEngine {
     */
     let bpm;
 
+    let accumulatedBeatTick = 0;
+
+    // Designate the "end" of the chart as an arbitrary number of beats (8?) after either the last arrow
+    // or the last event in the chart, whichever comes later
+    const lastArrow = this.arrows[this.arrows.length - 1];
+    const lastEvent = this.eventList[this.eventList.length - 1];
+
+    let finalBeat = 0;
+    if (lastArrow && lastEvent) {
+      finalBeat = Math.max(lastArrow.originalBeatPosition, lastEvent.beat);
+    } else if (lastArrow) {
+      finalBeat = lastArrow.originalBeatPosition;
+    } else if (lastEvent) {
+      finalBeat = lastEvent.beat;
+    }
+    finalBeat += 8;
+
     // hack to implement global offset of -12 ms
     this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
 
@@ -190,14 +210,12 @@ class GameEngine {
         // the duration of this constant bpm section in seconds
         const sectionDuration = (sectionBeatLength / bpm) * 60;
 
-        // flash stepzone on every beat at this bpm for the duration of this section
-        this.tl = this.tl
-          .to(this.stepZone, { beatTick: 0, duration: 0 })
-          .to(this.stepZone, {
-            beatTick: sectionBeatLength,
-            duration: sectionDuration,
-            ease: "none",
-          });
+        this.tl = this.tl.to(this.globalParams, {
+          beatTick: accumulatedBeatTick + sectionBeatLength,
+          duration: sectionDuration,
+          ease: "none",
+        });
+        accumulatedBeatTick += sectionBeatLength;
 
         this.arrows.forEach(arrow => {
           let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
@@ -233,15 +251,11 @@ class GameEngine {
       }
       // if this is the last bpm change/stop event, animate remaining arrows to end
       else {
-        // keep stepzone flashing indefinitely at current bpm
-        this.tl = this.tl
-          .to(this.stepZone, { beatTick: 0, duration: 0 })
-          .to(this.stepZone, {
-            beatTick: 1,
-            duration: (1 / bpm) * 60,
-            ease: "none",
-            repeat: -1,
-          });
+        this.tl = this.tl.to(this.globalParams, {
+          beatTick: finalBeat,
+          duration: ((finalBeat - accumulatedBeatTick) / bpm) * 60,
+          ease: "none",
+        });
 
         this.arrows.forEach(arrow => {
           let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
@@ -262,13 +276,17 @@ class GameEngine {
 
   mainLoop() {
     this.drawBackground();
-    this.stepZone.render(this.canvas);
+    this.stepZone.render(this.canvas, this.globalParams.beatTick);
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
     for (let i = this.arrows.length - 1; i >= 0; i--) {
       const arrow = this.arrows[i];
-      arrow.render(this.canvas);
+      arrow.render(this.canvas, this.globalParams.beatTick);
     }
+
+    // if (this.globalParams.beatTick) {
+    //   console.log(this.globalParams.beatTick);
+    // }
 
     window.requestAnimationFrame(this.mainLoop.bind(this));
   }

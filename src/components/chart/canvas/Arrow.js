@@ -66,7 +66,7 @@ class Arrow {
     this.holdBeats = attrs.holdBeats || null;
   }
 
-  render(canvas) {
+  render(canvas, beatTick) {
     const c = canvas.getContext("2d");
 
     const topBoundary = 0; // used to simulate the arrows being hit and disappearing
@@ -92,24 +92,24 @@ class Arrow {
         } else {
           if (this.noteskin === "rainbow") {
             // frameX = frameIndex * ARROW_WIDTH;
-            frameX = 0;
+            frameX = (Math.floor(beatTick * 4) % 8) * ARROW_WIDTH;
 
             const beatD = this.measureD / 4;
             const beatN = this.measureN % beatD;
             if (beatN === 0) {
               frameY = 0;
             } else if (0 < beatN && beatN <= beatD / 4) {
-              frameY = ARROW_HEIGHT;
+              frameY = 1;
             } else if (beatD / 4 < beatN && beatN <= beatD / 2) {
-              frameY = ARROW_HEIGHT * 2;
+              frameY = 2;
             } else if (beatD / 2 < beatN && beatN <= (3 * beatD) / 4) {
-              frameY = ARROW_HEIGHT * 3;
+              frameY = 3;
             } else if ((3 * beatD) / 4 < beatN && beatN < beatD) {
               frameY = 0;
             }
+            frameY *= ARROW_HEIGHT;
           } else if (this.noteskin === "note") {
-            // frameX = frameIndex * ARROW_WIDTH;
-            frameX = 0;
+            frameX = (Math.floor(beatTick * 4) % 8) * ARROW_WIDTH;
 
             /* 
               NOTE: In the future, if we want to support color codes for 12ths, 24ths, etc.
@@ -119,12 +119,11 @@ class Arrow {
               If GCF == 1, 2, or 4, use 4th note quantization.
               Otherwise, the resulting denominator is used for the quantization (3 and 6 may be treated as 12ths)
             */
-
             const measureFraction = this.measureN / this.measureD;
             if ([0, 1 / 4, 2 / 4, 3 / 4].includes(measureFraction)) {
               frameY = 0;
             } else if ([1 / 8, 3 / 8, 5 / 8, 7 / 8].includes(measureFraction)) {
-              frameY = ARROW_HEIGHT;
+              frameY = 1;
             } else if (
               [
                 1 / 16,
@@ -137,19 +136,35 @@ class Arrow {
                 15 / 16,
               ].includes(measureFraction)
             ) {
-              frameY = ARROW_HEIGHT * 3;
+              frameY = 3;
             } else {
-              frameY = ARROW_HEIGHT * 2;
+              frameY = 2;
             }
+            frameY *= ARROW_HEIGHT;
           } else if (this.noteskin === "vivid") {
-            frameX = 0;
-            frameY = 0;
+            frameX = (Math.floor(beatTick * 4) % 4) * ARROW_WIDTH;
+
+            const beatD = this.measureD / 4;
+            const beatN = this.measureN % beatD;
+            const noteOffset = Math.floor(beatTick) % 4;
+
+            if (beatN === 0) {
+              frameY = 0;
+            } else if (0 < beatN && beatN <= beatD / 4) {
+              frameY = 1;
+            } else if (beatD / 4 < beatN && beatN <= beatD / 2) {
+              frameY = 2;
+            } else if (beatD / 2 < beatN && beatN <= (3 * beatD) / 4) {
+              frameY = 3;
+            } else if ((3 * beatD) / 4 < beatN && beatN < beatD) {
+              frameY = 0;
+            }
+            frameY = ((frameY + noteOffset) % 4) * ARROW_HEIGHT;
           } else if (this.noteskin === "flat") {
-            // frameX = (frameIndex % 4) * ARROW_WIDTH;
             arrowImg = arrowImages[`vivid_${direction}`];
 
-            frameX = 0;
-            frameY = 0;
+            frameX = (Math.floor(beatTick * 4) % 4) * ARROW_WIDTH;
+            frameY = (Math.floor(beatTick) % 4) * ARROW_HEIGHT;
           }
         }
 

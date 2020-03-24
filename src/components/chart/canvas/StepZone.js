@@ -18,21 +18,11 @@ DIRECTIONS.forEach(direction => {
 });
 
 class StepZone {
-  constructor() {
-    this.beatTick = 0;
-  }
-
-  update() {}
-
-  render(canvas) {
+  render(canvas, beatTick) {
     const c = canvas.getContext("2d");
-
-    // if (this.beatTick) {
-    //   console.log(this.beatTick);
-    // }
     // flash starts at the beginning of the quarter beat and lasts for 1/16 beat
 
-    const isFlash = this.beatTick % 1 >= 0 && this.beatTick % 1 < 0.25;
+    const isFlash = beatTick % 1 > 0 && beatTick % 1 < 0.25;
 
     DIRECTIONS.forEach((direction, i) => {
       c.drawImage(
