@@ -1,9 +1,12 @@
-## [Unreleased]
+## v0.2.0 - 2020-03-23
 - Support for bpm changes and stops
 - Rainbow/Vivid/Flat arrow colors
 - Arrow color cycle animation
 - Step zone flashing to the beat animation
 - Marvelous flashes when the arrows reach the targets
+- Held freeze animation
+- Global offset of -12 ms to better approximate white cab timing
+- Fixed several simfile parsing issues that were causing certain songs to crash
 
 ## v0.1.0 - 2020-03-20
 - Dropdown of all songs available in DDR A20, linking to .ogg and .sm files hosted on ZiV

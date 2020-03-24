@@ -155,7 +155,7 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline() {
-    console.log("this.eventList", this.eventList);
+    // console.log("this.eventList", this.eventList);
 
     this.resetArrows();
 
