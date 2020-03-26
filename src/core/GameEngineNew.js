@@ -1,10 +1,11 @@
 import { gsap } from "gsap";
 
 import Arrow from "../components/chart/canvas/Arrow";
+import ShockArrow from "../components/chart/canvas/ShockArrow";
 import StepZone from "../components/chart/canvas/StepZone";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
-import { GLOBAL_OFFSET } from "../constants";
+import { GLOBAL_OFFSET, ARROW_HEIGHT } from "../constants";
 
 class GameEngine {
   // c: canvas context
@@ -18,6 +19,7 @@ class GameEngine {
     this.activeSimfile = null;
     this.eventList = [];
     this.arrows = [];
+    this.shockArrows = [];
 
     this.currentBeat = 0;
 
@@ -31,6 +33,11 @@ class GameEngine {
         for step zone and arrow animations without having to create separate tweens for them.
       */
       beatTick: 0,
+
+      /*
+        Use this parameter for animations based on absolute frame and not a function of the beat.
+      */
+      frame: 0,
     };
 
     // init logic
@@ -144,11 +151,18 @@ class GameEngine {
     });
 
     chart.forEach((note, key) => {
-      const arrow = new Arrow({ key, ...note, mods });
-      this.arrows.push(arrow);
+      if (note.note[0] === "M" || note.note[4] === "M") {
+        const shockArrow = new ShockArrow({ key, ...note, mods });
+        this.shockArrows.push(shockArrow);
+      } else {
+        const arrow = new Arrow({ key, ...note, mods });
+        this.arrows.push(arrow);
+      }
     });
 
     // console.log("this.arrows", this.arrows);
+
+    // console.log("this.shockArrows", this.shockArrows);
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
@@ -250,6 +264,39 @@ class GameEngine {
 
           if (!firstArrowChained) firstArrowChained = true;
         });
+
+        this.shockArrows.forEach(arrow => {
+          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
+          // ignore arrows that have already passed
+          if (beatsFromStart < 0) return;
+
+          // if arrow exists within this section
+          if (endEvent.beat > arrow.originalBeatPosition) {
+            const extraBeatTime = 60 / (arrow.speed * bpm); // amount of time it takes to travel one extra arrow height
+            const duration = (beatsFromStart / bpm) * 60 + extraBeatTime;
+            this.tl = this.tl.to(
+              arrow,
+              { currentBeatPosition: -1 / arrow.speed, duration, ease: "none" }, // animate one extra arrow height past target
+              firstArrowChained ? "<" : `<${delay}`
+            );
+          }
+          // if arrow comes after this section
+          else {
+            const duration = sectionDuration;
+            const endingBeatValue = arrow.originalBeatPosition - endEvent.beat;
+            this.tl = this.tl.to(
+              arrow,
+              {
+                currentBeatPosition: endingBeatValue,
+                duration,
+                ease: "none",
+              },
+              firstArrowChained ? "<" : `<${delay}`
+            );
+          }
+
+          if (!firstArrowChained) firstArrowChained = true;
+        });
       }
       // if this is the last bpm change/stop event, animate remaining arrows to end
       else {
@@ -272,6 +319,21 @@ class GameEngine {
           );
           if (!firstArrowChained) firstArrowChained = true;
         });
+
+        this.shockArrows.forEach(arrow => {
+          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
+          // ignore arrows that have already passed
+          if (beatsFromStart < 0) return;
+          const extraBeatTime = 60 / (arrow.speed * bpm);
+          const duration = (beatsFromStart / bpm) * 60 + extraBeatTime;
+
+          this.tl = this.tl.to(
+            arrow,
+            { currentBeatPosition: -1 / arrow.speed, duration, ease: "none" },
+            firstArrowChained ? "<" : `<${delay}`
+          );
+          if (!firstArrowChained) firstArrowChained = true;
+        });
       }
     }
   }
@@ -281,8 +343,15 @@ class GameEngine {
   }
 
   mainLoop() {
+    // if (this.tl.paused()) return;
+    // console.log("mainLoop running");
     this.drawBackground();
     this.stepZone.render(this.canvas, this.globalParams.beatTick);
+
+    for (let i = this.shockArrows.length - 1; i >= 0; i--) {
+      const shockArrow = this.shockArrows[i];
+      shockArrow.render(this.canvas, this.globalParams.frame);
+    }
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
     for (let i = this.arrows.length - 1; i >= 0; i--) {
@@ -293,7 +362,7 @@ class GameEngine {
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);
     // }
-
+    this.globalParams.frame++;
     window.requestAnimationFrame(this.mainLoop.bind(this));
   }
 

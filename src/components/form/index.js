@@ -38,7 +38,9 @@ const MusicListForm = props => {
 
     // onSongSelect(null, { value: "6bid6d9qPQ80DOqiidQQ891o6Od8801l" }); // otp
 
-    onSongSelect(null, { value: "9i0q91lPPiO61b9P891O1i86iOP1I08O" }); // otp
+    // onSongSelect(null, { value: "9i0q91lPPiO61b9P891O1i86iOP1I08O" }); // egoism
+
+    onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
   }, []);
 
   const handleSubmit = e => {

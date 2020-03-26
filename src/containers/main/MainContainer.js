@@ -4,6 +4,7 @@ import ChartArea from "../../components/chart/ChartArea";
 import Form from "../../components/form";
 import { optionDefaultValues } from "../../components/form/options";
 import { fetchDocument } from "../../utils";
+import { tsv } from "d3-fetch";
 
 const MainContainer = props => {
   const [loading, setLoading] = useState(true);
@@ -20,40 +21,30 @@ const MainContainer = props => {
   useEffect(() => {
     const fetchData = async () => {
       await fetchSimfiles();
-
       setLoading(false);
     };
     fetchData();
   }, []);
 
   const fetchSimfiles = async () => {
-    const tsv = await fetchDocument(
-      window.location.origin + "/data/simfiles.tsv"
-    );
-
-    const parsedTsv = tsv
-      .split("\n")
-      .map(row => {
-        const [hash, title, smUrl] = row.split("\t");
-        try {
-          const simfilePath = smUrl.replace(/(.sm$)|(.ssc$)/, "");
-          return { hash, title, simfilePath };
-        } catch (error) {
-          console.error(error);
-          console.log("errored on row", row);
-          console.log("result of row.split", hash, title, smUrl);
-          console.log("whats wrong with the tsv", tsv);
-          return null;
-        }
-      })
-      .filter(a => a !== null);
-    setSimfileList(parsedTsv);
+    try {
+      const parsedTsv = await tsv(
+        window.location.origin + "/data/simfiles.tsv"
+      );
+      parsedTsv.forEach(row => {
+        row.simfilePath = row.smUrl.replace(/(.sm$)|(.ssc$)/, "");
+      });
+      setSimfileList(parsedTsv);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 
   const onSongSelect = async song => {
     setSelectedSong(song);
 
-    console.log("MainContainer onSongSelect, song", song);
+    // console.log("MainContainer onSongSelect, song", song);
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now

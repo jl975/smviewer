@@ -55,11 +55,10 @@ miscImages.forEach(imageName => {
 class Arrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, turn, noteskin } = mods;
+    const { speed, noteskin } = mods;
 
     this.key = key; // arrow index
     this.speed = speed;
-    this.turn = turn;
     this.note = attrs.note;
     this.noteskin = noteskin;
     this.measureIdx = attrs.measureIdx;
@@ -70,6 +69,10 @@ class Arrow {
     this.holdBeats = attrs.holdBeats || null;
 
     this.hitFrame = 0; // frame for showing the Marvelous flash
+
+    if (this.note[0] === "M") {
+      this.shockFrame = -1;
+    }
   }
 
   reset() {
@@ -405,8 +408,16 @@ class Arrow {
       // shock
       else if (this.note[i] === "M") {
         arrowImg = arrowImages[`shock_${direction}`];
-        frameX = 0;
-        frameY = 0;
+        // frameX = 0;
+        // frameY = 0;
+        if (i === 0) {
+          this.shockFrame = (this.shockFrame + 1) % 8;
+          // console.log(this.shockFrame);
+        }
+
+        frameX = (this.shockFrame % 4) * ARROW_WIDTH;
+        frameY = Math.floor(this.shockFrame / 2) * ARROW_HEIGHT;
+
         destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
         destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
 
