@@ -64,7 +64,7 @@ class Arrow {
     this.measureIdx = attrs.measureIdx;
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
-    this.currentBeatPosition = attrs.currentBeatPosition;
+    // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
 
@@ -75,9 +75,9 @@ class Arrow {
     this.hitFrame = 0;
   }
 
-  // currentBeatPosition(beatTick) {
-  //   return this.originalBeatPosition - beatTick;
-  // }
+  currentBeatPosition(beatTick) {
+    return this.originalBeatPosition - beatTick;
+  }
 
   render(canvas, beatTick) {
     const c = canvas.getContext("2d");
@@ -181,7 +181,7 @@ class Arrow {
         }
 
         destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
-        destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
         if (destY > topBoundary && destY < bottomBoundary) {
           c.drawImage(
@@ -221,7 +221,7 @@ class Arrow {
         frameY = 0;
 
         destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
-        destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
         // draw freeze head
         if (destY > topBoundary && destY < bottomBoundary) {
@@ -262,7 +262,7 @@ class Arrow {
         frameY = 0;
 
         destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
-        destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
         // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
         // and line up with the top of the freeze tail.

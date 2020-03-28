@@ -19,11 +19,15 @@ class ShockArrow {
     this.note = attrs.note;
     this.noteskin = noteskin;
 
-    this.currentBeatPosition = attrs.currentBeatPosition;
+    // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
   }
 
-  render(canvas, frame) {
+  currentBeatPosition(beatTick) {
+    return this.originalBeatPosition - beatTick;
+  }
+
+  render(canvas, frame, beatTick) {
     const c = canvas.getContext("2d");
 
     const topBoundary = -ARROW_HEIGHT; // used to simulate the arrows being hit and disappearing
@@ -36,7 +40,8 @@ class ShockArrow {
       const frameX = (frame % 4) * ARROW_WIDTH;
       const frameY = Math.floor(frame / 4) * ARROW_HEIGHT;
       const destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
-      const destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
+      const destY =
+        this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
       if (destY > topBoundary && destY < bottomBoundary) {
         c.drawImage(

@@ -173,13 +173,9 @@ class GameEngine {
 
     /*
       The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
-      For each section, create a sequence of chained tweens including all the notes that have not yet been
-      hit prior to the beginning of the section.
-      For each note in any given section:
-      - If this section contains the note, animate its currentBeatPosition to 0. Set its duration to the
-        length of time between its beat value and the starting beat of the section.
-      - If the note comes after this section is over, set its duration to the length of the section. Animate
-        its currentBeatPosition to its beatValue minus the ending beat of the section.
+      Create a tween to animate the global beat tick for each of these sections and chain them together.
+      The position and/or frame animation of each canvas object (e.g. arrows, step zone, guidelines) can be
+      determined as a function of the beat tick value at any given point.
     */
     let bpm;
 
@@ -214,8 +210,6 @@ class GameEngine {
       if (startEvent.type === "bpm") bpm = startEvent.value;
       else if (startEvent.type === "stop") bpm = startEvent.bpm;
 
-      let firstArrowChained = false;
-
       // if there is a bpm change or stop event somewhere ahead of this one
       if (endEvent) {
         // number of beats between startEvent and endEvent, i.e. how long this constant bpm section is
@@ -224,114 +218,28 @@ class GameEngine {
         // the duration of this constant bpm section in seconds
         const sectionDuration = (sectionBeatLength / bpm) * 60;
 
-        this.tl = this.tl.to(this.globalParams, {
-          beatTick: accumulatedBeatTick + sectionBeatLength,
-          duration: sectionDuration,
-          ease: "none",
-        });
+        this.tl = this.tl.to(
+          this.globalParams,
+          {
+            beatTick: accumulatedBeatTick + sectionBeatLength,
+            duration: sectionDuration,
+            ease: "none",
+          },
+          `+=${delay}`
+        );
         accumulatedBeatTick += sectionBeatLength;
-
-        this.arrows.forEach(arrow => {
-          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
-          // ignore arrows that have already passed
-          if (beatsFromStart < 0) return;
-
-          // if arrow exists within this section
-          if (endEvent.beat > arrow.originalBeatPosition) {
-            const duration = (beatsFromStart / bpm) * 60;
-            this.tl = this.tl.to(
-              arrow,
-              { currentBeatPosition: 0, duration, ease: "none" },
-              firstArrowChained ? "<" : `<${delay}`
-            );
-          }
-          // if arrow comes after this section
-          else {
-            const duration = sectionDuration;
-            const endingBeatValue = arrow.originalBeatPosition - endEvent.beat;
-            this.tl = this.tl.to(
-              arrow,
-              {
-                currentBeatPosition: endingBeatValue,
-                duration,
-                ease: "none",
-              },
-              firstArrowChained ? "<" : `<${delay}`
-            );
-          }
-
-          if (!firstArrowChained) firstArrowChained = true;
-        });
-
-        this.shockArrows.forEach(arrow => {
-          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
-          // ignore arrows that have already passed
-          if (beatsFromStart < 0) return;
-
-          // if arrow exists within this section
-          if (endEvent.beat > arrow.originalBeatPosition) {
-            const extraBeatTime = 60 / (arrow.speed * bpm); // amount of time it takes to travel one extra arrow height
-            const duration = (beatsFromStart / bpm) * 60 + extraBeatTime;
-            this.tl = this.tl.to(
-              arrow,
-              { currentBeatPosition: -1 / arrow.speed, duration, ease: "none" }, // animate one extra arrow height past target
-              firstArrowChained ? "<" : `<${delay}`
-            );
-          }
-          // if arrow comes after this section
-          else {
-            const duration = sectionDuration;
-            const endingBeatValue = arrow.originalBeatPosition - endEvent.beat;
-            this.tl = this.tl.to(
-              arrow,
-              {
-                currentBeatPosition: endingBeatValue,
-                duration,
-                ease: "none",
-              },
-              firstArrowChained ? "<" : `<${delay}`
-            );
-          }
-
-          if (!firstArrowChained) firstArrowChained = true;
-        });
       }
-      // if this is the last bpm change/stop event, animate remaining arrows to end
+      // if this is the last bpm change/stop event, animate remaining objects to end
       else {
-        this.tl = this.tl.to(this.globalParams, {
-          beatTick: finalBeat,
-          duration: ((finalBeat - accumulatedBeatTick) / bpm) * 60,
-          ease: "none",
-        });
-
-        this.arrows.forEach(arrow => {
-          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
-          // ignore arrows that have already passed
-          if (beatsFromStart < 0) return;
-          const duration = (beatsFromStart / bpm) * 60;
-
-          this.tl = this.tl.to(
-            arrow,
-            { currentBeatPosition: 0, duration, ease: "none" },
-            firstArrowChained ? "<" : `<${delay}`
-          );
-          if (!firstArrowChained) firstArrowChained = true;
-        });
-
-        this.shockArrows.forEach(arrow => {
-          let beatsFromStart = arrow.originalBeatPosition - startEvent.beat;
-          // ignore arrows that have already passed
-          if (beatsFromStart < 0) return;
-          const extraBeatTime = 60 / (arrow.speed * bpm);
-          const duration = (beatsFromStart / bpm) * 60 + extraBeatTime;
-
-          this.tl = this.tl.to(
-            arrow,
-            { currentBeatPosition: -1 / arrow.speed, duration, ease: "none" },
-            firstArrowChained ? "<" : `<${delay}`
-          );
-          if (!firstArrowChained) firstArrowChained = true;
-        });
+        this.tl = this.tl.to(
+          this.globalParams,
+          {
+            beatTick: finalBeat,
+            duration: ((finalBeat - accumulatedBeatTick) / bpm) * 60,
+            ease: "none",
+          },
+          `+=${delay}`
+        );
       }
     }
 
@@ -356,7 +264,11 @@ class GameEngine {
 
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {
       const shockArrow = this.shockArrows[i];
-      shockArrow.render(this.canvas, this.globalParams.frame);
+      shockArrow.render(
+        this.canvas,
+        this.globalParams.frame,
+        this.globalParams.beatTick
+      );
     }
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
