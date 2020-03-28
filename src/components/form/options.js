@@ -34,9 +34,9 @@ export const options = {
 };
 
 export const optionDefaultValues = {
-  difficulty: "Difficult",
+  difficulty: "Expert",
   mods: {
-    speed: 2.75,
+    speed: 3,
     turn: "off",
     shuffle: 1,
     noteskin: "note",

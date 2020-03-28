@@ -3,12 +3,12 @@ import { gsap } from "gsap";
 import Arrow from "../components/chart/canvas/Arrow";
 import ShockArrow from "../components/chart/canvas/ShockArrow";
 import StepZone from "../components/chart/canvas/StepZone";
+import Guidelines from "../components/chart/canvas/Guidelines";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
-import { GLOBAL_OFFSET, ARROW_HEIGHT } from "../constants";
+import { GLOBAL_OFFSET, END_EXTRA_BEATS } from "../constants";
 
 class GameEngine {
-  // c: canvas context
   constructor(canvas, sm) {
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
@@ -16,15 +16,11 @@ class GameEngine {
     this.sm = sm;
     this.simfiles = {};
 
-    this.activeSimfile = null;
     this.eventList = [];
     this.arrows = [];
     this.shockArrows = [];
 
-    this.currentBeat = 0;
-
     this.drawBackground();
-    this.stepZone = new StepZone();
 
     this.globalParams = {
       /*
@@ -160,6 +156,8 @@ class GameEngine {
       }
     });
 
+    this.stepZone = new StepZone();
+
     // console.log("this.arrows", this.arrows);
 
     // console.log("this.shockArrows", this.shockArrows);
@@ -168,8 +166,8 @@ class GameEngine {
   }
 
   // Calculate the gsap tweens before playing the chart
-  initTimeline() {
-    // console.log("this.eventList", this.eventList);
+  initTimeline(mods) {
+    console.log("this.eventList", this.eventList);
 
     this.resetArrows();
 
@@ -200,7 +198,7 @@ class GameEngine {
     } else if (lastEvent) {
       finalBeat = lastEvent.beat;
     }
-    finalBeat += 8;
+    finalBeat += END_EXTRA_BEATS;
 
     // hack to implement global offset of -12 ms
     this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
@@ -336,6 +334,8 @@ class GameEngine {
         });
       }
     }
+
+    this.guidelines = new Guidelines({ mods, finalBeat });
   }
 
   resetArrows() {
@@ -346,7 +346,13 @@ class GameEngine {
     // if (this.tl.paused()) return;
     // console.log("mainLoop running");
     this.drawBackground();
-    this.stepZone.render(this.canvas, this.globalParams.beatTick);
+
+    if (this.stepZone) {
+      this.stepZone.render(this.canvas, this.globalParams.beatTick);
+    }
+    if (this.guidelines) {
+      this.guidelines.render(this.canvas, this.globalParams.beatTick);
+    }
 
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {
       const shockArrow = this.shockArrows[i];
@@ -381,10 +387,6 @@ class GameEngine {
   }
   pauseTl() {
     this.tl.pause();
-  }
-
-  yeet() {
-    // this.testArrow.y *= 2;
   }
 }
 

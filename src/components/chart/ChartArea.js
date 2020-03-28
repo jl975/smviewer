@@ -32,9 +32,9 @@ const ChartArea = props => {
     const simfile = ge.simfiles[`single_${selectedDifficulty}`];
 
     if (simfile) {
-      const eventList = ge.generateEventList(simfile);
-      ge.generateArrows(simfile, mods, eventList);
-      ge.initTimeline();
+      ge.generateEventList(simfile);
+      ge.generateArrows(simfile, mods);
+      ge.initTimeline(mods);
       ge.restartTl();
     }
     if (selectedAudio) {

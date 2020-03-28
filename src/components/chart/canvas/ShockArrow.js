@@ -38,10 +38,7 @@ class ShockArrow {
       const destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
       const destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
 
-      // console.log("destY", destY);
-
       if (destY > topBoundary && destY < bottomBoundary) {
-        // console.log("drawing shock", destX, destY);
         c.drawImage(
           arrowImg,
           frameX,

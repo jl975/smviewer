@@ -43,9 +43,11 @@ const MusicListForm = props => {
 
     // onSongSelect(null, { value: "9i0q91lPPiO61b9P891O1i86iOP1I08O" }); // egoism
 
-    // onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
+    onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
 
-    onSongSelect(null, { value: "PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD" }); // paranoia eternal
+    // onSongSelect(null, { value: "PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD" }); // paranoia eternal
+
+    // onSongSelect(null, { value: "QI06q9lPIoo80DlI18Ooi6dbPl89bqi0" }); // our soul
   }, []);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const MusicListForm = props => {
     const ge = gameEngine;
 
     if (ge.tl) {
-      console.log("timeline is this long", ge.tl.duration());
+      // console.log("timeline is this long", ge.tl.duration());
     }
   }, [gameEngine]);
 

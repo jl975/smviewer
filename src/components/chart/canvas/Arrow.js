@@ -69,15 +69,15 @@ class Arrow {
     this.holdBeats = attrs.holdBeats || null;
 
     this.hitFrame = 0; // frame for showing the Marvelous flash
-
-    if (this.note[0] === "M") {
-      this.shockFrame = -1;
-    }
   }
 
   reset() {
     this.hitFrame = 0;
   }
+
+  // currentBeatPosition(beatTick) {
+  //   return this.originalBeatPosition - beatTick;
+  // }
 
   render(canvas, beatTick) {
     const c = canvas.getContext("2d");
@@ -104,7 +104,6 @@ class Arrow {
           frameY = 0;
         } else {
           if (this.noteskin === "rainbow") {
-            // frameX = frameIndex * ARROW_WIDTH;
             frameX = (Math.floor(beatTick * 4) % 8) * ARROW_WIDTH;
 
             const beatD = this.measureD / 4;
@@ -206,7 +205,7 @@ class Arrow {
               ARROW_WIDTH,
               ARROW_HEIGHT,
               destX - this.hitFrame,
-              destY - this.hitFrame,
+              0 - this.hitFrame,
               ARROW_WIDTH + this.hitFrame * 2,
               ARROW_HEIGHT + this.hitFrame * 2
             );
@@ -247,7 +246,7 @@ class Arrow {
               ARROW_WIDTH,
               ARROW_HEIGHT,
               destX - this.hitFrame,
-              destY - this.hitFrame,
+              0 - this.hitFrame,
               ARROW_WIDTH + this.hitFrame * 2,
               ARROW_HEIGHT + this.hitFrame * 2
             );
@@ -396,7 +395,7 @@ class Arrow {
               ARROW_WIDTH,
               ARROW_HEIGHT,
               destX - this.hitFrame,
-              destY - this.hitFrame,
+              0 - this.hitFrame,
               ARROW_WIDTH + this.hitFrame * 2,
               ARROW_HEIGHT + this.hitFrame * 2
             );
