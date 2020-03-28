@@ -3,7 +3,7 @@ import { Button } from "semantic-ui-react";
 
 import "./ChartArea.scss";
 
-import GameEngine from "../../core/GameEngineNew";
+import GameEngine from "../../core/GameEngine";
 
 const ChartArea = props => {
   const {
