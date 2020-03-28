@@ -404,37 +404,6 @@ class Arrow {
           }
         }
       }
-
-      // shock
-      else if (this.note[i] === "M") {
-        arrowImg = arrowImages[`shock_${direction}`];
-        // frameX = 0;
-        // frameY = 0;
-        if (i === 0) {
-          this.shockFrame = (this.shockFrame + 1) % 8;
-          // console.log(this.shockFrame);
-        }
-
-        frameX = (this.shockFrame % 4) * ARROW_WIDTH;
-        frameY = Math.floor(this.shockFrame / 2) * ARROW_HEIGHT;
-
-        destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
-        destY = this.currentBeatPosition * ARROW_HEIGHT * this.speed;
-
-        if (destY > topBoundary && destY < bottomBoundary) {
-          c.drawImage(
-            arrowImg,
-            frameX,
-            frameY,
-            ARROW_WIDTH,
-            ARROW_HEIGHT,
-            destX,
-            destY,
-            ARROW_WIDTH,
-            ARROW_HEIGHT
-          );
-        }
-      }
     }
   }
 }

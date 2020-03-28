@@ -18,6 +18,8 @@ const MainContainer = props => {
 
   const [mods, setMods] = useState(optionDefaultValues.mods);
 
+  const [gameEngine, setGameEngine] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchSimfiles();
@@ -44,7 +46,7 @@ const MainContainer = props => {
   const onSongSelect = async song => {
     setSelectedSong(song);
 
-    // console.log("MainContainer onSongSelect, song", song);
+    console.log("MainContainer onSongSelect, song", song);
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
@@ -74,6 +76,8 @@ const MainContainer = props => {
             sm={selectedSM}
             selectedAudio={selectedAudio}
             mods={mods}
+            gameEngine={gameEngine}
+            setGameEngine={setGameEngine}
           />
           <Form
             simfileList={simfileList}
@@ -85,6 +89,7 @@ const MainContainer = props => {
             setSelectedAudio={setSelectedAudio}
             mods={mods}
             setMods={setMods}
+            gameEngine={gameEngine}
           />
         </>
       )}

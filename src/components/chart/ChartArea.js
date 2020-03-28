@@ -6,10 +6,16 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngineNew";
 
 const ChartArea = props => {
-  const { selectedDifficulty, sm, mods, selectedAudio } = props;
+  const {
+    selectedDifficulty,
+    sm,
+    mods,
+    selectedAudio,
+    gameEngine,
+    setGameEngine,
+  } = props;
 
   const [canvas, setCanvas] = useState(null);
-  const [gameEngine, setGameEngine] = useState(null);
 
   // define canvas on mount
   useEffect(() => {

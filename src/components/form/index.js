@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Radio } from "semantic-ui-react";
+// import { Slider } from "react-semantic-ui-range";
 
 import { options } from "./options";
 import { capitalize } from "../../utils";
 
 const MusicListForm = props => {
-  const { simfileList, selectedDifficulty, mods, setMods } = props;
+  const { simfileList, selectedDifficulty, mods, setMods, gameEngine } = props;
   // console.log("MusicListForm simfileList", simfileList);
 
   const simfileOptions = simfileList.map(song => {
@@ -13,6 +14,8 @@ const MusicListForm = props => {
   });
 
   const [selectedSongOption, setSelectedSongOption] = useState(null);
+
+  const [timeProgress, setTimeProgress] = useState(0);
 
   //temp
   useEffect(() => {
@@ -40,18 +43,23 @@ const MusicListForm = props => {
 
     // onSongSelect(null, { value: "9i0q91lPPiO61b9P891O1i86iOP1I08O" }); // egoism
 
-    onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
+    // onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
+
+    onSongSelect(null, { value: "PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD" }); // paranoia eternal
   }, []);
+
+  useEffect(() => {
+    if (!gameEngine) return;
+    const ge = gameEngine;
+
+    if (ge.tl) {
+      console.log("timeline is this long", ge.tl.duration());
+    }
+  }, [gameEngine]);
 
   const handleSubmit = e => {
     e.preventDefault();
   };
-
-  // const togglePlay = () => {
-  //   if (!currentAudio) return;
-  //   if (currentAudio.paused) currentAudio.play();
-  //   else currentAudio.pause();
-  // };
 
   const onSongSelect = (e, data) => {
     const songHash = data.value;
@@ -69,6 +77,23 @@ const MusicListForm = props => {
   const updateMods = updatedMods => {
     setMods({ ...mods, ...updatedMods });
   };
+
+  const getChartDuration = () => {
+    if (!gameEngine || !gameEngine.tl) return 0;
+    const duration = gameEngine.tl.duration();
+    return duration;
+  };
+
+  // const timeProgressSettings = {
+  //   min: 0,
+  //   max: getChartDuration(),
+  //   step: 0.01,
+  //   onChange: value => {
+  //     // console.log("onChange value", value);
+  //     setTimeProgress(value);
+  //     gameEngine.tl.seek(value);
+  //   },
+  // };
 
   return (
     <div className="form-container">
@@ -166,6 +191,13 @@ const MusicListForm = props => {
             })}
           </div>
         )}
+
+        <div className="form-field">
+          <h4 className="form-label">Time progress</h4>
+          {/* {getChartDuration() ? (
+            <Slider settings={timeProgressSettings} value={timeProgress} />
+          ) : null} */}
+        </div>
       </form>
     </div>
   );
