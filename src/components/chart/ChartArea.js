@@ -4,23 +4,29 @@ import { Button } from "semantic-ui-react";
 import "./ChartArea.scss";
 
 import GameEngine from "../../core/GameEngine";
+import AudioPlayer from "../../core/AudioPlayer";
 
 const ChartArea = props => {
   const {
     selectedDifficulty,
+    selectedSong,
     sm,
     mods,
     selectedAudio,
+    loadingAudio,
     gameEngine,
     setGameEngine,
   } = props;
 
   const [canvas, setCanvas] = useState(null);
+  const [playing, setPlaying] = useState(false);
 
   // define canvas on mount
   useEffect(() => {
-    setCanvas(document.querySelector("#chartArea"));
-  }, []);
+    if (!loadingAudio) {
+      setCanvas(document.querySelector("#chartArea"));
+    }
+  }, [loadingAudio]);
 
   useEffect(() => {
     if (!canvas) return;
@@ -37,35 +43,42 @@ const ChartArea = props => {
       ge.initTimeline(mods);
       ge.restartTl();
     }
-    if (selectedAudio) {
-      selectedAudio.load();
-    }
-
     setGameEngine(ge);
   }, [canvas, sm, selectedDifficulty, mods]);
 
   const togglePlay = () => {
     if (!gameEngine) return;
-    gameEngine.toggleTl();
+    // gameEngine.toggleTl();
 
-    if (selectedAudio) {
-      if (selectedAudio.paused) selectedAudio.play();
-      else selectedAudio.pause();
+    if (AudioPlayer.isPlaying()) {
+      AudioPlayer.pause();
+      setPlaying(false);
+    } else {
+      AudioPlayer.play();
+      setPlaying(true);
     }
   };
   const restart = () => {
     if (!gameEngine) return;
-    gameEngine.restartTl();
-    if (selectedAudio) {
-      selectedAudio.load();
-    }
+    // gameEngine.restartTl();
+
+    AudioPlayer.stop();
+    setPlaying(false);
+  };
+
+  const isPlayDisabled = () => {
+    if (!gameEngine || loadingAudio) return true;
+    return false;
   };
 
   return (
     <div className="canvas-container">
-      <canvas id="chartArea" width="256" height="512" />
+      {loadingAudio && <div>Loading audio...</div>}
+      {!loadingAudio && <canvas id="chartArea" width="256" height="512" />}
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
-      <Button onClick={togglePlay}>Play/Pause</Button>
+      <Button onClick={togglePlay} disabled={isPlayDisabled()}>
+        {playing ? "Pause" : "Play"}
+      </Button>
       <Button onClick={restart}>Restart</Button>
     </div>
   );

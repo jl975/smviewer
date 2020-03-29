@@ -7,6 +7,7 @@ import Guidelines from "../components/chart/canvas/Guidelines";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
 import { GLOBAL_OFFSET, END_EXTRA_BEATS } from "../constants";
+import AudioPlayer from "./AudioPlayer";
 
 class GameEngine {
   constructor(canvas, sm) {
@@ -15,6 +16,8 @@ class GameEngine {
     this.tl = gsap.timeline();
     this.sm = sm;
     this.simfiles = {};
+    // this.toneSource = toneSource;
+    // this.toneSource.sync();
 
     this.eventList = [];
     this.arrows = [];
@@ -244,6 +247,7 @@ class GameEngine {
     }
 
     this.guidelines = new Guidelines({ mods, finalBeat });
+    AudioPlayer.setTimeline(this.tl);
   }
 
   resetArrows() {
@@ -254,6 +258,8 @@ class GameEngine {
     // if (this.tl.paused()) return;
     // console.log("mainLoop running");
     this.drawBackground();
+
+    // console.log(this.toneSource.loaded);
 
     if (this.stepZone) {
       this.stepZone.render(this.canvas, this.globalParams.beatTick);
@@ -289,8 +295,23 @@ class GameEngine {
     this.c.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  // isAudioLoaded() {
+  //   console.log("isAudioLoaded()", this.toneSource.loaded);
+  //   return this.toneSource.loaded;
+  // }
+
   toggleTl() {
-    this.tl.paused() ? this.tl.play() : this.tl.pause();
+    if (this.tl.paused()) {
+      // Tone.Draw.schedule(() => {
+      // }, 0);
+      // Tone.Transport.start();
+      this.tl.play();
+
+      // this.tl.play();
+    } else {
+      // Tone.Transport.pause();
+      this.tl.pause();
+    }
   }
   restartTl() {
     // console.log("call restart");

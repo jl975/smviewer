@@ -1,3 +1,9 @@
+## v0.3.0 - (unreleased)
+- Implement guidelines
+- Fixed simfile tsv reading issue that would often cause app to crash on page load
+- Found solution for reliably keeping chart in sync with the audio
+- Refactored arrow animation engine to greatly decrease chart processing times
+
 ## v0.2.0 - 2020-03-23
 - Support for bpm changes and stops
 - Rainbow/Vivid/Flat arrow colors

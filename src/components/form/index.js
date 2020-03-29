@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Radio } from "semantic-ui-react";
-// import { Slider } from "react-semantic-ui-range";
 
 import { options } from "./options";
 import { capitalize } from "../../utils";
 
 const MusicListForm = props => {
   const { simfileList, selectedDifficulty, mods, setMods, gameEngine } = props;
-  // console.log("MusicListForm simfileList", simfileList);
 
   const simfileOptions = simfileList.map(song => {
     return { key: song.hash, value: song.hash, text: song.title };
@@ -23,7 +21,7 @@ const MusicListForm = props => {
 
     // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
 
-    // onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
+    onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
 
     // onSongSelect(null, { value: "bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l" }); // lachryma
 
@@ -37,7 +35,7 @@ const MusicListForm = props => {
 
     // onSongSelect(null, { value: "loP08P1PPi990lPD0O060d888O9o6qb8" }); // seasons
 
-    onSongSelect(null, { value: "8QbqP80q9PI8bbi0qOoiibOQD08OPdli" }); // felm
+    // onSongSelect(null, { value: "8QbqP80q9PI8bbi0qOoiibOQD08OPdli" }); // felm
 
     // onSongSelect(null, { value: "6bid6d9qPQ80DOqiidQQ891o6Od8801l" }); // otp
 
@@ -50,6 +48,8 @@ const MusicListForm = props => {
     // onSongSelect(null, { value: "QI06q9lPIoo80DlI18Ooi6dbPl89bqi0" }); // our soul
 
     // onSongSelect(null, { value: "POq8OPlOO9199i11Od0P00801Qo01DQo" }); // rtswy
+
+    // onSongSelect(null, { value: "QQldo10ObPPQPlliODiDIIl0Q1oPoo61" }); // deltamax
   }, []);
 
   useEffect(() => {
@@ -196,12 +196,9 @@ const MusicListForm = props => {
           </div>
         )}
 
-        <div className="form-field">
+        {/* <div className="form-field">
           <h4 className="form-label">Time progress</h4>
-          {/* {getChartDuration() ? (
-            <Slider settings={timeProgressSettings} value={timeProgress} />
-          ) : null} */}
-        </div>
+        </div> */}
       </form>
     </div>
   );
