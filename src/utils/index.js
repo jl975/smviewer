@@ -1,5 +1,7 @@
 export const fetchDocument = async path => {
-  const response = await fetch(path);
+  const response = await fetch(path, {
+    mode: "cors",
+  });
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");
   const readResult = await reader.read();

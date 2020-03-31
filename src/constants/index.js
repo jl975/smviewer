@@ -7,7 +7,8 @@ export const FREEZE_BODY_HEIGHT = 128;
 export const DIRECTIONS = ["left", "down", "up", "right"];
 
 /* Number of seconds that the visuals are delayed relative to the audio */
-export const GLOBAL_OFFSET = 0.012;
+// export const GLOBAL_OFFSET = 0.012;
+export const GLOBAL_OFFSET = 0;
 
 export const MARVELOUS_FLASH_FRAMES = 4;
 

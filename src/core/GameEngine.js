@@ -16,8 +16,6 @@ class GameEngine {
     this.tl = gsap.timeline();
     this.sm = sm;
     this.simfiles = {};
-    // this.toneSource = toneSource;
-    // this.toneSource.sync();
 
     this.eventList = [];
     this.arrows = [];
@@ -259,8 +257,6 @@ class GameEngine {
     // console.log("mainLoop running");
     this.drawBackground();
 
-    // console.log(this.toneSource.loaded);
-
     if (this.stepZone) {
       this.stepZone.render(this.canvas, this.globalParams.beatTick);
     }
@@ -295,21 +291,10 @@ class GameEngine {
     this.c.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  // isAudioLoaded() {
-  //   console.log("isAudioLoaded()", this.toneSource.loaded);
-  //   return this.toneSource.loaded;
-  // }
-
   toggleTl() {
     if (this.tl.paused()) {
-      // Tone.Draw.schedule(() => {
-      // }, 0);
-      // Tone.Transport.start();
       this.tl.play();
-
-      // this.tl.play();
     } else {
-      // Tone.Transport.pause();
       this.tl.pause();
     }
   }

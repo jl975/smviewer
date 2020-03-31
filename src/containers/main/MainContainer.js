@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { tsv } from "d3-fetch";
+import { Howler } from "howler";
 
 import ChartArea from "../../components/chart/ChartArea";
 import Form from "../../components/form";
@@ -24,6 +25,8 @@ const MainContainer = props => {
   const [loadingAudio, setLoadingAudio] = useState(false);
 
   useEffect(() => {
+    // alert(JSON.stringify(Howler._codecs));
+
     const fetchData = async () => {
       await fetchSimfiles();
       setLoadingSimfiles(false);
@@ -49,13 +52,15 @@ const MainContainer = props => {
   };
 
   const onSongSelect = async song => {
+    console.log("MainContainer selected song", song);
     AudioPlayer.selectSong(song);
     setSelectedSong(song);
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
     const sm = await fetchDocument(
-      `https://cors-anywhere.herokuapp.com/${song.simfilePath}.sm`
+      // `https://cors-anywhere.herokuapp.com/${song.simfilePath}.sm`
+      `${window.location.origin}/simfiles/${song.smName}`
     );
     setSelectedSM(sm);
   };
