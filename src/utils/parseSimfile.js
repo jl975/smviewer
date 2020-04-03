@@ -1,5 +1,5 @@
 const modeRegex = /dance-([a-z]+)/;
-const difficultyRegex = /(Beginner|Easy|Medium|Hard|Challenge)/;
+const difficultyRegex = /(Beginner|Easy|Medium|Hard|Challenge|Edit)/;
 
 const difficultyMap = {
   Beginner: "Beginner",

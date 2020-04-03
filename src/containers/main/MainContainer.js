@@ -58,11 +58,15 @@ const MainContainer = props => {
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
-    const sm = await fetchDocument(
-      // `https://cors-anywhere.herokuapp.com/${song.simfilePath}.sm`
-      `${window.location.origin}/simfiles/${song.smName}`
-    );
-    setSelectedSM(sm);
+    try {
+      const sm = await fetchDocument(
+        // `https://cors-anywhere.herokuapp.com/${song.simfilePath}.sm`
+        `${window.location.origin}/simfiles/${song.smName}.sm`
+      );
+      setSelectedSM(sm);
+    } catch (err) {
+      alert(err);
+    }
   };
 
   const onDifficultySelect = difficulty => {
