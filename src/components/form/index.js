@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown, Radio } from "semantic-ui-react";
+import { Dropdown, Radio, Button } from "semantic-ui-react";
 
 import { options } from "./options";
 import { capitalize } from "../../utils";
 
 const MusicListForm = props => {
-  const { simfileList, selectedDifficulty, mods, setMods, gameEngine } = props;
+  const {
+    activeView,
+    simfileList,
+    selectedDifficulty,
+    mods,
+    setMods,
+    gameEngine,
+  } = props;
 
   const simfileOptions = simfileList.map(song => {
     return { key: song.hash, value: song.hash, text: song.title };
@@ -102,7 +109,9 @@ const MusicListForm = props => {
   // };
 
   return (
-    <div className="form-container">
+    <div
+      className={`form-container ${activeView === "mods" ? "open" : "closed"}`}
+    >
       <form onSubmit={handleSubmit}>
         <div className="form-field">
           <h4 className="form-label">Song</h4>

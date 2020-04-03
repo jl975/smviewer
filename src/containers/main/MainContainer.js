@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { tsv } from "d3-fetch";
 import { Howler } from "howler";
+import { Button } from "semantic-ui-react";
 
 import ChartArea from "../../components/chart/ChartArea";
 import Form from "../../components/form";
+import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
 import { optionDefaultValues } from "../../components/form/options";
 import { fetchDocument } from "../../utils";
@@ -19,6 +21,7 @@ const MainContainer = props => {
   const [selectedAudio, setSelectedAudio] = useState(null);
 
   const [mods, setMods] = useState(optionDefaultValues.mods);
+  const [activeView, setActiveView] = useState("main");
 
   const [gameEngine, setGameEngine] = useState(null);
 
@@ -87,6 +90,15 @@ const MainContainer = props => {
             gameEngine={gameEngine}
             setGameEngine={setGameEngine}
           />
+          {/* 
+          <Button
+            onClick={() => {
+              setModFormOpen(true);
+            }}
+          >
+            mods
+          </Button> */}
+
           <Form
             simfileList={simfileList}
             selectedSong={selectedSong}
@@ -98,7 +110,10 @@ const MainContainer = props => {
             mods={mods}
             setMods={setMods}
             gameEngine={gameEngine}
+            activeView={activeView}
           />
+
+          <MobileNav activeView={activeView} setActiveView={setActiveView} />
         </>
       )}
     </div>

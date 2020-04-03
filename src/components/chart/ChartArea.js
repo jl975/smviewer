@@ -76,10 +76,12 @@ const ChartArea = props => {
       {loadingAudio && <div>Loading audio...</div>}
       {!loadingAudio && <canvas id="chartArea" width="256" height="512" />}
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
-      <Button onClick={togglePlay} disabled={isPlayDisabled()}>
-        {playing ? "Pause" : "Play"}
-      </Button>
-      <Button onClick={restart}>Restart</Button>
+      <div className="play-controls">
+        <Button onClick={togglePlay} disabled={isPlayDisabled()}>
+          {playing ? "Pause" : "Play"}
+        </Button>
+        <Button onClick={restart}>Restart</Button>
+      </div>
     </div>
   );
 };

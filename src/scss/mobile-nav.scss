@@ -1,0 +1,30 @@
+.mobileNav {
+  position: fixed;
+  bottom: 0;
+  height: 60px;
+  width: 100%;
+  background: pink;
+  display: flex;
+  background: rgba(250, 252, 255, 0.975);
+
+  .mobileNav_item {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border-top: 1px solid #dadbdc;
+
+    .icon {
+      pointer-events: none;
+      color: #202122;
+    }
+
+    &.active {
+      .icon {
+        color: #0080ff;
+      }
+    }
+  }
+}

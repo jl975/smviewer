@@ -6,7 +6,7 @@ import MainContainer from "./containers/main/MainContainer";
 
 function App() {
   return (
-    <div className="ui fluid container app-container">
+    <div className="app-container">
       <MainContainer />
       {/* <GsapTest /> */}
     </div>

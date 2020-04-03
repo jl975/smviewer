@@ -1,9 +1,22 @@
+:root {
+  touch-action: pan-x pan-y;
+  height: 100%;
+}
+
+html,
+body {
+  height: 20px;
+  overflow: auto;
+  min-width: 0;
+}
+
 #root {
   height: 100%;
 }
 
-.ui.container.app-container {
+.app-container {
   height: 100%;
 }
 
 @import "./scss/main";
+@import "./scss/mobile-nav";
