@@ -5,6 +5,7 @@
 - Found solution for reliably keeping chart in sync with the audio
 - Refactored arrow animation engine to greatly decrease chart processing times
 - Shock arrow animation
+- Initial mobile view implementation
 
 ## v0.2.0 - 2020-03-23
 

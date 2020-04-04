@@ -17,7 +17,6 @@ class AudioPlayer {
     this.setLoadingAudio(true);
 
     this.currentSong.audio = new Howl({
-      src: `${song.simfilePath}.ogg`,
       src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
       format: ["mp3"],
       html5: true,
@@ -50,7 +49,7 @@ class AudioPlayer {
 
   updateTimeline() {
     const self = this;
-    this.currentSong.tl.time(self.getCurrentTime());
+    this.currentSong.tl.time(self.getCurrentTime() + 0.07);
   }
 
   play() {

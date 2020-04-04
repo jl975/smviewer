@@ -5,6 +5,7 @@
 
   position: fixed;
 
+  // prevent mobile devices from zooming in
   input[type="text"],
   input[type="number"],
   textarea {
@@ -21,7 +22,7 @@
   padding: 30px;
   background: rgba(250, 252, 255, 0.975);
   transform: translateX(100%);
-  transition: transform 0.2s;
+  transition: transform 0.35s;
 
   &.open {
     transform: translateX(0%);

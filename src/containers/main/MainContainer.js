@@ -4,13 +4,14 @@ import { Howler } from "howler";
 import { Button } from "semantic-ui-react";
 
 import ChartArea from "../../components/chart/ChartArea";
-import Form from "../../components/form";
+import SongForm from "../../components/form/SongForm";
+import ModsForm from "../../components/form/ModsForm";
 import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
 import { optionDefaultValues } from "../../components/form/options";
 import { fetchDocument } from "../../utils";
 
-const MainContainer = props => {
+const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
   const [simfileList, setSimfileList] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
@@ -44,8 +45,10 @@ const MainContainer = props => {
       const parsedTsv = await tsv(
         window.location.origin + "/data/simfiles.tsv"
       );
-      parsedTsv.forEach(row => {
-        row.simfilePath = row.smUrl.replace(/(.sm$)|(.ssc$)/, "");
+      parsedTsv.forEach((row) => {
+        row.levels = row.levels
+          .split(",")
+          .map((level) => (level ? parseInt(level) : null));
       });
       setSimfileList(parsedTsv);
     } catch (error) {
@@ -54,7 +57,7 @@ const MainContainer = props => {
     }
   };
 
-  const onSongSelect = async song => {
+  const onSongSelect = async (song) => {
     console.log("MainContainer selected song", song);
     AudioPlayer.selectSong(song);
     setSelectedSong(song);
@@ -63,7 +66,6 @@ const MainContainer = props => {
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
     try {
       const sm = await fetchDocument(
-        // `https://cors-anywhere.herokuapp.com/${song.simfilePath}.sm`
         `${window.location.origin}/simfiles/${song.smName}.sm`
       );
       setSelectedSM(sm);
@@ -72,7 +74,7 @@ const MainContainer = props => {
     }
   };
 
-  const onDifficultySelect = difficulty => {
+  const onDifficultySelect = (difficulty) => {
     setSelectedDifficulty(difficulty);
   };
 
@@ -90,16 +92,17 @@ const MainContainer = props => {
             gameEngine={gameEngine}
             setGameEngine={setGameEngine}
           />
-          {/* 
-          <Button
-            onClick={() => {
-              setModFormOpen(true);
-            }}
-          >
-            mods
-          </Button> */}
 
-          <Form
+          <SongForm
+            activeView={activeView}
+            simfileList={simfileList}
+            selectedDifficulty={selectedDifficulty}
+            onSongSelect={onSongSelect}
+            onDifficultySelect={onDifficultySelect}
+          />
+
+          <ModsForm
+            activeView={activeView}
             simfileList={simfileList}
             selectedSong={selectedSong}
             onSongSelect={onSongSelect}
@@ -110,7 +113,6 @@ const MainContainer = props => {
             mods={mods}
             setMods={setMods}
             gameEngine={gameEngine}
-            activeView={activeView}
           />
 
           <MobileNav activeView={activeView} setActiveView={setActiveView} />
