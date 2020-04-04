@@ -14,3 +14,23 @@ export const MARVELOUS_FLASH_FRAMES = 4;
 
 /* Number of beats played after the last note or event until the timeline ends */
 export const END_EXTRA_BEATS = 8;
+
+export const DDR_VERSIONS = [
+  "DDR 1st",
+  "DDR 2ndMIX",
+  "DDR 3rdMIX",
+  "DDR 4thMIX",
+  "DDR 5thMIX",
+  "DDRMAX",
+  "DDRMAX2",
+  "DDR EXTREME",
+  "DDR SuperNOVA",
+  "DDR SuperNOVA 2",
+  "DDR X",
+  "DDR X2",
+  "DDR X3 VS 2ndMIX",
+  "DanceDanceRevolution (2013)",
+  "DanceDanceRevolution (2014)",
+  "DanceDanceRevolution A",
+  "DanceDanceRevolution A20",
+];

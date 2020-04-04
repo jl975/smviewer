@@ -11,6 +11,8 @@ import AudioPlayer from "../../core/AudioPlayer";
 import { optionDefaultValues } from "../../components/form/options";
 import { fetchDocument } from "../../utils";
 
+import { DDR_VERSIONS } from "../../constants";
+
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
   const [simfileList, setSimfileList] = useState([]);
@@ -49,6 +51,7 @@ const MainContainer = (props) => {
         row.levels = row.levels
           .split(",")
           .map((level) => (level ? parseInt(level) : null));
+        row.version = DDR_VERSIONS[row.version];
       });
       setSimfileList(parsedTsv);
     } catch (error) {

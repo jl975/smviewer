@@ -55,6 +55,10 @@ const init = async () => {
   parsedTsv = getMetadataFromSM(parsedTsv);
 
   // // one-time script of filling in empty smName and mp3 url columns
+  // parsedTsv.forEach((song) => {
+  //   song.version = hashVersion[song.hash].version;
+  // });
+
   // const newColumns = getMp3AndSmColumns();
   // parsedTsv.forEach(song => {
   //   if (!song.smName) return;
@@ -70,6 +74,9 @@ const init = async () => {
 };
 
 init();
+
+/* one-time scripts for initial population of new columns */
+// const hashVersion = require("./hash_version.json");
 
 // const getMp3AndSmColumns = () => {
 //   return fs
