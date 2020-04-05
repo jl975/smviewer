@@ -4,6 +4,7 @@ import { Dropdown, Radio, Button } from "semantic-ui-react";
 import SongGrid from "./SongGrid";
 import { options } from "./options";
 import { SP_DIFFICULTIES } from "../../constants";
+import AudioPlayer from "../../core/AudioPlayer";
 
 const SongForm = (props) => {
   const {
@@ -12,6 +13,8 @@ const SongForm = (props) => {
     simfileList,
     selectedDifficulty,
     loadingAudio,
+    previewPlaying,
+    setPreviewPlaying,
   } = props;
 
   const simfileOptions = simfileList.map((song) => {
@@ -27,16 +30,14 @@ const SongForm = (props) => {
   // NOT the song currently playing in the main view
   const [selectedSong, setSelectedSong] = useState(null);
 
-  const [pendingViewChange, setPendingViewChange] = useState(false);
-
   // initialize song for testing
   useEffect(() => {
     // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" }); // ORCA
     // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
-    onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
+    // onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
     // onSongSelect(null, { value: "bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l" }); // lachryma
     // onSongSelect(null, { value: "06O0ObdQobq86lPDo6P18dQ1QPdilIQO" }); // ayakashi
-    // onSongSelect(null, { value: "9bI0dQdb01Dl1bQq1Pq998i0l096D99P" }); // second heaven
+    onSongSelect(null, { value: "9bI0dQdb01Dl1bQq1Pq998i0l096D99P" }); // second heaven
     // onSongSelect(null, { value: "8o1iQPiId8P6Db9Iqo1Oo119QDoq8qQ8" }); // chaos
     // onSongSelect(null, { value: "dD6PqbboDil89DPIID86Pldi6obI1b8l" }); // pluto
     // onSongSelect(null, { value: "loP08P1PPi990lPD0O060d888O9o6qb8" }); // seasons
@@ -56,22 +57,17 @@ const SongForm = (props) => {
     // setTimeout(() => {
     //   handleSubmit({ preventDefault: () => {} });
     // });
+
+    AudioPlayer.setStatePreviewPlaying = setPreviewPlaying;
   }, []);
 
   useEffect(() => {
     if (selectedSongOption) {
       const song = simfileList.find((song) => song.hash === selectedSongOption);
       setSelectedSong(song);
+      AudioPlayer.storeAudioSource(song);
     }
   }, [selectedSongOption]);
-
-  useEffect(() => {
-    if (pendingViewChange && !loadingAudio) {
-      console.log("redirect to main");
-
-      setActiveView("main");
-    }
-  }, [pendingViewChange, loadingAudio]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,23 +76,18 @@ const SongForm = (props) => {
     await props.onSongSelect(selectedSong);
     props.onDifficultySelect(selectedDifficultyOption);
 
-    setPendingViewChange(true);
+    setActiveView("main");
   };
 
   const onSongSelect = (e, data) => {
     const songHash = data.value;
     setSelectedSongOption(songHash);
-
-    // const song = simfileList.find((song) => song.hash === songHash);
-    // props.onSongSelect(song);
   };
 
   // deprecated, used with semantic ui radio
   const onDifficultySelect = (e, data) => {
     const difficulty = data.value;
     setSelectedDifficultyOption(difficulty);
-
-    console.log("select", difficulty);
     // props.onDifficultySelect(difficulty);
   };
 
@@ -126,6 +117,27 @@ const SongForm = (props) => {
     });
   };
 
+  const toggleSongPreview = () => {
+    const oldSongHash = AudioPlayer.currentPreview;
+
+    // toggle start/stop of the same song
+    if (oldSongHash === selectedSong.hash) {
+      if (previewPlaying) {
+        AudioPlayer.stopSongPreview();
+      } else {
+        AudioPlayer.playSongPreview(selectedSong);
+      }
+    }
+
+    // play a new song and stop the current one (if applicable)
+    else {
+      if (previewPlaying) {
+        AudioPlayer.stopSongPreview();
+      }
+      AudioPlayer.playSongPreview(selectedSong);
+    }
+  };
+
   return (
     <div
       className={`form-container songView ${
@@ -137,9 +149,12 @@ const SongForm = (props) => {
           <div className="selectedSong">
             <div className="selectedSong-jacket-wrapper">
               <img
-                className="selectedSong-jacket"
+                className={`selectedSong-jacket ${
+                  previewPlaying ? "playing" : ""
+                }`}
                 src={`/jackets/${selectedSongOption}.png`}
                 alt="Selected song"
+                onClick={toggleSongPreview}
               />
             </div>
             <div className="selectedSong-info">
@@ -159,22 +174,6 @@ const SongForm = (props) => {
               <div className="song-difficulties">{renderDifficulties()}</div>
             </div>
           </div>
-
-          {/* <div>
-            <h4 className="form-label">Difficulty</h4>
-            {options.difficulty.map((difficulty) => {
-              return (
-                <Radio
-                  key={`difficulty_${difficulty}`}
-                  label={difficulty}
-                  name="difficulty"
-                  value={selectedDifficultyOption}
-                  checked={selectedDifficultyOption === difficulty}
-                  onChange={onDifficultySelect}
-                />
-              );
-            })}
-          </div> */}
           <div className="songForm-actions">
             <Button type="submit" className="submit-btn">
               SELECT
@@ -186,7 +185,7 @@ const SongForm = (props) => {
       <SongGrid
         simfileList={simfileList}
         onSongSelect={onSongSelect}
-        selectedSong={selectedSongOption}
+        selectedSongOption={selectedSongOption}
       />
     </div>
   );

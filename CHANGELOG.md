@@ -6,6 +6,7 @@
 - Refactored arrow animation engine to greatly decrease chart processing times
 - Shock arrow animation
 - Initial mobile view implementation
+- New song select UI with SDVX/DDRA-style 3 column jacket grid
 
 ## v0.2.0 - 2020-03-23
 

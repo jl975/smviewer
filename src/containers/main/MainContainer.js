@@ -29,7 +29,9 @@ const MainContainer = (props) => {
   const [gameEngine, setGameEngine] = useState(null);
 
   const [loadingAudio, setLoadingAudio] = useState(false);
+
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [previewPlaying, setPreviewPlaying] = useState(false);
 
   useEffect(() => {
     // alert(JSON.stringify(Howler._codecs));
@@ -41,6 +43,7 @@ const MainContainer = (props) => {
     fetchData();
 
     AudioPlayer.setLoadingAudio = setLoadingAudio;
+    console.log("set AudioPlayer.setLoadingAudio from MainContainer.js");
     AudioPlayer.setStateAudioPlaying = setAudioPlaying;
   }, []);
 
@@ -85,6 +88,11 @@ const MainContainer = (props) => {
     setSelectedDifficulty(difficulty);
   };
 
+  const changeActiveView = (view) => {
+    setActiveView(view);
+    AudioPlayer.activeView = view;
+  };
+
   return (
     <div className="main-container">
       {!loadingSimfiles && (
@@ -102,12 +110,14 @@ const MainContainer = (props) => {
 
           <SongForm
             activeView={activeView}
-            setActiveView={setActiveView}
+            setActiveView={changeActiveView}
             simfileList={simfileList}
             selectedDifficulty={selectedDifficulty}
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
             loadingAudio={loadingAudio}
+            previewPlaying={previewPlaying}
+            setPreviewPlaying={setPreviewPlaying}
           />
 
           <ModsForm
@@ -126,7 +136,7 @@ const MainContainer = (props) => {
 
           <MobileNav
             activeView={activeView}
-            setActiveView={setActiveView}
+            setActiveView={changeActiveView}
             audioPlaying={audioPlaying}
           />
         </>

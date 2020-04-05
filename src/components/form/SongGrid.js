@@ -1,7 +1,7 @@
 import React from "react";
 
 const SongGrid = (props) => {
-  const { simfileList, onSongSelect, selectedSong } = props;
+  const { simfileList, onSongSelect, selectedSongOption } = props;
 
   let songs = simfileList.slice(200, 300);
   // let songs = simfileList;
@@ -20,7 +20,11 @@ const SongGrid = (props) => {
         key={`songtile_${song.hash}`}
         onClick={() => selectSong(song)}
       >
-        <div className="songTile">
+        <div
+          className={`songTile ${
+            selectedSongOption === song.hash ? "selected" : ""
+          }`}
+        >
           <div className="song-jacket-wrapper">
             <img
               className="song-jacket"
