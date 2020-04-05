@@ -5,6 +5,7 @@ import SongGrid from "./SongGrid";
 import { options } from "./options";
 import { SP_DIFFICULTIES } from "../../constants";
 import AudioPlayer from "../../core/AudioPlayer";
+import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
 
 const SongForm = (props) => {
   const {
@@ -71,7 +72,7 @@ const SongForm = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("selectedSongOption", selectedSongOption);
+    AudioPlayer.stopSongPreview();
 
     await props.onSongSelect(selectedSong);
     props.onDifficultySelect(selectedDifficultyOption);
@@ -82,6 +83,7 @@ const SongForm = (props) => {
   const onSongSelect = (e, data) => {
     const songHash = data.value;
     setSelectedSongOption(songHash);
+    AudioPlayer.stopSongPreview();
   };
 
   // deprecated, used with semantic ui radio
@@ -147,11 +149,16 @@ const SongForm = (props) => {
       <form className="songForm" onSubmit={handleSubmit}>
         <div className="form-inner-wrapper">
           <div className="selectedSong">
-            <div className="selectedSong-jacket-wrapper">
+            <div
+              className={`selectedSong-jacket-wrapper ${
+                previewPlaying ? "playing" : ""
+              }`}
+            >
+              <div className="selectedSong-jacket-overlay">
+                <AudioWave />
+              </div>
               <img
-                className={`selectedSong-jacket ${
-                  previewPlaying ? "playing" : ""
-                }`}
+                className={`selectedSong-jacket`}
                 src={`/jackets/${selectedSongOption}.png`}
                 alt="Selected song"
                 onClick={toggleSongPreview}

@@ -1,5 +1,7 @@
 import React from "react";
 
+import AudioPlayer from "../../core/AudioPlayer";
+
 const SongGrid = (props) => {
   const { simfileList, onSongSelect, selectedSongOption } = props;
 
@@ -10,7 +12,7 @@ const SongGrid = (props) => {
 
   const selectSong = (song) => {
     onSongSelect(null, { value: song.hash });
-    console.log("select song", song);
+    // console.log("select song", song);
   };
 
   const renderSong = (song) => {

@@ -43,7 +43,6 @@ const MainContainer = (props) => {
     fetchData();
 
     AudioPlayer.setLoadingAudio = setLoadingAudio;
-    console.log("set AudioPlayer.setLoadingAudio from MainContainer.js");
     AudioPlayer.setStateAudioPlaying = setAudioPlaying;
   }, []);
 

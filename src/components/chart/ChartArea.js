@@ -6,7 +6,7 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 
-const ChartArea = props => {
+const ChartArea = (props) => {
   const {
     selectedDifficulty,
     selectedSong,

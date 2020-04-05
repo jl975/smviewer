@@ -3,7 +3,15 @@ import { gsap } from "gsap";
 
 class AudioPlayer {
   constructor() {
-    this.sources = {}; // map of song hash to associated Howl object
+    /*
+      Trying to share the same audio source for both song and preview was causing too many
+      issues. Sticking to keeping separate Howl objects for each even if means loading
+      duplicate copies of the same mp3
+    */
+    this.sources = {
+      song: {},
+      preview: {},
+    }; // map of song hash to associated Howl object
     this.currentSong = null; // hash of current song
     this.currentPreview = null; // hash of current preview
 
@@ -22,18 +30,51 @@ class AudioPlayer {
   setStatePreviewPlaying() {}
 
   getCurrentSong() {
-    return this.sources[this.currentSong];
+    return this.sources.song[this.currentSong];
   }
   getCurrentPreview() {
-    return this.sources[this.currentPreview];
+    return this.sources.preview[this.currentPreview];
   }
 
+  // when loading a song file for the first time, save it as two separate Howls:
+  // one for the full song and one for the preview sample
   storeAudioSource(song) {
-    if (!this.sources[song.hash]) {
+    if (!this.sources.song[song.hash]) {
       this.setLoadingAudio(true);
 
-      this.sources[song.hash] = { title: song.title };
-      this.sources[song.hash].audio = new Howl({
+      this.sources.song[song.hash] = { title: song.title };
+      this.sources.song[song.hash].audio = new Howl({
+        src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
+        format: ["mp3"],
+        html5: true,
+        onload: () => {
+          // console.log(`AudioPlayer song loaded: ${song.title}`);
+          this.setLoadingAudio(false);
+        },
+        onloaderror: (id, error, blah) => {
+          alert(`${id};;; ${error};;; ${blah}`);
+        },
+        onplay: () => {
+          gsap.ticker.add(this.updateTimeline);
+          this.setStateAudioPlaying(true);
+        },
+        onpause: (spriteId) => {
+          gsap.ticker.remove(this.updateTimeline);
+          this.setStateAudioPlaying(false);
+        },
+        onseek: () => {},
+        onstop: () => {
+          gsap.ticker.remove(this.updateTimeline);
+          this.setStateAudioPlaying(false);
+        },
+        onend: (spriteId) => {
+          gsap.ticker.remove(this.updateTimeline);
+          this.setStateAudioPlaying(false);
+        },
+      });
+
+      this.sources.preview[song.hash] = { title: song.title };
+      this.sources.preview[song.hash].audio = new Howl({
         src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
         format: ["mp3"],
         html5: true,
@@ -42,63 +83,21 @@ class AudioPlayer {
             parseFloat((song.sampleStart - 0.12) * 1000),
             parseFloat(song.sampleLength * 1000),
           ],
-          full: [0, 180000], // arbitrarily chosen 3 mins to represent "full duration"
         },
-        onload: () => {
-          console.log(`AudioPlayer song loaded: ${song.title}`);
-          this.setLoadingAudio(false);
+        onplay: () => {},
+        onstop: () => {
+          clearTimeout(this.previewFadeTimeout);
+          this.currentPreviewId = null;
+          this.setStatePreviewPlaying(false);
         },
-        onloaderror: (id, error, blah) => {
-          alert(`${id};;; ${error};;; ${blah}`);
-        },
-        onplay: (spriteId) => {
-          if (this.currentSong === song.hash && this.activeView === "main") {
-            gsap.ticker.add(this.updateTimeline);
-            this.setStateAudioPlaying(true);
-          } else if (spriteId === this.currentPreviewId) {
-            const preview = this.getCurrentPreview().audio;
-
-            const fadeinTime = 200;
-            const fadeoutTime = 2000;
-            preview.fade(0, 1, fadeinTime);
-            this.previewFadeTimeout = setTimeout(() => {
-              preview.fade(1, 0, fadeoutTime);
-            }, song.sampleLength * 1000 - fadeoutTime);
-            this.setStatePreviewPlaying(true);
-          }
-        },
-        onpause: (spriteId) => {
-          if (this.currentSong === song.hash && this.activeView === "main") {
-            gsap.ticker.remove(this.updateTimeline);
-            this.setStateAudioPlaying(false);
-          } else if (spriteId === this.currentPreviewId) {
-            console.log(spriteId, "paused");
-          }
-        },
-        onseek: () => {},
-        onstop: (spriteId) => {
-          if (this.currentSong === song.hash && this.activeView === "main") {
-            gsap.ticker.remove(this.updateTimeline);
-            this.setStateAudioPlaying(false);
-          } else if (spriteId === this.currentPreviewId) {
-            clearTimeout(this.previewFadeTimeout);
-            this.currentPreviewId = null;
-            this.setStatePreviewPlaying(false);
-          }
-        },
-        onend: (spriteId) => {
-          if (this.currentSong === song.hash && this.activeView === "main") {
-            gsap.ticker.remove(this.updateTimeline);
-            this.setStateAudioPlaying(false);
-          } else if (spriteId === this.currentPreviewId) {
-            clearTimeout(this.previewFadeTimeout);
-            this.currentPreviewId = null;
-            this.setStatePreviewPlaying(false);
-          }
+        onend: () => {
+          clearTimeout(this.previewFadeTimeout);
+          this.currentPreviewId = null;
+          this.setStatePreviewPlaying(false);
         },
       });
 
-      console.log(`Added ${song.title} to AudioPlayer.sources`, this.sources);
+      // console.log(`Added ${song.title} to AudioPlayer.sources`, this.sources);
     }
   }
 
@@ -121,9 +120,7 @@ class AudioPlayer {
   }
 
   play() {
-    this.currentSongId = this.getCurrentSong().audio.play(
-      this.currentSongId || "full"
-    );
+    this.currentSongId = this.getCurrentSong().audio.play();
   }
 
   pause() {
@@ -165,6 +162,19 @@ class AudioPlayer {
     const preview = this.getCurrentPreview().audio;
 
     this.currentPreviewId = preview.play("sample");
+
+    preview.on("play", () => {
+      const preview = this.getCurrentPreview().audio;
+
+      const fadeinTime = 200;
+      const fadeoutTime = 2000;
+      preview.fade(0, 1, fadeinTime);
+
+      this.previewFadeTimeout = setTimeout(() => {
+        preview.fade(1, 0, fadeoutTime);
+      }, song.sampleLength * 1000 - fadeoutTime);
+      this.setStatePreviewPlaying(true);
+    });
   }
 
   stopSongPreview() {
@@ -172,7 +182,8 @@ class AudioPlayer {
     const preview = this.getCurrentPreview().audio;
 
     preview.stop(this.currentPreviewId);
-    clearTimeout(this.previewFadeTimeout);
+
+    // clearTimeout(this.previewFadeTimeout);
   }
 
   isPreviewPlaying() {

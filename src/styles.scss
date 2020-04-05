@@ -18,6 +18,9 @@ body {
   height: 100%;
 }
 
+// animated SVGs
+@import "./svg/svg.scss";
+
 @import "./scss/main";
 @import "./scss/mobile-nav";
 @import "./scss/song-view";
