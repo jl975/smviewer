@@ -24,11 +24,12 @@ const MainContainer = (props) => {
   const [selectedAudio, setSelectedAudio] = useState(null);
 
   const [mods, setMods] = useState(optionDefaultValues.mods);
-  const [activeView, setActiveView] = useState("main");
+  const [activeView, setActiveView] = useState("song");
 
   const [gameEngine, setGameEngine] = useState(null);
 
   const [loadingAudio, setLoadingAudio] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
 
   useEffect(() => {
     // alert(JSON.stringify(Howler._codecs));
@@ -40,6 +41,7 @@ const MainContainer = (props) => {
     fetchData();
 
     AudioPlayer.setLoadingAudio = setLoadingAudio;
+    AudioPlayer.setStateAudioPlaying = setAudioPlaying;
   }, []);
 
   const fetchSimfiles = async () => {
@@ -53,6 +55,8 @@ const MainContainer = (props) => {
           .map((level) => (level ? parseInt(level) : null));
         row.version = DDR_VERSIONS[row.version];
       });
+
+      // console.log("simfiles", parsedTsv);
       setSimfileList(parsedTsv);
     } catch (error) {
       console.error(error);
@@ -118,7 +122,11 @@ const MainContainer = (props) => {
             gameEngine={gameEngine}
           />
 
-          <MobileNav activeView={activeView} setActiveView={setActiveView} />
+          <MobileNav
+            activeView={activeView}
+            setActiveView={setActiveView}
+            audioPlaying={audioPlaying}
+          />
         </>
       )}
     </div>

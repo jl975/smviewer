@@ -3,7 +3,6 @@
   bottom: 0;
   height: 60px;
   width: 100%;
-  background: pink;
   display: flex;
   background: rgba(250, 252, 255, 0.975);
 
@@ -19,11 +18,18 @@
     .icon {
       pointer-events: none;
       color: #202122;
+      transition: color 0.15s;
     }
 
     &.active {
       .icon {
         color: #0080ff;
+      }
+    }
+
+    &.disabled {
+      .icon {
+        color: #c0c6cc;
       }
     }
   }

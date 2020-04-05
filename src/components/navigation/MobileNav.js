@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "semantic-ui-react";
 
 const MobileNav = (props) => {
-  const { activeView, setActiveView } = props;
+  const { activeView, audioPlaying } = props;
 
   const navItems = [
     { view: "main", icon: "arrow up" },
@@ -12,6 +12,16 @@ const MobileNav = (props) => {
     { view: "mods", icon: "sidebar" },
   ];
 
+  const setActiveView = (view) => {
+    if (view === "song" && audioPlaying) return;
+    props.setActiveView(view);
+  };
+
+  const isDisabled = (view) => {
+    if (view === "song" && audioPlaying) return true;
+    return false;
+  };
+
   return (
     <nav className="mobileNav">
       {navItems.map((navItem) => {
@@ -20,7 +30,9 @@ const MobileNav = (props) => {
         return (
           <div
             key={`mobileNavItem_${view}`}
-            className={`mobileNav_item ${activeView === view ? "active" : ""}`}
+            className={`mobileNav_item ${activeView === view ? "active" : ""} ${
+              isDisabled(view) ? "disabled" : ""
+            }`}
             onClick={() => setActiveView(view)}
           >
             <Icon name={icon} />

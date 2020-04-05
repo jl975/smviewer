@@ -10,6 +10,9 @@ class AudioPlayer {
     this.updateTimeline = this.updateTimeline.bind(this);
   }
 
+  // placeholder that will be overridden by a React state change method
+  setStateAudioPlaying() {}
+
   selectSong(song) {
     if (this.currentSong.audio) {
       this.currentSong.audio.stop();
@@ -54,14 +57,17 @@ class AudioPlayer {
 
   play() {
     this.currentSong.audio.play();
+    this.setStateAudioPlaying(true);
   }
 
   pause() {
     this.currentSong.audio.pause();
+    this.setStateAudioPlaying(false);
   }
 
   stop() {
     this.currentSong.audio.stop();
+    this.setStateAudioPlaying(false);
   }
 
   getCurrentTime() {
