@@ -34,3 +34,12 @@ export const DDR_VERSIONS = [
   "DanceDanceRevolution A",
   "DanceDanceRevolution A20",
 ];
+
+export const SP_DIFFICULTIES = [
+  "Beginner",
+  "Basic",
+  "Difficult",
+  "Expert",
+  "Challenge",
+];
+export const DP_DIFFICULTIES = ["Basic", "Difficult", "Expert", "Challenge"];

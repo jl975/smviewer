@@ -102,10 +102,12 @@ const MainContainer = (props) => {
 
           <SongForm
             activeView={activeView}
+            setActiveView={setActiveView}
             simfileList={simfileList}
             selectedDifficulty={selectedDifficulty}
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
+            loadingAudio={loadingAudio}
           />
 
           <ModsForm

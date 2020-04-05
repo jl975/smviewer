@@ -3,7 +3,7 @@ import React from "react";
 const SongGrid = (props) => {
   const { simfileList, onSongSelect, selectedSong } = props;
 
-  let songs = simfileList.slice(0, 100);
+  let songs = simfileList.slice(200, 300);
   // let songs = simfileList;
 
   // console.log("songs", songs);
