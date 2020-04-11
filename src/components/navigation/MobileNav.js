@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "semantic-ui-react";
+import AudioPlayer from "../../core/AudioPlayer";
 
 const MobileNav = (props) => {
   const { activeView, audioPlaying } = props;
@@ -39,22 +40,6 @@ const MobileNav = (props) => {
           </div>
         );
       })}
-      {/* <div
-        className={`mobileNav_item ${activeView === "main" ? "active" : ""}`}
-        onClick={() => setActiveView("main")}
-      >
-        <Icon name="arrow up" />
-      </div>
-      <div className="mobileNav_item" />
-      <div className="mobileNav_item" />
-      <div className="mobileNav_item" />
-
-      <div
-        className={`mobileNav_item ${activeView === "mods" ? "active" : ""}`}
-        onClick={() => setActiveView("mods")}
-      >
-        <Icon name="sidebar" />
-      </div> */}
     </nav>
   );
 };

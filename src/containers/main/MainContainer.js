@@ -55,7 +55,7 @@ const MainContainer = (props) => {
         row.levels = row.levels
           .split(",")
           .map((level) => (level ? parseInt(level) : null));
-        row.version = DDR_VERSIONS[row.version];
+        // row.version = DDR_VERSIONS[row.version];
       });
 
       // console.log("simfiles", parsedTsv);

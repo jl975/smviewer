@@ -110,7 +110,7 @@ class GameEngine {
 
     if (Array.isArray(chart[0])) {
       const newChart = [];
-      chart.forEach(measure => {
+      chart.forEach((measure) => {
         newChart.push(...measure);
       });
       chart = newChart;
@@ -168,7 +168,7 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    console.log("this.eventList", this.eventList);
+    // console.log("this.eventList", this.eventList);
 
     this.resetArrows();
 
@@ -249,7 +249,7 @@ class GameEngine {
   }
 
   resetArrows() {
-    this.arrows.forEach(arrow => arrow.reset());
+    this.arrows.forEach((arrow) => arrow.reset());
   }
 
   mainLoop() {
@@ -293,8 +293,10 @@ class GameEngine {
 
   toggleTl() {
     if (this.tl.paused()) {
+      console.log("tl.play()");
       this.tl.play();
     } else {
+      console.log("tl.pause()");
       this.tl.pause();
     }
   }

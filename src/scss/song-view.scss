@@ -16,7 +16,7 @@
   .selectedSong {
     position: relative;
     background-color: rgba(98, 124, 146, 1);
-    height: 200px;
+    // height: 200px;
     margin-top: 10px;
     display: flex;
   }
@@ -227,5 +227,47 @@
         -1px -1px 0 #000;
       transition: font-size 0.15s, line-height 0.15s, color 0.15s;
     }
+  }
+
+  .songForm-filters {
+    display: flex;
+    justify-content: space-between;
+
+    .form-field {
+      padding: 0 10px;
+      display: flex;
+      flex-direction: column;
+
+      .ui.selection.dropdown {
+        min-width: 70px;
+
+        .menu {
+          height: 300px;
+          max-height: none;
+          > .item {
+            text-align: center;
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+          }
+
+          .text {
+            font-size: 16px;
+          }
+        }
+        &.version-filter-dropdown {
+          width: 120px;
+
+          .menu {
+            .text {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    // .title-filter-dropdown {
+    //   width: 70px;
+    // }
   }
 }

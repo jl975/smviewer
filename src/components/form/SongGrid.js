@@ -3,10 +3,10 @@ import React from "react";
 import AudioPlayer from "../../core/AudioPlayer";
 
 const SongGrid = (props) => {
-  const { simfileList, onSongSelect, selectedSongOption } = props;
+  const { displayedSongs, onSongSelect, selectedSongOption } = props;
 
-  let songs = simfileList.slice(200, 300);
-  // let songs = simfileList;
+  // let songs = displayedSongs.slice(200, 300);
+  let songs = displayedSongs;
 
   // console.log("songs", songs);
 

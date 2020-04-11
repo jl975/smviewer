@@ -39,6 +39,6 @@ export const optionDefaultValues = {
     speed: 3,
     turn: "off",
     shuffle: 1,
-    noteskin: "rainbow",
+    noteskin: "note",
   },
 };

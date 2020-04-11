@@ -18,11 +18,14 @@ class AudioPlayer {
     this.currentSongId = null; // Howler soundID of current song
     this.currentPreviewId = null; // Howler soundId of current preview
 
-    this.updateTimeline = this.updateTimeline.bind(this);
+    // this.updateTimeline = this.updateTimeline.bind(this);
 
     this.activeView = null; // gets updated whenever active view changes in React
 
     this.previewFadeTimeout = null; // reference to preview fade setTimeout so it can be cleared
+
+    this.updateTimeline = this.updateTimeline.bind(this);
+    this.audioResyncFrames = 0;
   }
 
   // placeholders that will be overridden by a React state change method
@@ -55,10 +58,17 @@ class AudioPlayer {
           alert(`${id};;; ${error};;; ${blah}`);
         },
         onplay: () => {
+          this.getCurrentSong().tl.play();
+
+          // arbitrary number of frames chosen to tell timeline to resync with the audio
+          // because audio playback takes a while to restabilize
+          this.audioResyncFrames = 10;
+
           gsap.ticker.add(this.updateTimeline);
           this.setStateAudioPlaying(true);
         },
-        onpause: (spriteId) => {
+        onpause: () => {
+          this.getCurrentSong().tl.pause();
           gsap.ticker.remove(this.updateTimeline);
           this.setStateAudioPlaying(false);
         },
@@ -114,9 +124,16 @@ class AudioPlayer {
     this.getCurrentSong().tl = tl;
   }
 
+  // when audio is played, resync timeline with audio a few times until audio playback
+  // stabilizes, then remove this method from the ticker
   updateTimeline() {
     const self = this;
     this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
+
+    this.audioResyncFrames--;
+    if (this.audioResyncFrames <= 0) {
+      gsap.ticker.remove(this.updateTimeline);
+    }
   }
 
   play() {
