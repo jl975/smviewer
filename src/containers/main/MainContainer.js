@@ -39,9 +39,7 @@ const MainContainer = (props) => {
 
   const fetchSimfiles = async () => {
     try {
-      const parsedTsv = await tsv(
-        window.location.origin + "/data/simfiles.tsv"
-      );
+      const parsedTsv = await tsv(window.location.href + "/data/simfiles.tsv");
       parsedTsv.forEach((row) => {
         row.levels = row.levels
           .split(",")
@@ -65,7 +63,7 @@ const MainContainer = (props) => {
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
     try {
       const sm = await fetchDocument(
-        `${window.location.origin}/simfiles/${song.smName}.sm`
+        `${window.location.href}/simfiles/${song.smName}.sm`
       );
       setSelectedSM(sm);
     } catch (err) {
