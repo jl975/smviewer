@@ -8,7 +8,7 @@ import {
 import { getAssetPath } from "../../../utils";
 
 const arrowImages = {};
-DIRECTIONS.forEach(direction => {
+DIRECTIONS.forEach((direction) => {
   arrowImages[`rainbow_${direction}`] = new Image();
   arrowImages[`rainbow_${direction}`].src = getAssetPath(
     `rainbow_${direction}.png`
@@ -47,7 +47,7 @@ DIRECTIONS.forEach(direction => {
 });
 
 const miscImages = ["freeze_head", "tap_explosion"];
-miscImages.forEach(imageName => {
+miscImages.forEach((imageName) => {
   arrowImages[imageName] = new Image();
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`);
 });
@@ -69,6 +69,10 @@ class Arrow {
     this.holdBeats = attrs.holdBeats || null;
 
     this.hitFrame = 0; // frame for showing the Marvelous flash
+
+    // can be used to detect the moment that the arrow passes a certain position
+    // even without landing precisely on it
+    this.previousBeatPosition = null;
   }
 
   reset() {
@@ -198,19 +202,26 @@ class Arrow {
         }
         if (destY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.save();
+            c.globalAlpha =
+              1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
+            console.log(c.globalAlpha);
             c.drawImage(
               arrowImages.tap_explosion,
               0,
               0,
               ARROW_WIDTH,
               ARROW_HEIGHT,
-              destX - this.hitFrame,
-              0 - this.hitFrame,
-              ARROW_WIDTH + this.hitFrame * 2,
-              ARROW_HEIGHT + this.hitFrame * 2
+              destX - 2 - this.hitFrame,
+              0 - 2 - this.hitFrame,
+              ARROW_WIDTH + 4 + this.hitFrame * 2,
+              ARROW_HEIGHT + 4 + this.hitFrame * 2
             );
+            c.restore();
             this.hitFrame++;
           }
+        } else {
+          this.hitFrame = 0;
         }
       }
 
@@ -237,8 +248,13 @@ class Arrow {
             ARROW_HEIGHT
           );
         }
+
+        // target flash
         if (destY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.save();
+            c.globalAlpha =
+              1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
             c.drawImage(
               arrowImages.tap_explosion,
               0,
@@ -250,8 +266,11 @@ class Arrow {
               ARROW_WIDTH + this.hitFrame * 2,
               ARROW_HEIGHT + this.hitFrame * 2
             );
+            c.restore();
             this.hitFrame++;
           }
+        } else {
+          this.hitFrame = 0;
         }
       }
 
@@ -285,7 +304,10 @@ class Arrow {
           partialDestY = 0;
           arrowImg = arrowImages[`freeze_tail_active_${direction}`];
           arrowBodyImg = arrowImages[`freeze_body_active_${direction}`];
-          freezeBeingHeld = true;
+
+          if (destY > 0) {
+            freezeBeingHeld = true;
+          }
         }
 
         // draw partial
@@ -388,6 +410,9 @@ class Arrow {
         // flash at the end of successfully held down freeze
         if (destY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            c.save();
+            c.globalAlpha =
+              1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
             c.drawImage(
               arrowImages.tap_explosion,
               0,
@@ -399,10 +424,15 @@ class Arrow {
               ARROW_WIDTH + this.hitFrame * 2,
               ARROW_HEIGHT + this.hitFrame * 2
             );
+            c.restore();
             this.hitFrame++;
           }
+        } else {
+          this.hitFrame = 0;
         }
       }
+
+      this.previousBeatPosition = this.currentBeatPosition(beatTick);
     }
   }
 }

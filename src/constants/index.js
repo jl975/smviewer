@@ -10,7 +10,7 @@ export const DIRECTIONS = ["left", "down", "up", "right"];
 // export const GLOBAL_OFFSET = 0.012;
 export const GLOBAL_OFFSET = 0;
 
-export const MARVELOUS_FLASH_FRAMES = 4;
+export const MARVELOUS_FLASH_FRAMES = 12;
 
 /* Number of beats played after the last note or event until the timeline ends */
 export const END_EXTRA_BEATS = 8;

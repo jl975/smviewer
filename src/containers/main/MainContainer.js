@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { tsv } from "d3-fetch";
-import { Howler } from "howler";
 import { Button } from "semantic-ui-react";
 
 import ChartArea from "../../components/chart/ChartArea";
@@ -10,8 +9,6 @@ import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
 import { optionDefaultValues } from "../../components/form/options";
 import { fetchDocument } from "../../utils";
-
-import { DDR_VERSIONS } from "../../constants";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -34,8 +31,6 @@ const MainContainer = (props) => {
   const [previewPlaying, setPreviewPlaying] = useState(false);
 
   useEffect(() => {
-    // alert(JSON.stringify(Howler._codecs));
-
     const fetchData = async () => {
       await fetchSimfiles();
       setLoadingSimfiles(false);
@@ -55,7 +50,6 @@ const MainContainer = (props) => {
         row.levels = row.levels
           .split(",")
           .map((level) => (level ? parseInt(level) : null));
-        // row.version = DDR_VERSIONS[row.version];
       });
 
       // console.log("simfiles", parsedTsv);

@@ -74,6 +74,9 @@ class AudioPlayer {
         },
         onseek: () => {},
         onstop: () => {
+          if (this.getCurrentSong().tl) {
+            this.getCurrentSong().tl.restart().pause();
+          }
           gsap.ticker.remove(this.updateTimeline);
           this.setStateAudioPlaying(false);
         },
