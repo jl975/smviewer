@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import SongGrid from "./SongGrid";
 import { options } from "./options";
+import { getJacketPath } from "../../utils";
 import {
   SP_DIFFICULTIES,
   TITLE_CATEGORIES,
@@ -225,7 +226,7 @@ const SongForm = (props) => {
               </div>
               <img
                 className={`selectedSong-jacket`}
-                src={`/jackets/${selectedSongOption}.png`}
+                src={getJacketPath(`${selectedSongOption}.png`)}
                 alt="Selected song"
                 onClick={toggleSongPreview}
               />

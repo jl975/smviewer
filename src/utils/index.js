@@ -12,6 +12,10 @@ export const getAssetPath = (path) => {
   return window.location.href + "/assets/" + path;
 };
 
+export const getJacketPath = (path) => {
+  return window.location.href + "/jackets/" + path;
+};
+
 export const capitalize = (str) => {
   return str.slice(0, 1).toUpperCase() + str.slice(1);
 };

@@ -1,6 +1,7 @@
 import React from "react";
 
 import AudioPlayer from "../../core/AudioPlayer";
+import { getJacketPath } from "../../utils";
 
 const SongGrid = (props) => {
   const { displayedSongs, onSongSelect, selectedSongOption } = props;
@@ -30,7 +31,7 @@ const SongGrid = (props) => {
           <div className="song-jacket-wrapper">
             <img
               className="song-jacket"
-              src={`/jackets/${song.hash}.png`}
+              src={getJacketPath(`${song.hash}.png`)}
               title={song.title}
               alt={song.title}
             />
