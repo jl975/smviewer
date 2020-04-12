@@ -6,7 +6,7 @@ const MobileNav = (props) => {
   const { activeView, audioPlaying } = props;
 
   const navItems = [
-    { view: "main", icon: "arrow up" },
+    { view: "chart", icon: "arrow up" },
     { view: "song", icon: "music" },
     { view: "2", icon: "" },
     { view: "3", icon: "" },

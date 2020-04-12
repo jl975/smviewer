@@ -205,7 +205,6 @@ class Arrow {
             c.save();
             c.globalAlpha =
               1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-            console.log(c.globalAlpha);
             c.drawImage(
               arrowImages.tap_explosion,
               0,

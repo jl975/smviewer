@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "semantic-ui-react";
+import Hammer from "hammerjs";
+import "inobounce";
 
 import "./ChartArea.scss";
 
@@ -24,7 +26,23 @@ const ChartArea = (props) => {
   // define canvas on mount
   useEffect(() => {
     if (!loadingAudio) {
-      setCanvas(document.querySelector("#chartArea"));
+      const chartArea = document.querySelector("#chartArea");
+      setCanvas(chartArea);
+
+      const mc = new Hammer(chartArea);
+
+      mc.on("panup", (e) => {
+        // e.preventDefault();
+        // alert("up");
+        console.log(e);
+        AudioPlayer.goForward(20);
+      });
+      mc.on("pandown", (e) => {
+        // alert("down");
+        // e.preventDefault();
+        console.log(e);
+        AudioPlayer.goBack(20);
+      });
     }
   }, [loadingAudio]);
 

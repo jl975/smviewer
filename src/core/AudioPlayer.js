@@ -156,7 +156,20 @@ class AudioPlayer {
     return this.getCurrentSong().audio.seek();
   }
 
-  seek(value) {}
+  goBack(ms) {
+    const self = this;
+    this.seek(self.getCurrentTime() - ms * 0.001);
+    this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
+  }
+  goForward(ms) {
+    const self = this;
+    this.seek(self.getCurrentTime() + ms * 0.001);
+    this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
+  }
+
+  seek(value) {
+    this.getCurrentSong().audio.seek(value);
+  }
 
   isPlaying() {
     return (
