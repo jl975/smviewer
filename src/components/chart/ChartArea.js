@@ -7,6 +7,7 @@ import "./ChartArea.scss";
 
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
+import Progress from "./Progress";
 
 const ChartArea = (props) => {
   const {
@@ -32,15 +33,9 @@ const ChartArea = (props) => {
       const mc = new Hammer(chartArea);
 
       mc.on("panup", (e) => {
-        // e.preventDefault();
-        // alert("up");
-        console.log(e);
         AudioPlayer.goForward(20);
       });
       mc.on("pandown", (e) => {
-        // alert("down");
-        // e.preventDefault();
-        console.log(e);
         AudioPlayer.goBack(20);
       });
     }
@@ -92,7 +87,14 @@ const ChartArea = (props) => {
   return (
     <div className="canvas-container">
       {loadingAudio && <div>Loading audio...</div>}
-      {!loadingAudio && <canvas id="chartArea" width="256" height="512" />}
+      {!loadingAudio && (
+        <>
+          <canvas id="chartArea" width="256" height="512" />
+          <div className="progress-container">
+            <Progress />
+          </div>
+        </>
+      )}
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
       <div className="play-controls">
         <Button onClick={togglePlay} disabled={isPlayDisabled()}>

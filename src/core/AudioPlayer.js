@@ -25,12 +25,15 @@ class AudioPlayer {
     this.previewFadeTimeout = null; // reference to preview fade setTimeout so it can be cleared
 
     this.updateTimeline = this.updateTimeline.bind(this);
+    this.updateProgress = this.updateProgress.bind(this);
     this.audioResyncFrames = 0;
   }
 
   // placeholders that will be overridden by a React state change method
+  // these can probably all be replaced with Redux action dispatches
   setStateAudioPlaying() {}
   setStatePreviewPlaying() {}
+  setStateProgress() {}
 
   getCurrentSong() {
     return this.sources.song[this.currentSong];
@@ -60,17 +63,15 @@ class AudioPlayer {
         onplay: () => {
           this.getCurrentSong().tl.play();
 
-          // arbitrary number of frames chosen to tell timeline to resync with the audio
-          // because audio playback takes a while to restabilize
-          this.audioResyncFrames = 10;
-
-          gsap.ticker.add(this.updateTimeline);
+          this.resync();
           this.setStateAudioPlaying(true);
+          gsap.ticker.add(this.updateProgress);
         },
         onpause: () => {
           this.getCurrentSong().tl.pause();
           gsap.ticker.remove(this.updateTimeline);
           this.setStateAudioPlaying(false);
+          gsap.ticker.remove(this.updateProgress);
         },
         onseek: () => {},
         onstop: () => {
@@ -127,6 +128,13 @@ class AudioPlayer {
     this.getCurrentSong().tl = tl;
   }
 
+  resync() {
+    // arbitrary number of frames chosen to tell timeline to resync with the audio
+    // because audio playback takes a while to restabilize
+    this.audioResyncFrames = 10;
+    gsap.ticker.add(this.updateTimeline);
+  }
+
   // when audio is played, resync timeline with audio a few times until audio playback
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
@@ -136,6 +144,14 @@ class AudioPlayer {
     this.audioResyncFrames--;
     if (this.audioResyncFrames <= 0) {
       gsap.ticker.remove(this.updateTimeline);
+    }
+  }
+
+  updateProgress(time, deltaTime, frame) {
+    if (frame % 15 === 0 && this.setStateProgress) {
+      const audio = this.getCurrentSong().audio;
+      const progress = audio.seek() / audio.duration();
+      this.setStateProgress(progress);
     }
   }
 
@@ -158,17 +174,23 @@ class AudioPlayer {
 
   goBack(ms) {
     const self = this;
-    this.seek(self.getCurrentTime() - ms * 0.001);
+    this.seekTime(self.getCurrentTime() - ms * 0.001);
     this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
   }
   goForward(ms) {
     const self = this;
-    this.seek(self.getCurrentTime() + ms * 0.001);
+    this.seekTime(self.getCurrentTime() + ms * 0.001);
     this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
   }
 
-  seek(value) {
-    this.getCurrentSong().audio.seek(value);
+  seekTime(timestamp) {
+    this.getCurrentSong().audio.seek(timestamp);
+    this.resync();
+  }
+
+  seekProgress(value) {
+    const self = this;
+    this.seekTime(value * this.getCurrentSong().audio.duration());
   }
 
   isPlaying() {

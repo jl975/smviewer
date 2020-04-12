@@ -202,6 +202,7 @@ class Arrow {
         }
         if (destY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+            // console.log(this.currentBeatPosition(beatTick));
             c.save();
             c.globalAlpha =
               1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);

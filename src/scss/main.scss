@@ -65,6 +65,20 @@
   display: flex;
   margin: 15px auto;
 }
+.progress-container {
+  margin-top: 10px;
+}
+#progress-bar {
+  margin: auto 20px;
+  height: 50px;
+  background: #d7e2ed;
+
+  .progress-value {
+    background: #627c92;
+    width: 50%;
+    height: 100%;
+  }
+}
 
 @media only screen and (min-width: 426px) {
   .canvas-container {

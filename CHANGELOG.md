@@ -7,6 +7,7 @@
 - Shock arrow animation
 - Initial mobile view implementation
 - New song select UI with SDVX/DDRA-style 3 column jacket grid
+- Song progress bar
 
 ## v0.2.0 - 2020-03-23
 
