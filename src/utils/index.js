@@ -1,4 +1,4 @@
-export const fetchDocument = async path => {
+export const fetchDocument = async (path) => {
   const response = await fetch(path, {
     mode: "cors",
   });
@@ -8,10 +8,10 @@ export const fetchDocument = async path => {
   return decoder.decode(readResult.value);
 };
 
-export const getAssetPath = path => {
-  return window.location.origin + "/assets/" + path;
+export const getAssetPath = (path) => {
+  return window.location.href + "/assets/" + path;
 };
 
-export const capitalize = str => {
+export const capitalize = (str) => {
   return str.slice(0, 1).toUpperCase() + str.slice(1);
 };
