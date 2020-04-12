@@ -1,6 +1,9 @@
 import { Howl } from "howler";
 import { gsap } from "gsap";
 
+import store from "../store";
+import * as actions from "../actions/AudioActions";
+
 class AudioPlayer {
   constructor() {
     /*
@@ -28,12 +31,6 @@ class AudioPlayer {
     this.updateProgress = this.updateProgress.bind(this);
     this.audioResyncFrames = 0;
   }
-
-  // placeholders that will be overridden by a React state change method
-  // these can probably all be replaced with Redux action dispatches
-  setStateAudioPlaying() {}
-  setStatePreviewPlaying() {}
-  setStateProgress() {}
 
   getCurrentSong() {
     return this.sources.song[this.currentSong];
@@ -64,26 +61,28 @@ class AudioPlayer {
           this.getCurrentSong().tl.play();
 
           this.resync();
-          this.setStateAudioPlaying(true);
           gsap.ticker.add(this.updateProgress);
+          store.dispatch(actions.playChartAudio());
         },
         onpause: () => {
           this.getCurrentSong().tl.pause();
           gsap.ticker.remove(this.updateTimeline);
-          this.setStateAudioPlaying(false);
           gsap.ticker.remove(this.updateProgress);
+          store.dispatch(actions.pauseChartAudio());
         },
         onseek: () => {},
         onstop: () => {
+          console.log("song stopped");
           if (this.getCurrentSong().tl) {
             this.getCurrentSong().tl.restart().pause();
           }
           gsap.ticker.remove(this.updateTimeline);
-          this.setStateAudioPlaying(false);
+          store.dispatch(actions.stopChartAudio());
         },
         onend: (spriteId) => {
+          console.log("song ended");
           gsap.ticker.remove(this.updateTimeline);
-          this.setStateAudioPlaying(false);
+          store.dispatch(actions.stopChartAudio());
         },
       });
 
@@ -98,16 +97,18 @@ class AudioPlayer {
             parseFloat(song.sampleLength * 1000),
           ],
         },
-        onplay: () => {},
+        onplay: () => {
+          store.dispatch(actions.playPreviewAudio());
+        },
         onstop: () => {
           clearTimeout(this.previewFadeTimeout);
           this.currentPreviewId = null;
-          this.setStatePreviewPlaying(false);
+          store.dispatch(actions.stopPreviewAudio());
         },
         onend: () => {
           clearTimeout(this.previewFadeTimeout);
           this.currentPreviewId = null;
-          this.setStatePreviewPlaying(false);
+          store.dispatch(actions.stopPreviewAudio());
         },
       });
 
@@ -148,10 +149,10 @@ class AudioPlayer {
   }
 
   updateProgress(time, deltaTime, frame) {
-    if (frame % 15 === 0 && this.setStateProgress) {
+    if (frame % 15 === 0) {
       const audio = this.getCurrentSong().audio;
       const progress = audio.seek() / audio.duration();
-      this.setStateProgress(progress);
+      store.dispatch(actions.setChartProgress(progress));
     }
   }
 
@@ -191,6 +192,7 @@ class AudioPlayer {
   seekProgress(value) {
     const self = this;
     this.seekTime(value * this.getCurrentSong().audio.duration());
+    store.dispatch(actions.setChartProgress(value));
   }
 
   isPlaying() {
@@ -228,7 +230,6 @@ class AudioPlayer {
       this.previewFadeTimeout = setTimeout(() => {
         preview.fade(1, 0, fadeoutTime);
       }, song.sampleLength * 1000 - fadeoutTime);
-      this.setStatePreviewPlaying(true);
     });
   }
 

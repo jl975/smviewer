@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { connect } from "react-redux";
 
 import AudioPlayer from "../../core/AudioPlayer";
 
 const Progress = (props) => {
   const progressBar = useRef();
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
+
+  const { progress } = props;
 
   useEffect(() => {
     progressBar.current.addEventListener("touchstart", (e) => {
@@ -19,7 +22,7 @@ const Progress = (props) => {
       // jumpToProgress(e.touches[0]);
     });
 
-    AudioPlayer.setStateProgress = setProgress;
+    // AudioPlayer.setStateProgress = setProgress;
   }, []);
 
   const jumpToProgress = (event) => {
@@ -29,7 +32,7 @@ const Progress = (props) => {
 
     if (progressPercent < 0 || progressPercent > 1) return;
 
-    setProgress(progressPercent);
+    // setProgress(progressPercent);
     AudioPlayer.seekProgress(progressPercent);
   };
 

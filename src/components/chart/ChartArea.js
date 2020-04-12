@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "semantic-ui-react";
+import { connect } from "react-redux";
 import Hammer from "hammerjs";
 import "inobounce";
 
@@ -8,6 +9,7 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import Progress from "./Progress";
+import { audio } from "../../reducers/AudioReducer";
 
 const ChartArea = (props) => {
   const {
@@ -91,14 +93,14 @@ const ChartArea = (props) => {
         <>
           <canvas id="chartArea" width="256" height="512" />
           <div className="progress-container">
-            <Progress />
+            <Progress progress={props.audio.progress} />
           </div>
         </>
       )}
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
       <div className="play-controls">
         <Button onClick={togglePlay} disabled={isPlayDisabled()}>
-          {playing ? "Pause" : "Play"}
+          {props.audio.status === "playing" ? "Pause" : "Play"}
         </Button>
         <Button onClick={restart}>Restart</Button>
       </div>
@@ -106,4 +108,15 @@ const ChartArea = (props) => {
   );
 };
 
-export default ChartArea;
+const mapStateToProps = (state) => {
+  const { audio } = state;
+  return {
+    audio: audio.chartAudio,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);

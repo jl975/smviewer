@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Radio, Button } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 import SongGrid from "./SongGrid";
 import { options } from "./options";
@@ -19,8 +20,7 @@ const SongForm = (props) => {
     simfileList,
     selectedDifficulty,
     loadingAudio,
-    previewPlaying,
-    setPreviewPlaying,
+    previewAudio,
   } = props;
 
   const simfileOptions = simfileList.map((song) => {
@@ -112,8 +112,6 @@ const SongForm = (props) => {
     // setTimeout(() => {
     //   handleSubmit({ preventDefault: () => {} });
     // });
-
-    AudioPlayer.setStatePreviewPlaying = setPreviewPlaying;
   }, []);
 
   useEffect(() => {
@@ -192,7 +190,7 @@ const SongForm = (props) => {
 
     // toggle start/stop of the same song
     if (oldSongHash === selectedSong.hash) {
-      if (previewPlaying) {
+      if (previewAudio.status === "playing") {
         AudioPlayer.stopSongPreview();
       } else {
         AudioPlayer.playSongPreview(selectedSong);
@@ -201,7 +199,7 @@ const SongForm = (props) => {
 
     // play a new song and stop the current one (if applicable)
     else {
-      if (previewPlaying) {
+      if (previewAudio.status === "playing") {
         AudioPlayer.stopSongPreview();
       }
       AudioPlayer.playSongPreview(selectedSong);
@@ -219,7 +217,7 @@ const SongForm = (props) => {
           <div className="selectedSong">
             <div
               className={`selectedSong-jacket-wrapper ${
-                previewPlaying ? "playing" : ""
+                previewAudio.status === "playing" ? "playing" : ""
               }`}
             >
               <div className="selectedSong-jacket-overlay">
@@ -308,4 +306,16 @@ const SongForm = (props) => {
   );
 };
 
-export default SongForm;
+const mapStateToProps = (state) => {
+  const { audio } = state;
+  const { previewAudio } = audio;
+  return {
+    previewAudio,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SongForm);

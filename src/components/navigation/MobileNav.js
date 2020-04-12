@@ -1,9 +1,12 @@
 import React from "react";
 import { Icon } from "semantic-ui-react";
+import { connect } from "react-redux";
+
 import AudioPlayer from "../../core/AudioPlayer";
+import { stopPreviewAudio } from "../../actions/AudioActions";
 
 const MobileNav = (props) => {
-  const { activeView, audioPlaying } = props;
+  const { activeView, chartAudio, previewAudio } = props;
 
   const navItems = [
     { view: "chart", icon: "arrow up" },
@@ -14,12 +17,13 @@ const MobileNav = (props) => {
   ];
 
   const setActiveView = (view) => {
-    if (view === "song" && audioPlaying) return;
+    if (view === "song" && chartAudio.status === "playing") return;
+    AudioPlayer.stopSongPreview();
     props.setActiveView(view);
   };
 
   const isDisabled = (view) => {
-    if (view === "song" && audioPlaying) return true;
+    if (view === "song" && chartAudio.status === "playing") return true;
     return false;
   };
 
@@ -44,4 +48,19 @@ const MobileNav = (props) => {
   );
 };
 
-export default MobileNav;
+const mapStateToProps = (state) => {
+  const { audio } = state;
+  const { chartAudio, previewAudio } = audio;
+  return {
+    chartAudio,
+    previewAudio,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    stopPreviewAudio: () => dispatch(stopPreviewAudio()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MobileNav);

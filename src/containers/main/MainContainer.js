@@ -27,9 +27,6 @@ const MainContainer = (props) => {
 
   const [loadingAudio, setLoadingAudio] = useState(false);
 
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const [previewPlaying, setPreviewPlaying] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       await fetchSimfiles();
@@ -38,7 +35,6 @@ const MainContainer = (props) => {
     fetchData();
 
     AudioPlayer.setLoadingAudio = setLoadingAudio;
-    AudioPlayer.setStateAudioPlaying = setAudioPlaying;
   }, []);
 
   const fetchSimfiles = async () => {
@@ -109,8 +105,6 @@ const MainContainer = (props) => {
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
             loadingAudio={loadingAudio}
-            previewPlaying={previewPlaying}
-            setPreviewPlaying={setPreviewPlaying}
           />
 
           <ModsForm
@@ -127,11 +121,7 @@ const MainContainer = (props) => {
             gameEngine={gameEngine}
           />
 
-          <MobileNav
-            activeView={activeView}
-            setActiveView={changeActiveView}
-            audioPlaying={audioPlaying}
-          />
+          <MobileNav activeView={activeView} setActiveView={changeActiveView} />
         </>
       )}
     </div>
