@@ -3,6 +3,8 @@ import { gsap } from "gsap";
 
 import store from "../store";
 import * as actions from "../actions/AudioActions";
+import { changeActiveBpm } from "../actions/ChartActions";
+import { getCurrentBpm } from "../utils/engineUtils";
 
 class AudioPlayer {
   constructor() {
@@ -126,6 +128,9 @@ class AudioPlayer {
   setTimeline(tl) {
     this.getCurrentSong().tl = tl;
   }
+  setGlobalParams(params) {
+    this.getCurrentSong().globalParams = params;
+  }
 
   resync() {
     // arbitrary number of frames chosen to tell timeline to resync with the audio
@@ -138,10 +143,14 @@ class AudioPlayer {
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
     const self = this;
-    this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
+    this.getCurrentSong().tl.seek(self.getCurrentTime() + 0.07);
 
     this.audioResyncFrames--;
     if (this.audioResyncFrames <= 0) {
+      // recalculate current bpm (necessary if skipping progress)
+      const currentBpm = getCurrentBpm(self.getCurrentSong().globalParams);
+      store.dispatch(changeActiveBpm(currentBpm));
+
       gsap.ticker.remove(this.updateTimeline);
     }
   }
@@ -174,12 +183,10 @@ class AudioPlayer {
   goBack(ms) {
     const self = this;
     this.seekTime(self.getCurrentTime() - ms * 0.001);
-    this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
   }
   goForward(ms) {
     const self = this;
     this.seekTime(self.getCurrentTime() + ms * 0.001);
-    this.getCurrentSong().tl.time(self.getCurrentTime() + 0.07);
   }
 
   seekTime(timestamp) {

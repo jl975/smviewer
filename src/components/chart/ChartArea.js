@@ -9,7 +9,6 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import Progress from "./Progress";
-import { audio } from "../../reducers/AudioReducer";
 
 const ChartArea = (props) => {
   const {
@@ -24,7 +23,6 @@ const ChartArea = (props) => {
   } = props;
 
   const [canvas, setCanvas] = useState(null);
-  const [playing, setPlaying] = useState(false);
 
   // define canvas on mount
   useEffect(() => {
@@ -65,20 +63,16 @@ const ChartArea = (props) => {
     if (!gameEngine) return;
     // gameEngine.toggleTl();
 
-    if (AudioPlayer.isPlaying()) {
+    // if (AudioPlayer.isPlaying()) {
+    if (props.audio.status === "playing") {
       AudioPlayer.pause();
-      setPlaying(false);
     } else {
       AudioPlayer.play();
-      setPlaying(true);
     }
   };
   const restart = () => {
     if (!gameEngine) return;
-    // gameEngine.restartTl();
-
     AudioPlayer.stop();
-    setPlaying(false);
   };
 
   const isPlayDisabled = () => {
@@ -93,7 +87,7 @@ const ChartArea = (props) => {
         <>
           <canvas id="chartArea" width="256" height="448" />
           <div className="progress-container">
-            <Progress progress={props.audio.progress} />
+            <Progress progress={props.audio.progress} gameEngine={gameEngine} />
           </div>
         </>
       )}
@@ -135,7 +129,8 @@ const ChartArea = (props) => {
           )}
         </div>
         <div className="bpm-information">
-          {/* <div className="bpm-header">BPM</div> */}
+          <div className="bpm-header">BPM</div>
+          <div className="bpm-value">{props.chart.activeBpm}</div>
         </div>
       </div>
     </div>
@@ -143,9 +138,10 @@ const ChartArea = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio } = state;
+  const { audio, chart } = state;
   return {
     audio: audio.chartAudio,
+    chart,
   };
 };
 

@@ -20,12 +20,31 @@ export const applyTurnMods = (chart, mods) => {
   let turnMod = turn;
   if (turn === "shuffle") turnMod += shuffle;
 
-  return chart.map(row => {
+  return chart.map((row) => {
     const note = row.note;
     const turnedNote = turnMap[turnMod]
       .split("")
-      .map(direction => note[turnMap.off.indexOf(direction)]);
+      .map((direction) => note[turnMap.off.indexOf(direction)]);
 
     return { ...row, note: turnedNote };
   });
+};
+
+/*
+  Given the bpmChangeQueue and the current beat tick, find the latest bpm
+  change event that happened before the current beat and set the current bpm
+  to that bpm value. This should be invoked every time the audio is resynced
+  (which will happen whenever progress is skipped)
+*/
+export const getCurrentBpm = (params) => {
+  const { beatTick, bpmChangeQueue } = params;
+  let lastBpmValue = 0;
+  for (let i = 0; i < bpmChangeQueue.length; i++) {
+    const bpmEvent = bpmChangeQueue[i];
+    if (bpmEvent.beat > beatTick) {
+      return lastBpmValue;
+    }
+    lastBpmValue = bpmEvent.value;
+  }
+  return lastBpmValue;
 };

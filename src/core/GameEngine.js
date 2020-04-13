@@ -8,6 +8,8 @@ import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
 import { GLOBAL_OFFSET, END_EXTRA_BEATS } from "../constants";
 import AudioPlayer from "./AudioPlayer";
+import store from "../store";
+import * as actions from "../actions/ChartActions";
 
 class GameEngine {
   constructor(canvas, sm) {
@@ -35,6 +37,9 @@ class GameEngine {
         Use this parameter for animations based on absolute frame and not a function of the beat.
       */
       frame: 0,
+
+      bpmChangeQueue: [],
+      lastBpmChangePtr: 0,
     };
 
     // init logic
@@ -68,11 +73,15 @@ class GameEngine {
       else {
         eventList.push({ ...bpm, type: "bpm" });
         currentBpm = bpm.value;
+
+        this.globalParams.bpmChangeQueue.push(bpm);
+
         bpmPtr++;
       }
     }
     while (bpmPtr < bpms.length) {
       eventList.push({ ...bpms[bpmPtr], type: "bpm" });
+      this.globalParams.bpmChangeQueue.push(bpms[bpmPtr]);
       bpmPtr++;
     }
     while (stopPtr < stops.length) {
@@ -101,6 +110,9 @@ class GameEngine {
 
       currentEvent.timestamp = currentTimestamp;
     }
+
+    // store.dispatch(actions.setBpmChangeQueue(this.globalParams.bpmChangeQueue));
+
     this.eventList = eventList;
     return eventList;
   }
@@ -168,7 +180,7 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    // console.log("this.eventList", this.eventList);
+    console.log("this.eventList", this.eventList);
 
     this.resetArrows();
 
@@ -225,6 +237,11 @@ class GameEngine {
             beatTick: accumulatedBeatTick + sectionBeatLength,
             duration: sectionDuration,
             ease: "none",
+            onStart: () => {
+              if (startEvent.type === "bpm") {
+                store.dispatch(actions.changeActiveBpm(startEvent.value));
+              }
+            },
           },
           `+=${delay}`
         );
@@ -238,6 +255,11 @@ class GameEngine {
             beatTick: finalBeat,
             duration: ((finalBeat - accumulatedBeatTick) / bpm) * 60,
             ease: "none",
+            onStart: () => {
+              if (startEvent.type === "bpm") {
+                store.dispatch(actions.changeActiveBpm(startEvent.value));
+              }
+            },
           },
           `+=${delay}`
         );
@@ -246,6 +268,7 @@ class GameEngine {
 
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);
+    AudioPlayer.setGlobalParams(this.globalParams);
   }
 
   resetArrows() {
