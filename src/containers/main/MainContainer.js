@@ -21,7 +21,7 @@ const MainContainer = (props) => {
   const [selectedAudio, setSelectedAudio] = useState(null);
 
   const [mods, setMods] = useState(optionDefaultValues.mods);
-  const [activeView, setActiveView] = useState("song");
+  const [activeView, setActiveView] = useState("chart");
 
   const [gameEngine, setGameEngine] = useState(null);
 
@@ -61,9 +61,17 @@ const MainContainer = (props) => {
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
+
+    let smName = song.smName;
+
+    // special case for tohoku evolved: pick one of its types at random
+    if (song.hash === "OddDoQ6dqi0QdQDDOO6qlO08d8bPbli1") {
+      smName = smName.replace("1", Math.floor(Math.random() * 4) + 1);
+    }
+
     try {
       const sm = await fetchDocument(
-        `${window.location.href}/simfiles/${song.smName}.sm`
+        `${window.location.href}/simfiles/${smName}.sm`
       );
       setSelectedSM(sm);
     } catch (err) {

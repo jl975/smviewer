@@ -72,7 +72,6 @@ class AudioPlayer {
         },
         onseek: () => {},
         onstop: () => {
-          console.log("song stopped");
           if (this.getCurrentSong().tl) {
             this.getCurrentSong().tl.restart().pause();
           }
@@ -80,7 +79,6 @@ class AudioPlayer {
           store.dispatch(actions.stopChartAudio());
         },
         onend: (spriteId) => {
-          console.log("song ended");
           gsap.ticker.remove(this.updateTimeline);
           store.dispatch(actions.stopChartAudio());
         },

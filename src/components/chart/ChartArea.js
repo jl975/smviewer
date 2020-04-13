@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import Hammer from "hammerjs";
 import "inobounce";
@@ -91,18 +91,52 @@ const ChartArea = (props) => {
       {loadingAudio && <div>Loading audio...</div>}
       {!loadingAudio && (
         <>
-          <canvas id="chartArea" width="256" height="512" />
+          <canvas id="chartArea" width="256" height="448" />
           <div className="progress-container">
             <Progress progress={props.audio.progress} />
           </div>
         </>
       )}
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
-      <div className="play-controls">
-        <Button onClick={togglePlay} disabled={isPlayDisabled()}>
-          {props.audio.status === "playing" ? "Pause" : "Play"}
-        </Button>
-        <Button onClick={restart}>Restart</Button>
+      <div className="row">
+        <div className="play-controls">
+          <Button
+            onClick={() => AudioPlayer.goBack(100)}
+            disabled={props.audio.progress === 0}
+            className="play-control"
+          >
+            <Icon name="backward" />
+          </Button>
+          <Button
+            onClick={togglePlay}
+            disabled={isPlayDisabled()}
+            className="play-control"
+          >
+            <Icon name={props.audio.status === "playing" ? "pause" : "play"} />
+          </Button>
+          <Button onClick={restart} className="play-control">
+            <Icon name="stop" />
+          </Button>
+          <Button
+            onClick={() => AudioPlayer.goForward(100)}
+            className="play-control"
+          >
+            <Icon name="forward" />
+          </Button>
+        </div>
+      </div>
+      <div className="row">
+        <div className="song-information">
+          {selectedSong && (
+            <>
+              <div className="song-title">{selectedSong.title}</div>
+              <div className="song-artist">{selectedSong.artist}</div>
+            </>
+          )}
+        </div>
+        <div className="bpm-information">
+          {/* <div className="bpm-header">BPM</div> */}
+        </div>
       </div>
     </div>
   );
