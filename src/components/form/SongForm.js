@@ -135,7 +135,7 @@ const SongForm = (props) => {
     // if a specific level filter has been chosen, select the difficulty that
     // corresponds to that level
     console.log("selectedFilters.level", selectedFilters.level);
-    if (selectedFilters.level) {
+    if (selectedFilters.level !== "all") {
       for (let i = 0; i < song.levels.length; i++) {
         const level = song.levels[i];
         if (level === selectedFilters.level) {
@@ -145,18 +145,46 @@ const SongForm = (props) => {
         }
       }
     } else {
-      props.onDifficultySelect(selectedDifficultyOption);
+      // console.log("selectedDifficultyOption", selectedDifficultyOption);
+      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
+        selectedDifficultyOption
+      );
+      if (song.levels[selectedDiffOptionIndex]) {
+        props.onDifficultySelect(selectedDifficultyOption);
+      } else {
+        /*
+          If the song does not have a chart corresponding to the chosen difficulty option,
+          pick whatever is *closest*
+          - If Difficult, Expert, or Challenge is the chosen option, start from Challenge and
+            work your way down until the first available difficulty is reached.
+          - If Beginner or Basic is the chosen option, start from Beginner and work up.
+          The closest available difficulty will be chosen for the song without affecting the
+          difficulty option selected for the form, like the way it works in the real game
+        */
+        if (
+          ["Difficult", "Expert", "Challenge"].includes(
+            selectedDifficultyOption
+          )
+        ) {
+          for (let i = 4; i >= 0; i--) {
+            if (song.levels[i]) {
+              props.onDifficultySelect(SP_DIFFICULTIES[i]);
+              break;
+            }
+          }
+        } else if (["Beginner", "Basic"].includes(selectedDifficultyOption)) {
+          for (let i = 0; i <= 4; i++) {
+            if (song.levels[i]) {
+              props.onDifficultySelect(SP_DIFFICULTIES[i]);
+              break;
+            }
+          }
+        }
+      }
     }
 
     // automatically update chart
     props.onSongSelect(song);
-  };
-
-  // deprecated, used with semantic ui radio
-  const onDifficultySelect = (e, data) => {
-    const difficulty = data.value;
-    setSelectedDifficultyOption(difficulty);
-    // props.onDifficultySelect(difficulty);
   };
 
   const handleDifficultySelect = (difficulty) => {
@@ -174,7 +202,7 @@ const SongForm = (props) => {
       return (
         <div
           className={`song-difficulty ${difficulty} ${
-            selectedDifficultyOption === difficulty ? "selected" : ""
+            selectedDifficulty === difficulty ? "selected" : ""
           }`}
           key={`sp-difficulty_${difficulty}`}
           onClick={() => handleDifficultySelect(difficulty)}
@@ -289,12 +317,6 @@ const SongForm = (props) => {
               />
             </div>
           </div>
-
-          {/* <div className="songForm-actions">
-            <Button type="submit" className="submit-btn">
-              SELECT
-            </Button>
-          </div> */}
         </div>
       </form>
 
