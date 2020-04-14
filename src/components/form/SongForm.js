@@ -37,21 +37,36 @@ const SongForm = (props) => {
     title: "all",
     version: 16,
     level: "all",
+    difficulty: "all",
     // level: 10,
   });
 
   const [displayedSongs, setDisplayedSongs] = useState([]);
 
   useEffect(() => {
-    const { title, version, level } = selectedFilters;
+    const { title, version, level, difficulty } = selectedFilters;
 
-    const songs = simfileList.filter((song) => {
-      return (
-        (title === "all" || title === song.abcSort) &&
-        (version === "all" || version === parseInt(song.version)) &&
-        (level === "all" || song.levels.slice(0, 5).includes(level))
-      );
-    });
+    const songs = simfileList
+      .filter((song) => {
+        return (
+          (title === "all" || title === song.abcSort) &&
+          (version === "all" || version === parseInt(song.version)) &&
+          (level === "all" || song.levels.slice(0, 5).includes(level))
+        );
+      })
+      .filter((song) => {
+        // if a difficulty is specified:
+        // - if level is not specified, simply check if that difficulty exists
+        // - if level is specified, only show if the difficulty is that level
+        if (difficulty !== "all") {
+          if (level === "all") {
+            return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] !== null;
+          } else {
+            return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] === level;
+          }
+        }
+        return song;
+      });
 
     setDisplayedSongs(songs);
   }, [selectedFilters]);
@@ -81,6 +96,18 @@ const SongForm = (props) => {
   ].concat(
     LEVELS.map((level) => {
       return { key: `level_${level}`, value: level, text: level };
+    })
+  );
+
+  const difficultySortOptions = [
+    { key: "difficulty_all", value: "all", text: "ALL" },
+  ].concat(
+    SP_DIFFICULTIES.map((difficulty) => {
+      return {
+        key: `difficulty_${difficulty}`,
+        value: difficulty,
+        text: difficulty,
+      };
     })
   );
 
@@ -127,7 +154,7 @@ const SongForm = (props) => {
     const songHash = data.value;
     setSelectedSongOption(songHash);
 
-    console.log("setSelectedSongOption", songHash);
+    // console.log("setSelectedSongOption", songHash);
     AudioPlayer.stopSongPreview();
 
     const song = simfileList.find((song) => song.hash === songHash);
@@ -135,7 +162,9 @@ const SongForm = (props) => {
     // if a specific level filter has been chosen, select the difficulty that
     // corresponds to that level
     console.log("selectedFilters.level", selectedFilters.level);
-    if (selectedFilters.level !== "all") {
+    if (selectedFilters.difficulty !== "all") {
+      handleDifficultySelect(selectedFilters.difficulty);
+    } else if (selectedFilters.level !== "all") {
       for (let i = 0; i < song.levels.length; i++) {
         const level = song.levels[i];
         if (level === selectedFilters.level) {
@@ -277,44 +306,65 @@ const SongForm = (props) => {
             </div>
           </div>
           <div className="songForm-filters">
-            <div className="form-field">
-              <label>By Title</label>
-              <Dropdown
-                className="title-filter-dropdown"
-                selection
-                value={selectedFilters.title}
-                onChange={(e, data) =>
-                  setSelectedFilters({ ...selectedFilters, title: data.value })
-                }
-                options={titleSortOptions}
-              />
-            </div>
-            <div className="form-field">
-              <label>By Version</label>
-              <Dropdown
-                className="version-filter-dropdown"
-                selection
-                value={selectedFilters.version}
-                onChange={(e, data) =>
-                  setSelectedFilters({
-                    ...selectedFilters,
-                    version: data.value,
-                  })
-                }
-                options={versionSortOptions}
-              />
-            </div>
-            <div className="form-field">
-              <label>By Level</label>
-              <Dropdown
-                className="level-filter-dropdown"
-                selection
-                value={selectedFilters.level}
-                onChange={(e, data) =>
-                  setSelectedFilters({ ...selectedFilters, level: data.value })
-                }
-                options={levelSortOptions}
-              />
+            <div className="songForm-filters-row">
+              <div className="form-field">
+                <label>By Title</label>
+                <Dropdown
+                  className="title-filter-dropdown"
+                  selection
+                  value={selectedFilters.title}
+                  onChange={(e, data) =>
+                    setSelectedFilters({
+                      ...selectedFilters,
+                      title: data.value,
+                    })
+                  }
+                  options={titleSortOptions}
+                />
+              </div>
+              <div className="form-field">
+                <label>By Version</label>
+                <Dropdown
+                  className="version-filter-dropdown"
+                  selection
+                  value={selectedFilters.version}
+                  onChange={(e, data) =>
+                    setSelectedFilters({
+                      ...selectedFilters,
+                      version: data.value,
+                    })
+                  }
+                  options={versionSortOptions}
+                />
+              </div>
+              <div className="form-field">
+                <label>By Level</label>
+                <Dropdown
+                  className="level-filter-dropdown"
+                  selection
+                  value={selectedFilters.level}
+                  onChange={(e, data) =>
+                    setSelectedFilters({
+                      ...selectedFilters,
+                      level: data.value,
+                    })
+                  }
+                  options={levelSortOptions}
+                />
+                <label>By Difficulty</label>
+                <Dropdown
+                  className="difficulty-filter-dropdown"
+                  selection
+                  value={selectedFilters.difficulty}
+                  onChange={(e, data) =>
+                    setSelectedFilters({
+                      ...selectedFilters,
+                      difficulty: data.value,
+                    })
+                  }
+                  options={difficultySortOptions}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import "./ChartArea.scss";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import Progress from "./Progress";
+import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 
 const ChartArea = (props) => {
   const {
@@ -131,6 +132,20 @@ const ChartArea = (props) => {
         <div className="bpm-information">
           <div className="bpm-header">BPM</div>
           <div className="bpm-value">{props.chart.activeBpm}</div>
+        </div>
+        <div className="level-information">
+          {selectedSong && (
+            <>
+              <div className="song-difficulty">{selectedDifficulty}</div>
+              <div className="song-level">
+                {
+                  selectedSong.levels[
+                    SP_DIFFICULTIES.indexOf(selectedDifficulty)
+                  ]
+                }
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

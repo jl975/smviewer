@@ -7,8 +7,8 @@
     position: relative;
     // padding: 10px 20px 0;
     height: 280px;
-    display: flex;
-    flex-direction: column;
+    // display: flex;
+    // flex-direction: column;
     padding-bottom: 5px;
     background-color: rgb(215, 226, 237);
   }
@@ -19,6 +19,7 @@
     // height: 200px;
     margin-top: 10px;
     display: flex;
+    // height: 145px;
   }
 
   .selectedSong-jacket-wrapper {
@@ -230,8 +231,14 @@
   }
 
   .songForm-filters {
-    display: flex;
-    justify-content: space-between;
+    // display: flex;
+    // justify-content: space-between;
+    // height: 145px;
+
+    .songForm-filters-row {
+      display: flex;
+      justify-content: space-between;
+    }
 
     .form-field {
       padding: 0 10px;
@@ -240,6 +247,7 @@
 
       .ui.selection.dropdown {
         min-width: 70px;
+        margin-bottom: 5px;
 
         .menu {
           height: 300px;
@@ -258,6 +266,14 @@
           width: 120px;
 
           .menu {
+            .text {
+              font-size: 14px;
+            }
+          }
+        }
+        &.difficulty-filter-dropdown {
+          .menu {
+            height: auto;
             .text {
               font-size: 14px;
             }
