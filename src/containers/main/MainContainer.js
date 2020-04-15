@@ -71,7 +71,7 @@ const MainContainer = (props) => {
 
     try {
       const sm = await fetchDocument(
-        `${window.location.href}/simfiles/${smName}.sm`
+        `${window.location.href}/simfiles/${encodeURIComponent(smName)}.sm`
       );
       setSelectedSM(sm);
     } catch (err) {

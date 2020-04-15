@@ -39,7 +39,6 @@ class GameEngine {
       frame: 0,
 
       bpmChangeQueue: [],
-      lastBpmChangePtr: 0,
     };
 
     // init logic

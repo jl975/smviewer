@@ -43,12 +43,10 @@ const SongGrid = (props) => {
   };
 
   return (
-    <div className="songGrid-container">
-      <div className="songGrid">
-        {songs.map((song) => {
-          return renderSong(song);
-        })}
-      </div>
+    <div className="songGrid">
+      {songs.map((song) => {
+        return renderSong(song);
+      })}
     </div>
   );
 };

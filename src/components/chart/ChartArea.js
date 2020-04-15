@@ -42,6 +42,7 @@ const ChartArea = (props) => {
     }
   }, [loadingAudio]);
 
+  // reset chart if song, difficulty, or mods change
   useEffect(() => {
     if (!canvas) return;
 
@@ -56,6 +57,7 @@ const ChartArea = (props) => {
       ge.generateArrows(simfile, mods);
       ge.initTimeline(mods);
       ge.restartTl();
+      AudioPlayer.resync();
     }
     setGameEngine(ge);
   }, [canvas, sm, selectedDifficulty, mods]);

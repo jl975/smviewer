@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Dropdown, Radio, Button } from "semantic-ui-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import SongGrid from "./SongGrid";
-import { options } from "./options";
 import { getJacketPath } from "../../utils";
 import {
   SP_DIFFICULTIES,
@@ -14,15 +13,45 @@ import {
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
 
+const titleSortOptions = [
+  { key: "title_all", value: "all", text: "ALL" },
+].concat(
+  TITLE_CATEGORIES.map((letter) => {
+    return { key: `title_${letter}`, value: letter, text: letter };
+  })
+);
+
+const versionSortOptions = [
+  { key: "version_all", value: "all", text: "ALL" },
+].concat(
+  DDR_VERSIONS.map((versionName, idx) => {
+    return { key: `version_${idx}`, value: idx, text: versionName };
+  }).reverse()
+);
+
+const levelSortOptions = [
+  { key: "level_all", value: "all", text: "ALL" },
+].concat(
+  LEVELS.map((level) => {
+    return { key: `level_${level}`, value: level, text: level };
+  })
+);
+
+const difficultySortOptions = [
+  { key: "difficulty_all", value: "all", text: "ALL" },
+].concat(
+  SP_DIFFICULTIES.map((difficulty) => {
+    return {
+      key: `difficulty_${difficulty}`,
+      value: difficulty,
+      text: difficulty,
+    };
+  })
+);
+
 const SongForm = (props) => {
-  const {
-    activeView,
-    setActiveView,
-    simfileList,
-    selectedDifficulty,
-    loadingAudio,
-    previewAudio,
-  } = props;
+  const { activeView, simfileList, selectedDifficulty, previewAudio } = props;
+  const songGridContainer = useRef();
 
   const simfileOptions = simfileList.map((song) => {
     return { key: song.hash, value: song.hash, text: song.title };
@@ -43,6 +72,7 @@ const SongForm = (props) => {
 
   const [displayedSongs, setDisplayedSongs] = useState([]);
 
+  // on filter change
   useEffect(() => {
     const { title, version, level, difficulty } = selectedFilters;
 
@@ -56,12 +86,13 @@ const SongForm = (props) => {
       })
       .filter((song) => {
         // if a difficulty is specified:
-        // - if level is not specified, simply check if that difficulty exists
-        // - if level is specified, only show if the difficulty is that level
         if (difficulty !== "all") {
+          // if level is not specified, simply check if that difficulty exists
           if (level === "all") {
             return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] !== null;
-          } else {
+          }
+          // if level is specified, only show if the difficulty is that level
+          else {
             return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] === level;
           }
         }
@@ -69,47 +100,12 @@ const SongForm = (props) => {
       });
 
     setDisplayedSongs(songs);
+    songGridContainer.current.scrollTop = 0;
   }, [selectedFilters]);
 
   // object corresponding to the selected song option
   // NOT the song currently playing in the main view
   const [selectedSong, setSelectedSong] = useState(null);
-
-  const titleSortOptions = [
-    { key: "title_all", value: "all", text: "ALL" },
-  ].concat(
-    TITLE_CATEGORIES.map((letter) => {
-      return { key: `title_${letter}`, value: letter, text: letter };
-    })
-  );
-
-  const versionSortOptions = [
-    { key: "version_all", value: "all", text: "ALL" },
-  ].concat(
-    DDR_VERSIONS.map((versionName, idx) => {
-      return { key: `version_${idx}`, value: idx, text: versionName };
-    }).reverse()
-  );
-
-  const levelSortOptions = [
-    { key: "level_all", value: "all", text: "ALL" },
-  ].concat(
-    LEVELS.map((level) => {
-      return { key: `level_${level}`, value: level, text: level };
-    })
-  );
-
-  const difficultySortOptions = [
-    { key: "difficulty_all", value: "all", text: "ALL" },
-  ].concat(
-    SP_DIFFICULTIES.map((difficulty) => {
-      return {
-        key: `difficulty_${difficulty}`,
-        value: difficulty,
-        text: difficulty,
-      };
-    })
-  );
 
   // initialize song for testing
   useEffect(() => {
@@ -135,11 +131,6 @@ const SongForm = (props) => {
     // onSongSelect(null, { value: "9I00D9Id61iD6QP8i8Dd6698PoQ9bdi9" }); // okome
     // onSongSelect(null, { value: "O9qDQOQO8dDDIiO9dPP0Pb8qQo9l89D9" }); // triperfect
     // onSongSelect(null, { value: "0IldoDlDQql99DqQo0Qq9ioPIiiPoIoi" }); // pluto relinquish
-
-    // onDifficultySelect(null, "Expert");
-    // setTimeout(() => {
-    //   handleSubmit({ preventDefault: () => {} });
-    // });
   }, []);
 
   useEffect(() => {
@@ -161,7 +152,6 @@ const SongForm = (props) => {
 
     // if a specific level filter has been chosen, select the difficulty that
     // corresponds to that level
-    console.log("selectedFilters.level", selectedFilters.level);
     if (selectedFilters.difficulty !== "all") {
       handleDifficultySelect(selectedFilters.difficulty);
     } else if (selectedFilters.level !== "all") {
@@ -174,7 +164,6 @@ const SongForm = (props) => {
         }
       }
     } else {
-      // console.log("selectedDifficultyOption", selectedDifficultyOption);
       const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
         selectedDifficultyOption
       );
@@ -297,6 +286,8 @@ const SongForm = (props) => {
                 value={selectedSongOption}
                 onChange={onSongSelect}
                 options={simfileOptions}
+                selectOnBlur={false}
+                selectOnNavigation={false}
               />
               <div className="song-artist">
                 {selectedSong && selectedSong.artist}
@@ -370,11 +361,13 @@ const SongForm = (props) => {
         </div>
       </form>
 
-      <SongGrid
-        displayedSongs={displayedSongs}
-        onSongSelect={onSongSelect}
-        selectedSongOption={selectedSongOption}
-      />
+      <div className="songGrid-container" ref={songGridContainer}>
+        <SongGrid
+          displayedSongs={displayedSongs}
+          onSongSelect={onSongSelect}
+          selectedSongOption={selectedSongOption}
+        />
+      </div>
     </div>
   );
 };

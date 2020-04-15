@@ -96,6 +96,10 @@
     font-weight: 800;
     z-index: 10;
 
+    input.search {
+      padding-left: 4px;
+    }
+
     > .text {
       height: 100%;
       display: flex;
