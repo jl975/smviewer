@@ -9,11 +9,11 @@ const MobileNav = (props) => {
   const { activeView, chartAudio, previewAudio } = props;
 
   const navItems = [
-    { view: "chart", icon: "arrow up" },
     { view: "song", icon: "music" },
+    { view: "mods", icon: "sidebar" },
     { view: "2", icon: "" },
     { view: "3", icon: "" },
-    { view: "mods", icon: "sidebar" },
+    { view: "chart", icon: "arrow up" },
   ];
 
   const setActiveView = (view) => {

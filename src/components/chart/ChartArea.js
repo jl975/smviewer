@@ -155,10 +155,11 @@ const ChartArea = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio, chart } = state;
+  const { audio, chart, mods } = state;
   return {
     audio: audio.chartAudio,
     chart,
+    mods,
   };
 };
 

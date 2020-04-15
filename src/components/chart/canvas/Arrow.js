@@ -55,7 +55,7 @@ miscImages.forEach((imageName) => {
 class Arrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, noteskin } = mods;
+    const { speed, noteskin, colorFreezes } = mods;
 
     this.key = key; // arrow index
     this.speed = speed;
@@ -64,6 +64,7 @@ class Arrow {
     this.measureIdx = attrs.measureIdx;
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
+    this.colorFreezes = colorFreezes;
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
@@ -98,11 +99,11 @@ class Arrow {
       const direction = DIRECTIONS[i];
 
       // regular note
-      if (this.note[i] === "1") {
+      if (this.note[i] === "1" || (this.note[i] === "2" && this.colorFreezes)) {
         arrowImg = arrowImages[`${this.noteskin}_${direction}`];
 
         // color as freeze head if it is hit simultaneously with a freeze arrow
-        if (this.note.includes("2")) {
+        if (this.note.includes("2") && !this.colorFreezes) {
           arrowImg = arrowImages.freeze_head;
           frameX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
           frameY = 0;

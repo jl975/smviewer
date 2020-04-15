@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Radio } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { Radio, Checkbox } from "semantic-ui-react";
 
 import { options } from "./options";
 import { capitalize } from "../../utils";
+import { updateMods } from "../../actions/ModsActions";
 
 const ModsForm = (props) => {
   const {
@@ -10,41 +12,9 @@ const ModsForm = (props) => {
     simfileList,
     selectedDifficulty,
     mods,
-    setMods,
     gameEngine,
+    updateMods,
   } = props;
-
-  const [timeProgress, setTimeProgress] = useState(0);
-
-  // useEffect(() => {
-  //   if (!gameEngine) return;
-  //   const ge = gameEngine;
-
-  //   if (ge.tl) {
-  //     // console.log("timeline is this long", ge.tl.duration());
-  //   }
-  // }, [gameEngine]);
-
-  const updateMods = (updatedMods) => {
-    setMods({ ...mods, ...updatedMods });
-  };
-
-  const getChartDuration = () => {
-    if (!gameEngine || !gameEngine.tl) return 0;
-    const duration = gameEngine.tl.duration();
-    return duration;
-  };
-
-  // const timeProgressSettings = {
-  //   min: 0,
-  //   max: getChartDuration(),
-  //   step: 0.01,
-  //   onChange: value => {
-  //     // console.log("onChange value", value);
-  //     setTimeProgress(value);
-  //     gameEngine.tl.seek(value);
-  //   },
-  // };
 
   return (
     <div
@@ -116,12 +86,30 @@ const ModsForm = (props) => {
           </div>
         )}
 
-        {/* <div className="form-field">
-          <h4 className="form-label">Time progress</h4>
-        </div> */}
+        <h4>Miscellaneous</h4>
+        <div className="form-field">
+          <Checkbox
+            toggle
+            label="Color freeze heads"
+            name="colorFreezes"
+            checked={mods.colorFreezes}
+            onChange={() => updateMods({ colorFreezes: !mods.colorFreezes })}
+          />
+        </div>
       </form>
     </div>
   );
 };
 
-export default ModsForm;
+const mapStateToProps = (state) => {
+  const { mods } = state;
+  return { mods };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateMods: (mods) => dispatch(updateMods(mods)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModsForm);

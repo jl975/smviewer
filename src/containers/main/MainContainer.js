@@ -98,7 +98,6 @@ const MainContainer = (props) => {
             selectedDifficulty={selectedDifficulty}
             sm={selectedSM}
             selectedAudio={selectedAudio}
-            mods={mods}
             gameEngine={gameEngine}
             setGameEngine={setGameEngine}
           />
@@ -122,8 +121,6 @@ const MainContainer = (props) => {
             onDifficultySelect={onDifficultySelect}
             selectedAudio={selectedAudio}
             setSelectedAudio={setSelectedAudio}
-            mods={mods}
-            setMods={setMods}
             gameEngine={gameEngine}
           />
 
