@@ -17,13 +17,13 @@ const MobileNav = (props) => {
   ];
 
   const setActiveView = (view) => {
-    if (view === "song" && chartAudio.status === "playing") return;
+    if (chartAudio.status === "playing") return;
     AudioPlayer.stopSongPreview();
     props.setActiveView(view);
   };
 
   const isDisabled = (view) => {
-    if (view === "song" && chartAudio.status === "playing") return true;
+    if (view !== "chart" && chartAudio.status === "playing") return true;
     return false;
   };
 

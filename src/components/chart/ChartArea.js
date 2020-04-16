@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import Hammer from "hammerjs";
-import "inobounce";
+// import "inobounce";
 
 import "./ChartArea.scss";
 
+import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import Progress from "./Progress";
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
+import HoldButton from "../ui/HoldButton";
 
 const ChartArea = (props) => {
   const {
@@ -97,13 +98,13 @@ const ChartArea = (props) => {
       {/* <canvas id="chartArea" width="256" height="18000" /> */}
       <div className="row">
         <div className="play-controls">
-          <Button
-            onClick={() => AudioPlayer.goBack(100)}
-            disabled={props.audio.progress === 0}
+          <HoldButton
+            onClick={() => AudioPlayer.goBack(20)}
+            // disabled={props.audio.progress === 0}
             className="play-control"
           >
             <Icon name="backward" />
-          </Button>
+          </HoldButton>
           <Button
             onClick={togglePlay}
             disabled={isPlayDisabled()}
@@ -114,12 +115,12 @@ const ChartArea = (props) => {
           <Button onClick={restart} className="play-control">
             <Icon name="stop" />
           </Button>
-          <Button
-            onClick={() => AudioPlayer.goForward(100)}
+          <HoldButton
+            onClick={() => AudioPlayer.goForward(20)}
             className="play-control"
           >
             <Icon name="forward" />
-          </Button>
+          </HoldButton>
         </div>
       </div>
       <div className="row">

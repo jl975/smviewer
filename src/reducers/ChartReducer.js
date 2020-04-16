@@ -11,6 +11,7 @@ export const chart = (state = initialState, action) => {
       return { ...state, bpmChangeQueue: [...action.payload] };
     }
     case actions.CHANGE_ACTIVE_BPM_DISPLAY: {
+      // const activeBpm = action.payload;
       const activeBpm = Math.round(action.payload);
       return { ...state, activeBpm };
     }

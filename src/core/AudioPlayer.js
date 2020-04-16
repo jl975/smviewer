@@ -78,6 +78,7 @@ class AudioPlayer {
             this.getCurrentSong().tl.restart().pause();
           }
           gsap.ticker.remove(this.updateTimeline);
+          gsap.ticker.remove(this.updateProgress);
           store.dispatch(actions.stopChartAudio());
         },
         onend: (spriteId) => {
@@ -137,6 +138,7 @@ class AudioPlayer {
     // because audio playback takes a while to restabilize
     this.audioResyncFrames = 10;
     gsap.ticker.add(this.updateTimeline);
+    this.updateProgressOnce();
   }
 
   // when audio is played, resync timeline with audio a few times until audio playback
@@ -163,6 +165,10 @@ class AudioPlayer {
     }
   }
 
+  updateProgressOnce() {
+    this.updateProgress(null, null, 0);
+  }
+
   play() {
     this.currentSongId = this.getCurrentSong().audio.play();
   }
@@ -173,6 +179,7 @@ class AudioPlayer {
 
   stop() {
     this.getCurrentSong().audio.stop(this.currentSongId);
+    this.seekTime(0);
     this.currentSongId = null;
   }
 

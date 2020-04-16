@@ -21,7 +21,7 @@ const MainContainer = (props) => {
   const [selectedAudio, setSelectedAudio] = useState(null);
 
   const [mods, setMods] = useState(optionDefaultValues.mods);
-  const [activeView, setActiveView] = useState("song");
+  const [activeView, setActiveView] = useState("chart");
 
   const [gameEngine, setGameEngine] = useState(null);
 
