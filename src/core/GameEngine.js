@@ -23,6 +23,8 @@ class GameEngine {
     this.arrows = [];
     this.shockArrows = [];
 
+    this.mainLoopRequestRef = null;
+
     this.drawBackground();
 
     this.globalParams = {
@@ -46,7 +48,21 @@ class GameEngine {
       this.simfiles = parseSimfile(this.sm);
     }
 
-    this.mainLoop();
+    AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
+    AudioPlayer.stopAnimationLoop = this.stopLoop.bind(this);
+    AudioPlayer.updateAnimationLoopOnce = this.updateLoopOnce.bind(this);
+  }
+
+  startLoop() {
+    this.mainLoopRequestRef = window.requestAnimationFrame(
+      this.mainLoop.bind(this)
+    );
+  }
+  stopLoop() {
+    window.cancelAnimationFrame(this.mainLoopRequestRef);
+  }
+  updateLoopOnce() {
+    window.requestAnimationFrame(this.mainLoop.bind(this, false));
   }
 
   // bpm changes and stops converted to timestamps
@@ -268,14 +284,16 @@ class GameEngine {
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);
     AudioPlayer.setGlobalParams(this.globalParams);
+
+    this.updateLoopOnce();
+    // hack
   }
 
   resetArrows() {
     this.arrows.forEach((arrow) => arrow.reset());
   }
 
-  mainLoop() {
-    // if (this.tl.paused()) return;
+  mainLoop(loop = true) {
     // console.log("mainLoop running");
     this.drawBackground();
 
@@ -305,7 +323,12 @@ class GameEngine {
     //   console.log(this.globalParams.beatTick);
     // }
     this.globalParams.frame++;
-    window.requestAnimationFrame(this.mainLoop.bind(this));
+
+    if (loop) {
+      this.mainLoopRequestRef = window.requestAnimationFrame(
+        this.mainLoop.bind(this)
+      );
+    }
   }
 
   drawBackground() {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
 import Hammer from "hammerjs";
-// import "inobounce";
+import "inobounce";
 
 import "./ChartArea.scss";
 

@@ -64,12 +64,14 @@ class AudioPlayer {
 
           this.resync();
           gsap.ticker.add(this.updateProgress);
+          this.startAnimationLoop();
           store.dispatch(actions.playChartAudio());
         },
         onpause: () => {
           this.getCurrentSong().tl.pause();
           gsap.ticker.remove(this.updateTimeline);
           gsap.ticker.remove(this.updateProgress);
+          this.stopAnimationLoop();
           store.dispatch(actions.pauseChartAudio());
         },
         onseek: () => {},
@@ -79,10 +81,12 @@ class AudioPlayer {
           }
           gsap.ticker.remove(this.updateTimeline);
           gsap.ticker.remove(this.updateProgress);
+          this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
         },
         onend: (spriteId) => {
           gsap.ticker.remove(this.updateTimeline);
+          this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
         },
       });
@@ -167,6 +171,7 @@ class AudioPlayer {
 
   updateProgressOnce() {
     this.updateProgress(null, null, 0);
+    this.updateAnimationLoopOnce();
   }
 
   play() {
