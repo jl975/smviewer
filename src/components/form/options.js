@@ -40,6 +40,7 @@ export const optionDefaultValues = {
     turn: "off",
     shuffle: 1,
     noteskin: "note",
+    guidelines: true,
     colorFreezes: false,
   },
 };

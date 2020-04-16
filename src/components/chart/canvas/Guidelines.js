@@ -3,13 +3,16 @@ import { ARROW_HEIGHT } from "../../../constants";
 class Guidelines {
   constructor(attrs) {
     const { mods } = attrs;
-    const { speed } = mods;
+    const { speed, guidelines } = mods;
 
     this.speed = speed;
     this.finalBeat = attrs.finalBeat;
+    this.showGuidelines = guidelines;
   }
 
   render(canvas, beatTick) {
+    if (!this.showGuidelines) return;
+
     const c = canvas.getContext("2d");
 
     const topBoundary = 0;

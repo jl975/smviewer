@@ -90,6 +90,15 @@ const ModsForm = (props) => {
         <div className="form-field">
           <Checkbox
             toggle
+            label="Guidelines"
+            name="guidelines"
+            checked={mods.guidelines}
+            onChange={() => updateMods({ guidelines: !mods.guidelines })}
+          />
+        </div>
+        <div className="form-field">
+          <Checkbox
+            toggle
             label="Color freeze heads"
             name="colorFreezes"
             checked={mods.colorFreezes}
