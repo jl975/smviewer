@@ -43,7 +43,7 @@ class AudioPlayer {
 
   // when loading a song file for the first time, save it as two separate Howls:
   // one for the full song and one for the preview sample
-  storeAudioSource(song) {
+  storeAudioSource(song, initialProgress = 0) {
     if (!this.sources.song[song.hash]) {
       this.setLoadingAudio(true);
 
@@ -55,6 +55,9 @@ class AudioPlayer {
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false);
+          this.seekTime(
+            this.getCurrentSong().audio.duration() * initialProgress
+          );
         },
         onloaderror: (id, error, blah) => {
           alert(`${id};;; ${error};;; ${blah}`);
@@ -121,12 +124,12 @@ class AudioPlayer {
     }
   }
 
-  selectSong(song) {
+  selectSong(song, initialProgress = 0) {
     if (this.currentSong) {
       this.getCurrentSong().audio.stop(this.currentSongId);
     }
 
-    this.storeAudioSource(song);
+    this.storeAudioSource(song, initialProgress);
     this.currentSong = song.hash;
   }
 

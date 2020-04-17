@@ -1,3 +1,5 @@
+import { presetParams } from "../../utils";
+
 export const options = {
   difficulty: ["Beginner", "Basic", "Difficult", "Expert", "Challenge"],
   mods: {
@@ -33,7 +35,7 @@ export const options = {
   },
 };
 
-export const optionDefaultValues = {
+const optionDefaultValues = {
   difficulty: "Challenge",
   mods: {
     speed: 0.25,
@@ -44,3 +46,32 @@ export const optionDefaultValues = {
     colorFreezes: false,
   },
 };
+
+if (presetParams.difficulty) {
+  const difficulties = {
+    b: "Beginner",
+    B: "Basic",
+    D: "Difficult",
+    E: "Expert",
+    C: "Challenge",
+  };
+  if (Object.keys(difficulties).includes(presetParams.difficulty[0])) {
+    optionDefaultValues.difficulty = difficulties[presetParams.difficulty[0]];
+  }
+}
+if (presetParams.speed) {
+  const value = parseFloat(
+    `${presetParams.speed[0]}.${presetParams.speed.slice(1)}`
+  );
+  if (options.mods.speed.includes(value)) {
+    optionDefaultValues.mods.speed = value;
+  }
+}
+if (presetParams.turn) {
+  const turnValue = presetParams.turn.toLowerCase();
+  if (options.mods.turn.includes(turnValue)) {
+    optionDefaultValues.mods.turn = turnValue;
+  }
+}
+
+export { optionDefaultValues };

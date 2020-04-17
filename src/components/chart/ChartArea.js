@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon } from "semantic-ui-react";
+import { Button, Icon, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
-import Hammer from "hammerjs";
 import "inobounce";
 
 import "./ChartArea.scss";
@@ -11,12 +10,14 @@ import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import Progress from "./Progress";
 import HoldButton from "../ui/HoldButton";
+import ShareModal from "./ShareModal";
 
 const ChartArea = (props) => {
   const {
     selectedDifficulty,
     selectedSong,
     sm,
+    chart,
     mods,
     selectedAudio,
     loadingAudio,
@@ -25,21 +26,13 @@ const ChartArea = (props) => {
   } = props;
 
   const [canvas, setCanvas] = useState(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   // define canvas on mount
   useEffect(() => {
     if (!loadingAudio) {
       const chartArea = document.querySelector("#chartArea");
       setCanvas(chartArea);
-
-      const mc = new Hammer(chartArea);
-
-      mc.on("panup", (e) => {
-        AudioPlayer.goForward(20);
-      });
-      mc.on("pandown", (e) => {
-        AudioPlayer.goBack(20);
-      });
     }
   }, [loadingAudio]);
 
@@ -65,9 +58,6 @@ const ChartArea = (props) => {
 
   const togglePlay = () => {
     if (!gameEngine) return;
-    // gameEngine.toggleTl();
-
-    // if (AudioPlayer.isPlaying()) {
     if (props.audio.status === "playing") {
       AudioPlayer.pause();
     } else {
@@ -82,6 +72,13 @@ const ChartArea = (props) => {
   const isPlayDisabled = () => {
     if (!gameEngine || loadingAudio) return true;
     return false;
+  };
+
+  const shareParams = {
+    song: selectedSong,
+    difficulty: selectedDifficulty,
+    mods,
+    progress: props.audio.progress,
   };
 
   return (
@@ -121,6 +118,14 @@ const ChartArea = (props) => {
           >
             <Icon name="forward" />
           </HoldButton>
+
+          <Button
+            onClick={() => setShareModalOpen(true)}
+            className="play-control share-btn"
+            disabled={props.audio.status === "playing"}
+          >
+            <Icon name="share square" />
+          </Button>
         </div>
       </div>
       <div className="row">
@@ -134,7 +139,7 @@ const ChartArea = (props) => {
         </div>
         <div className="bpm-information">
           <div className="bpm-header">BPM</div>
-          <div className="bpm-value">{props.chart.activeBpm}</div>
+          <div className="bpm-value">{chart.activeBpm}</div>
         </div>
         <div className="level-information">
           {selectedSong && (
@@ -151,6 +156,11 @@ const ChartArea = (props) => {
           )}
         </div>
       </div>
+      <ShareModal
+        modalOpen={shareModalOpen}
+        setModalOpen={setShareModalOpen}
+        data={shareParams}
+      />
     </div>
   );
 };

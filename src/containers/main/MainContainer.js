@@ -8,7 +8,7 @@ import ModsForm from "../../components/form/ModsForm";
 import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
 import { optionDefaultValues } from "../../components/form/options";
-import { fetchDocument } from "../../utils";
+import { getOriginPath, fetchDocument, presetParams } from "../../utils";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -39,7 +39,7 @@ const MainContainer = (props) => {
 
   const fetchSimfiles = async () => {
     try {
-      const parsedTsv = await tsv(window.location.href + "/data/simfiles.tsv");
+      const parsedTsv = await tsv(getOriginPath() + "data/simfiles.tsv");
       parsedTsv.forEach((row) => {
         row.levels = row.levels
           .split(",")
@@ -54,9 +54,9 @@ const MainContainer = (props) => {
     }
   };
 
-  const onSongSelect = async (song) => {
+  const onSongSelect = async (song, initialProgress = 0) => {
     console.log("MainContainer selected song", song);
-    AudioPlayer.selectSong(song);
+    AudioPlayer.selectSong(song, initialProgress);
     setSelectedSong(song);
 
     // retrieve audio file and simfile from song.simfilePath
@@ -71,7 +71,7 @@ const MainContainer = (props) => {
 
     try {
       const sm = await fetchDocument(
-        `${window.location.href}/simfiles/${encodeURIComponent(smName)}.sm`
+        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.sm`
       );
       setSelectedSM(sm);
     } catch (err) {
