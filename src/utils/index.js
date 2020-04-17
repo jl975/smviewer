@@ -1,8 +1,10 @@
 export const getOriginPath = () => {
-  return window.location.href.slice(
-    0,
-    window.location.href.indexOf(window.location.search)
-  );
+  if (window.location.search)
+    return window.location.href.slice(
+      0,
+      window.location.href.indexOf(window.location.search)
+    );
+  return window.location.href;
 };
 
 export const fetchDocument = async (path) => {
