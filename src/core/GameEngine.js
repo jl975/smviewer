@@ -13,6 +13,7 @@ import * as actions from "../actions/ChartActions";
 
 class GameEngine {
   constructor(canvas, sm) {
+    const self = this;
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
     this.tl = gsap.timeline();
@@ -22,6 +23,7 @@ class GameEngine {
     this.eventList = [];
     this.arrows = [];
     this.shockArrows = [];
+    this.allArrows = [];
 
     this.mainLoopRequestRef = null;
 
@@ -40,7 +42,10 @@ class GameEngine {
       */
       frame: 0,
 
-      bpmChangeQueue: [],
+      combo: 0,
+      bpmChangeQueue: [], // this is the one that is used
+
+      arrows: self.allArrows,
     };
 
     // init logic
@@ -89,14 +94,14 @@ class GameEngine {
         eventList.push({ ...bpm, type: "bpm" });
         currentBpm = bpm.value;
 
-        this.globalParams.bpmChangeQueue.push(bpm);
+        // this.globalParams.bpmChangeQueue.push(bpm);
 
         bpmPtr++;
       }
     }
     while (bpmPtr < bpms.length) {
       eventList.push({ ...bpms[bpmPtr], type: "bpm" });
-      this.globalParams.bpmChangeQueue.push(bpms[bpmPtr]);
+      // this.globalParams.bpmChangeQueue.push(bpms[bpmPtr]);
       bpmPtr++;
     }
     while (stopPtr < stops.length) {
@@ -105,6 +110,8 @@ class GameEngine {
     }
 
     eventList[0].timestamp = 0;
+
+    this.globalParams.bpmChangeQueue = [eventList[0]];
 
     for (let i = 1; i < eventList.length; i++) {
       const prevEvent = eventList[i - 1];
@@ -124,9 +131,11 @@ class GameEngine {
       const currentTimestamp = prevTimestamp + timestampDiff;
 
       currentEvent.timestamp = currentTimestamp;
-    }
 
-    // store.dispatch(actions.setBpmChangeQueue(this.globalParams.bpmChangeQueue));
+      if (currentEvent.type === "bpm") {
+        this.globalParams.bpmChangeQueue.push(currentEvent);
+      }
+    }
 
     this.eventList = eventList;
     return eventList;
@@ -178,17 +187,15 @@ class GameEngine {
       if (note.note[0] === "M" || note.note[4] === "M") {
         const shockArrow = new ShockArrow({ key, ...note, mods });
         this.shockArrows.push(shockArrow);
+        this.allArrows.push(shockArrow);
       } else {
         const arrow = new Arrow({ key, ...note, mods });
         this.arrows.push(arrow);
+        this.allArrows.push(arrow);
       }
     });
 
     this.stepZone = new StepZone();
-
-    // console.log("this.arrows", this.arrows);
-
-    // console.log("this.shockArrows", this.shockArrows);
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
@@ -196,6 +203,7 @@ class GameEngine {
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
     // console.log("this.eventList", this.eventList);
+    const self = this;
 
     this.resetArrows();
 
@@ -280,6 +288,53 @@ class GameEngine {
         );
       }
     }
+
+    // console.log("bpmChangeQueue", this.globalParams.bpmChangeQueue);
+
+    // combo counter
+    const bpmChangeQueue = this.globalParams.bpmChangeQueue;
+
+    let currentBpmPtr = 0,
+      currentBpm = bpmChangeQueue[currentBpmPtr].value,
+      currentCombo = 0;
+    this.allArrows.forEach((arrow, idx) => {
+      if (
+        arrow instanceof Arrow &&
+        !arrow.note.includes("1") &&
+        !arrow.note.includes("2")
+      )
+        return;
+
+      while (
+        currentBpmPtr < bpmChangeQueue.length - 1 &&
+        bpmChangeQueue[currentBpmPtr + 1].beat <= arrow.originalBeatPosition
+      ) {
+        currentBpmPtr++;
+        currentBpm = bpmChangeQueue[currentBpmPtr].value;
+      }
+
+      const bpmSectionStartBeat = bpmChangeQueue[currentBpmPtr].beat;
+      const bpmSectionStartTime = bpmChangeQueue[currentBpmPtr].timestamp;
+
+      const beatDiff = arrow.originalBeatPosition - bpmSectionStartBeat;
+      const timeDiff = beatDiff * (60 / currentBpm);
+      const arrowTimestamp = bpmSectionStartTime + timeDiff;
+
+      currentCombo++;
+      arrow.combo = currentCombo;
+      arrow.timestamp = arrowTimestamp;
+
+      this.tl.set(
+        this.globalParams,
+        {
+          combo: arrow.combo,
+          onStart: () => {
+            store.dispatch(actions.setCombo(arrow.combo));
+          },
+        },
+        arrowTimestamp
+      );
+    });
 
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);

@@ -3,8 +3,8 @@ import { gsap } from "gsap";
 
 import store from "../store";
 import * as actions from "../actions/AudioActions";
-import { changeActiveBpm } from "../actions/ChartActions";
-import { getCurrentBpm } from "../utils/engineUtils";
+import { changeActiveBpm, setCombo } from "../actions/ChartActions";
+import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
 
 class AudioPlayer {
   constructor() {
@@ -159,6 +159,9 @@ class AudioPlayer {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(self.getCurrentSong().globalParams);
       store.dispatch(changeActiveBpm(currentBpm));
+
+      const currentCombo = getCurrentCombo(self.getCurrentSong());
+      store.dispatch(setCombo(currentCombo));
 
       gsap.ticker.remove(this.updateTimeline);
     }

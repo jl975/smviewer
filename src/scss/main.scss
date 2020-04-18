@@ -57,9 +57,26 @@
   display: flex;
   flex-direction: column;
 }
+.canvas-wrapper {
+  position: relative;
+  display: flex;
+}
 #chartArea {
   margin: 0 auto;
   // margin-top: 5px;
+}
+
+.combo-temp {
+  position: absolute;
+  top: 40%;
+  right: 0;
+  margin-right: 10px;
+  font-size: 14px;
+
+  .combo-num {
+    font-weight: 800;
+    font-size: 22px;
+  }
 }
 
 .row {

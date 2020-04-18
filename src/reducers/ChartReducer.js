@@ -3,6 +3,7 @@ import * as actions from "../actions/ChartActions";
 const initialState = {
   activeBpm: null,
   bpmChangeQueue: [],
+  combo: 0,
 };
 
 export const chart = (state = initialState, action) => {
@@ -16,7 +17,7 @@ export const chart = (state = initialState, action) => {
       return { ...state, activeBpm };
     }
     case actions.SET_COMBO: {
-      return { ...state };
+      return { ...state, combo: action.payload };
     }
     default:
       return state;

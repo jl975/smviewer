@@ -48,3 +48,23 @@ export const getCurrentBpm = (params) => {
   }
   return lastBpmValue;
 };
+
+/*
+  Find the current combo given the song timestamp. This should be invoked
+  every time the audio is resynced.
+*/
+export const getCurrentCombo = (song) => {
+  const { audio, globalParams } = song;
+  const { arrows } = globalParams;
+  if (!arrows.length) return 0;
+
+  // Go through the chart until the arrow following the current timestamp is reached,
+  // then set the combo to one less than that arrow's combo
+  for (let i = 0; i < arrows.length; i++) {
+    const arrow = arrows[i];
+    if (arrow.timestamp > audio.seek()) {
+      return arrow.combo - 1;
+    }
+  }
+  return arrows[arrows.length - 1].combo;
+};

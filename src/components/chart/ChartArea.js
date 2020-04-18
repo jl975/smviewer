@@ -86,7 +86,13 @@ const ChartArea = (props) => {
       {loadingAudio && <div>Loading audio...</div>}
       {!loadingAudio && (
         <>
-          <canvas id="chartArea" width="256" height="448" />
+          <div className="canvas-wrapper">
+            <canvas id="chartArea" width="256" height="448" />
+            <div className="combo-temp">
+              <div>Combo</div>
+              <div className="combo-num">{chart.combo}</div>
+            </div>
+          </div>
           <div className="progress-container">
             <Progress progress={props.audio.progress} gameEngine={gameEngine} />
           </div>
