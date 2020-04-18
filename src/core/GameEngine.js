@@ -232,8 +232,8 @@ class GameEngine {
     }
     finalBeat += END_EXTRA_BEATS;
 
-    // hack to implement global offset of -12 ms
-    this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
+    // // hack to implement global offset of -12 ms
+    // this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
 
     for (let i = 0; i < this.eventList.length; i++) {
       let startEvent = this.eventList[i],

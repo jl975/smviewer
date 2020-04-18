@@ -8,7 +8,13 @@ export const DIRECTIONS = ["left", "down", "up", "right"];
 
 /* Number of seconds that the visuals are delayed relative to the audio */
 // export const GLOBAL_OFFSET = 0.012;
-export const GLOBAL_OFFSET = 0;
+
+/* 
+  Offset of the visuals (i.e. chart, gsap timeline) relative to the audio.
+  Positive value represents notes being earlier (have to hit earlier than the music)
+  Negative value represents notes being later (have to hit later than the music)
+*/
+export const GLOBAL_OFFSET = 0.07;
 
 export const MARVELOUS_FLASH_FRAMES = 12;
 

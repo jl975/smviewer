@@ -1,3 +1,5 @@
+import { GLOBAL_OFFSET } from "../constants";
+
 export const applyTurnMods = (chart, mods) => {
   const { turn, shuffle } = mods;
 
@@ -62,7 +64,7 @@ export const getCurrentCombo = (song) => {
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < arrows.length; i++) {
     const arrow = arrows[i];
-    if (arrow.timestamp > audio.seek()) {
+    if (arrow.timestamp > audio.seek() + GLOBAL_OFFSET) {
       return arrow.combo - 1;
     }
   }

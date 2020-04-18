@@ -5,6 +5,7 @@ import store from "../store";
 import * as actions from "../actions/AudioActions";
 import { changeActiveBpm, setCombo } from "../actions/ChartActions";
 import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
+import { GLOBAL_OFFSET } from "../constants";
 
 class AudioPlayer {
   constructor() {
@@ -152,7 +153,8 @@ class AudioPlayer {
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
     const self = this;
-    this.getCurrentSong().tl.seek(self.getCurrentTime() + 0.07);
+    this.getCurrentSong().tl.seek(self.getCurrentTime() + GLOBAL_OFFSET);
+    // this.getCurrentSong().tl.seek(self.getCurrentTime());
 
     this.audioResyncFrames--;
     if (this.audioResyncFrames <= 0) {
