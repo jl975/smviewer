@@ -15,6 +15,9 @@ export const chart = (state = initialState, action) => {
       const activeBpm = Math.round(action.payload);
       return { ...state, activeBpm };
     }
+    case actions.SET_COMBO: {
+      return { ...state };
+    }
     default:
       return state;
   }
