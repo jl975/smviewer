@@ -213,8 +213,8 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    console.clear();
-    console.log("this.eventList", this.eventList);
+    // console.clear();
+    // console.log("this.eventList", this.eventList);
     const self = this;
 
     this.resetArrows();
@@ -303,7 +303,7 @@ class GameEngine {
 
     // combo counter
     const bpmChangeQueue = this.globalParams.bpmChangeQueue;
-    console.log("bpmChangeQueue", bpmChangeQueue);
+    // console.log("bpmChangeQueue", bpmChangeQueue);
 
     let currentBpmPtr = -1,
       currentEventPtr = 0,
@@ -381,7 +381,7 @@ class GameEngine {
           onStart: () => {
             store.dispatch(actions.setCombo(arrow.combo));
             if (arrow instanceof Arrow) {
-              AudioPlayer.playAssistTick();
+              // AudioPlayer.playAssistTick();
               // console.log(arrow);
             }
           },

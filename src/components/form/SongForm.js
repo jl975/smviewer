@@ -109,6 +109,13 @@ const SongForm = (props) => {
 
   // initialize song for testing
   useEffect(() => {
+    /*
+      For some reason, the very first interaction with the dom will reset the Howler
+      audio seek time to 0 (a bug?). Force an interaction in the beginning to get this
+      out of the way and prevent overwriting of the preset time
+    */
+    document.body.click();
+
     if (presetParams.song) {
       let progress = presetParams.progress ? presetParams.progress / 100000 : 0;
       onSongSelect(null, { value: presetParams.song }, progress);

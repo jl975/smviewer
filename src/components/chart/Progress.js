@@ -32,14 +32,6 @@ const Progress = (props) => {
 
     if (progressPercent < 0 || progressPercent > 1) return;
 
-    // console.log(
-    //   "jump to progress",
-    //   progressPercent,
-    //   "gameEngine",
-    //   gameEngine.globalParams
-    // );
-
-    // setProgress(progressPercent);
     AudioPlayer.seekProgress(progressPercent);
   };
 
