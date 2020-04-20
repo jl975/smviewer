@@ -300,13 +300,13 @@ class Arrow {
 
         // shrink in size once it reaches the target
         // this is also where the freeze starts to be held down
-        if (partialDestY < 0) {
+        if (partialDestY <= 0) {
           partialHeight += partialDestY;
           partialDestY = 0;
           arrowImg = arrowImages[`freeze_tail_active_${direction}`];
           arrowBodyImg = arrowImages[`freeze_body_active_${direction}`];
 
-          if (destY > 0) {
+          if (destY >= 0) {
             freezeBeingHeld = true;
           }
         }

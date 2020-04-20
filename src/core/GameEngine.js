@@ -84,6 +84,21 @@ class GameEngine {
     while (bpmPtr < bpms.length && stopPtr < stops.length) {
       const bpm = bpms[bpmPtr];
       const stop = stops[stopPtr];
+
+      // bpm changes before stops when they fall on the same beat
+      // // add stop event, keeping track of the bpm at this point
+      // if (bpm.beat <= stop.beat) {
+      //   eventList.push({ ...bpm, type: "bpm" });
+      //   currentBpm = bpm.value;
+      //   bpmPtr++;
+      // }
+      // // add bpm event, replacing the currently tracked bpm
+      // else {
+      //   eventList.push({ ...stop, bpm: currentBpm, type: "stop" });
+      //   stopPtr++;
+      // }
+
+      // stops before bpm changes when they fall on the same beat
       // add stop event, keeping track of the bpm at this point
       if (stop.beat <= bpm.beat) {
         eventList.push({ ...stop, bpm: currentBpm, type: "stop" });
@@ -93,15 +108,11 @@ class GameEngine {
       else {
         eventList.push({ ...bpm, type: "bpm" });
         currentBpm = bpm.value;
-
-        // this.globalParams.bpmChangeQueue.push(bpm);
-
         bpmPtr++;
       }
     }
     while (bpmPtr < bpms.length) {
       eventList.push({ ...bpms[bpmPtr], type: "bpm" });
-      // this.globalParams.bpmChangeQueue.push(bpms[bpmPtr]);
       bpmPtr++;
     }
     while (stopPtr < stops.length) {
@@ -202,7 +213,8 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    // console.log("this.eventList", this.eventList);
+    console.clear();
+    console.log("this.eventList", this.eventList);
     const self = this;
 
     this.resetArrows();
@@ -289,13 +301,16 @@ class GameEngine {
       }
     }
 
-    // console.log("bpmChangeQueue", this.globalParams.bpmChangeQueue);
-
     // combo counter
     const bpmChangeQueue = this.globalParams.bpmChangeQueue;
+    console.log("bpmChangeQueue", bpmChangeQueue);
 
-    let currentBpmPtr = 0,
-      currentBpm = bpmChangeQueue[currentBpmPtr].value,
+    let currentBpmPtr = -1,
+      currentEventPtr = 0,
+      pendingStopPtr = -1,
+      currentBpm = null,
+      pendingStop = null,
+      currentStopOffset = 0,
       currentCombo = 0;
     this.allArrows.forEach((arrow, idx) => {
       if (
@@ -305,12 +320,47 @@ class GameEngine {
       )
         return;
 
+      // Find the latest bpm section that starts before this note
       while (
         currentBpmPtr < bpmChangeQueue.length - 1 &&
-        bpmChangeQueue[currentBpmPtr + 1].beat <= arrow.originalBeatPosition
+        bpmChangeQueue[currentBpmPtr + 1].beat < arrow.originalBeatPosition
       ) {
+        // if this block was entered, a new bpm section was entered
         currentBpmPtr++;
-        currentBpm = bpmChangeQueue[currentBpmPtr].value;
+        const bpmSection = bpmChangeQueue[currentBpmPtr];
+        currentBpm = bpmSection.value;
+
+        // reset the accumulated stop time
+        currentStopOffset = 0;
+
+        // find the index of this bpm section in the eventList and use it as a starting point
+        // for keeping track of stops
+        for (let i = currentEventPtr; i < this.eventList.length; i++) {
+          const event = this.eventList[i];
+          if (event.beat === bpmSection.beat && event.type === "bpm") {
+            currentEventPtr = i;
+            const nextEvent = this.eventList[i + 1];
+            if (nextEvent && nextEvent.type === "stop") {
+              pendingStopPtr = i + 1;
+              pendingStop = this.eventList[pendingStopPtr];
+            }
+            break;
+          }
+        }
+      }
+
+      // Accumulate total time of any stops that exist in this bpm section before this note.
+      // Keep track of the next pending stop so it can be added to the total stop time as soon as
+      // the first arrow following it is reached
+      while (pendingStop && pendingStop.beat < arrow.originalBeatPosition) {
+        currentStopOffset += pendingStop.value;
+        const nextEvent = this.eventList[pendingStopPtr + 1];
+        if (nextEvent && nextEvent.type === "stop") {
+          pendingStopPtr++;
+        } else {
+          pendingStopPtr = -1;
+        }
+        pendingStop = this.eventList[pendingStopPtr];
       }
 
       const bpmSectionStartBeat = bpmChangeQueue[currentBpmPtr].beat;
@@ -318,7 +368,7 @@ class GameEngine {
 
       const beatDiff = arrow.originalBeatPosition - bpmSectionStartBeat;
       const timeDiff = beatDiff * (60 / currentBpm);
-      const arrowTimestamp = bpmSectionStartTime + timeDiff;
+      const arrowTimestamp = bpmSectionStartTime + timeDiff + currentStopOffset;
 
       currentCombo++;
       arrow.combo = currentCombo;
@@ -330,6 +380,10 @@ class GameEngine {
           combo: arrow.combo,
           onStart: () => {
             store.dispatch(actions.setCombo(arrow.combo));
+            if (arrow instanceof Arrow) {
+              AudioPlayer.playAssistTick();
+              // console.log(arrow);
+            }
           },
         },
         arrowTimestamp

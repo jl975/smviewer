@@ -36,7 +36,7 @@ export const options = {
 };
 
 const optionDefaultValues = {
-  difficulty: "Challenge",
+  difficulty: "Expert",
   mods: {
     speed: 3,
     turn: "off",

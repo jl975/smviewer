@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import store from "../store";
 import * as actions from "../actions/AudioActions";
 import { changeActiveBpm, setCombo } from "../actions/ChartActions";
+import { getAssetPath } from "../utils";
 import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
 import { GLOBAL_OFFSET } from "../constants";
 
@@ -17,6 +18,13 @@ class AudioPlayer {
     this.sources = {
       song: {},
       preview: {},
+      assistTick: {
+        audio: new Howl({
+          src: getAssetPath("sounds/assist_tick.wav"),
+          // format: ["wav"],
+          // html5: true,
+        }),
+      },
     }; // map of song hash to associated Howl object
     this.currentSong = null; // hash of current song
     this.currentPreview = null; // hash of current preview
@@ -33,6 +41,10 @@ class AudioPlayer {
     this.updateTimeline = this.updateTimeline.bind(this);
     this.updateProgress = this.updateProgress.bind(this);
     this.audioResyncFrames = 0;
+  }
+
+  playAssistTick() {
+    this.sources.assistTick.audio.play();
   }
 
   getCurrentSong() {
