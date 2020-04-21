@@ -203,7 +203,6 @@ class Arrow {
         }
         if (destY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-            // console.log(this.currentBeatPosition(beatTick));
             c.save();
             c.globalAlpha =
               1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
@@ -336,13 +335,11 @@ class Arrow {
               ARROW_HEIGHT / 2 -
               originalPartialHeight -
               FREEZE_BODY_HEIGHT * (i - 1));
-
           if (bodyDestY < 0 && bodyDestY > -FREEZE_BODY_HEIGHT) {
             bodyHeight += bodyDestY;
             bodyFrameY -= bodyDestY;
             bodyDestY = 0;
           }
-
           if (bodyDestY > -bodyHeight && bodyDestY < bottomBoundary) {
             c.drawImage(
               arrowBodyImg,
@@ -362,6 +359,12 @@ class Arrow {
 
         // if the freeze is shorter than the height of the tail sprite,
         // cut off the top of the sprite such that it starts at the midpoint of the freeze head
+
+        // Because we need to overwrite destY for proper sprite placement in the event that the
+        // top of the sprite needs to be cut off, store the actual Y position of the arrow
+        // in a separate variable
+        let actualDestY = destY;
+
         if (this.holdBeats[i] * ARROW_HEIGHT * this.speed < ARROW_HEIGHT / 2) {
           const tailPartialHeight =
             this.holdBeats[i] * ARROW_HEIGHT * this.speed;
@@ -376,7 +379,7 @@ class Arrow {
           destY = ARROW_HEIGHT / 2;
         }
 
-        if (destY > topBoundary && destY < bottomBoundary) {
+        if (actualDestY > topBoundary && actualDestY < bottomBoundary) {
           c.drawImage(
             arrowImg,
             frameX,
@@ -409,7 +412,7 @@ class Arrow {
         }
 
         // flash at the end of successfully held down freeze
-        if (destY <= 0) {
+        if (actualDestY <= 0) {
           if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
             c.save();
             c.globalAlpha =

@@ -394,6 +394,9 @@ class GameEngine {
     AudioPlayer.setTimeline(this.tl);
     AudioPlayer.setGlobalParams(this.globalParams);
 
+    window.left1 = this.arrows[2];
+    window.left2 = this.arrows[3];
+
     this.updateLoopOnce();
     // hack
   }

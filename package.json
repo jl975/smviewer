@@ -1,5 +1,5 @@
 {
-  "name": "smplayer",
+  "name": "smviewer",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://jl975.github.io/smviewer",
@@ -24,7 +24,7 @@
     "semantic-ui-react": "^0.88.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=1998 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
