@@ -423,9 +423,44 @@ class GameEngine {
     }
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
+    // Up arrow is the exception: later arrows are layered over the earlier ones
+
+    // draw freeze bodies first because they need to be at the bottom layer
     for (let i = this.arrows.length - 1; i >= 0; i--) {
       const arrow = this.arrows[i];
-      arrow.render(this.canvas, this.globalParams.beatTick);
+      [0, 1, 3].forEach((directionIdx) => {
+        arrow.renderFreezeBody(
+          this.canvas,
+          this.globalParams.beatTick,
+          directionIdx
+        );
+      });
+    }
+    for (let i = 0; i < this.arrows.length; i++) {
+      const arrow = this.arrows[i];
+      const directionIdx = 2;
+      arrow.renderFreezeBody(
+        this.canvas,
+        this.globalParams.beatTick,
+        directionIdx
+      );
+    }
+
+    // then draw the arrow heads over the freeze bodies
+    for (let i = this.arrows.length - 1; i >= 0; i--) {
+      const arrow = this.arrows[i];
+      [0, 1, 3].forEach((directionIdx) => {
+        arrow.renderArrow(
+          this.canvas,
+          this.globalParams.beatTick,
+          directionIdx
+        );
+      });
+    }
+    for (let i = 0; i < this.arrows.length; i++) {
+      const arrow = this.arrows[i];
+      const directionIdx = 2;
+      arrow.renderArrow(this.canvas, this.globalParams.beatTick, directionIdx);
     }
 
     // if (this.globalParams.beatTick) {
