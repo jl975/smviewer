@@ -367,10 +367,10 @@ class Arrow {
 
         if (this.holdBeats[i] * ARROW_HEIGHT * this.speed < ARROW_HEIGHT / 2) {
           const tailPartialHeight =
-            this.holdBeats[i] * ARROW_HEIGHT * this.speed;
+            this.holdBeats[i] * ARROW_HEIGHT * this.speed; // distance between head note and tail note
           frameY += ARROW_HEIGHT / 2 - tailPartialHeight;
           destY += ARROW_HEIGHT / 2 - tailPartialHeight;
-          tailHeight = ARROW_HEIGHT - tailPartialHeight;
+          tailHeight = tailPartialHeight + ARROW_HEIGHT / 2;
         }
 
         // shrink in size once it reaches the target
