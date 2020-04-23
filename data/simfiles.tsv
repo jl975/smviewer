@@ -10,7 +10,7 @@ index	hash	title	smName	artist	version	levels	abcSort	dAudioUrl	sampleStart	samp
 8	Oq900IIl1Ob8qoIPqDP0PD6blbqIqlP1	いーあるふぁんくらぶ	Yi-er fanclub	みきとP	15	1,4,8,12,,5,9,12,	あ	gp2ok5v2mjemfej/Yi-er%20fanclub.mp3	66.186	15
 9	61oIP0QIlO90d18ObDP1Dii6PoIQoOD8	イーディーエム・ジャンパーズ	EDM jumpers	かめりあ feat. ななひら	15	3,5,8,12,,4,8,11,	あ	ufn28qaaxt39cfz/EDM%20jumpers.mp3	67.804	15
 10	ibI0QllidqQ089ql8dob6bIoodbbIoqq	怒れる大きな白い馬	Tino's White Horse	Morning Blue Dragon	8	4,5,8,11,,3,7,11,	あ	ofbjfgqmo57kr4v/Tino%27s%20White%20Horse.mp3	66.1	15
-11	16IqQ680IioldO69QD61liQod0DQ8boQ	色は匂へど散りぬるを	Iro wa nio e do chirinuru wo	幽閉サテライト(Arranged\:Iceon) feat. senya	15	3,5,8,11,,6,8,11,	あ	9awaqlhjbn5sqnt/Iro%20wa%20nio%20e%20do%20chirinuru%20wo.mp3	60.871	15
+11	16IqQ680IioldO69QD61liQod0DQ8boQ	色は匂へど散りぬるを	Iro wa nio e do chirinuru wo	幽閉サテライト(Arranged:Iceon) feat. senya	15	3,5,8,11,,6,8,11,	あ	9awaqlhjbn5sqnt/Iro%20wa%20nio%20e%20do%20chirinuru%20wo.mp3	60.871	15
 12	bd8oD0iqDQ8Qobd1oIqi8981QbD6I6Iq	エイリアンエイリアン	Alien Alien	ナユタン星人	15	2,5,9,12,,5,9,12,	あ	0n6a72etjyhbtex/Alien%20Alien.mp3	50.517	15
 13	80PdqQ0iiOQb9i91lIliodiO9PI8O609	エキサイティング！！も・ちゃ・ちゃ☆	Exciting!! Mo-cha-cha	日向美ビタースイーツ♪	15	4,8,11,13,,8,11,13,	あ	mnhyox6jj9nvgt5/Exciting%21%21%20Mo-cha-cha.mp3	72.726	15
 14	oQolO9oOO01ll0I8969i8O1IQliloDqP	エンドルフィン	Endorphin	U1 overground	14	4,8,12,15,,8,12,15,	あ	icoxzhks7q2kglr/Endorphin.mp3	39	15
@@ -40,7 +40,7 @@ index	hash	title	smName	artist	version	levels	abcSort	dAudioUrl	sampleStart	samp
 38	I1qd16dPdqPi96ql0lP10OQDbo11D89P	恋時雨	Koishigure	ときめきアイドル project	15	3,7,9,12,,7,9,13,	か	13jv886wk36a2ax/Koishigure.mp3	56.281	15
 39	Q9Q088PPd0bPi9QQ8iil1lQqPdiQP69D	恋する☆宇宙戦争っ!!	Koisuru uchuu sensou!!	Prim	15	4,7,12,14,17,8,13,15,17	か	g3v658l3p660d1g/Koisuru%20uchuu%20sensou%21%21.mp3	50.399	15
 40	i9il1DIDl91Db0OdllOddIqO600Pl89q	恋のパズルマジック	Koi no puzzle magic	ときめきアイドル project Rhythmixxx	15	3,6,9,11,,6,9,11,	か	7w75slxhu9lopg2/Koi%20no%20puzzle%20magic.mp3	49.355	15
-41	qilOP8l6bDPi98lqDbO6O1obOi068QOQ	恋はどう？モロ◎波動OK☆方程式！！	Koi hadou Moro Hadou OK Houteishiki!!	あべにゅうぷろじぇくと feat.佐倉紗織 produced by ave\	14	4,7,11,14,,6,11,14,	か	xn3jm1tiqmrtgjx/Koi%20hadou%20Moro%20Hadou%20OK%20Houteishiki%21%21.mp3	7.04	15
+41	qilOP8l6bDPi98lqDbO6O1obOi068QOQ	恋はどう？モロ◎波動OK☆方程式！！	Koi hadou Moro Hadou OK Houteishiki!!	あべにゅうぷろじぇくと feat.佐倉紗織 produced by ave;new	14	4,7,11,14,,6,11,14,	か	xn3jm1tiqmrtgjx/Koi%20hadou%20Moro%20Hadou%20OK%20Houteishiki%21%21.mp3	7.04	15
 42	bo9l0Dl0PbqQQQ16Qq6bOOi68o0996Pq	紅焔	Kouen	PON	12	3,6,9,12,15,6,9,12,15	か	vtg98fm8fjqmx6d/Kouen.mp3	51.79	15
 43	qbbPQoqqqiPd98d61P0qDd0iDId6OqoQ	この青空の下で	Kono aozora no shita de	TAG meets “eimy”	15	3,6,9,11,,6,9,11,	か	9k19bhs5q9ajen8/Kono%20aozora%20no%20shita%20de.mp3	36.781	15
 44	9idOOIdDO01D8PO06bOPPbOIOoiQ8O0P	この子の七つのお祝いに	Konoko no nanatsu no oiwaini	あさき	8	3,7,10,14,,7,10,14,	か	7g8fio9noky3qea/Konoko%20no%20nanatsu%20no%20oiwaini.mp3	66.253	15
@@ -291,7 +291,7 @@ index	hash	title	smName	artist	version	levels	abcSort	dAudioUrl	sampleStart	samp
 289	Io9i8oQlbO1QqIdbbDPQl6b00OIPlIOP	Dance Floor	Dance Floor	neuras feat. Yurai	10	2,5,6,9,,5,7,10,	D	9dvei3nmngbdocc/Dance%20Floor.mp3	37.75	15
 290	QbI1i8Q8o06qQQIqllQ6091l998D0qIi	Dance Partay	Dance Partay	DKC Crew	14	2,5,7,11,13,5,8,11,12	D	d7h49gkcv09yvug/Dance%20Partay.mp3	44.4	15
 291	ddOqqDI91bqqiOoll6I0i16i1P18019q	Dancer in the flare	Dancer in the flare	猫叉Master	15	3,6,10,13,,6,11,13,	D	t4eian2ckbpa9wx/Dancer%20in%20the%20flare.mp3	74.572	15
-292	DdIbd6Pbl910P6QOqD6iQI0l0b1qdI8q	dazzle	dazzle	kobo feat. kr\:agué	10	2,4,8,10,,4,8,10,	D	qhcyb2dt41tiu0p/dazzle.mp3	80.81	15
+292	DdIbd6Pbl910P6QOqD6iQI0l0b1qdI8q	dazzle	dazzle	kobo feat. kr:agué	10	2,4,8,10,,4,8,10,	D	qhcyb2dt41tiu0p/dazzle.mp3	80.81	15
 293	IPdDlblblqO1do9IQbDoi0iOoPDoiDlI	Dazzlin' Darlin	Dazzlin' Darlin	HHH	11	2,6,9,11,,6,10,12,	D	tb8kjqfkr9qnnlo/Dazzlin%27%20Darlin.mp3	88.98	15
 294	69l8lOiooPPPqb9Io9Il01dPD0Q988Iq	Dazzlin' Darlin-秋葉工房mix-	Dazzlin' Darlin-AKBKmix-	Remixed by DJ Command	11	3,5,8,11,,5,7,12,	D	04yv97yxrh8m5k2/Dazzlin%27%20Darlin-AKBKmix-.mp3	82.86	15
 295	8dbiodDo1i6IolDQdqdOoqDDD90q6liQ	DDR MEGAMIX	DDR MEGAMIX	DDR	15	6,8,13,15,16,8,13,16,17	D	ipj06sfghijdep1/DDR%20MEGAMIX.mp3	2	15
@@ -446,12 +446,12 @@ index	hash	title	smName	artist	version	levels	abcSort	dAudioUrl	sampleStart	samp
 444	DddIPd6iId8Doqq8OibDlD1dOi8PO8o9	i feel ...	i feel	AKIRA YAMAOKA	6	3,4,8,12,,3,8,12,	I	8y9dgdb3t8awdpk/i%20feel.mp3	69.362	15
 445	0ib0Pqol08o9ODDq166iDl8oll061lPl	iFUTURELIST(DDR VERSION)	iFUTURELIST(DDR VERSION)	AKIRA YAMAOKA	8	3,5,7,12,13,5,7,11,13	I	tg0tikbbm3k4iqv/iFUTURELIST%28DDR%20VERSION%29.mp3	56.038	15
 446	1Ob1I0do8Iq6QqP6PQIiddD18dqDP9oo	Illegal Function Call	Illegal Function Call	U1-ASAMi	15	4,10,13,16,,10,14,16,	I	2emqvzjzg79vd52/Illegal%20Function%20Call.mp3	88.642	15
-447	1900DdoIl00b88q6Qq9ob9D6lQ8IQiPb	I Love You	I Love You	O\/iviA	16	4,8,13,16,,8,12,16,	I	s5l7m3nzfi1rtou/I%20Love%20You.mp3	29.118	15
+447	1900DdoIl00b88q6Qq9ob9D6lQ8IQiPb	I Love You	I Love You	O/iviA	16	4,8,13,16,,8,12,16,	I	s5l7m3nzfi1rtou/I%20Love%20You.mp3	29.118	15
 448	69b01qbo8Qdi6liOPq091bqo01i16oQ9	I'm an Albatraoz	I'm an Albatraoz	AronChupa	16	1,4,7,11,,4,7,11,	I	5gcsqc8b80xki84/I%27m%20an%20Albatraoz.mp3	31.893	15
 449	Q8qb1oQobdqDqi0i19qqb11P1oDoiD8O	IMANOGUILTS	IMANOGUILTS	Mystic Moon	14	4,8,11,14,15,8,11,14,15	I	bwz934sydcvx21q/IMANOGUILTS.mp3	14.348	15
 450	lPoD60qooQ91QDq1qO9d19q9IoDIlPq9	I'm gonna get you!	I'm gonna get you!	Kelly Cosmo	7	3,4,7,9,,4,7,11,	I	iqr2stxw296zghu/I%27m%20gonna%20get%20you%21.mp3	37.506	12
 451	90lolio9qd6qo6Pl8oo69iqi81oiiQib	I'm so Happy	I'm so Happy	Ryu☆	11	3,6,8,12,16,6,8,12,16	I	hul5n8zx38vm3su/I%27m%20so%20Happy.mp3	49.07	15
-452	bdQ6IobP6II86I1io686Il9qQ69dOod1	IN BETWEEN	IN BETWEEN	BEMANI Sound Team \“L.E.D.-G\” feat. Mayumi Morinaga	15	4,7,12,15,,7,12,15,	I	uq371exwnltwabb/IN%20BETWEEN.mp3	86.607	15
+452	bdQ6IobP6II86I1io686Il9qQ69dOod1	IN BETWEEN	IN BETWEEN	BEMANI Sound Team “L.E.D.-G” feat. Mayumi Morinaga	15	4,7,12,15,,7,12,15,	I	uq371exwnltwabb/IN%20BETWEEN.mp3	86.607	15
 453	1i6ObblIOoPo6dDd9dIIq11l60qiD9di	I Need You	I Need You	Supa Fova feat. Jenny F.	8	3,4,6,8,,5,6,8,	I	nkwin8y6ce1owv6/I%20Need%20You.mp3	46.193	15
 454	b1ObooOQ9iI0DilD9Q6qlIQ8D1d8dQO9	in love wit you	in love wit you	Kotaro feat. Aya	11	1,3,6,8,,4,6,9,	I	wq2m1x1v10k2nuq/in%20love%20wit%20you.mp3	41.76	15
 455	qDi0dIlObi6Q6P8dQ1b8oIb188O9608o	INNOCENCE OF SILENCE	INNOCENCE OF SILENCE	nc ft NRG Factory	8	3,5,10,12,,5,9,12,	I	v279l1t09yav0v4/INNOCENCE%20OF%20SILENCE.mp3	1.689	15
@@ -544,7 +544,7 @@ index	hash	title	smName	artist	version	levels	abcSort	dAudioUrl	sampleStart	samp
 542	OoQ6Oq81oIql8iIlbI6qldIlqoD1Di1I	Monkey Punk	Monkey Punk	Big Idea	8	4,5,8,10,,5,8,10,	M	btjgofhyl2zzyv1/Monkey%20Punk.mp3	48.06	15
 543	lI8qIDQPD0PDOdO1d01iOq8bI98iiQ1l	MOON	MOON	dj TAKA feat.Erika	8	3,3,7,10,,1,8,10,	M	6gge0xatvj155zz/MOON.mp3	40.79	15
 544	olOOdb66Q0bP0dqQPdIdQ8IPQql8D6bi	MOONSTER	MOONSTER	kobo uniting Marsha & D.	9	4,5,7,12,,4,7,10,	M	bjvk9k9s1yq1htg/MOONSTER.mp3	64.48	15
-545	qOlDPoiqibIOqod69dPilbiqD6qdO1qQ	More One Night	More One Night	チト(CV\：水瀬いのり)、ユーリ(CV\：久保ユリカ)	15	3,5,8,10,12,5,8,11,12	M	26a7h9mge3lfkf2/More%20One%20Night.mp3	72.239	15
+545	qOlDPoiqibIOqod69dPilbiqD6qdO1qQ	More One Night	More One Night	チト(CV：水瀬いのり)、ユーリ(CV：久保ユリカ)	15	3,5,8,10,12,5,8,11,12	M	26a7h9mge3lfkf2/More%20One%20Night.mp3	72.239	15
 546	QQdIOi1Q81IqIoDqo80P0I1Q9qIdq1il	murmur twins	murmur twins	yu_tokiwa.djw	8	3,4,8,11,,3,8,11,	M	2w4szoz2inrqrv2/murmur%20twins.mp3	56.374	15
 547	i11d86DOOdOb8Pbb1QqIilQI9Idib8PP	Music In The Rhythm	Music In The Rhythm	nc ft. 触電	9	4,7,8,11,,5,8,12,	M	11n3nkj4jetaomu/Music%20In%20The%20Rhythm.mp3	13.93	15
 548	Io1661doQq6OQ8DoobPq1IQlbqoDD1q8	My Only Shining Star	My Only Shining Star	NAOKI feat. Becky Lucinda	8	3,4,7,9,,3,7,11,	M	l89cuz93yiji9sk/My%20Only%20Shining%20Star.mp3	40.25	15
