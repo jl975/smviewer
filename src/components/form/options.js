@@ -2,6 +2,7 @@ import { presetParams } from "../../utils";
 
 export const options = {
   difficulty: ["Beginner", "Basic", "Difficult", "Expert", "Challenge"],
+  mode: ["single", "double"],
   mods: {
     speed: [
       0.25,
@@ -37,6 +38,7 @@ export const options = {
 
 const optionDefaultValues = {
   difficulty: "Expert",
+  mode: "single",
   mods: {
     speed: 3,
     turn: "off",
@@ -57,6 +59,11 @@ if (presetParams.difficulty) {
   };
   if (Object.keys(difficulties).includes(presetParams.difficulty[0])) {
     optionDefaultValues.difficulty = difficulties[presetParams.difficulty[0]];
+  }
+  if (presetParams.difficulty[1] === "S") {
+    optionDefaultValues.mode = "single";
+  } else if (presetParams.difficulty[1] === "D") {
+    optionDefaultValues.mode = "double";
   }
 }
 if (presetParams.speed) {

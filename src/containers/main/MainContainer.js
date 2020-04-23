@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { tsv } from "d3-fetch";
 import { Button } from "semantic-ui-react";
 
@@ -7,20 +8,19 @@ import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
-import { optionDefaultValues } from "../../components/form/options";
 import { getOriginPath, fetchDocument, presetParams } from "../../utils";
+import {
+  selectSong,
+  selectDifficulty,
+  selectMode,
+} from "../../actions/SongSelectActions";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
   const [simfileList, setSimfileList] = useState([]);
-  const [selectedSong, setSelectedSong] = useState(null);
   const [selectedSM, setSelectedSM] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState(
-    optionDefaultValues.difficulty
-  );
   const [selectedAudio, setSelectedAudio] = useState(null);
 
-  const [mods, setMods] = useState(optionDefaultValues.mods);
   const [activeView, setActiveView] = useState("chart");
 
   const [gameEngine, setGameEngine] = useState(null);
@@ -57,7 +57,11 @@ const MainContainer = (props) => {
   const onSongSelect = async (song, initialProgress = 0) => {
     console.log("MainContainer selected song", song);
     AudioPlayer.selectSong(song, initialProgress);
-    setSelectedSong(song);
+    // setSelectedSong(song);
+
+    props.selectSong(song);
+
+    document.title = `${song.title} - SMViewer`;
 
     // retrieve audio file and simfile from song.simfilePath
     // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
@@ -80,7 +84,11 @@ const MainContainer = (props) => {
   };
 
   const onDifficultySelect = (difficulty) => {
-    setSelectedDifficulty(difficulty);
+    // setSelectedDifficulty(difficulty);
+    props.selectDifficulty(difficulty);
+  };
+  const onModeSelect = (mode) => {
+    props.selectMode(mode);
   };
 
   const changeActiveView = (view) => {
@@ -94,8 +102,9 @@ const MainContainer = (props) => {
         <>
           <ChartArea
             loadingAudio={loadingAudio}
-            selectedSong={selectedSong}
-            selectedDifficulty={selectedDifficulty}
+            // selectedSong={selectedSong}
+            // selectedDifficulty={selectedDifficulty}
+            // selectedMode={selectedMode}
             sm={selectedSM}
             selectedAudio={selectedAudio}
             gameEngine={gameEngine}
@@ -106,23 +115,15 @@ const MainContainer = (props) => {
             activeView={activeView}
             setActiveView={changeActiveView}
             simfileList={simfileList}
-            selectedDifficulty={selectedDifficulty}
+            // selectedDifficulty={selectedDifficulty}
+            // selectedMode={selectedMode}
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
+            onModeSelect={onModeSelect}
             loadingAudio={loadingAudio}
           />
 
-          <ModsForm
-            activeView={activeView}
-            simfileList={simfileList}
-            selectedSong={selectedSong}
-            onSongSelect={onSongSelect}
-            selectedDifficulty={selectedDifficulty}
-            onDifficultySelect={onDifficultySelect}
-            selectedAudio={selectedAudio}
-            setSelectedAudio={setSelectedAudio}
-            gameEngine={gameEngine}
-          />
+          <ModsForm activeView={activeView} />
 
           <MobileNav activeView={activeView} setActiveView={changeActiveView} />
         </>
@@ -131,4 +132,16 @@ const MainContainer = (props) => {
   );
 };
 
-export default MainContainer;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectSong: (song) => dispatch(selectSong(song)),
+    selectDifficulty: (song) => dispatch(selectDifficulty(song)),
+    selectMode: (song) => dispatch(selectMode(song)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

@@ -12,9 +12,14 @@ const difficulties = {
   Challenge: "C",
 };
 
+const modes = {
+  single: "S",
+  double: "D",
+};
+
 const ShareModal = (props) => {
   const { modalOpen, setModalOpen, data } = props;
-  const { song, difficulty, mods, progress } = data;
+  const { song, difficulty, mode, mods, progress } = data;
 
   const shareUrl = useRef();
   const [message, setMessage] = useState("");
@@ -32,7 +37,7 @@ const ShareModal = (props) => {
   const generateShareUrl = () => {
     const params = {
       song: song.hash,
-      difficulty: difficulties[difficulty] + "SP",
+      difficulty: difficulties[difficulty] + modes[mode] + "P",
       turn: mods.turn !== "off" ? mods.turn : "",
       speed: mods.speed.toString().replace(".", ""),
       progress: parseInt(progress * 100000),

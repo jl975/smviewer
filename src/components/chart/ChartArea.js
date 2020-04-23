@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Icon, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "inobounce";
@@ -15,6 +15,7 @@ import ShareModal from "./ShareModal";
 const ChartArea = (props) => {
   const {
     selectedDifficulty,
+    selectedMode,
     selectedSong,
     sm,
     chart,
@@ -27,14 +28,38 @@ const ChartArea = (props) => {
 
   const [canvas, setCanvas] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const chartArea = useRef();
 
   // define canvas on mount
   useEffect(() => {
     if (!loadingAudio) {
-      const chartArea = document.querySelector("#chartArea");
-      setCanvas(chartArea);
+      chartArea.current = document.querySelector("#chartArea");
+      setCanvas(chartArea.current);
     }
   }, [loadingAudio]);
+
+  // change chart dimensions depending on single or double
+  // Hardcoded widths for now. Variable widths may be possible in the future
+  useEffect(() => {
+    if (!canvas) return;
+
+    if (selectedMode === "single") {
+      chartArea.current.width = 256;
+      chartArea.current.style.transform = "none";
+      chartArea.current.style.position = "relative";
+      chartArea.current.style.left = 0;
+      chartArea.current.style.top = 0;
+    } else if (selectedMode === "double") {
+      chartArea.current.width = 512;
+      const scaleFactor = window.innerWidth / chartArea.current.width;
+      const xOffset = (chartArea.current.width - window.innerWidth) / 2;
+      const yOffset = xOffset * (7 / 8);
+      chartArea.current.style.transform = `scale(${scaleFactor})`;
+      chartArea.current.style.position = "absolute";
+      chartArea.current.style.left = `-${xOffset}px`;
+      chartArea.current.style.top = `-${yOffset}px`;
+    }
+  }, [canvas, selectedMode]);
 
   // reset chart if song, difficulty, or mods change
   useEffect(() => {
@@ -44,9 +69,10 @@ const ChartArea = (props) => {
 
     if (!selectedDifficulty) return;
 
-    const simfile = ge.simfiles[`single_${selectedDifficulty}`];
+    const simfile = ge.simfiles[`${selectedMode}_${selectedDifficulty}`];
 
     if (simfile) {
+      console.log(simfile);
       ge.generateEventList(simfile);
       ge.generateArrows(simfile, mods);
       ge.initTimeline(mods);
@@ -54,7 +80,7 @@ const ChartArea = (props) => {
       AudioPlayer.resync();
     }
     setGameEngine(ge);
-  }, [canvas, sm, selectedDifficulty, mods]);
+  }, [canvas, sm, selectedDifficulty, selectedMode, mods]);
 
   const togglePlay = () => {
     if (!gameEngine) return;
@@ -77,6 +103,7 @@ const ChartArea = (props) => {
   const shareParams = {
     song: selectedSong,
     difficulty: selectedDifficulty,
+    mode: selectedMode,
     mods,
     progress: props.audio.progress,
   };
@@ -86,7 +113,7 @@ const ChartArea = (props) => {
       {loadingAudio && <div>Loading audio...</div>}
       {!loadingAudio && (
         <>
-          <div className="canvas-wrapper">
+          <div className={`canvas-wrapper ${selectedMode}`}>
             <canvas id="chartArea" width="256" height="448" />
             <div className="combo-temp">
               <div>Combo</div>
@@ -154,7 +181,9 @@ const ChartArea = (props) => {
               <div className="song-level">
                 {
                   selectedSong.levels[
-                    SP_DIFFICULTIES.indexOf(selectedDifficulty)
+                    selectedMode === "double"
+                      ? DP_DIFFICULTIES.indexOf(selectedDifficulty) + 5
+                      : SP_DIFFICULTIES.indexOf(selectedDifficulty)
                   ]
                 }
               </div>
@@ -172,11 +201,14 @@ const ChartArea = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio, chart, mods } = state;
+  const { audio, chart, mods, songSelect } = state;
   return {
     audio: audio.chartAudio,
     chart,
     mods,
+    selectedSong: songSelect.song,
+    selectedDifficulty: songSelect.difficulty,
+    selectedMode: songSelect.mode,
   };
 };
 

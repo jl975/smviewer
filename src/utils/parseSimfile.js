@@ -9,14 +9,14 @@ const difficultyMap = {
   Challenge: "Challenge",
 };
 
-const parseSimfile = sm => {
+const parseSimfile = (sm) => {
   const simfiles = {};
 
   let bpms = "";
   if (/#BPMS:/i.test(sm)) {
     bpms = /#BPMS:([\s\S]*?)\s*;/i.exec(sm)[1];
     if (bpms.length) {
-      bpms = bpms.split(",").map(point => {
+      bpms = bpms.split(",").map((point) => {
         const [beat, value] = point.split("=");
         return { beat: parseFloat(beat), value: parseFloat(value) };
       });
@@ -29,7 +29,7 @@ const parseSimfile = sm => {
   if (/#STOPS:/i.test(sm)) {
     stops = /#STOPS:([\s\S]*?)\s*;/i.exec(sm)[1];
     if (stops.length) {
-      stops = stops.split(",").map(point => {
+      stops = stops.split(",").map((point) => {
         const [beat, value] = point.split("=");
         return { beat: parseFloat(beat), value: parseFloat(value) };
       });
@@ -43,7 +43,7 @@ const parseSimfile = sm => {
     .split(/#NOTES:\s+/)
     .slice(1);
 
-  chartStrs.forEach(chartStr => {
+  chartStrs.forEach((chartStr) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double
 
     let smDifficulty = difficultyRegex.exec(chartStr)[1];
@@ -64,14 +64,14 @@ const parseSimfile = sm => {
         const ticks = measure
           .trim()
           .split("\r\n")
-          .filter(n => !n.startsWith("//")); // filter out comment lines
+          .filter((n) => !n.startsWith("//")); // filter out comment lines
 
         const numTicks = ticks.length;
 
         const noteObjects = [];
         ticks.forEach((tick, tickIdx) => {
           // skip empty ticks and comment lines
-          if (!tick.split("").filter(n => n !== "0").length) return;
+          if (!tick.split("").filter((n) => n !== "0").length) return;
 
           const noteObj = {};
           noteObj.note = tick;

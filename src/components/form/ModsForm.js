@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Radio, Checkbox } from "semantic-ui-react";
 
@@ -7,14 +7,15 @@ import { capitalize } from "../../utils";
 import { updateMods } from "../../actions/ModsActions";
 
 const ModsForm = (props) => {
-  const {
-    activeView,
-    simfileList,
-    selectedDifficulty,
-    mods,
-    gameEngine,
-    updateMods,
-  } = props;
+  const { activeView, mods, updateMods, mode } = props;
+
+  // when switching between single and double, any mod set to a value incompatible
+  // with the new mode will be reset to its default value
+  useEffect(() => {
+    if (mode === "double" && !["off", "mirror"].includes(mods.turn)) {
+      updateMods({ turn: "off" });
+    }
+  }, [mode]);
 
   return (
     <div
@@ -55,18 +56,23 @@ const ModsForm = (props) => {
 
         <div className="form-field">
           <h4 className="form-label">Turn</h4>
-          {options.mods.turn.map((turn) => {
-            return (
-              <Radio
-                key={`turn_${turn}`}
-                label={capitalize(turn)}
-                name="turn"
-                value={turn}
-                checked={mods.turn === turn}
-                onChange={() => updateMods({ turn })}
-              />
-            );
-          })}
+          {options.mods.turn
+            .filter((turn) => {
+              if (mode === "double") return turn === "off" || turn === "mirror";
+              return true;
+            })
+            .map((turn) => {
+              return (
+                <Radio
+                  key={`turn_${turn}`}
+                  label={capitalize(turn)}
+                  name="turn"
+                  value={turn}
+                  checked={mods.turn === turn}
+                  onChange={() => updateMods({ turn })}
+                />
+              );
+            })}
         </div>
         {mods.turn === "shuffle" && (
           <div className="form-field">
@@ -111,8 +117,8 @@ const ModsForm = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { mods } = state;
-  return { mods };
+  const { mods, songSelect } = state;
+  return { mods, mode: songSelect.mode };
 };
 
 const mapDispatchToProps = (dispatch) => {

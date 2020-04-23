@@ -1,6 +1,6 @@
 import { GLOBAL_OFFSET } from "../constants";
 
-export const applyTurnMods = (chart, mods) => {
+export const applyTurnMods = (chart, mods, mode) => {
   const { turn, shuffle } = mods;
 
   // shuffle patterns courtesy of https://zenius-i-vanisher.com/v5.2/viewthread.php?threadid=3823
@@ -22,14 +22,23 @@ export const applyTurnMods = (chart, mods) => {
   let turnMod = turn;
   if (turn === "shuffle") turnMod += shuffle;
 
-  return chart.map((row) => {
-    const note = row.note;
-    const turnedNote = turnMap[turnMod]
-      .split("")
-      .map((direction) => note[turnMap.off.indexOf(direction)]);
+  if (mode === "single") {
+    return chart.map((row) => {
+      const note = row.note;
+      const turnedNote = turnMap[turnMod]
+        .split("")
+        .map((direction) => note[turnMap.off.indexOf(direction)]);
 
-    return { ...row, note: turnedNote };
-  });
+      return { ...row, note: turnedNote };
+    });
+  }
+  if (mode === "double") {
+    return chart.map((row) => {
+      let turnedNote = row.note.split("");
+      if (turn === "mirror") turnedNote = turnedNote.reverse();
+      return { ...row, note: turnedNote };
+    });
+  }
 };
 
 /*

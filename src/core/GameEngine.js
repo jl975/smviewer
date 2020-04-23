@@ -154,6 +154,7 @@ class GameEngine {
 
   generateArrows(simfile, mods) {
     let { chart } = simfile;
+    const mode = store.getState().songSelect.mode;
 
     if (Array.isArray(chart[0])) {
       const newChart = [];
@@ -163,7 +164,7 @@ class GameEngine {
       chart = newChart;
     }
 
-    chart = applyTurnMods(chart, mods);
+    chart = applyTurnMods(chart, mods, mode);
 
     chart.forEach((note, key) => {
       // calculate starting position currentBeatPosition
@@ -406,8 +407,12 @@ class GameEngine {
     // console.log("mainLoop running");
     this.drawBackground();
 
+    // console.log(store.getState());
+
+    const mode = store.getState().songSelect.mode;
+
     if (this.stepZone) {
-      this.stepZone.render(this.canvas, this.globalParams.beatTick);
+      this.stepZone.render(this.canvas, this.globalParams.beatTick, mode);
     }
     if (this.guidelines) {
       this.guidelines.render(this.canvas, this.globalParams.beatTick);
@@ -425,42 +430,55 @@ class GameEngine {
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
     // Up arrow is the exception: later arrows are layered over the earlier ones
 
+    const upArrows = mode === "double" ? [2, 6] : [2];
+    const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
+
     // draw freeze bodies first because they need to be at the bottom layer
     for (let i = this.arrows.length - 1; i >= 0; i--) {
       const arrow = this.arrows[i];
-      [0, 1, 3].forEach((directionIdx) => {
+      notUpArrows.forEach((directionIdx) => {
         arrow.renderFreezeBody(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          mode
         );
       });
     }
     for (let i = 0; i < this.arrows.length; i++) {
       const arrow = this.arrows[i];
-      const directionIdx = 2;
-      arrow.renderFreezeBody(
-        this.canvas,
-        this.globalParams.beatTick,
-        directionIdx
-      );
+      upArrows.forEach((directionIdx) => {
+        arrow.renderFreezeBody(
+          this.canvas,
+          this.globalParams.beatTick,
+          directionIdx,
+          mode
+        );
+      });
     }
 
     // then draw the arrow heads over the freeze bodies
     for (let i = this.arrows.length - 1; i >= 0; i--) {
       const arrow = this.arrows[i];
-      [0, 1, 3].forEach((directionIdx) => {
+      notUpArrows.forEach((directionIdx) => {
         arrow.renderArrow(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          mode
         );
       });
     }
     for (let i = 0; i < this.arrows.length; i++) {
       const arrow = this.arrows[i];
-      const directionIdx = 2;
-      arrow.renderArrow(this.canvas, this.globalParams.beatTick, directionIdx);
+      upArrows.forEach((directionIdx) => {
+        arrow.renderArrow(
+          this.canvas,
+          this.globalParams.beatTick,
+          directionIdx,
+          mode
+        );
+      });
     }
 
     // if (this.globalParams.beatTick) {

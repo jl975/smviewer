@@ -60,6 +60,13 @@
 .canvas-wrapper {
   position: relative;
   display: flex;
+  height: 448px;
+
+  &.double {
+    .combo-temp {
+      display: none;
+    }
+  }
 }
 #chartArea {
   margin: 0 auto;

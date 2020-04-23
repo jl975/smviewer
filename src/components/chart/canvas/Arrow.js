@@ -84,7 +84,7 @@ class Arrow {
     return this.originalBeatPosition - beatTick;
   }
 
-  renderFreezeBody(canvas, beatTick, directionIdx) {
+  renderFreezeBody(canvas, beatTick, directionIdx, mode) {
     const c = canvas.getContext("2d");
 
     const topBoundary = 0;
@@ -92,7 +92,7 @@ class Arrow {
 
     let arrowImg;
     let frameX, frameY, destX, destY;
-    const direction = DIRECTIONS[directionIdx];
+    const direction = DIRECTIONS[directionIdx % 4];
 
     // freeze body and tail
     if (this.note[directionIdx] === "3") {
@@ -100,7 +100,7 @@ class Arrow {
       frameX = 0;
       frameY = 0;
 
-      destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+      destX = directionIdx * ARROW_WIDTH;
       destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
       // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
@@ -227,7 +227,7 @@ class Arrow {
             ARROW_HEIGHT * 2,
             ARROW_WIDTH,
             ARROW_HEIGHT,
-            DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
+            directionIdx * ARROW_WIDTH,
             0,
             ARROW_WIDTH,
             ARROW_HEIGHT
@@ -263,7 +263,7 @@ class Arrow {
     this.previousBeatPosition = this.currentBeatPosition(beatTick);
   }
 
-  renderArrow(canvas, beatTick, directionIdx) {
+  renderArrow(canvas, beatTick, directionIdx, mode) {
     const c = canvas.getContext("2d");
 
     const topBoundary = 0; // used to simulate the arrows being hit and disappearing
@@ -274,13 +274,14 @@ class Arrow {
 
     let arrowImg;
     let frameX, frameY, destX, destY;
-    const direction = DIRECTIONS[directionIdx];
+    const direction = DIRECTIONS[directionIdx % 4];
 
     // regular note
     if (
       this.note[directionIdx] === "1" ||
       (this.note[directionIdx] === "2" && this.colorFreezes)
     ) {
+      // console.log("arrow", directionIdx);
       arrowImg = arrowImages[`${this.noteskin}_${direction}`];
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
@@ -366,7 +367,7 @@ class Arrow {
         }
       }
 
-      destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+      destX = directionIdx * ARROW_WIDTH;
       destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
       if (destY > topBoundary && destY < bottomBoundary) {
@@ -412,7 +413,7 @@ class Arrow {
       frameX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
       frameY = 0;
 
-      destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+      destX = directionIdx * ARROW_WIDTH;
       destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 
       // draw freeze head

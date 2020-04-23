@@ -2,7 +2,7 @@ import { DIRECTIONS, ARROW_HEIGHT, ARROW_WIDTH } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 
 const flashImages = {};
-DIRECTIONS.forEach(direction => {
+DIRECTIONS.forEach((direction) => {
   flashImages[direction] = new Image();
   flashImages[direction].src = getAssetPath(`${direction}_tap_flash.png`);
   flashImages[direction] = new Image();
@@ -10,7 +10,7 @@ DIRECTIONS.forEach(direction => {
 });
 
 const receptorImages = {};
-DIRECTIONS.forEach(direction => {
+DIRECTIONS.forEach((direction) => {
   receptorImages[direction] = new Image();
   receptorImages[direction].src = getAssetPath(`${direction}_tap_receptor.png`);
   receptorImages[direction] = new Image();
@@ -18,7 +18,7 @@ DIRECTIONS.forEach(direction => {
 });
 
 class StepZone {
-  render(canvas, beatTick) {
+  render(canvas, beatTick, mode) {
     const c = canvas.getContext("2d");
     // flash starts at the beginning of the quarter beat and lasts for 1/16 beat
 
@@ -36,6 +36,20 @@ class StepZone {
         ARROW_WIDTH,
         ARROW_HEIGHT
       );
+
+      if (mode === "double") {
+        c.drawImage(
+          isFlash ? flashImages[direction] : receptorImages[direction],
+          0,
+          0,
+          ARROW_WIDTH,
+          ARROW_HEIGHT,
+          (i + 4) * ARROW_WIDTH,
+          0,
+          ARROW_WIDTH,
+          ARROW_HEIGHT
+        );
+      }
     });
   }
 }
