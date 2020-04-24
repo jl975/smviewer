@@ -2,7 +2,7 @@ import { DIRECTIONS, ARROW_WIDTH, ARROW_HEIGHT } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 
 const arrowImages = {};
-DIRECTIONS.forEach(direction => {
+DIRECTIONS.forEach((direction) => {
   arrowImages[`shock_${direction}`] = new Image();
   arrowImages[`shock_${direction}`].src = getAssetPath(
     `shock_${direction}.png`
@@ -35,11 +35,12 @@ class ShockArrow {
     frame = Math.floor(frame / 3) % 8; // each sprite frame lasts 3 canvas animation frames
 
     for (let i = 0; i < this.note.length; i++) {
-      const direction = DIRECTIONS[i];
+      if (this.note[i] !== "M") continue;
+      const direction = DIRECTIONS[i % 4];
       const arrowImg = arrowImages[`shock_${direction}`];
       const frameX = (frame % 4) * ARROW_WIDTH;
       const frameY = Math.floor(frame / 4) * ARROW_HEIGHT;
-      const destX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+      const destX = i * ARROW_WIDTH;
       const destY =
         this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
 

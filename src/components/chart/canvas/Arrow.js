@@ -84,7 +84,7 @@ class Arrow {
     return this.originalBeatPosition - beatTick;
   }
 
-  renderFreezeBody(canvas, beatTick, directionIdx, mode) {
+  renderFreezeBody(canvas, beatTick, directionIdx) {
     const c = canvas.getContext("2d");
 
     const topBoundary = 0;
@@ -263,7 +263,7 @@ class Arrow {
     this.previousBeatPosition = this.currentBeatPosition(beatTick);
   }
 
-  renderArrow(canvas, beatTick, directionIdx, mode) {
+  renderArrow(canvas, beatTick, directionIdx) {
     const c = canvas.getContext("2d");
 
     const topBoundary = 0; // used to simulate the arrows being hit and disappearing

@@ -200,7 +200,12 @@ class GameEngine {
         const shockArrow = new ShockArrow({ key, ...note, mods });
         this.shockArrows.push(shockArrow);
         this.allArrows.push(shockArrow);
-      } else {
+      }
+      if (
+        note.note.includes("1") ||
+        note.note.includes("2") ||
+        note.note.includes("3")
+      ) {
         const arrow = new Arrow({ key, ...note, mods });
         this.arrows.push(arrow);
         this.allArrows.push(arrow);
@@ -214,10 +219,6 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    // console.clear();
-    // console.log("this.eventList", this.eventList);
-    const self = this;
-
     this.resetArrows();
 
     /*
@@ -407,8 +408,6 @@ class GameEngine {
     // console.log("mainLoop running");
     this.drawBackground();
 
-    // console.log(store.getState());
-
     const mode = store.getState().songSelect.mode;
 
     if (this.stepZone) {
@@ -440,8 +439,7 @@ class GameEngine {
         arrow.renderFreezeBody(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx,
-          mode
+          directionIdx
         );
       });
     }
@@ -451,8 +449,7 @@ class GameEngine {
         arrow.renderFreezeBody(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx,
-          mode
+          directionIdx
         );
       });
     }
@@ -464,8 +461,7 @@ class GameEngine {
         arrow.renderArrow(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx,
-          mode
+          directionIdx
         );
       });
     }
@@ -475,8 +471,7 @@ class GameEngine {
         arrow.renderArrow(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx,
-          mode
+          directionIdx
         );
       });
     }
