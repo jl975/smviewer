@@ -75,7 +75,9 @@ const MainContainer = (props) => {
 
     try {
       const sm = await fetchDocument(
-        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.sm`
+        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${
+          song.useSsc ? "ssc" : "sm"
+        }`
       );
       setSelectedSM(sm);
     } catch (err) {

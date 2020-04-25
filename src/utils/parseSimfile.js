@@ -9,39 +9,51 @@ const difficultyMap = {
   Challenge: "Challenge",
 };
 
-const parseSimfile = (sm) => {
+const parseSimfile = (sm, simfileType = "sm") => {
   const simfiles = {};
 
-  let bpms = "";
-  if (/#BPMS:/i.test(sm)) {
-    bpms = /#BPMS:([\s\S]*?)\s*;/i.exec(sm)[1];
+  const chartMetadata = sm.slice(
+    0,
+    sm.indexOf(simfileType === "ssc" ? "#NOTEDATA:" : "#NOTES:")
+  );
+
+  let bpms = [];
+  let stops = [];
+
+  // default bpms
+  if (/#BPMS:/i.test(chartMetadata)) {
+    bpms = /#BPMS:([\s\S]*?)\s*;/i.exec(chartMetadata)[1];
     if (bpms.length) {
       bpms = bpms.split(",").map((point) => {
         const [beat, value] = point.split("=");
         return { beat: parseFloat(beat), value: parseFloat(value) };
       });
-    } else {
-      bpms = [];
     }
   }
-
-  let stops = "";
-  if (/#STOPS:/i.test(sm)) {
-    stops = /#STOPS:([\s\S]*?)\s*;/i.exec(sm)[1];
+  // default stops
+  if (/#STOPS:/i.test(chartMetadata)) {
+    stops = /#STOPS:([\s\S]*?)\s*;/i.exec(chartMetadata)[1];
     if (stops.length) {
       stops = stops.split(",").map((point) => {
         const [beat, value] = point.split("=");
         return { beat: parseFloat(beat), value: parseFloat(value) };
       });
-    } else {
-      stops = [];
     }
   }
 
-  const chartStrs = sm
-    .slice(sm.indexOf("#NOTES:"))
-    .split(/#NOTES:\s+/)
-    .slice(1);
+  let chartStrs;
+
+  if (simfileType === "ssc") {
+    chartStrs = sm
+      .slice(sm.indexOf("#NOTEDATA:"))
+      .split(/#NOTEDATA:\s*;/)
+      .slice(1);
+  } else {
+    chartStrs = sm
+      .slice(sm.indexOf("#NOTES:"))
+      .split(/#NOTES:\s+/)
+      .slice(1);
+  }
 
   chartStrs.forEach((chartStr) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double
@@ -52,9 +64,40 @@ const parseSimfile = (sm) => {
     simfiles[`${mode}_${difficulty}`] = { difficulty, mode, bpms, stops };
     const simfile = simfiles[`${mode}_${difficulty}`];
 
-    const levelRegex = new RegExp(`${smDifficulty}:\\s+([0-9]+):`);
-    const level = parseInt(levelRegex.exec(chartStr)[1]);
+    let level;
+    if (simfileType === "ssc") {
+      level = /#METER:([0-9]+);/.exec(chartStr)[1];
+    } else {
+      const levelRegex = new RegExp(`${smDifficulty}:\\s+([0-9]+):`);
+      level = parseInt(levelRegex.exec(chartStr)[1]);
+    }
     simfile.level = level;
+
+    if (simfileType === "ssc") {
+      // check for different bpms
+      if (/#BPMS:/i.test(chartStr)) {
+        bpms = /#BPMS:([\s\S]*?)\s*;/i.exec(chartStr)[1];
+        if (bpms.length) {
+          bpms = bpms.split(",").map((point) => {
+            const [beat, value] = point.split("=");
+            return { beat: parseFloat(beat), value: parseFloat(value) };
+          });
+          simfile.bpms = bpms;
+        }
+      }
+
+      // check for different stops
+      if (/#STOPS:/i.test(chartStr)) {
+        stops = /#STOPS:([\s\S]*?)\s*;/i.exec(chartStr)[1];
+        if (stops.length) {
+          stops = stops.split(",").map((point) => {
+            const [beat, value] = point.split("=");
+            return { beat: parseFloat(beat), value: parseFloat(value) };
+          });
+          simfile.stops = stops;
+        }
+      }
+    }
 
     const measures = chartStr
       .slice(chartStr.lastIndexOf(":") + 1, chartStr.lastIndexOf(";"))
@@ -84,6 +127,7 @@ const parseSimfile = (sm) => {
 
         return noteObjects;
       });
+
     simfile.chart = measures;
   });
 

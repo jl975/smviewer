@@ -65,14 +65,14 @@ const ChartArea = (props) => {
   useEffect(() => {
     if (!canvas) return;
 
-    let ge = new GameEngine(canvas, sm);
+    const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+    let ge = new GameEngine(canvas, sm, simfileType);
 
     if (!selectedDifficulty) return;
 
     const simfile = ge.simfiles[`${selectedMode}_${selectedDifficulty}`];
 
     if (simfile) {
-      console.log(simfile);
       ge.generateEventList(simfile);
       ge.generateArrows(simfile, mods);
       ge.initTimeline(mods);

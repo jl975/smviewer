@@ -12,7 +12,7 @@ import store from "../store";
 import * as actions from "../actions/ChartActions";
 
 class GameEngine {
-  constructor(canvas, sm) {
+  constructor(canvas, sm, simfileType = "sm") {
     const self = this;
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
@@ -50,7 +50,7 @@ class GameEngine {
 
     // init logic
     if (this.sm) {
-      this.simfiles = parseSimfile(this.sm);
+      this.simfiles = parseSimfile(this.sm, simfileType);
     }
 
     AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
