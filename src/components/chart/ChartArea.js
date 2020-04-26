@@ -66,6 +66,7 @@ const ChartArea = (props) => {
     if (!canvas) return;
 
     const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+
     let ge = new GameEngine(canvas, sm, simfileType);
 
     if (!selectedDifficulty) return;

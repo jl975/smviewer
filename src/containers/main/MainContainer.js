@@ -79,6 +79,7 @@ const MainContainer = (props) => {
           song.useSsc ? "ssc" : "sm"
         }`
       );
+
       setSelectedSM(sm);
     } catch (err) {
       alert(err);
