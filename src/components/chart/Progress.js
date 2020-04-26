@@ -6,6 +6,10 @@ import { presetParams } from "../../utils";
 
 const Progress = (props) => {
   const progressBar = useRef();
+  const mouseDown = useRef();
+
+  const [presetPosition, setPresetPosition] = useState(null);
+
   const { progress } = props;
 
   let presetStart = 0;
@@ -14,16 +18,43 @@ const Progress = (props) => {
   }
 
   useEffect(() => {
+    // mobile scrub behavior
     progressBar.current.addEventListener("touchstart", (e) => {
+      e.preventDefault();
       jumpToProgress(e.touches[0]);
     });
-
     progressBar.current.addEventListener("touchmove", (e) => {
+      e.preventDefault();
       jumpToProgress(e.touches[0]);
     });
 
-    progressBar.current.addEventListener("touchend", (e) => {
-      // jumpToProgress(e.touches[0]);
+    // desktop scrub behavior
+    progressBar.current.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      jumpToProgress(e);
+      mouseDown.current = true;
+    });
+    progressBar.current.addEventListener("mousemove", (e) => {
+      e.preventDefault();
+      if (mouseDown.current) {
+        jumpToProgress(e);
+      }
+    });
+    progressBar.current.addEventListener("mouseup", (e) => {
+      e.preventDefault();
+      mouseDown.current = false;
+    });
+
+    // set preset marker position and update on window resize
+    if (presetStart && progressBar.current) {
+      const totalWidth = progressBar.current.offsetWidth;
+      setPresetPosition(totalWidth * presetStart);
+    }
+    window.addEventListener("resize", (e) => {
+      if (presetStart && progressBar.current) {
+        const totalWidth = progressBar.current.offsetWidth;
+        setPresetPosition(totalWidth * presetStart);
+      }
     });
   }, []);
 
@@ -48,21 +79,14 @@ const Progress = (props) => {
     e.stopPropagation();
   };
 
-  const getPresetMarkerPosition = () => {
-    let totalWidth = 0;
-    if (progressBar.current) {
-      totalWidth = progressBar.current.offsetWidth;
-    }
-    return totalWidth * presetStart;
-  };
-
   return (
     <div id="progress-bar" ref={progressBar}>
       {presetStart ? (
         <div
           className="preset-marker"
           onClick={jumpToPresetStart}
-          style={{ left: `${getPresetMarkerPosition()}px` }}
+          onTouchStart={jumpToPresetStart}
+          style={{ left: `${presetPosition}px` }}
         ></div>
       ) : null}
       <div

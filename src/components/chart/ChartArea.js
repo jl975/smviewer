@@ -20,6 +20,7 @@ const ChartArea = (props) => {
     sm,
     chart,
     mods,
+    screen,
     selectedAudio,
     loadingAudio,
     gameEngine,
@@ -29,8 +30,9 @@ const ChartArea = (props) => {
   const [canvas, setCanvas] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
+  const canvasWrapper = useRef();
 
-  // define canvas on mount
+  // define canvas and resize listener on mount
   useEffect(() => {
     if (!loadingAudio) {
       chartArea.current = document.querySelector("#chartArea");
@@ -41,8 +43,11 @@ const ChartArea = (props) => {
   // change chart dimensions depending on single or double
   // Hardcoded widths for now. Variable widths may be possible in the future
   useEffect(() => {
-    if (!canvas) return;
+    if (!canvas || !canvasWrapper.current) return;
+    resizeChartArea();
+  }, [canvas, selectedMode, screen]);
 
+  const resizeChartArea = () => {
     if (selectedMode === "single") {
       chartArea.current.width = 256;
       chartArea.current.style.transform = "none";
@@ -51,15 +56,29 @@ const ChartArea = (props) => {
       chartArea.current.style.top = 0;
     } else if (selectedMode === "double") {
       chartArea.current.width = 512;
-      const scaleFactor = window.innerWidth / chartArea.current.width;
-      const xOffset = (chartArea.current.width - window.innerWidth) / 2;
-      const yOffset = xOffset * (7 / 8);
-      chartArea.current.style.transform = `scale(${scaleFactor})`;
-      chartArea.current.style.position = "absolute";
-      chartArea.current.style.left = `-${xOffset}px`;
-      chartArea.current.style.top = `-${yOffset}px`;
+
+      const wrapper = canvasWrapper.current.getBoundingClientRect();
+
+      if (wrapper.width < 512) {
+        const scaleFactor = wrapper.width / chartArea.current.width;
+        const xOffset = (chartArea.current.width - wrapper.width) / 2;
+        const yOffset = xOffset * (7 / 8);
+        chartArea.current.style.transform = `scale(${scaleFactor})`;
+        chartArea.current.style.position = "absolute";
+        chartArea.current.style.left = `-${xOffset}px`;
+        chartArea.current.style.top = `-${yOffset}px`;
+      } else {
+        chartArea.current.style.transform = "none";
+        chartArea.current.style.position = "relative";
+        chartArea.current.style.left = 0;
+        chartArea.current.style.top = 0;
+      }
     }
-  }, [canvas, selectedMode]);
+
+    if (gameEngine) {
+      gameEngine.updateLoopOnce();
+    }
+  };
 
   // reset chart if song, difficulty, or mods change
   useEffect(() => {
@@ -114,7 +133,7 @@ const ChartArea = (props) => {
       {loadingAudio && <div>Loading audio...</div>}
       {!loadingAudio && (
         <>
-          <div className={`canvas-wrapper ${selectedMode}`}>
+          <div className={`canvas-wrapper ${selectedMode}`} ref={canvasWrapper}>
             <canvas id="chartArea" width="256" height="448" />
             <div className="combo-temp">
               <div>Combo</div>
@@ -202,7 +221,7 @@ const ChartArea = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio, chart, mods, songSelect } = state;
+  const { audio, chart, mods, songSelect, screen } = state;
   return {
     audio: audio.chartAudio,
     chart,
@@ -210,6 +229,7 @@ const mapStateToProps = (state) => {
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
+    screen,
   };
 };
 

@@ -14,6 +14,7 @@ import {
   selectDifficulty,
   selectMode,
 } from "../../actions/SongSelectActions";
+import { resizeScreen } from "../../actions/ScreenActions";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -35,6 +36,8 @@ const MainContainer = (props) => {
     fetchData();
 
     AudioPlayer.setLoadingAudio = setLoadingAudio;
+
+    window.addEventListener("resize", props.resizeScreen);
   }, []);
 
   const fetchSimfiles = async () => {
@@ -144,6 +147,7 @@ const mapDispatchToProps = (dispatch) => {
     selectSong: (song) => dispatch(selectSong(song)),
     selectDifficulty: (song) => dispatch(selectDifficulty(song)),
     selectMode: (song) => dispatch(selectMode(song)),
+    resizeScreen: (e) => dispatch(resizeScreen(e)),
   };
 };
 
