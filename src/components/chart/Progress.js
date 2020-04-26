@@ -2,12 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 
 import AudioPlayer from "../../core/AudioPlayer";
+import { presetParams } from "../../utils";
 
 const Progress = (props) => {
   const progressBar = useRef();
-  // const [progress, setProgress] = useState(0);
+  const { progress } = props;
 
-  const { progress, gameEngine } = props;
+  let presetStart = 0;
+  if (presetParams.progress) {
+    presetStart = presetParams.progress / 100000;
+  }
 
   useEffect(() => {
     progressBar.current.addEventListener("touchstart", (e) => {
@@ -21,22 +25,46 @@ const Progress = (props) => {
     progressBar.current.addEventListener("touchend", (e) => {
       // jumpToProgress(e.touches[0]);
     });
-
-    // AudioPlayer.setStateProgress = setProgress;
   }, []);
 
-  const jumpToProgress = (event) => {
-    const totalWidth = progressBar.current.offsetWidth;
-    const x = event.clientX - progressBar.current.offsetLeft;
-    const progressPercent = x / totalWidth;
+  const jumpToProgress = (event, presetProgress) => {
+    let progressPercent;
+
+    if (presetProgress) {
+      progressPercent = presetProgress;
+    } else {
+      const totalWidth = progressBar.current.offsetWidth;
+      const x = event.clientX - progressBar.current.offsetLeft;
+      progressPercent = x / totalWidth;
+    }
 
     if (progressPercent < 0 || progressPercent > 1) return;
 
     AudioPlayer.seekProgress(progressPercent);
   };
 
+  const jumpToPresetStart = (e) => {
+    jumpToProgress(e, presetStart);
+    e.stopPropagation();
+  };
+
+  const getPresetMarkerPosition = () => {
+    let totalWidth = 0;
+    if (progressBar.current) {
+      totalWidth = progressBar.current.offsetWidth;
+    }
+    return totalWidth * presetStart;
+  };
+
   return (
     <div id="progress-bar" ref={progressBar}>
+      {presetStart ? (
+        <div
+          className="preset-marker"
+          onClick={jumpToPresetStart}
+          style={{ left: `${getPresetMarkerPosition()}px` }}
+        ></div>
+      ) : null}
       <div
         className="progress-value"
         style={{ width: `${progress * 100}%` }}

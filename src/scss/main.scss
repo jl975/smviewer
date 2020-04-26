@@ -133,13 +133,25 @@
   margin-top: 5px;
 }
 #progress-bar {
+  position: relative;
   margin: auto 20px;
   height: 50px;
   background: #d7e2ed;
 
+  .preset-marker {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 7px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 2px;
+    transform: translateX(-50%);
+  }
+
   .progress-value {
     background: #627c92;
-    width: 50%;
+    width: 0%;
     height: 100%;
   }
 }
