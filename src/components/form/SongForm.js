@@ -142,8 +142,7 @@ const SongForm = (props) => {
     document.body.click();
 
     if (presetParams.song) {
-      let progress = presetParams.progress ? presetParams.progress / 100000 : 0;
-      onSongSelect(null, { value: presetParams.song }, progress);
+      onSongSelect(null, { value: presetParams.song });
     } else {
       // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" }); // ORCA
       // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
@@ -182,7 +181,7 @@ const SongForm = (props) => {
     }
   }, [selectedSongOption]);
 
-  const onSongSelect = async (e, data, initialProgress = 0) => {
+  const onSongSelect = async (e, data) => {
     const songHash = data.value;
     setSelectedSongOption(songHash);
 
@@ -190,6 +189,14 @@ const SongForm = (props) => {
     AudioPlayer.stopSongPreview();
 
     const song = simfileList.find((song) => song.hash === songHash);
+
+    let initialProgress = 0;
+    if (presetParams.song === songHash && presetParams.progress) {
+      initialProgress = presetParams.progress / 100000;
+    } else {
+      // remove preset progress marker if it is no longer relevant to the new song
+      presetParams.progress = 0;
+    }
 
     // automatically fetch simfile and update chart
     await props.onSongSelect(song, initialProgress);
@@ -256,9 +263,6 @@ const SongForm = (props) => {
         }
       }
     }
-
-    // // automatically update chart
-    // props.onSongSelect(song, initialProgress);
   };
 
   const handleDifficultySelect = (difficulty) => {
