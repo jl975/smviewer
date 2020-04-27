@@ -3,6 +3,7 @@ import { Modal, Button, Input } from "semantic-ui-react";
 import copy from "copy-to-clipboard";
 
 import { getOriginPath } from "../../utils";
+import Progress from "./canvas/Progress";
 
 const difficulties = {
   Beginner: "b",
@@ -35,6 +36,8 @@ const ShareModal = (props) => {
   // console.log("ShareModal data", data);
 
   const generateShareUrl = () => {
+    const progress = Progress.getProgress();
+
     const params = {
       song: song.hash,
       difficulty: difficulties[difficulty] + modes[mode] + "P",

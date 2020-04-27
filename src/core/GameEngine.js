@@ -221,6 +221,8 @@ class GameEngine {
   initTimeline(mods) {
     this.resetArrows();
 
+    console.log(`this.allArrows.length: ${this.allArrows.length}`);
+
     /*
       The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
       Create a tween to animate the global beat tick for each of these sections and chain them together.
@@ -376,12 +378,16 @@ class GameEngine {
       arrow.combo = currentCombo;
       arrow.timestamp = arrowTimestamp;
 
+      const comboTemp = document.querySelector("#combo-temp .combo-num");
+
       this.tl.set(
         this.globalParams,
         {
           combo: arrow.combo,
           onStart: () => {
-            store.dispatch(actions.setCombo(arrow.combo));
+            // store.dispatch(actions.setCombo(arrow.combo));
+            comboTemp.textContent = arrow.combo;
+
             if (arrow instanceof Arrow) {
               // AudioPlayer.playAssistTick();
               // console.log(arrow);

@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 
 import store from "../store";
 import * as actions from "../actions/AudioActions";
+import Progress from "../components/chart/canvas/Progress";
 import { changeActiveBpm, setCombo } from "../actions/ChartActions";
 import { getAssetPath } from "../utils";
 import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
@@ -162,9 +163,12 @@ class AudioPlayer {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(this.getCurrentSong().globalParams);
       store.dispatch(changeActiveBpm(currentBpm));
+      // document.querySelector(".bpm-value").textContent = Math.round(currentBpm);
 
       const currentCombo = getCurrentCombo(this.getCurrentSong());
-      store.dispatch(setCombo(currentCombo));
+      // store.dispatch(setCombo(currentCombo));
+      const comboTemp = document.querySelector("#combo-temp .combo-num");
+      if (comboTemp) comboTemp.textContent = currentCombo;
 
       gsap.ticker.remove(this.updateTimeline);
     }
@@ -190,7 +194,8 @@ class AudioPlayer {
     if (frame % 15 === 0) {
       const audio = this.getCurrentSong().audio;
       const progress = audio.seek() / audio.duration();
-      store.dispatch(actions.setChartProgress(progress));
+      // store.dispatch(actions.setChartProgress(progress));
+      Progress.render(progress);
     }
   }
 

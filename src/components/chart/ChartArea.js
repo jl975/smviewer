@@ -5,12 +5,14 @@ import "inobounce";
 
 import "./ChartArea.scss";
 
+import { presetParams } from "../../utils";
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
-import Progress from "./Progress";
+// import Progress from "./Progress";
 import HoldButton from "../ui/HoldButton";
 import ShareModal from "./ShareModal";
+import Progress from "./canvas/Progress";
 
 const ChartArea = (props) => {
   const {
@@ -37,6 +39,8 @@ const ChartArea = (props) => {
     if (!loadingAudio) {
       chartArea.current = document.querySelector("#chartArea");
       setCanvas(chartArea.current);
+
+      Progress.initCanvas();
     }
   }, [loadingAudio]);
 
@@ -128,6 +132,8 @@ const ChartArea = (props) => {
     progress: props.audio.progress,
   };
 
+  console.log("ChartArea rerender");
+
   return (
     <div className="canvas-container">
       {loadingAudio && <div>Loading audio...</div>}
@@ -135,13 +141,26 @@ const ChartArea = (props) => {
         <>
           <div className={`canvas-wrapper ${selectedMode}`} ref={canvasWrapper}>
             <canvas id="chartArea" width="256" height="448" />
-            <div className="combo-temp">
+            <div id="combo-temp">
               <div>Combo</div>
               <div className="combo-num">{chart.combo}</div>
             </div>
           </div>
           <div className="progress-container">
-            <Progress progress={props.audio.progress} gameEngine={gameEngine} />
+            {/* <Progress progress={props.audio.progress} gameEngine={gameEngine} /> */}
+
+            <div className="progress-wrapper">
+              <canvas id="progress" />
+              {presetParams.progress ? (
+                <div
+                  className="preset-marker-wrapper"
+                  onClick={Progress.jumpToPresetStart.bind(Progress)}
+                  onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
+                >
+                  <div className="preset-marker" />
+                </div>
+              ) : null}
+            </div>
           </div>
         </>
       )}
