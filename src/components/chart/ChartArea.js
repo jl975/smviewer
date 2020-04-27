@@ -5,11 +5,10 @@ import "inobounce";
 
 import "./ChartArea.scss";
 
-import { presetParams } from "../../utils";
+import { presetParams, getJacketPath } from "../../utils";
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
-// import Progress from "./Progress";
 import HoldButton from "../ui/HoldButton";
 import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
@@ -23,7 +22,6 @@ const ChartArea = (props) => {
     chart,
     mods,
     screen,
-    selectedAudio,
     loadingAudio,
     gameEngine,
     setGameEngine,
@@ -33,6 +31,7 @@ const ChartArea = (props) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
   const canvasWrapper = useRef();
+  const chartLoadingScreen = useRef();
 
   // define canvas and resize listener on mount
   useEffect(() => {
@@ -45,7 +44,7 @@ const ChartArea = (props) => {
   }, [loadingAudio]);
 
   // change chart dimensions depending on single or double
-  // Hardcoded widths for now. Variable widths may be possible in the future
+  // Hardcoded heights for now. Variable heights may be possible in the future
   useEffect(() => {
     if (!canvas || !canvasWrapper.current) return;
     resizeChartArea();
@@ -132,11 +131,19 @@ const ChartArea = (props) => {
     progress: props.audio.progress,
   };
 
-  console.log("ChartArea rerender");
-
   return (
     <div className="canvas-container">
-      {loadingAudio && <div>Loading audio...</div>}
+      {loadingAudio && (
+        <div className={`canvas-wrapper`} ref={chartLoadingScreen}>
+          <div className={`chart-loading-screen ${selectedMode}`}>
+            <img
+              className="chart-loading-jacket"
+              src={getJacketPath(`${selectedSong.hash}.png`)}
+            />
+            <div className="chart-loading-message">Loading chart...</div>
+          </div>
+        </div>
+      )}
       {!loadingAudio && (
         <>
           <div className={`canvas-wrapper ${selectedMode}`} ref={canvasWrapper}>

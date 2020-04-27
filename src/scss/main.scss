@@ -68,6 +68,35 @@
     }
   }
 }
+
+.chart-loading-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  margin: 0 auto;
+  color: #fff;
+
+  &.single {
+    height: 448px;
+    width: 256px;
+  }
+  &.double {
+    height: 448px;
+    width: 512px;
+  }
+
+  .chart-loading-jacket {
+    height: 130px;
+    width: 130px;
+  }
+
+  .chart-loading-message {
+  }
+}
+
 #chartArea {
   margin: 0 auto;
   // margin-top: 5px;

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { tsv } from "d3-fetch";
-import { Button } from "semantic-ui-react";
 
 import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import MobileNav from "../../components/navigation/MobileNav";
 import AudioPlayer from "../../core/AudioPlayer";
-import { getOriginPath, fetchDocument, presetParams } from "../../utils";
+import { getOriginPath, fetchDocument } from "../../utils";
 import {
   selectSong,
   selectDifficulty,
@@ -20,7 +19,6 @@ const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
   const [simfileList, setSimfileList] = useState([]);
   const [selectedSM, setSelectedSM] = useState(null);
-  const [selectedAudio, setSelectedAudio] = useState(null);
 
   const [activeView, setActiveView] = useState("chart");
 
@@ -108,11 +106,7 @@ const MainContainer = (props) => {
         <>
           <ChartArea
             loadingAudio={loadingAudio}
-            // selectedSong={selectedSong}
-            // selectedDifficulty={selectedDifficulty}
-            // selectedMode={selectedMode}
             sm={selectedSM}
-            selectedAudio={selectedAudio}
             gameEngine={gameEngine}
             setGameEngine={setGameEngine}
           />
@@ -121,8 +115,6 @@ const MainContainer = (props) => {
             activeView={activeView}
             setActiveView={changeActiveView}
             simfileList={simfileList}
-            // selectedDifficulty={selectedDifficulty}
-            // selectedMode={selectedMode}
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
             onModeSelect={onModeSelect}
