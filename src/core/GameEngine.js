@@ -305,9 +305,13 @@ class GameEngine {
       }
     }
 
-    // combo counter
+    // note events (combo, assist tick, target flash)
+    console.log("eventList", this.eventList);
     const bpmChangeQueue = this.globalParams.bpmChangeQueue;
     // console.log("bpmChangeQueue", bpmChangeQueue);
+
+    // subset of arrows that specifically count for combo (e.g. excluding ends of freeze arrows)
+    this.comboArrows = [];
 
     let currentBpmPtr = -1,
       currentEventPtr = 0,
@@ -378,6 +382,8 @@ class GameEngine {
       arrow.combo = currentCombo;
       arrow.timestamp = arrowTimestamp;
 
+      this.comboArrows.push(arrow);
+
       const comboTemp = document.querySelector("#combo-temp .combo-num");
 
       this.tl.set(
@@ -397,6 +403,12 @@ class GameEngine {
         arrowTimestamp
       );
     });
+
+    // console.log("combo arrows", this.comboArrows);
+
+    window.arrow = (combo) => {
+      return this.comboArrows[combo - 1];
+    };
 
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);

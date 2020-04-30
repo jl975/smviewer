@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams } from "../../utils";
+import { getClosestDifficulty } from "../../utils/songUtils";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import {
   SP_DIFFICULTIES,
@@ -73,7 +74,7 @@ const SongForm = (props) => {
 
   const [selectedFilters, setSelectedFilters] = useState({
     title: "all",
-    version: 16,
+    version: 15,
     level: "all",
     difficulty: "all",
     // level: 10,
@@ -81,16 +82,27 @@ const SongForm = (props) => {
 
   const [displayedSongs, setDisplayedSongs] = useState([]);
 
-  // on filter change
+  // on filter or mode change
   useEffect(() => {
     const { title, version, level, difficulty } = selectedFilters;
 
     const songs = simfileList
       .filter((song) => {
+        const singleDiffs = song.levels.slice(0, 5);
+        const doubleDiffs = song.levels.slice(5, 9);
         return (
+          // song matches title filter
           (title === "all" || title === song.abcSort) &&
+          // song matches version filter
           (version === "all" || version === parseInt(song.version)) &&
-          (level === "all" ||
+          // if a level filter is selected, song matches level filter
+          // if level is not being filtered, song has at least one chart on the chosen mode
+          ((level === "all" &&
+            selectedMode === "single" &&
+            singleDiffs.some((level) => !!level)) ||
+            (level === "all" &&
+              selectedMode === "double" &&
+              doubleDiffs.some((level) => !!level)) ||
             (selectedMode === "single" &&
               song.levels.slice(0, 5).includes(level)) ||
             (selectedMode === "double" &&
@@ -126,7 +138,7 @@ const SongForm = (props) => {
 
     setDisplayedSongs(songs);
     songGridContainer.current.scrollTop = 0;
-  }, [selectedFilters]);
+  }, [selectedFilters, selectedMode]);
 
   // object corresponding to the selected song option
   // NOT the song currently playing in the main view
@@ -236,31 +248,35 @@ const SongForm = (props) => {
           The closest available difficulty will be chosen for the song without affecting the
           difficulty option selected for the form, like the way it works in the real game
         */
-        const difficulties =
-          selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
-        const levels =
-          selectedMode === "double"
-            ? song.levels.slice(5, 9)
-            : song.levels.slice(0, 5);
-        if (
-          ["Difficult", "Expert", "Challenge"].includes(
-            selectedDifficultyOption
-          )
-        ) {
-          for (let i = difficulties.length - 1; i >= 0; i--) {
-            if (levels[i]) {
-              props.onDifficultySelect(difficulties[i]);
-              break;
-            }
-          }
-        } else if (["Beginner", "Basic"].includes(selectedDifficultyOption)) {
-          for (let i = 0; i <= difficulties.length - 1; i++) {
-            if (levels[i]) {
-              props.onDifficultySelect(difficulties[i]);
-              break;
-            }
-          }
-        }
+        props.onDifficultySelect(
+          getClosestDifficulty(song, selectedDifficultyOption, selectedMode)
+        );
+
+        // const difficulties =
+        //   selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
+        // const levels =
+        //   selectedMode === "double"
+        //     ? song.levels.slice(5, 9)
+        //     : song.levels.slice(0, 5);
+        // if (
+        //   ["Difficult", "Expert", "Challenge"].includes(
+        //     selectedDifficultyOption
+        //   )
+        // ) {
+        //   for (let i = difficulties.length - 1; i >= 0; i--) {
+        //     if (levels[i]) {
+        //       props.onDifficultySelect(difficulties[i]);
+        //       break;
+        //     }
+        //   }
+        // } else if (["Beginner", "Basic"].includes(selectedDifficultyOption)) {
+        //   for (let i = 0; i <= difficulties.length - 1; i++) {
+        //     if (levels[i]) {
+        //       props.onDifficultySelect(difficulties[i]);
+        //       break;
+        //     }
+        //   }
+        // }
       }
     }
   };
@@ -440,6 +456,10 @@ const SongForm = (props) => {
           displayedSongs={displayedSongs}
           onSongSelect={onSongSelect}
           selectedSongOption={selectedSongOption}
+          selectedMode={selectedMode}
+          // selectedDifficulty={selectedDifficulty}
+          selectedDifficultyOption={selectedDifficultyOption}
+          selectedFilters={selectedFilters}
         />
       </div>
     </div>

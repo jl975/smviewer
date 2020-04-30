@@ -154,8 +154,6 @@ const ChartArea = (props) => {
             </div>
           </div>
           <div className="progress-container">
-            {/* <Progress progress={props.audio.progress} gameEngine={gameEngine} /> */}
-
             <div className="progress-wrapper">
               <canvas id="progress" />
               {presetParams.progress ? (

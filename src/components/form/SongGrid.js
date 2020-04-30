@@ -1,19 +1,78 @@
 import React from "react";
 
-import AudioPlayer from "../../core/AudioPlayer";
 import { getJacketPath } from "../../utils";
+import { SP_DIFFICULTIES } from "../../constants";
+import { getClosestDifficulty } from "../../utils/songUtils";
 
 const SongGrid = (props) => {
-  const { displayedSongs, onSongSelect, selectedSongOption } = props;
+  const {
+    displayedSongs,
+    onSongSelect,
+    selectedSongOption,
+    selectedMode,
+    selectedDifficultyOption,
+    selectedFilters,
+  } = props;
 
-  // let songs = displayedSongs.slice(200, 300);
   let songs = displayedSongs;
-
-  // console.log("songs", songs);
 
   const selectSong = (song) => {
     onSongSelect(null, { value: song.hash });
-    // console.log("select song", song);
+  };
+
+  const renderSongLevel = (song) => {
+    let levels = [];
+    if (selectedMode === "single") levels = song.levels.slice(0, 5);
+    else if (selectedMode === "double")
+      levels = [null, ...song.levels.slice(5, 9)];
+
+    const levelFilter = selectedFilters.level;
+    const difficultyFilter = selectedFilters.difficulty;
+
+    // If neither level nor difficulty are being filtered, show the chosen difficulty option or whatever is closest
+    if (difficultyFilter === "all" && levelFilter === "all") {
+      const displayedLevels = [null, null, null, null, null];
+      const difficultyIdx = SP_DIFFICULTIES.indexOf(selectedDifficultyOption);
+      if (levels[difficultyIdx]) {
+        displayedLevels[difficultyIdx] = levels[difficultyIdx];
+      } else {
+        const closestDiff = getClosestDifficulty(
+          song,
+          selectedDifficultyOption,
+          selectedMode
+        );
+        const closestDiffIdx = SP_DIFFICULTIES.indexOf(closestDiff);
+        displayedLevels[closestDiffIdx] = levels[closestDiffIdx];
+      }
+      levels = displayedLevels;
+    } else {
+      levels.forEach((level, i) => {
+        if (!level) return;
+        const difficulty = SP_DIFFICULTIES[i];
+        // If level is chosen but difficulty is not, show all difficulties that match the level
+        if (difficultyFilter === "all") {
+          if (level !== levelFilter) levels[i] = null;
+        }
+        // If level is not chosen but difficulty is, show the filtered difficulty only
+        // If both level and difficulty are chosen, show the filtered difficulty only
+        else {
+          if (difficulty !== difficultyFilter) levels[i] = null;
+        }
+      });
+    }
+
+    return levels.map((level, i) => {
+      if (!level) return null;
+      const difficulty = SP_DIFFICULTIES[i];
+      return (
+        <div
+          key={`${song.hash}_${difficulty}`}
+          className={`song-level ${difficulty}`}
+        >
+          {level}
+        </div>
+      );
+    });
   };
 
   const renderSong = (song) => {
@@ -36,6 +95,7 @@ const SongGrid = (props) => {
               alt={song.title}
             />
           </div>
+          <div className="song-level-wrapper">{renderSongLevel(song)}</div>
           <div className="song-title-bar">{song.title}</div>
         </div>
       </div>

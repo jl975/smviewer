@@ -20,7 +20,7 @@ const MainContainer = (props) => {
   const [simfileList, setSimfileList] = useState([]);
   const [selectedSM, setSelectedSM] = useState(null);
 
-  const [activeView, setActiveView] = useState("chart");
+  const [activeView, setActiveView] = useState("song");
 
   const [gameEngine, setGameEngine] = useState(null);
 
