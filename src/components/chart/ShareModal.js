@@ -20,7 +20,7 @@ const modes = {
 
 const ShareModal = (props) => {
   const { modalOpen, setModalOpen, data } = props;
-  const { song, difficulty, mode, mods, progress } = data;
+  const { song, difficulty, mode, mods } = data;
 
   const shareUrl = useRef();
   const [message, setMessage] = useState("");

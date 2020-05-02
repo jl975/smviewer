@@ -221,7 +221,7 @@ class GameEngine {
   initTimeline(mods) {
     this.resetArrows();
 
-    console.log(`this.allArrows.length: ${this.allArrows.length}`);
+    // console.log(`this.allArrows.length: ${this.allArrows.length}`);
 
     /*
       The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
@@ -306,7 +306,7 @@ class GameEngine {
     }
 
     // note events (combo, assist tick, target flash)
-    console.log("eventList", this.eventList);
+    // console.log("eventList", this.eventList);
     const bpmChangeQueue = this.globalParams.bpmChangeQueue;
     // console.log("bpmChangeQueue", bpmChangeQueue);
 
