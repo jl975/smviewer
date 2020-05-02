@@ -44,11 +44,8 @@ const ChartArea = (props) => {
   // define canvas and resize listener on mount
   useEffect(() => {
     if (!loadingAudio) {
-      // if (!chartArea.current) {
-      console.log("setting canvas");
       chartArea.current = document.querySelector("#chartArea");
       setCanvas(chartArea.current);
-      // }
 
       Progress.initCanvas();
     }

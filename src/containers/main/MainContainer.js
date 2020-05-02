@@ -21,7 +21,7 @@ const MainContainer = (props) => {
   const [simfileList, setSimfileList] = useState([]);
   const [selectedSM, setSelectedSM] = useState(null);
 
-  const [activeView, setActiveView] = useState("song");
+  const [activeView, setActiveView] = useState("chart");
 
   const [gameEngine, setGameEngine] = useState(null);
 
@@ -87,6 +87,7 @@ const MainContainer = (props) => {
       // User might try to select a new song before the simfile is fetched.
       // Only process simfile if this is the last song that was selected
       if (loadStore.lastRequestedSong === song.title) {
+        console.log("sm loaded");
         setSelectedSM(sm);
       }
     } catch (err) {

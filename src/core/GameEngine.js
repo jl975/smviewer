@@ -351,6 +351,8 @@ class GameEngine {
             if (nextEvent && nextEvent.type === "stop") {
               pendingStopPtr = i + 1;
               pendingStop = this.eventList[pendingStopPtr];
+            } else {
+              pendingStop = null;
             }
             break;
           }
@@ -395,7 +397,7 @@ class GameEngine {
             comboTemp.textContent = arrow.combo;
 
             if (arrow instanceof Arrow) {
-              // AudioPlayer.playAssistTick();
+              AudioPlayer.playAssistTick();
               // console.log(arrow);
             }
           },
@@ -404,18 +406,11 @@ class GameEngine {
       );
     });
 
-    // console.log("combo arrows", this.comboArrows);
-
-    window.arrow = (combo) => {
-      return this.comboArrows[combo - 1];
-    };
-
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);
     AudioPlayer.setGlobalParams(this.globalParams);
 
     this.updateLoopOnce();
-    // hack
   }
 
   resetArrows() {
