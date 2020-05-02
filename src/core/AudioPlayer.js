@@ -156,6 +156,9 @@ class AudioPlayer {
   // when audio is played, resync timeline with audio a few times until audio playback
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
+    // for reducing debugging headaches; don't remove
+    if (!this.getCurrentSong().tl) return;
+
     this.getCurrentSong().tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
 
     this.audioResyncFrames--;

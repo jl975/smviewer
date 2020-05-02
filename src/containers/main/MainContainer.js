@@ -14,6 +14,7 @@ import {
   selectMode,
 } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
+import loadStore from "../../utils/loadStore";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -65,7 +66,6 @@ const MainContainer = (props) => {
     document.title = `${song.title} - SMViewer`;
 
     // retrieve audio file and simfile from song.simfilePath
-    // TEMP: SM only; ignore Ace for Aces and Chaos Terror-Tech for now
 
     let smName = song.smName;
 
@@ -75,15 +75,22 @@ const MainContainer = (props) => {
     }
 
     try {
+      // Immediately update the value of "last requested song"
+      // Any pending requests that finish before the last song is loaded will be ignored
+      loadStore.lastRequestedSong = song.title;
       const sm = await fetchDocument(
         `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${
           song.useSsc ? "ssc" : "sm"
         }`
       );
 
-      setSelectedSM(sm);
+      // User might try to select a new song before the simfile is fetched.
+      // Only process simfile if this is the last song that was selected
+      if (loadStore.lastRequestedSong === song.title) {
+        setSelectedSM(sm);
+      }
     } catch (err) {
-      alert(err);
+      alert(`Song ${song.title} failed to load`, err);
     }
   };
 

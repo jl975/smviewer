@@ -3,9 +3,9 @@ import { Button, Icon, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "inobounce";
 
-import "./ChartArea.scss";
-
 import { presetParams, getJacketPath } from "../../utils";
+import { usePrevious } from "../../hooks";
+// import loadStore from '../../utils/loadStore';
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
@@ -33,11 +33,22 @@ const ChartArea = (props) => {
   const canvasWrapper = useRef();
   const chartLoadingScreen = useRef();
 
+  const prevState = usePrevious({
+    canvas,
+    sm,
+    selectedDifficulty,
+    selectedMode,
+    mods,
+  });
+
   // define canvas and resize listener on mount
   useEffect(() => {
     if (!loadingAudio) {
+      // if (!chartArea.current) {
+      console.log("setting canvas");
       chartArea.current = document.querySelector("#chartArea");
       setCanvas(chartArea.current);
+      // }
 
       Progress.initCanvas();
     }
@@ -85,6 +96,30 @@ const ChartArea = (props) => {
 
   // reset chart if song, difficulty, or mods change
   useEffect(() => {
+    const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods };
+    Object.keys(currentState).forEach((thing) => {
+      if (prevState[thing] !== currentState[thing]) {
+        if (thing === "sm") {
+          // console.log(
+          //   `${thing} changed from ${
+          //     prevState[thing]
+          //       ? prevState[thing].slice(0, 100)
+          //       : prevState[thing]
+          //   } \n\nto ${currentState[thing].slice(0, 100)}`
+          // );
+        } else {
+          // console.log(`${thing} changed`);
+          // console.log(
+          //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
+          // );
+        }
+
+        // console.log(
+        //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
+        // );
+      }
+    });
+
     if (!canvas) return;
 
     const simfileType = selectedSong.useSsc ? "ssc" : "sm";

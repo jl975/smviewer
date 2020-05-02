@@ -6,6 +6,7 @@ import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
+import loadStore from "../../utils/loadStore";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import {
   SP_DIFFICULTIES,
@@ -213,6 +214,11 @@ const SongForm = (props) => {
     // automatically fetch simfile and update chart
     await props.onSongSelect(song, initialProgress);
 
+    // short-circuit if this is not the last song that was selected
+    if (loadStore.lastRequestedSong !== song.title) {
+      return;
+    }
+
     // if a specific level filter has been chosen, select the difficulty that
     // corresponds to that level
     if (selectedFilters.difficulty !== "all") {
@@ -236,48 +242,17 @@ const SongForm = (props) => {
       const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
         selectedDifficultyOption
       );
+      let difficultyToSelect;
       if (song.levels[selectedDiffOptionIndex]) {
-        props.onDifficultySelect(selectedDifficultyOption);
+        difficultyToSelect = selectedDifficultyOption;
       } else {
-        /*
-          If the song does not have a chart corresponding to the chosen difficulty option,
-          pick whatever is *closest*
-          - If Difficult, Expert, or Challenge is the chosen option, start from Challenge and
-            work your way down until the first available difficulty is reached.
-          - If Beginner or Basic is the chosen option, start from Beginner and work up.
-          The closest available difficulty will be chosen for the song without affecting the
-          difficulty option selected for the form, like the way it works in the real game
-        */
-        props.onDifficultySelect(
-          getClosestDifficulty(song, selectedDifficultyOption, selectedMode)
+        difficultyToSelect = getClosestDifficulty(
+          song,
+          selectedDifficultyOption,
+          selectedMode
         );
-
-        // const difficulties =
-        //   selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
-        // const levels =
-        //   selectedMode === "double"
-        //     ? song.levels.slice(5, 9)
-        //     : song.levels.slice(0, 5);
-        // if (
-        //   ["Difficult", "Expert", "Challenge"].includes(
-        //     selectedDifficultyOption
-        //   )
-        // ) {
-        //   for (let i = difficulties.length - 1; i >= 0; i--) {
-        //     if (levels[i]) {
-        //       props.onDifficultySelect(difficulties[i]);
-        //       break;
-        //     }
-        //   }
-        // } else if (["Beginner", "Basic"].includes(selectedDifficultyOption)) {
-        //   for (let i = 0; i <= difficulties.length - 1; i++) {
-        //     if (levels[i]) {
-        //       props.onDifficultySelect(difficulties[i]);
-        //       break;
-        //     }
-        //   }
-        // }
       }
+      props.onDifficultySelect(difficultyToSelect);
     }
   };
 

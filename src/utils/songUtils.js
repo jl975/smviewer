@@ -1,5 +1,14 @@
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../constants";
 
+/*
+  If the song does not have a chart corresponding to the chosen difficulty option,
+  pick whatever is *closest*
+  - If Difficult, Expert, or Challenge is the chosen option, start from Challenge and
+    work your way down until the first available difficulty is reached.
+  - If Beginner or Basic is the chosen option, start from Beginner and work up.
+  The closest available difficulty will be chosen for the song without affecting the
+  difficulty option selected for the form, like the way it works in the real game
+*/
 export const getClosestDifficulty = (song, difficulty, mode) => {
   const difficulties = mode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
   const levels =
