@@ -236,28 +236,28 @@ class Arrow {
       }
 
       // flash at the end of successfully held down freeze
-      if (actualDestY <= 0) {
-        if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-          c.save();
-          c.globalAlpha =
-            1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-          c.drawImage(
-            arrowImages.tap_explosion,
-            0,
-            0,
-            ARROW_WIDTH,
-            ARROW_HEIGHT,
-            destX - this.hitFrame,
-            0 - this.hitFrame,
-            ARROW_WIDTH + this.hitFrame * 2,
-            ARROW_HEIGHT + this.hitFrame * 2
-          );
-          c.restore();
-          this.hitFrame++;
-        }
-      } else {
-        this.hitFrame = 0;
-      }
+      // if (actualDestY <= 0) {
+      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+      //     c.save();
+      //     c.globalAlpha =
+      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
+      //     c.drawImage(
+      //       arrowImages.tap_explosion,
+      //       0,
+      //       0,
+      //       ARROW_WIDTH,
+      //       ARROW_HEIGHT,
+      //       destX - this.hitFrame,
+      //       0 - this.hitFrame,
+      //       ARROW_WIDTH + this.hitFrame * 2,
+      //       ARROW_HEIGHT + this.hitFrame * 2
+      //     );
+      //     c.restore();
+      //     this.hitFrame++;
+      //   }
+      // } else {
+      //   this.hitFrame = 0;
+      // }
     }
 
     this.previousBeatPosition = this.currentBeatPosition(beatTick);
@@ -383,28 +383,29 @@ class Arrow {
           ARROW_HEIGHT
         );
       }
-      if (destY <= 0) {
-        if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-          c.save();
-          c.globalAlpha =
-            1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-          c.drawImage(
-            arrowImages.tap_explosion,
-            0,
-            0,
-            ARROW_WIDTH,
-            ARROW_HEIGHT,
-            destX - 2 - this.hitFrame,
-            0 - 2 - this.hitFrame,
-            ARROW_WIDTH + 4 + this.hitFrame * 2,
-            ARROW_HEIGHT + 4 + this.hitFrame * 2
-          );
-          c.restore();
-          this.hitFrame++;
-        }
-      } else {
-        this.hitFrame = 0;
-      }
+      // // target flash
+      // if (destY <= 0) {
+      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+      //     c.save();
+      //     c.globalAlpha =
+      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
+      //     c.drawImage(
+      //       arrowImages.tap_explosion,
+      //       0,
+      //       0,
+      //       ARROW_WIDTH,
+      //       ARROW_HEIGHT,
+      //       destX - 2 - this.hitFrame,
+      //       0 - 2 - this.hitFrame,
+      //       ARROW_WIDTH + 4 + this.hitFrame * 2,
+      //       ARROW_HEIGHT + 4 + this.hitFrame * 2
+      //     );
+      //     c.restore();
+      //     this.hitFrame++;
+      //   }
+      // } else {
+      //   this.hitFrame = 0;
+      // }
     }
 
     // freeze note
@@ -431,29 +432,29 @@ class Arrow {
         );
       }
 
-      // target flash
-      if (destY <= 0) {
-        if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-          c.save();
-          c.globalAlpha =
-            1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-          c.drawImage(
-            arrowImages.tap_explosion,
-            0,
-            0,
-            ARROW_WIDTH,
-            ARROW_HEIGHT,
-            destX - this.hitFrame,
-            0 - this.hitFrame,
-            ARROW_WIDTH + this.hitFrame * 2,
-            ARROW_HEIGHT + this.hitFrame * 2
-          );
-          c.restore();
-          this.hitFrame++;
-        }
-      } else {
-        this.hitFrame = 0;
-      }
+      // // target flash
+      // if (destY <= 0) {
+      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
+      //     c.save();
+      //     c.globalAlpha =
+      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
+      //     c.drawImage(
+      //       arrowImages.tap_explosion,
+      //       0,
+      //       0,
+      //       ARROW_WIDTH,
+      //       ARROW_HEIGHT,
+      //       destX - this.hitFrame,
+      //       0 - this.hitFrame,
+      //       ARROW_WIDTH + this.hitFrame * 2,
+      //       ARROW_HEIGHT + this.hitFrame * 2
+      //     );
+      //     c.restore();
+      //     this.hitFrame++;
+      //   }
+      // } else {
+      //   this.hitFrame = 0;
+      // }
     }
 
     this.previousBeatPosition = this.currentBeatPosition(beatTick);

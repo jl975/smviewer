@@ -4,9 +4,14 @@ import Arrow from "../components/chart/canvas/Arrow";
 import ShockArrow from "../components/chart/canvas/ShockArrow";
 import StepZone from "../components/chart/canvas/StepZone";
 import Guidelines from "../components/chart/canvas/Guidelines";
+import TargetFlash from "../components/chart/canvas/TargetFlash";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
-import { GLOBAL_OFFSET, END_EXTRA_BEATS } from "../constants";
+import {
+  GLOBAL_OFFSET,
+  END_EXTRA_BEATS,
+  MARVELOUS_FLASH_FRAMES,
+} from "../constants";
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
 import * as actions from "../actions/ChartActions";
@@ -46,7 +51,10 @@ class GameEngine {
       bpmChangeQueue: [], // this is the one that is used
 
       arrows: self.allArrows,
+      targetFlashes: {},
     };
+
+    window.targetFlashes = this.globalParams.targetFlashes;
 
     // init logic
     if (this.sm) {
@@ -321,13 +329,6 @@ class GameEngine {
       currentStopOffset = 0,
       currentCombo = 0;
     this.allArrows.forEach((arrow, idx) => {
-      if (
-        arrow instanceof Arrow &&
-        !arrow.note.includes("1") &&
-        !arrow.note.includes("2")
-      )
-        return;
-
       // Find the latest bpm section that starts before this note
       while (
         currentBpmPtr < bpmChangeQueue.length - 1 &&
@@ -380,30 +381,54 @@ class GameEngine {
       const timeDiff = beatDiff * (60 / currentBpm);
       const arrowTimestamp = bpmSectionStartTime + timeDiff + currentStopOffset;
 
-      currentCombo++;
-      arrow.combo = currentCombo;
-      arrow.timestamp = arrowTimestamp;
+      // combo arrows (includes regular notes and freeze heads)
+      if (
+        arrow.note.includes("1") ||
+        arrow.note.includes("2") ||
+        arrow.note.includes("M")
+      ) {
+        currentCombo++;
+        arrow.combo = currentCombo;
+        arrow.timestamp = arrowTimestamp;
 
-      this.comboArrows.push(arrow);
+        this.comboArrows.push(arrow);
 
-      const comboTemp = document.querySelector("#combo-temp .combo-num");
+        const comboTemp = document.querySelector("#combo-temp .combo-num");
 
-      this.tl.set(
-        this.globalParams,
-        {
-          combo: arrow.combo,
-          onStart: () => {
-            // store.dispatch(actions.setCombo(arrow.combo));
-            comboTemp.textContent = arrow.combo;
+        this.tl.set(
+          this.globalParams,
+          {
+            combo: arrow.combo,
+            onStart: () => {
+              // store.dispatch(actions.setCombo(arrow.combo));
+              comboTemp.textContent = arrow.combo;
 
-            if (arrow instanceof Arrow) {
-              AudioPlayer.playAssistTick();
-              // console.log(arrow);
-            }
+              if (arrow instanceof Arrow) {
+                // AudioPlayer.playAssistTick();
+                // console.log(arrow);
+                this.globalParams.targetFlashes[
+                  arrow.originalBeatPosition
+                ] = new TargetFlash(arrow);
+              }
+            },
           },
-        },
-        arrowTimestamp
-      );
+          arrowTimestamp
+        );
+      }
+      // freeze ends that are not simultaneous with combo arrows
+      else if (arrow.note.includes("3")) {
+        this.tl.set(
+          this.globalParams,
+          {
+            onStart: () => {
+              this.globalParams.targetFlashes[
+                arrow.originalBeatPosition
+              ] = new TargetFlash(arrow);
+            },
+          },
+          arrowTimestamp
+        );
+      }
     });
 
     this.guidelines = new Guidelines({ mods, finalBeat });
@@ -487,6 +512,17 @@ class GameEngine {
           directionIdx
         );
       });
+    }
+
+    // target flashes
+    for (let beatStamp in this.globalParams.targetFlashes) {
+      const targetFlash = this.globalParams.targetFlashes[beatStamp];
+      targetFlash.frame++;
+      if (targetFlash.frame > MARVELOUS_FLASH_FRAMES) {
+        delete this.globalParams.targetFlashes[beatStamp];
+      } else {
+        targetFlash.render(this.canvas);
+      }
     }
 
     // if (this.globalParams.beatTick) {
