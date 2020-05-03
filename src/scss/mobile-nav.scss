@@ -35,6 +35,14 @@
         fill: #202122;
         transition: fill 0.15s;
       }
+
+      &.song {
+        path {
+          fill: #202122;
+          stroke: #202122;
+          stroke-width: 4px;
+        }
+      }
     }
 
     .description {
@@ -50,6 +58,12 @@
       .svg-icon {
         path {
           fill: #0080ff;
+        }
+        &.song {
+          path {
+            fill: #0080ff;
+            stroke: #0080ff;
+          }
         }
       }
     }
