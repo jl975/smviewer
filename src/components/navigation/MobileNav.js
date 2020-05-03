@@ -4,16 +4,17 @@ import { connect } from "react-redux";
 
 import AudioPlayer from "../../core/AudioPlayer";
 import { stopPreviewAudio } from "../../actions/AudioActions";
+import { ReactComponent as ChartIcon } from "../../svg/arrows.svg";
 
 const MobileNav = (props) => {
   const { activeView, chartAudio, previewAudio } = props;
 
   const navItems = [
-    { view: "song", icon: "music" },
-    { view: "mods", icon: "sidebar" },
-    { view: "2", icon: "" },
-    { view: "3", icon: "" },
-    { view: "chart", icon: "arrow up" },
+    { view: "song", icon: "music", text: "Song" },
+    { view: "mods", icon: "sidebar", text: "Mods" },
+    { view: "2", icon: "", text: "" },
+    { view: "3", icon: "", text: "" },
+    { view: "chart", svgIcon: ChartIcon, text: "Chart" },
   ];
 
   const setActiveView = (view) => {
@@ -30,7 +31,8 @@ const MobileNav = (props) => {
   return (
     <nav className="mobileNav">
       {navItems.map((navItem) => {
-        const { view, icon } = navItem;
+        const { view, icon, text } = navItem;
+        const SVGIcon = navItem.svgIcon;
         if (!view) return <div className="mobileNav_item" />;
         return (
           <div
@@ -40,7 +42,8 @@ const MobileNav = (props) => {
             }`}
             onClick={() => setActiveView(view)}
           >
-            <Icon name={icon} />
+            {SVGIcon ? <SVGIcon className="svg-icon" /> : <Icon name={icon} />}
+            <span className="description">{text}</span>
           </div>
         );
       })}
