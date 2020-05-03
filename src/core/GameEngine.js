@@ -412,7 +412,7 @@ class GameEngine {
               }
             },
           },
-          arrowTimestamp
+          arrowTimestamp - 0.008
         );
       }
       // freeze ends that are not simultaneous with combo arrows
@@ -426,7 +426,7 @@ class GameEngine {
               ] = new TargetFlash(arrow);
             },
           },
-          arrowTimestamp
+          arrowTimestamp - 0.008
         );
       }
     });

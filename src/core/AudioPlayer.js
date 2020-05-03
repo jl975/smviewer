@@ -159,7 +159,10 @@ class AudioPlayer {
     // // for reducing debugging headaches; don't remove
     // if (!this.getCurrentSong().tl) return;
 
-    this.getCurrentSong().tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
+    // sometimes this will still error on load, just bypass it
+    try {
+      this.getCurrentSong().tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
+    } catch (err) {}
 
     this.audioResyncFrames--;
     if (this.audioResyncFrames <= 0) {

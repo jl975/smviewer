@@ -146,8 +146,6 @@ const ChartArea = (props) => {
     mods,
   };
 
-  console.log("rerender ChartArea");
-
   return (
     <div className="canvas-container">
       {loadingAudio && (
