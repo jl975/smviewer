@@ -288,6 +288,17 @@ const SongForm = (props) => {
     });
   };
 
+  const getDisplayBpm = () => {
+    if (!selectedSong) return null;
+    let displayBpm = selectedSong.displayBpm;
+    if (displayBpm.includes(",")) {
+      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedDifficulty);
+      if (selectedMode === "double") difficultyIdx += 4;
+      displayBpm = displayBpm.split(",")[difficultyIdx];
+    }
+    return displayBpm;
+  };
+
   const toggleSongPreview = () => {
     const oldSongHash = AudioPlayer.currentPreview;
 
@@ -358,6 +369,11 @@ const SongForm = (props) => {
                   onChange={(value) => props.onModeSelect(value)}
                   value={selectedMode}
                 />
+              </div>
+
+              <div className="bpm-display-container">
+                <div className="bpm-display-label">BPM</div>
+                <div className="bpm-display-value">{getDisplayBpm()}</div>
               </div>
             </div>
           </div>

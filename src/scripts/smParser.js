@@ -54,6 +54,27 @@ const getMetadataFromSM = (json) => {
       song.sampleLength = parseFloat(sampleLength);
     }
 
+    // Display bpm
+    if (/#DISPLAYBPM:/i.test(sm)) {
+      let displayBpm = /#DISPLAYBPM:([\s\S]*?)\s*;/i.exec(sm)[1];
+      displayBpm = displayBpm
+        .split(":")
+        .map((bpm) => parseInt(bpm))
+        .join("-");
+      // console.log(`${smName}: ${displayBpm}`);
+      song.displayBpm = displayBpm;
+    } else {
+      let bpm = /#BPMS:([\s\S]*?)\s*;/i.exec(sm)[1];
+      bpm = bpm.split(",").map((point) => {
+        point = point.split("=");
+        return Math.round(parseFloat(point[1]));
+      });
+      let displayBpm = [Math.min(...bpm), Math.max(...bpm)];
+      if (displayBpm[0] === displayBpm[1]) displayBpm = [displayBpm[0]];
+      displayBpm = displayBpm.join("-");
+      song.displayBpm = displayBpm;
+    }
+
     const chartStrs = sm
       .slice(sm.indexOf("#NOTES:"))
       .split(/#NOTES:\s+/)

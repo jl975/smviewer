@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { Radio, Checkbox } from "semantic-ui-react";
 
 import { options } from "./options";
+import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import { capitalize } from "../../utils";
 import { updateMods } from "../../actions/ModsActions";
 
 const ModsForm = (props) => {
-  const { activeView, mods, updateMods, mode } = props;
+  const { activeView, mods, updateMods, mode, song, difficulty } = props;
 
   // when switching between single and double, any mod set to a value incompatible
   // with the new mode will be reset to its default value
@@ -16,6 +17,27 @@ const ModsForm = (props) => {
       updateMods({ turn: "off" });
     }
   }, [mode]);
+
+  const getEffectiveScrollSpeed = () => {
+    if (!song) return null;
+    let displayBpm = song.displayBpm;
+    if (displayBpm.includes(",")) {
+      let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty);
+      if (mode === "double") difficultyIdx += 4;
+      displayBpm = displayBpm.split(",")[difficultyIdx];
+    }
+
+    const [lowBpm, highBpm] = displayBpm.split("-");
+    if (!highBpm) {
+      return <strong>{Math.round(lowBpm * mods.speed)}</strong>;
+    } else {
+      return (
+        <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(
+          highBpm * mods.speed
+        )}`}</strong>
+      );
+    }
+  };
 
   return (
     <div
@@ -36,6 +58,7 @@ const ModsForm = (props) => {
               />
             );
           })}
+          <div>Effective scroll speed: {getEffectiveScrollSpeed()}</div>
         </div>
 
         <div className="form-field">
@@ -118,7 +141,12 @@ const ModsForm = (props) => {
 
 const mapStateToProps = (state) => {
   const { mods, songSelect } = state;
-  return { mods, mode: songSelect.mode };
+  return {
+    mods,
+    mode: songSelect.mode,
+    song: songSelect.song,
+    difficulty: songSelect.difficulty,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

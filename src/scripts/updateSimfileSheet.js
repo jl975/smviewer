@@ -54,6 +54,8 @@ const init = async () => {
 
   parsedTsv = getMetadataFromSM(parsedTsv);
 
+  console.log(parsedTsv);
+
   // // one-time script of filling in empty smName and mp3 url columns
   // parsedTsv.forEach((song) => {
   //   song.version = hashVersion[song.hash].version;
@@ -74,6 +76,8 @@ const init = async () => {
 };
 
 init();
+
+const getDisplayBpm = () => {};
 
 /* one-time scripts for initial population of new columns */
 // const hashVersion = require("./hash_version.json");

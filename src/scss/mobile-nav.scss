@@ -41,6 +41,7 @@
           fill: #202122;
           stroke: #202122;
           stroke-width: 4px;
+          transition: fill 0.15s, stroke 0.15s;
         }
       }
     }
@@ -48,6 +49,7 @@
     .description {
       font-size: 14px;
       font-weight: 600;
+      transition: color 0.15s;
     }
 
     &.active {
@@ -76,6 +78,12 @@
       .svg-icon {
         path {
           fill: #c0c6cc;
+        }
+        &.song {
+          path {
+            fill: #c0c6cc;
+            stroke: #c0c6cc;
+          }
         }
       }
     }
