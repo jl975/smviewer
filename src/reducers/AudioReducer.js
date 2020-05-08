@@ -12,6 +12,10 @@ const initialState = {
 
 export const audio = (state = initialState, action) => {
   switch (action.type) {
+    case actions.SET_CHART_AUDIO_STATUS: {
+      const chartAudio = { ...state.chartAudio, status: action.payload };
+      return { ...state, chartAudio };
+    }
     case actions.PLAY_CHART_AUDIO: {
       const chartAudio = { ...state.chartAudio, status: "playing" };
       return { ...state, chartAudio };

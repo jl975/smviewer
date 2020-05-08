@@ -223,7 +223,11 @@ class AudioPlayer {
   }
 
   play() {
+    if (store.getState().audio.chartAudio.status === "pending") {
+      return;
+    }
     this.currentSongId = this.getCurrentSong().audio.play();
+    store.dispatch(actions.setChartAudioStatus("pending"));
   }
 
   pause() {
