@@ -8,66 +8,25 @@ import { getJacketPath, presetParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
 import {
   getUserSettings,
+  updateUserSettings,
   getSavedSongProgress,
 } from "../../utils/userSettings";
 import loadStore from "../../utils/loadStore";
 import ToggleSwitch from "../ui/ToggleSwitch";
+import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import {
-  SP_DIFFICULTIES,
-  DP_DIFFICULTIES,
-  TITLE_CATEGORIES,
-  LEVELS,
-  DDR_VERSIONS,
-} from "../../constants";
+  titleSortOptions,
+  versionSortOptions,
+  levelSortOptions,
+  difficultySortOptions,
+} from "./songFormOptions";
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
-
-const titleSortOptions = [
-  { key: "title_all", value: "all", text: "ALL" },
-].concat(
-  TITLE_CATEGORIES.map((letter) => {
-    return { key: `title_${letter}`, value: letter, text: letter };
-  })
-);
-
-const versionSortOptions = [
-  { key: "version_all", value: "all", text: "ALL" },
-].concat(
-  DDR_VERSIONS.map((versionName, idx) => {
-    return { key: `version_${idx}`, value: idx, text: versionName };
-  }).reverse()
-);
-
-const levelSortOptions = [
-  { key: "level_all", value: "all", text: "ALL" },
-].concat(
-  LEVELS.map((level) => {
-    return { key: `level_${level}`, value: level, text: level };
-  })
-);
-
-const difficultySortOptions = [
-  { key: "difficulty_all", value: "all", text: "ALL" },
-].concat(
-  SP_DIFFICULTIES.map((difficulty) => {
-    return {
-      key: `difficulty_${difficulty}`,
-      value: difficulty,
-      text: difficulty,
-    };
-  })
-);
 
 const userSettings = getUserSettings();
 
 const SongForm = (props) => {
-  const {
-    activeView,
-    simfileList,
-    selectedDifficulty,
-    selectedMode,
-    previewAudio,
-  } = props;
+  const { simfileList, selectedDifficulty, selectedMode, previewAudio } = props;
   const songGridContainer = useRef();
 
   const simfileOptions = simfileList.map((song) => {
@@ -79,13 +38,21 @@ const SongForm = (props) => {
     selectedDifficulty
   );
 
-  const [selectedFilters, setSelectedFilters] = useState({
-    title: "all",
-    version: 15,
-    level: "all",
-    difficulty: "all",
-    // level: 10,
-  });
+  const [selectedFilters, setSelectedFilters] = useState(
+    userSettings.filters || {
+      title: "all",
+      version: 15,
+      level: "all",
+      difficulty: "all",
+      // level: 10,
+    }
+  );
+
+  const updateSelectedFilters = (newFilters) => {
+    const filters = { ...selectedFilters, ...newFilters };
+    updateUserSettings({ filters });
+    setSelectedFilters(filters);
+  };
 
   const [displayedSongs, setDisplayedSongs] = useState([]);
 
@@ -338,7 +305,7 @@ const SongForm = (props) => {
   return (
     <div
       className={`form-container songView ${
-        activeView === "song" ? "open" : "closed"
+        props.activeView === "song" ? "open" : "closed"
       }`}
     >
       <form className="songForm">
@@ -401,8 +368,7 @@ const SongForm = (props) => {
                   selection
                   value={selectedFilters.title}
                   onChange={(e, data) =>
-                    setSelectedFilters({
-                      ...selectedFilters,
+                    updateSelectedFilters({
                       title: data.value,
                     })
                   }
@@ -416,8 +382,7 @@ const SongForm = (props) => {
                   selection
                   value={selectedFilters.version}
                   onChange={(e, data) =>
-                    setSelectedFilters({
-                      ...selectedFilters,
+                    updateSelectedFilters({
                       version: data.value,
                     })
                   }
@@ -431,8 +396,7 @@ const SongForm = (props) => {
                   selection
                   value={selectedFilters.level}
                   onChange={(e, data) =>
-                    setSelectedFilters({
-                      ...selectedFilters,
+                    updateSelectedFilters({
                       level: data.value,
                     })
                   }
@@ -444,8 +408,7 @@ const SongForm = (props) => {
                   selection
                   value={selectedFilters.difficulty}
                   onChange={(e, data) =>
-                    setSelectedFilters({
-                      ...selectedFilters,
+                    updateSelectedFilters({
                       difficulty: data.value,
                     })
                   }
@@ -473,13 +436,14 @@ const SongForm = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio, songSelect } = state;
+  const { audio, songSelect, screen } = state;
   const { previewAudio } = audio;
   return {
     previewAudio,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
     previousSong: songSelect.song,
+    activeView: screen.activeView,
   };
 };
 

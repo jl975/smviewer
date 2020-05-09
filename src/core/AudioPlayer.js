@@ -36,8 +36,6 @@ class AudioPlayer {
 
     // this.updateTimeline = this.updateTimeline.bind(this);
 
-    this.activeView = null; // gets updated whenever active view changes in React
-
     this.previewFadeTimeout = null; // reference to preview fade setTimeout so it can be cleared
 
     this.updateTimeline = this.updateTimeline.bind(this);

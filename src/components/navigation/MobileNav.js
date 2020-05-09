@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import AudioPlayer from "../../core/AudioPlayer";
 import { stopPreviewAudio } from "../../actions/AudioActions";
+import { setActiveView } from "../../actions/ScreenActions";
 import { ReactComponent as ChartIcon } from "../../svg/arrows.svg";
 import { ReactComponent as ModsIcon } from "../../svg/mods.svg";
 import { ReactComponent as SongIcon } from "../../svg/music_search.svg";
@@ -19,7 +20,7 @@ const MobileNav = (props) => {
     { view: "chart", svgIcon: ChartIcon, text: "Chart" },
   ];
 
-  const setActiveView = (view) => {
+  const changeActiveView = (view) => {
     if (chartAudio.status === "playing") return;
     AudioPlayer.stopSongPreview();
     props.setActiveView(view);
@@ -42,7 +43,7 @@ const MobileNav = (props) => {
             className={`mobileNav_item ${activeView === view ? "active" : ""} ${
               isDisabled(view) ? "disabled" : ""
             }`}
-            onClick={() => setActiveView(view)}
+            onClick={() => changeActiveView(view)}
           >
             {SVGIcon ? (
               <SVGIcon className={`svg-icon ${view}`} />
@@ -58,17 +59,19 @@ const MobileNav = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { audio } = state;
+  const { audio, screen } = state;
   const { chartAudio, previewAudio } = audio;
   return {
     chartAudio,
     previewAudio,
+    activeView: screen.activeView,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     stopPreviewAudio: () => dispatch(stopPreviewAudio()),
+    setActiveView: (view) => dispatch(setActiveView(view)),
   };
 };
 

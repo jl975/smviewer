@@ -21,8 +21,6 @@ const MainContainer = (props) => {
   const [simfileList, setSimfileList] = useState([]);
   const [selectedSM, setSelectedSM] = useState(null);
 
-  const [activeView, setActiveView] = useState("chart");
-
   const [gameEngine, setGameEngine] = useState(null);
 
   const [loadingAudio, setLoadingAudio] = useState(false);
@@ -103,11 +101,6 @@ const MainContainer = (props) => {
     props.selectMode(mode);
   };
 
-  const changeActiveView = (view) => {
-    setActiveView(view);
-    AudioPlayer.activeView = view;
-  };
-
   return (
     <div className="main-container">
       {!loadingSimfiles && (
@@ -120,8 +113,6 @@ const MainContainer = (props) => {
           />
 
           <SongForm
-            activeView={activeView}
-            setActiveView={changeActiveView}
             simfileList={simfileList}
             onSongSelect={onSongSelect}
             onDifficultySelect={onDifficultySelect}
@@ -129,9 +120,9 @@ const MainContainer = (props) => {
             loadingAudio={loadingAudio}
           />
 
-          <ModsForm activeView={activeView} />
+          <ModsForm />
 
-          <MobileNav activeView={activeView} setActiveView={changeActiveView} />
+          <MobileNav />
         </>
       )}
     </div>

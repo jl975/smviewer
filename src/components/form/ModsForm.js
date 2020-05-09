@@ -140,12 +140,13 @@ const ModsForm = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { mods, songSelect } = state;
+  const { mods, songSelect, screen } = state;
   return {
     mods,
     mode: songSelect.mode,
     song: songSelect.song,
     difficulty: songSelect.difficulty,
+    activeView: screen.activeView,
   };
 };
 
