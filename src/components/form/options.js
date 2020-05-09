@@ -1,4 +1,5 @@
 import { presetParams } from "../../utils";
+import { getUserSettings } from "../../utils/userSettings";
 
 export const options = {
   difficulty: ["Beginner", "Basic", "Difficult", "Expert", "Challenge"],
@@ -36,6 +37,7 @@ export const options = {
   },
 };
 
+// Default values when user opens app for the first time
 const optionDefaultValues = {
   difficulty: "Challenge",
   mode: "single",
@@ -49,6 +51,23 @@ const optionDefaultValues = {
   },
 };
 
+// Values stored in localStorage user settings override default values
+const userSettings = getUserSettings();
+["song", "difficulty", "mode"].forEach((key) => {
+  if (userSettings[key]) {
+    optionDefaultValues[key] = userSettings[key];
+  }
+});
+
+if (userSettings.mods) {
+  Object.keys(optionDefaultValues.mods).forEach((mod) => {
+    if (typeof userSettings.mods[mod] !== "undefined") {
+      optionDefaultValues.mods[mod] = userSettings.mods[mod];
+    }
+  });
+}
+
+// Preset params in the url override default values AND user settings
 if (presetParams.difficulty) {
   const difficulties = {
     b: "Beginner",
@@ -81,4 +100,5 @@ if (presetParams.turn) {
   }
 }
 
+console.log("optionDefaultValues", optionDefaultValues);
 export { optionDefaultValues };

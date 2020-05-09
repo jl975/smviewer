@@ -191,6 +191,7 @@ const ChartArea = (props) => {
           setShareModalOpen={setShareModalOpen}
         />
       </div>
+      {/* <div className="row">{JSON.stringify(window.localStorage)}</div> */}
       <div className="row">
         <SongInfo />
       </div>

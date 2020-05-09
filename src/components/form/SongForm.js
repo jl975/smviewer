@@ -6,6 +6,10 @@ import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
+import {
+  getUserSettings,
+  getSavedSongProgress,
+} from "../../utils/userSettings";
 import loadStore from "../../utils/loadStore";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import {
@@ -53,6 +57,8 @@ const difficultySortOptions = [
     };
   })
 );
+
+const userSettings = getUserSettings();
 
 const SongForm = (props) => {
   const {
@@ -156,6 +162,8 @@ const SongForm = (props) => {
 
     if (presetParams.song) {
       onSongSelect(null, { value: presetParams.song });
+    } else if (userSettings.song) {
+      onSongSelect(null, { value: userSettings.song });
     } else {
       // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" }); // ORCA
       // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
@@ -205,6 +213,12 @@ const SongForm = (props) => {
     const song = simfileList.find((song) => song.hash === songHash);
 
     let initialProgress = 0;
+
+    // initialize progress only if this is the song being initialized on page load
+    if (!props.previousSong) {
+      initialProgress = getSavedSongProgress();
+    }
+
     if (presetParams.song === songHash && presetParams.progress) {
       initialProgress = presetParams.progress / 100000;
     } else {
@@ -465,6 +479,7 @@ const mapStateToProps = (state) => {
     previewAudio,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
+    previousSong: songSelect.song,
   };
 };
 

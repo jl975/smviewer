@@ -6,6 +6,7 @@ import * as actions from "../actions/AudioActions";
 import Progress from "../components/chart/canvas/Progress";
 import { changeActiveBpm, setCombo } from "../actions/ChartActions";
 import { getAssetPath } from "../utils";
+import { saveSongProgress } from "../utils/userSettings";
 import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
 import { GLOBAL_OFFSET } from "../constants";
 
@@ -206,6 +207,7 @@ class AudioPlayer {
       const audio = this.getCurrentSong().audio;
       const progress = audio.seek() / audio.duration();
       // store.dispatch(actions.setChartProgress(progress));
+      saveSongProgress(progress);
       Progress.render(progress);
     }
   }
@@ -232,6 +234,10 @@ class AudioPlayer {
 
   pause() {
     this.getCurrentSong().audio.pause(this.currentSongId);
+
+    const audio = this.getCurrentSong().audio;
+    const progress = audio.seek() / audio.duration();
+    saveSongProgress(progress);
   }
 
   stop() {
