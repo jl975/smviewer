@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d660fc99305cc871e17270ea5689b432",
+    "revision": "f337702357c5130a9b8f97b2c6adc842",
     "url": "/smviewer/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/smviewer/static/css/2.99956f5e.chunk.css"
   },
   {
-    "revision": "06e1de717589d576f7d8",
+    "revision": "ecbc2ed77df77a4cc2df",
     "url": "/smviewer/static/css/main.5b392de0.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/smviewer/static/js/2.4dd816df.chunk.js"
   },
   {
-    "revision": "06e1de717589d576f7d8",
-    "url": "/smviewer/static/js/main.6cd70c6c.chunk.js"
+    "revision": "ecbc2ed77df77a4cc2df",
+    "url": "/smviewer/static/js/main.f8326a92.chunk.js"
   },
   {
     "revision": "30a009a188b1d16895c0",
