@@ -5,7 +5,7 @@ import { tsv } from "d3-fetch";
 import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
-import MobileNav from "../../components/navigation/MobileNav";
+import Navbar from "../../components/navigation/Navbar";
 import AudioPlayer from "../../core/AudioPlayer";
 import { getOriginPath, fetchDocument } from "../../utils";
 import {
@@ -105,24 +105,23 @@ const MainContainer = (props) => {
     <div className="main-container">
       {!loadingSimfiles && (
         <>
-          <ChartArea
-            loadingAudio={loadingAudio}
-            sm={selectedSM}
-            gameEngine={gameEngine}
-            setGameEngine={setGameEngine}
-          />
-
-          <SongForm
-            simfileList={simfileList}
-            onSongSelect={onSongSelect}
-            onDifficultySelect={onDifficultySelect}
-            onModeSelect={onModeSelect}
-            loadingAudio={loadingAudio}
-          />
-
-          <ModsForm />
-
-          <MobileNav />
+          <Navbar />
+          <div className="view-container">
+            <ChartArea
+              loadingAudio={loadingAudio}
+              sm={selectedSM}
+              gameEngine={gameEngine}
+              setGameEngine={setGameEngine}
+            />
+            <ModsForm />
+            <SongForm
+              simfileList={simfileList}
+              onSongSelect={onSongSelect}
+              onDifficultySelect={onDifficultySelect}
+              onModeSelect={onModeSelect}
+              loadingAudio={loadingAudio}
+            />
+          </div>
         </>
       )}
     </div>

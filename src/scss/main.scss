@@ -14,19 +14,33 @@
   }
 }
 
-.form-container {
+.view-container {
+  width: 100%;
+}
+
+.view-section {
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  padding: 30px;
-  background: rgba(250, 252, 255, 0.975);
-  transform: translateX(100%);
-  transition: transform 0.1s;
+  background: #fff;
+  // transition: opacity 0.1s;
+  // z-index: 0;
+  // opacity: 0;
 
-  &.open {
+  &.songView {
+    transform: translateX(-100%);
+    // z-index: 1;
+  }
+  &.modsView {
+    transform: translateX(100%);
+    // z-index: 1;
+  }
+
+  &.active {
     transform: translateX(0%);
+    // opacity: 1;
   }
 
   .form-field {
@@ -46,6 +60,20 @@
       }
     }
   }
+
+  .effective-scroll-speed {
+    margin-left: 20px;
+    font-weight: normal;
+  }
+}
+
+.songView {
+  padding: 0;
+}
+.chartView {
+}
+.modsView {
+  padding: 20px;
 }
 
 .canvas-container {
@@ -207,9 +235,7 @@
 
 @media only screen and (min-width: 426px) {
   .canvas-container {
-    // width: 256px;
     padding: 30px;
-    // margin-right: 30px;
   }
   .main-container {
     display: flex;
@@ -218,4 +244,81 @@
 
 // tablets and up
 @media only screen and (min-width: 769px) {
+  .main-container {
+    // max-width: 1000px;
+    // margin: 0 auto;
+  }
+  .songView,
+  .modsView,
+  .chartView {
+    position: relative;
+    transform: none !important;
+    background: none;
+  }
+
+  .view-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .songView {
+    order: 1;
+    width: 400px;
+  }
+  .chartView {
+    order: 2;
+    flex: 1 1;
+    width: calc(100% - 400px);
+    height: auto;
+    overflow: visible;
+  }
+  .modsView {
+    order: 3;
+    border-top: 1px solid #dadbdc;
+    border-left: none;
+    width: calc(100% - 400px);
+    height: 300px;
+    overflow-y: auto;
+  }
+
+  .row {
+    margin: 0;
+  }
+}
+
+@media only screen and (min-width: 1370px) {
+  .view-container {
+    flex-direction: row;
+    background-color: #d7e2ed;
+  }
+  .songView,
+  .chartView,
+  .modsView {
+    overflow: visible;
+    padding: 15px 10px;
+  }
+  .songView {
+    width: 440px;
+  }
+  .chartView {
+    width: auto;
+    height: 100%;
+
+    border-radius: 10px;
+  }
+  .modsView {
+    width: 360px;
+    height: 100%;
+    border-top: none;
+    border-radius: 8px;
+  }
+
+  .view-wrapper {
+    padding: 20px 25px;
+    background-color: #fff;
+    border-radius: 8px;
+    height: 100%;
+    min-height: 700px;
+  }
 }

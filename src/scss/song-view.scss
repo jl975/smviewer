@@ -1,7 +1,9 @@
 .songView {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
+  .view-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
   .form-inner-wrapper {
     position: relative;
@@ -311,4 +313,33 @@
     //   width: 70px;
     // }
   }
+}
+
+@media only screen and (min-width: 426px) {
+}
+
+// tablets and up
+@media only screen and (min-width: 769px) {
+  .songView {
+    .view-wrapper {
+      padding: 0;
+    }
+
+    // .form-inner-wrapper {
+    //   background: #dadada;
+    // }
+    // .selectedSong {
+    //   background: #dadada;
+    // }
+
+    .selectedSong-jacket-wrapper {
+      margin-left: 5px;
+    }
+    .selectedSong-info {
+      padding-right: 5px;
+    }
+  }
+}
+
+@media only screen and (min-width: 1410px) {
 }

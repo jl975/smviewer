@@ -304,132 +304,134 @@ const SongForm = (props) => {
 
   return (
     <div
-      className={`form-container songView ${
-        props.activeView === "song" ? "open" : "closed"
+      className={`view-section songView ${
+        props.activeView === "song" ? "active" : ""
       }`}
     >
-      <form className="songForm">
-        <div className="form-inner-wrapper">
-          <div className="selectedSong">
-            <div
-              className={`selectedSong-jacket-wrapper ${
-                previewAudio.status === "playing" ? "playing" : ""
-              }`}
-            >
-              <div className="selectedSong-jacket-overlay">
-                <AudioWave />
-              </div>
-              <img
-                className={`selectedSong-jacket`}
-                src={getJacketPath(`${selectedSongOption}.png`)}
-                alt="Selected song"
-                onClick={toggleSongPreview}
-              />
-            </div>
-            <div className="selectedSong-info">
-              <Dropdown
-                placeholder="Choose a song"
-                className="song-title-dropdown"
-                search
-                selection
-                value={selectedSongOption}
-                onChange={onSongSelect}
-                options={simfileOptions}
-                selectOnBlur={false}
-                selectOnNavigation={false}
-              />
-              <div className="song-artist">
-                {selectedSong && selectedSong.artist}
-              </div>
-
-              <div className="song-difficulties">{renderDifficulties()}</div>
-
-              <div className="song-mode">
-                <ToggleSwitch
-                  option1={{ text: "Single", value: "single" }}
-                  option2={{ text: "Double", value: "double" }}
-                  onChange={(value) => props.onModeSelect(value)}
-                  value={selectedMode}
+      <div className="view-wrapper">
+        <form className="songForm">
+          <div className="form-inner-wrapper">
+            <div className="selectedSong">
+              <div
+                className={`selectedSong-jacket-wrapper ${
+                  previewAudio.status === "playing" ? "playing" : ""
+                }`}
+              >
+                <div className="selectedSong-jacket-overlay">
+                  <AudioWave />
+                </div>
+                <img
+                  className={`selectedSong-jacket`}
+                  src={getJacketPath(`${selectedSongOption}.png`)}
+                  alt="Selected song"
+                  onClick={toggleSongPreview}
                 />
               </div>
+              <div className="selectedSong-info">
+                <Dropdown
+                  placeholder="Choose a song"
+                  className="song-title-dropdown"
+                  search
+                  selection
+                  value={selectedSongOption}
+                  onChange={onSongSelect}
+                  options={simfileOptions}
+                  selectOnBlur={false}
+                  selectOnNavigation={false}
+                />
+                <div className="song-artist">
+                  {selectedSong && selectedSong.artist}
+                </div>
 
-              <div className="bpm-display-container">
-                <div className="bpm-display-label">BPM</div>
-                <div className="bpm-display-value">{getDisplayBpm()}</div>
+                <div className="song-difficulties">{renderDifficulties()}</div>
+
+                <div className="song-mode">
+                  <ToggleSwitch
+                    option1={{ text: "Single", value: "single" }}
+                    option2={{ text: "Double", value: "double" }}
+                    onChange={(value) => props.onModeSelect(value)}
+                    value={selectedMode}
+                  />
+                </div>
+
+                <div className="bpm-display-container">
+                  <div className="bpm-display-label">BPM</div>
+                  <div className="bpm-display-value">{getDisplayBpm()}</div>
+                </div>
+              </div>
+            </div>
+            <div className="songForm-filters">
+              <div className="songForm-filters-row">
+                <div className="form-field">
+                  <label>By Title</label>
+                  <Dropdown
+                    className="title-filter-dropdown"
+                    selection
+                    value={selectedFilters.title}
+                    onChange={(e, data) =>
+                      updateSelectedFilters({
+                        title: data.value,
+                      })
+                    }
+                    options={titleSortOptions}
+                  />
+                </div>
+                <div className="form-field">
+                  <label>By Version</label>
+                  <Dropdown
+                    className="version-filter-dropdown"
+                    selection
+                    value={selectedFilters.version}
+                    onChange={(e, data) =>
+                      updateSelectedFilters({
+                        version: data.value,
+                      })
+                    }
+                    options={versionSortOptions}
+                  />
+                </div>
+                <div className="form-field">
+                  <label>By Level</label>
+                  <Dropdown
+                    className="level-filter-dropdown"
+                    selection
+                    value={selectedFilters.level}
+                    onChange={(e, data) =>
+                      updateSelectedFilters({
+                        level: data.value,
+                      })
+                    }
+                    options={levelSortOptions}
+                  />
+                  <label>By Difficulty</label>
+                  <Dropdown
+                    className="difficulty-filter-dropdown"
+                    selection
+                    value={selectedFilters.difficulty}
+                    onChange={(e, data) =>
+                      updateSelectedFilters({
+                        difficulty: data.value,
+                      })
+                    }
+                    options={difficultySortOptions}
+                  />
+                </div>
               </div>
             </div>
           </div>
-          <div className="songForm-filters">
-            <div className="songForm-filters-row">
-              <div className="form-field">
-                <label>By Title</label>
-                <Dropdown
-                  className="title-filter-dropdown"
-                  selection
-                  value={selectedFilters.title}
-                  onChange={(e, data) =>
-                    updateSelectedFilters({
-                      title: data.value,
-                    })
-                  }
-                  options={titleSortOptions}
-                />
-              </div>
-              <div className="form-field">
-                <label>By Version</label>
-                <Dropdown
-                  className="version-filter-dropdown"
-                  selection
-                  value={selectedFilters.version}
-                  onChange={(e, data) =>
-                    updateSelectedFilters({
-                      version: data.value,
-                    })
-                  }
-                  options={versionSortOptions}
-                />
-              </div>
-              <div className="form-field">
-                <label>By Level</label>
-                <Dropdown
-                  className="level-filter-dropdown"
-                  selection
-                  value={selectedFilters.level}
-                  onChange={(e, data) =>
-                    updateSelectedFilters({
-                      level: data.value,
-                    })
-                  }
-                  options={levelSortOptions}
-                />
-                <label>By Difficulty</label>
-                <Dropdown
-                  className="difficulty-filter-dropdown"
-                  selection
-                  value={selectedFilters.difficulty}
-                  onChange={(e, data) =>
-                    updateSelectedFilters({
-                      difficulty: data.value,
-                    })
-                  }
-                  options={difficultySortOptions}
-                />
-              </div>
-            </div>
-          </div>
+        </form>
+
+        <div className="songGrid-container" ref={songGridContainer}>
+          <SongGrid
+            displayedSongs={displayedSongs}
+            onSongSelect={onSongSelect}
+            selectedSongOption={selectedSongOption}
+            selectedMode={selectedMode}
+            // selectedDifficulty={selectedDifficulty}
+            selectedDifficultyOption={selectedDifficultyOption}
+            selectedFilters={selectedFilters}
+          />
         </div>
-      </form>
-
-      <div className="songGrid-container" ref={songGridContainer}>
-        <SongGrid
-          displayedSongs={displayedSongs}
-          onSongSelect={onSongSelect}
-          selectedSongOption={selectedSongOption}
-          selectedMode={selectedMode}
-          // selectedDifficulty={selectedDifficulty}
-          selectedDifficultyOption={selectedDifficultyOption}
-          selectedFilters={selectedFilters}
-        />
       </div>
     </div>
   );

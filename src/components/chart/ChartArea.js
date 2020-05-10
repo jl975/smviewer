@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Icon, Modal } from "semantic-ui-react";
 import { connect } from "react-redux";
 import "inobounce";
 
 import { presetParams, getJacketPath } from "../../utils";
 import { usePrevious } from "../../hooks";
-// import loadStore from '../../utils/loadStore';
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
-import HoldButton from "../ui/HoldButton";
 import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
@@ -147,59 +143,68 @@ const ChartArea = (props) => {
   };
 
   return (
-    <div className="canvas-container">
-      {loadingAudio && (
-        <div className={`canvas-wrapper`} ref={chartLoadingScreen}>
-          <div className={`chart-loading-screen ${selectedMode}`}>
-            <img
-              className="chart-loading-jacket"
-              src={getJacketPath(`${selectedSong.hash}.png`)}
-            />
-            <div className="chart-loading-message">Loading chart...</div>
+    <div
+      className={`view-section chartView ${
+        screen.activeView === "chart" ? "active" : ""
+      }`}
+    >
+      <div className="view-wrapper canvas-container">
+        {loadingAudio && (
+          <div className={`canvas-wrapper`} ref={chartLoadingScreen}>
+            <div className={`chart-loading-screen ${selectedMode}`}>
+              <img
+                className="chart-loading-jacket"
+                src={getJacketPath(`${selectedSong.hash}.png`)}
+              />
+              <div className="chart-loading-message">Loading chart...</div>
+            </div>
           </div>
+        )}
+        {!loadingAudio && (
+          <>
+            <div
+              className={`canvas-wrapper ${selectedMode}`}
+              ref={canvasWrapper}
+            >
+              <canvas id="chartArea" width="256" height="448" />
+              <div id="combo-temp">
+                <div>Combo</div>
+                <div className="combo-num"></div>
+              </div>
+            </div>
+            <div className="progress-container">
+              <div className="progress-wrapper">
+                <canvas id="progress" />
+                {presetParams.progress ? (
+                  <div
+                    className="preset-marker-wrapper"
+                    onClick={Progress.jumpToPresetStart.bind(Progress)}
+                    onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
+                  >
+                    <div className="preset-marker" />
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
+        {/* <canvas id="chartArea" width="256" height="18000" /> */}
+        <div className="row">
+          <PlayControls
+            controlsDisabled={!gameEngine || loadingAudio}
+            setShareModalOpen={setShareModalOpen}
+          />
         </div>
-      )}
-      {!loadingAudio && (
-        <>
-          <div className={`canvas-wrapper ${selectedMode}`} ref={canvasWrapper}>
-            <canvas id="chartArea" width="256" height="448" />
-            <div id="combo-temp">
-              <div>Combo</div>
-              <div className="combo-num"></div>
-            </div>
-          </div>
-          <div className="progress-container">
-            <div className="progress-wrapper">
-              <canvas id="progress" />
-              {presetParams.progress ? (
-                <div
-                  className="preset-marker-wrapper"
-                  onClick={Progress.jumpToPresetStart.bind(Progress)}
-                  onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
-                >
-                  <div className="preset-marker" />
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </>
-      )}
-      {/* <canvas id="chartArea" width="256" height="18000" /> */}
-      <div className="row">
-        <PlayControls
-          controlsDisabled={!gameEngine || loadingAudio}
-          setShareModalOpen={setShareModalOpen}
+        {/* <div className="row">{JSON.stringify(window.localStorage)}</div> */}
+        <div className="row">
+          <SongInfo />
+        </div>
+        <ShareModal
+          modalOpen={shareModalOpen}
+          setModalOpen={setShareModalOpen}
+          data={shareParams}
         />
       </div>
-      {/* <div className="row">{JSON.stringify(window.localStorage)}</div> */}
-      <div className="row">
-        <SongInfo />
-      </div>
-      <ShareModal
-        modalOpen={shareModalOpen}
-        setModalOpen={setShareModalOpen}
-        data={shareParams}
-      />
     </div>
   );
 };

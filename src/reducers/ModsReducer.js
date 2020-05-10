@@ -1,6 +1,6 @@
 import * as actions from "../actions/ModsActions";
 import { optionDefaultValues } from "../components/form/options";
-import { getUserSettings, updateUserSettings } from "../utils/userSettings";
+import { updateUserSettings } from "../utils/userSettings";
 
 const initialState = optionDefaultValues.mods;
 
