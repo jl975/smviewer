@@ -195,13 +195,16 @@ class AudioPlayer {
 
   // gsap ticker method for regularly updating progress bar, not called manually
   updateProgress(time, deltaTime, frame) {
+    const currentSong = this.getCurrentSong();
+    if (!currentSong || !currentSong.tl) return;
+
     // detect significant frame skips and resync when it happens
     if (deltaTime > 60) {
       // console.log(deltaTime);
-      this.getCurrentSong().tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
+      currentSong.tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
     }
     if (frame % 15 === 0) {
-      const audio = this.getCurrentSong().audio;
+      const audio = currentSong.audio;
       const progress = audio.seek() / audio.duration();
       // store.dispatch(actions.setChartProgress(progress));
       saveSongProgress(progress);
@@ -238,6 +241,7 @@ class AudioPlayer {
   }
 
   stop() {
+    if (!this.getCurrentSong()) return;
     this.getCurrentSong().audio.stop(this.currentSongId);
     this.seekTime(0);
     this.currentSongId = null;

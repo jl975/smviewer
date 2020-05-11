@@ -3,7 +3,6 @@ import {
   ARROW_WIDTH,
   ARROW_HEIGHT,
   FREEZE_BODY_HEIGHT,
-  MARVELOUS_FLASH_FRAMES,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 
@@ -69,15 +68,9 @@ class Arrow {
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
 
-    this.hitFrame = 0; // frame for showing the Marvelous flash
-
     // can be used to detect the moment that the arrow passes a certain position
     // even without landing precisely on it
     this.previousBeatPosition = null;
-  }
-
-  reset() {
-    this.hitFrame = 0;
   }
 
   currentBeatPosition(beatTick) {
@@ -220,44 +213,18 @@ class Arrow {
       // render head of held freeze arrow on top of the arrow body
       if (freezeBeingHeld) {
         const arrowHeadImg = arrowImages.freeze_head;
-        if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-          c.drawImage(
-            arrowHeadImg,
-            DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
-            ARROW_HEIGHT * 2,
-            ARROW_WIDTH,
-            ARROW_HEIGHT,
-            directionIdx * ARROW_WIDTH,
-            0,
-            ARROW_WIDTH,
-            ARROW_HEIGHT
-          );
-        }
+        c.drawImage(
+          arrowHeadImg,
+          DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
+          ARROW_HEIGHT * 2,
+          ARROW_WIDTH,
+          ARROW_HEIGHT,
+          directionIdx * ARROW_WIDTH,
+          0,
+          ARROW_WIDTH,
+          ARROW_HEIGHT
+        );
       }
-
-      // flash at the end of successfully held down freeze
-      // if (actualDestY <= 0) {
-      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-      //     c.save();
-      //     c.globalAlpha =
-      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-      //     c.drawImage(
-      //       arrowImages.tap_explosion,
-      //       0,
-      //       0,
-      //       ARROW_WIDTH,
-      //       ARROW_HEIGHT,
-      //       destX - this.hitFrame,
-      //       0 - this.hitFrame,
-      //       ARROW_WIDTH + this.hitFrame * 2,
-      //       ARROW_HEIGHT + this.hitFrame * 2
-      //     );
-      //     c.restore();
-      //     this.hitFrame++;
-      //   }
-      // } else {
-      //   this.hitFrame = 0;
-      // }
     }
 
     this.previousBeatPosition = this.currentBeatPosition(beatTick);
@@ -383,29 +350,6 @@ class Arrow {
           ARROW_HEIGHT
         );
       }
-      // // target flash
-      // if (destY <= 0) {
-      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-      //     c.save();
-      //     c.globalAlpha =
-      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-      //     c.drawImage(
-      //       arrowImages.tap_explosion,
-      //       0,
-      //       0,
-      //       ARROW_WIDTH,
-      //       ARROW_HEIGHT,
-      //       destX - 2 - this.hitFrame,
-      //       0 - 2 - this.hitFrame,
-      //       ARROW_WIDTH + 4 + this.hitFrame * 2,
-      //       ARROW_HEIGHT + 4 + this.hitFrame * 2
-      //     );
-      //     c.restore();
-      //     this.hitFrame++;
-      //   }
-      // } else {
-      //   this.hitFrame = 0;
-      // }
     }
 
     // freeze note
@@ -431,30 +375,6 @@ class Arrow {
           ARROW_HEIGHT
         );
       }
-
-      // // target flash
-      // if (destY <= 0) {
-      //   if (this.hitFrame <= MARVELOUS_FLASH_FRAMES) {
-      //     c.save();
-      //     c.globalAlpha =
-      //       1 - Math.pow(this.hitFrame / MARVELOUS_FLASH_FRAMES, 3);
-      //     c.drawImage(
-      //       arrowImages.tap_explosion,
-      //       0,
-      //       0,
-      //       ARROW_WIDTH,
-      //       ARROW_HEIGHT,
-      //       destX - this.hitFrame,
-      //       0 - this.hitFrame,
-      //       ARROW_WIDTH + this.hitFrame * 2,
-      //       ARROW_HEIGHT + this.hitFrame * 2
-      //     );
-      //     c.restore();
-      //     this.hitFrame++;
-      //   }
-      // } else {
-      //   this.hitFrame = 0;
-      // }
     }
 
     this.previousBeatPosition = this.currentBeatPosition(beatTick);

@@ -100,5 +100,4 @@ if (presetParams.turn) {
   }
 }
 
-console.log("optionDefaultValues", optionDefaultValues);
 export { optionDefaultValues };

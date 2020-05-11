@@ -89,12 +89,27 @@ const ChartArea = (props) => {
     }
   };
 
-  // reset chart if song, difficulty, or mods change
+  // reset chart if mode, difficulty, or mods change
   useEffect(() => {
     const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods };
+
+    if (!canvas) return;
+
+    const chartParams = {
+      mode: selectedMode,
+      difficulty: selectedDifficulty,
+      mods,
+    };
+
     Object.keys(currentState).forEach((thing) => {
       if (prevState[thing] !== currentState[thing]) {
-        if (thing === "sm") {
+        // initial setup of game engine when canvas is mounted
+        if (thing === "canvas") {
+          const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+          let ge = new GameEngine(canvas, sm, simfileType, chartParams);
+          ge.pauseTl();
+          setGameEngine(ge);
+        } else if (thing === "sm") {
           // console.log(
           //   `${thing} changed from ${
           //     prevState[thing]
@@ -102,37 +117,20 @@ const ChartArea = (props) => {
           //       : prevState[thing]
           //   } \n\nto ${currentState[thing].slice(0, 100)}`
           // );
-        } else {
+        }
+        // mode, difficulty, or mods
+        else {
           // console.log(`${thing} changed`);
           // console.log(
           //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
           // );
-        }
 
-        // console.log(
-        //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
-        // );
+          if (gameEngine) {
+            gameEngine.resetChart(chartParams);
+          }
+        }
       }
     });
-
-    if (!canvas) return;
-
-    const simfileType = selectedSong.useSsc ? "ssc" : "sm";
-
-    let ge = new GameEngine(canvas, sm, simfileType);
-
-    if (!selectedDifficulty) return;
-
-    const simfile = ge.simfiles[`${selectedMode}_${selectedDifficulty}`];
-
-    if (simfile) {
-      ge.generateEventList(simfile);
-      ge.generateArrows(simfile, mods);
-      ge.initTimeline(mods);
-      ge.restartTl();
-      AudioPlayer.resync();
-    }
-    setGameEngine(ge);
   }, [canvas, sm, selectedDifficulty, selectedMode, mods]);
 
   const shareParams = {

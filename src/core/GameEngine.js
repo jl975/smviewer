@@ -17,14 +17,14 @@ import store from "../store";
 import * as actions from "../actions/ChartActions";
 
 class GameEngine {
-  constructor(canvas, sm, simfileType = "sm") {
+  constructor(canvas, sm, simfileType = "sm", chartParams) {
     const self = this;
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
-    this.tl = gsap.timeline();
     this.sm = sm;
     this.simfiles = {};
 
+    this.tl = gsap.timeline();
     this.eventList = [];
     this.arrows = [];
     this.shockArrows = [];
@@ -54,16 +54,48 @@ class GameEngine {
       targetFlashes: {},
     };
 
-    window.targetFlashes = this.globalParams.targetFlashes;
-
-    // init logic
-    if (this.sm) {
-      this.simfiles = parseSimfile(this.sm, simfileType);
-    }
-
     AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
     AudioPlayer.stopAnimationLoop = this.stopLoop.bind(this);
     AudioPlayer.updateAnimationLoopOnce = this.updateLoopOnce.bind(this);
+
+    if (!this.sm) return;
+
+    // init logic
+    this.simfiles = parseSimfile(this.sm, simfileType);
+
+    this.resetChart(chartParams);
+  }
+
+  resetChart({ mode, difficulty, mods }) {
+    const self = this;
+
+    // kill the previous gsap timeline before creating a new one
+    if (this.tl) this.tl.kill();
+    this.tl = gsap.timeline();
+
+    // reinitialize all chart-specific values
+    this.eventList.length = 0;
+    this.arrows.length = 0;
+    this.shockArrows.length = 0;
+    this.allArrows.length = 0;
+
+    this.globalParams.beatTick = 0;
+    this.globalParams.frame = 0;
+    this.globalParams.combo = 0;
+    this.globalParams.bpmChangeQueue = [];
+    this.globalParams.arrows = self.allArrows;
+    this.globalParams.targetFlashes = {};
+
+    // recreate the chart with the new given parameters
+    // then immediately seek to where the chart's progress was before it was recreated
+    const simfile = this.simfiles[`${mode}_${difficulty}`];
+    if (simfile) {
+      this.generateEventList(simfile);
+      this.generateArrows(simfile, mods);
+      this.initTimeline(mods);
+      this.restartTl();
+      AudioPlayer.resync();
+    }
   }
 
   startLoop() {
@@ -227,8 +259,6 @@ class GameEngine {
 
   // Calculate the gsap tweens before playing the chart
   initTimeline(mods) {
-    this.resetArrows();
-
     // console.log(`this.allArrows.length: ${this.allArrows.length}`);
 
     /*
@@ -438,10 +468,6 @@ class GameEngine {
     this.updateLoopOnce();
   }
 
-  resetArrows() {
-    this.arrows.forEach((arrow) => arrow.reset());
-  }
-
   mainLoop(loop = true) {
     // console.log("mainLoop running");
     this.drawBackground();
@@ -542,19 +568,9 @@ class GameEngine {
     this.c.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  toggleTl() {
-    if (this.tl.paused()) {
-      console.log("tl.play()");
-      this.tl.play();
-    } else {
-      console.log("tl.pause()");
-      this.tl.pause();
-    }
-  }
   restartTl() {
     // console.log("call restart");
-    this.tl.restart().pause();
-    this.resetArrows();
+    this.tl.restart();
   }
   pauseTl() {
     this.tl.pause();

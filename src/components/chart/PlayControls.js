@@ -26,7 +26,6 @@ const PlayControls = (props) => {
     <div className="play-controls">
       <HoldButton
         onClick={() => AudioPlayer.goBack(20)}
-        // disabled={audio.progress === 0}
         className="play-control"
       >
         <Icon name="backward" />

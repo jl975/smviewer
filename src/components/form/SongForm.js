@@ -177,6 +177,7 @@ const SongForm = (props) => {
 
     // console.log("setSelectedSongOption", songHash);
     AudioPlayer.stopSongPreview();
+    AudioPlayer.stop();
 
     const song = simfileList.find((song) => song.hash === songHash);
 
