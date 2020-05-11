@@ -7,7 +7,7 @@ import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 const SongInfo = (props) => {
   const { chart, selectedSong, selectedDifficulty, selectedMode } = props;
   return (
-    <>
+    <div className="song-info-row">
       <div className="song-information">
         {selectedSong && (
           <>
@@ -36,7 +36,7 @@ const SongInfo = (props) => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

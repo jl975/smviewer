@@ -325,12 +325,19 @@
       padding: 0;
     }
 
-    // .form-inner-wrapper {
-    //   background: #dadada;
-    // }
-    // .selectedSong {
-    //   background: #dadada;
-    // }
+    .form-inner-wrapper {
+      background-color: inherit;
+      height: auto;
+      padding-bottom: 0;
+    }
+    .songForm-filters {
+      padding: 10px 10px;
+    }
+    .songForm-filters-row {
+      // padding: 10px 0 0;
+      // background-color: #fff;
+      border-bottom: 1px solid #d7e2ed;
+    }
 
     .selectedSong-jacket-wrapper {
       margin-left: 5px;

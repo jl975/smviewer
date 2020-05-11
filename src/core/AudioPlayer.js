@@ -68,7 +68,6 @@ class AudioPlayer {
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false);
-
           this.seekProgress(initialProgress);
         },
         onloaderror: (id, error, blah) => {
