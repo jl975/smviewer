@@ -477,7 +477,7 @@ class GameEngine {
 
   mainLoop(loop = true) {
     // console.log("mainLoop running");
-    console.log("\n\n\n");
+    // console.log("\n\n\n");
     let t0, t1;
 
     t0 = performance.now();
@@ -510,7 +510,7 @@ class GameEngine {
       );
     }
     t1 = performance.now();
-    console.log(`shockArrow.render: ${(t1 - t0).toFixed(3)} ms`);
+    // console.log(`shockArrow.render: ${(t1 - t0).toFixed(3)} ms`);
 
     // render arrows in the opposite order so the earlier arrows are layered over the later ones
     // Up arrow is the exception: later arrows are layered over the earlier ones

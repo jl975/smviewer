@@ -30,7 +30,7 @@ class Guidelines {
       const lineWidth = beat % 4 === 0 ? 2 : 1;
 
       if (destY > topBoundary && destY < bottomBoundary) {
-        console.log(destY);
+        // console.log(destY);
         c.beginPath();
         c.moveTo(0, destY);
         c.lineTo(canvas.width, destY);

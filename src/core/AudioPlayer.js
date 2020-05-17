@@ -206,17 +206,39 @@ class AudioPlayer {
     const currentSong = this.getCurrentSong();
     if (!currentSong || !currentSong.tl) return;
 
+    // console.log(currentSong.tl);
+
     // detect significant frame skips and resync when it happens
     if (deltaTime > 60) {
       // console.log(deltaTime);
       currentSong.tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
     }
     if (frame % 15 === 0) {
+      let t0 = performance.now();
       const audio = currentSong.audio;
       const progress = audio.seek() / audio.duration();
+      let t1 = performance.now();
+      const audioSeekPerf = t1 - t0;
+      // console.log(`audio seek/duration progress: ${(t1 - t0).toFixed(3)} ms`);
       // store.dispatch(actions.setChartProgress(progress));
+
+      t0 = performance.now();
+      let tlProgress = currentSong.tl.progress();
+      t1 = performance.now();
+      const tlSeekPerf = t1 - t0;
+
+      // console.log(
+      //   `audioSeekPerf - tlSeekPerf = ${(audioSeekPerf - tlSeekPerf).toFixed(
+      //     3
+      //   )} ms`
+      // );
+      // console.log(`tl progress: ${(t1 - t0).toFixed(3)} ms`);
+
+      t0 = performance.now();
       saveSongProgress(progress);
       Progress.render(progress);
+      t1 = performance.now();
+      // console.log(`renderProgress ${(t1 - t0).toFixed(3)} ms`);
     }
   }
 
