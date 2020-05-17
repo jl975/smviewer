@@ -103,6 +103,7 @@ class AudioPlayer {
         },
         onend: (spriteId) => {
           gsap.ticker.remove(this.updateTimeline);
+          gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
         },
@@ -148,9 +149,15 @@ class AudioPlayer {
   }
 
   resync() {
+    // number of frames it takes for audio to reload/restabilize
+    // this.getCurrentTime() (i.e. Howler .seek()) will return an object instead of a number
+    // if audio is not loaded yet
+    this.audioReloadFrames = 0;
+
     // arbitrary number of frames chosen to tell timeline to resync with the audio
-    // because audio playback takes a while to restabilize
+    // this needs to be done after (/in addition to) the audio restabilizing
     this.audioResyncFrames = 10;
+
     gsap.ticker.add(this.updateTimeline);
     this.updateProgressOnce();
   }
@@ -159,19 +166,44 @@ class AudioPlayer {
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
     // // for reducing debugging headaches; don't remove
-    if (!this.getCurrentSong().tl || !this.getCurrentSong().globalParams)
-      return;
+    const currentSong = this.getCurrentSong();
+    if (!currentSong.tl || !currentSong.globalParams) return;
 
+    let isAudioStable = false;
+
+    // the line that syncs the timeline with the audio time
     // sometimes this will still error on load, just bypass it
     try {
-      this.getCurrentSong().tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
-    } catch (err) {}
+      const currentTime = this.getCurrentTime();
+      // console.log("currentTime", currentTime);
+      if (typeof currentTime === "number") {
+        isAudioStable = true;
+        // console.log(
+        //   "seek timeline to",
+        //   currentTime,
+        //   "after",
+        //   this.audioReloadFrames,
+        //   "frames"
+        // );
+        // console.log("stabilized to", currentTime);
+        currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
 
-    this.audioResyncFrames--;
+        if (store.getState().audio.chartAudio.status === "playing") {
+          currentSong.tl.play();
+        }
+        this.audioResyncFrames--;
+      } else {
+        console.log("audio restabilizing");
+        currentSong.tl.pause();
+        // console.log("audio restabilizing", currentSong.tl._time);
+        this.audioReloadFrames++;
+      }
+    } catch (err) {}
 
     // if (this.getCurrentSong().globalParams) return;
 
-    if (this.audioResyncFrames <= 0) {
+    // if (this.audioResyncFrames <= 0) {
+    if (isAudioStable && this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(this.getCurrentSong().globalParams);
       store.dispatch(changeActiveBpm(currentBpm));
@@ -198,7 +230,8 @@ class AudioPlayer {
   }
 
   seekProgress(value) {
-    this.seekTime(value * this.getCurrentSong().audio.duration());
+    const audioDuration = this.getCurrentSong().audio.duration();
+    this.seekTime(value * audioDuration);
   }
 
   // gsap ticker method for regularly updating progress bar, not called manually
@@ -211,7 +244,20 @@ class AudioPlayer {
     // detect significant frame skips and resync when it happens
     if (deltaTime > 60) {
       // console.log(deltaTime);
-      currentSong.tl.seek(this.getCurrentTime() + GLOBAL_OFFSET);
+      const currentTime = this.getCurrentTime();
+      console.log(
+        "frame skip",
+        "deltaTime:",
+        deltaTime,
+        "currentTime:",
+        currentTime
+      );
+      if (typeof currentTime === "number") {
+        currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
+      } else {
+        console.log("audio unstable after frame skip, resyncing");
+        this.resync();
+      }
     }
     if (frame % 15 === 0) {
       let t0 = performance.now();
