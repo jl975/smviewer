@@ -292,6 +292,7 @@ const SongForm = (props) => {
 
   const isModeToggleDisabled = () => {
     if (!selectedSong || !selectedMode) return true;
+    if (selectedDifficulty === "Beginner") return true;
     if (selectedMode === "single") {
       return !selectedSong.levels.slice(5, 9).filter((a) => a).length;
     } else if (selectedMode === "double") {

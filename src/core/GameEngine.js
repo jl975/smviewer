@@ -68,9 +68,12 @@ class GameEngine {
 
   resetChart({ mode, difficulty, mods }) {
     const self = this;
+    const { audio } = store.getState();
 
     // kill the previous gsap timeline before creating a new one
-    if (this.tl) this.tl.kill();
+    if (this.tl) {
+      this.tl.kill();
+    }
     this.tl = gsap.timeline();
 
     // reinitialize all chart-specific values
@@ -95,6 +98,9 @@ class GameEngine {
       this.generateArrows(simfile, mods);
       this.initTimeline(mods);
       this.restartTl();
+      if (audio.chartAudio.status !== "playing") {
+        this.pauseTl();
+      }
       AudioPlayer.resync();
     }
   }
@@ -435,7 +441,6 @@ class GameEngine {
               if (comboTemp) {
                 comboTemp.textContent = arrow.combo;
               }
-
               if (arrow instanceof Arrow) {
                 // AudioPlayer.playAssistTick();
                 // console.log(arrow);
