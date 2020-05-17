@@ -76,7 +76,7 @@
   padding: 20px;
 }
 
-.canvas-container {
+.chartArea-container {
   width: 100%;
   // height: 100%;
   overflow: auto;
@@ -85,7 +85,7 @@
   display: flex;
   flex-direction: column;
 }
-.canvas-wrapper {
+.canvas-container {
   position: relative;
   display: flex;
   height: 448px;
@@ -96,9 +96,15 @@
     }
   }
 }
+.canvas-wrapper {
+  position: relative;
+  margin: 0 auto;
+}
 
 .chart-loading-screen {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -248,7 +254,7 @@
 }
 
 @media only screen and (min-width: 426px) {
-  .canvas-container {
+  .chartArea-container {
     padding: 30px;
   }
   .main-container {

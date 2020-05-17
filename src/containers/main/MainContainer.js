@@ -85,7 +85,6 @@ const MainContainer = (props) => {
       // User might try to select a new song before the simfile is fetched.
       // Only process simfile if this is the last song that was selected
       if (loadStore.lastRequestedSong === song.title) {
-        // console.log("sm loaded");
         setSelectedSM(sm);
       }
     } catch (err) {

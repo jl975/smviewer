@@ -171,13 +171,16 @@ const SongForm = (props) => {
     }
   }, [selectedSongOption]);
 
-  const onSongSelect = async (e, data) => {
+  const onSongSelect = async (_, data) => {
+    AudioPlayer.stopSongPreview();
+    if (selectedSong) {
+      AudioPlayer.killImmediately(selectedSong.hash);
+    }
+
     const songHash = data.value;
     setSelectedSongOption(songHash);
 
     // console.log("setSelectedSongOption", songHash);
-    AudioPlayer.stopSongPreview();
-    AudioPlayer.stop();
 
     const song = simfileList.find((song) => song.hash === songHash);
 
@@ -245,6 +248,10 @@ const SongForm = (props) => {
     props.onDifficultySelect(difficulty);
   };
 
+  const handleModeSelect = (mode) => {
+    props.onModeSelect(mode);
+  };
+
   const renderDifficulties = () => {
     if (!selectedSong) return null;
 
@@ -281,6 +288,16 @@ const SongForm = (props) => {
       displayBpm = displayBpm.split(",")[difficultyIdx];
     }
     return displayBpm;
+  };
+
+  const isModeToggleDisabled = () => {
+    if (!selectedSong || !selectedMode) return true;
+    if (selectedMode === "single") {
+      return !selectedSong.levels.slice(5, 9).filter((a) => a).length;
+    } else if (selectedMode === "double") {
+      return !selectedSong.levels.slice(0, 5).filter((a) => a).length;
+    }
+    return true;
   };
 
   const toggleSongPreview = () => {
@@ -351,8 +368,9 @@ const SongForm = (props) => {
                   <ToggleSwitch
                     option1={{ text: "Single", value: "single" }}
                     option2={{ text: "Double", value: "double" }}
-                    onChange={(value) => props.onModeSelect(value)}
+                    onChange={handleModeSelect}
                     value={selectedMode}
+                    disabled={isModeToggleDisabled()}
                   />
                 </div>
 

@@ -28,7 +28,7 @@ const ChartArea = (props) => {
   const [canvas, setCanvas] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
-  const canvasWrapper = useRef();
+  const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
 
   const prevState = usePrevious({
@@ -41,18 +41,16 @@ const ChartArea = (props) => {
 
   // define canvas and resize listener on mount
   useEffect(() => {
-    if (!loadingAudio) {
-      chartArea.current = document.querySelector("#chartArea");
-      setCanvas(chartArea.current);
+    chartArea.current = document.querySelector("#chartArea");
+    setCanvas(chartArea.current);
 
-      Progress.initCanvas();
-    }
-  }, [loadingAudio]);
+    Progress.initCanvas();
+  }, []);
 
   // change chart dimensions depending on single or double
   // Hardcoded heights for now. Variable heights may be possible in the future
   useEffect(() => {
-    if (!canvas || !canvasWrapper.current) return;
+    if (!canvas || !canvasContainer.current) return;
     resizeChartArea();
   }, [canvas, selectedMode, screen]);
 
@@ -66,7 +64,7 @@ const ChartArea = (props) => {
     } else if (selectedMode === "double") {
       chartArea.current.width = 512;
 
-      const wrapper = canvasWrapper.current.getBoundingClientRect();
+      const wrapper = canvasContainer.current.getBoundingClientRect();
 
       if (wrapper.width < 512) {
         const scaleFactor = wrapper.width / chartArea.current.width;
@@ -105,18 +103,18 @@ const ChartArea = (props) => {
       if (prevState[thing] !== currentState[thing]) {
         // initial setup of game engine when canvas is mounted
         if (thing === "canvas") {
-          const simfileType = selectedSong.useSsc ? "ssc" : "sm";
-          let ge = new GameEngine(canvas, sm, simfileType, chartParams);
-          ge.pauseTl();
-          setGameEngine(ge);
         } else if (thing === "sm") {
           // console.log(
           //   `${thing} changed from ${
           //     prevState[thing]
-          //       ? prevState[thing].slice(0, 100)
+          //       ? prevState[thing].slice(0, 30)
           //       : prevState[thing]
-          //   } \n\nto ${currentState[thing].slice(0, 100)}`
+          //   } \n\nto ${currentState[thing].slice(0, 30)}`
           // );
+          const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+          let ge = new GameEngine(canvas, sm, simfileType, chartParams);
+          ge.pauseTl();
+          setGameEngine(ge);
         }
         // mode, difficulty, or mods
         else {
@@ -146,46 +144,46 @@ const ChartArea = (props) => {
         screen.activeView === "chart" ? "active" : ""
       }`}
     >
-      <div className="view-wrapper canvas-container">
-        {loadingAudio && (
-          <div className={`canvas-wrapper`} ref={chartLoadingScreen}>
-            <div className={`chart-loading-screen ${selectedMode}`}>
-              <img
-                className="chart-loading-jacket"
-                src={getJacketPath(`${selectedSong.hash}.png`)}
-              />
-              <div className="chart-loading-message">Loading chart...</div>
-            </div>
+      <div className="view-wrapper chartArea-container">
+        {/* {!loadingAudio && (
+        <> */}
+        <div
+          className={`canvas-container ${selectedMode}`}
+          ref={canvasContainer}
+        >
+          <div className="canvas-wrapper">
+            <canvas id="chartArea" width="256" height="448" />
+            {loadingAudio && (
+              <div className={`chart-loading-screen ${selectedMode}`}>
+                <img
+                  className="chart-loading-jacket"
+                  src={getJacketPath(`${selectedSong.hash}.png`)}
+                />
+                <div className="chart-loading-message">Loading chart...</div>
+              </div>
+            )}
           </div>
-        )}
-        {!loadingAudio && (
-          <>
-            <div
-              className={`canvas-wrapper ${selectedMode}`}
-              ref={canvasWrapper}
-            >
-              <canvas id="chartArea" width="256" height="448" />
-              <div id="combo-temp">
-                <div>Combo</div>
-                <div className="combo-num"></div>
+          <div id="combo-temp">
+            <div>Combo</div>
+            <div className="combo-num"></div>
+          </div>
+        </div>
+        <div className="progress-container">
+          <div className="progress-wrapper">
+            <canvas id="progress" />
+            {presetParams.progress ? (
+              <div
+                className="preset-marker-wrapper"
+                onClick={Progress.jumpToPresetStart.bind(Progress)}
+                onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
+              >
+                <div className="preset-marker" />
               </div>
-            </div>
-            <div className="progress-container">
-              <div className="progress-wrapper">
-                <canvas id="progress" />
-                {presetParams.progress ? (
-                  <div
-                    className="preset-marker-wrapper"
-                    onClick={Progress.jumpToPresetStart.bind(Progress)}
-                    onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
-                  >
-                    <div className="preset-marker" />
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </>
-        )}
+            ) : null}
+          </div>
+        </div>
+        {/* </>
+        )} */}
         {/* <canvas id="chartArea" width="256" height="18000" /> */}
         <div className="row">
           <PlayControls

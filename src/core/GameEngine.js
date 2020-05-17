@@ -85,6 +85,7 @@ class GameEngine {
     this.globalParams.bpmChangeQueue = [];
     this.globalParams.arrows = self.allArrows;
     this.globalParams.targetFlashes = {};
+    AudioPlayer.setGlobalParams(this.globalParams);
 
     // recreate the chart with the new given parameters
     // then immediately seek to where the chart's progress was before it was recreated
@@ -431,7 +432,9 @@ class GameEngine {
             combo: arrow.combo,
             onStart: () => {
               // store.dispatch(actions.setCombo(arrow.combo));
-              comboTemp.textContent = arrow.combo;
+              if (comboTemp) {
+                comboTemp.textContent = arrow.combo;
+              }
 
               if (arrow instanceof Arrow) {
                 // AudioPlayer.playAssistTick();
@@ -463,7 +466,6 @@ class GameEngine {
 
     this.guidelines = new Guidelines({ mods, finalBeat });
     AudioPlayer.setTimeline(this.tl);
-    AudioPlayer.setGlobalParams(this.globalParams);
 
     this.updateLoopOnce();
   }

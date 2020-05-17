@@ -28,6 +28,8 @@ class AudioPlayer {
         }),
       },
     }; // map of song hash to associated Howl object
+
+    window.sources = this.sources;
     this.currentSong = null; // hash of current song
     this.currentPreview = null; // hash of current preview
 
@@ -44,7 +46,8 @@ class AudioPlayer {
   }
 
   getCurrentSong() {
-    return this.sources.song[this.currentSong];
+    const currentSong = this.sources.song[this.currentSong];
+    return currentSong;
   }
   getCurrentPreview() {
     return this.sources.preview[this.currentPreview];
@@ -60,8 +63,9 @@ class AudioPlayer {
     if (!this.sources.song[song.hash]) {
       this.setLoadingAudio(true);
 
-      this.sources.song[song.hash] = { title: song.title };
-      this.sources.song[song.hash].audio = new Howl({
+      const thisSong = (this.sources.song[song.hash] = { title: song.title });
+
+      thisSong.audio = new Howl({
         src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
         format: ["mp3"],
         html5: true,
@@ -74,14 +78,14 @@ class AudioPlayer {
           alert(`${id};;; ${error};;; ${blah}`);
         },
         onplay: () => {
-          this.getCurrentSong().tl.play();
+          thisSong.tl.play();
           this.resync();
           gsap.ticker.add(this.updateProgress);
           this.startAnimationLoop();
           store.dispatch(actions.playChartAudio());
         },
         onpause: () => {
-          this.getCurrentSong().tl.pause();
+          thisSong.tl.pause();
           gsap.ticker.remove(this.updateTimeline);
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
@@ -89,8 +93,8 @@ class AudioPlayer {
         },
         onseek: () => {},
         onstop: () => {
-          if (this.getCurrentSong().tl) {
-            this.getCurrentSong().tl.restart().pause();
+          if (thisSong.tl) {
+            thisSong.tl.restart().pause();
           }
           gsap.ticker.remove(this.updateTimeline);
           gsap.ticker.remove(this.updateProgress);
@@ -111,7 +115,7 @@ class AudioPlayer {
         html5: true,
         sprite: {
           sample: [
-            parseFloat((song.sampleStart - 0.12) * 1000),
+            parseFloat(song.sampleStart * 1000),
             parseFloat(song.sampleLength * 1000),
           ],
         },
@@ -155,7 +159,8 @@ class AudioPlayer {
   // stabilizes, then remove this method from the ticker
   updateTimeline() {
     // // for reducing debugging headaches; don't remove
-    // if (!this.getCurrentSong().tl) return;
+    if (!this.getCurrentSong().tl || !this.getCurrentSong().globalParams)
+      return;
 
     // sometimes this will still error on load, just bypass it
     try {
@@ -163,6 +168,9 @@ class AudioPlayer {
     } catch (err) {}
 
     this.audioResyncFrames--;
+
+    // if (this.getCurrentSong().globalParams) return;
+
     if (this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(this.getCurrentSong().globalParams);
@@ -241,10 +249,23 @@ class AudioPlayer {
   }
 
   stop() {
-    if (!this.getCurrentSong()) return;
+    if (!this.getCurrentSong()) {
+      return;
+    }
     this.getCurrentSong().audio.stop(this.currentSongId);
     this.seekTime(0);
     this.currentSongId = null;
+  }
+
+  killImmediately(songId) {
+    const currentSong = this.sources.song[songId];
+    if (currentSong) {
+      if (currentSong.tl) {
+        this.sources.song[songId].tl.kill();
+        // console.log("kill", this.sources.song[songId].title);
+      }
+      this.stop();
+    }
   }
 
   isPlaying() {

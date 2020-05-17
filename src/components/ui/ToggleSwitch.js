@@ -1,10 +1,10 @@
 import React from "react";
 
 const ToggleSwitch = (props) => {
-  const { option1, option2, value } = props;
+  const { option1, option2, value, disabled } = props;
 
   const toggleChange = () => {
-    if (!option1 || !option2) return;
+    if (disabled || !option1 || !option2) return;
 
     if (value === option1.value) {
       props.onChange(option2.value);
@@ -19,7 +19,7 @@ const ToggleSwitch = (props) => {
   };
 
   const selectOption = (option) => {
-    if (!option || typeof option.value === "undefined") return;
+    if (disabled || !option || typeof option.value === "undefined") return;
     props.onChange(option.value);
   };
 
@@ -31,7 +31,7 @@ const ToggleSwitch = (props) => {
   };
 
   return (
-    <div className="toggleSwitch-wrapper">
+    <div className={`toggleSwitch-wrapper ${disabled ? "disabled" : ""}`}>
       <label
         className={`toggleSwitch-option1 ${
           value === option1.value ? "selected" : ""
