@@ -102,6 +102,9 @@ class AudioPlayer {
           store.dispatch(actions.stopChartAudio());
         },
         onend: (spriteId) => {
+          if (thisSong.tl) {
+            thisSong.tl.pause();
+          }
           gsap.ticker.remove(this.updateTimeline);
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
@@ -188,7 +191,7 @@ class AudioPlayer {
         // console.log("stabilized to", currentTime);
         currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
 
-        if (store.getState().audio.chartAudio.status === "playing") {
+        if (this.getChartAudioStatus() === "playing") {
           currentSong.tl.play();
         }
         this.audioResyncFrames--;
@@ -301,7 +304,7 @@ class AudioPlayer {
   }
 
   play() {
-    if (store.getState().audio.chartAudio.status === "pending") {
+    if (this.getChartAudioStatus() === "pending") {
       return;
     }
     this.currentSongId = this.getCurrentSong().audio.play();
@@ -392,6 +395,10 @@ class AudioPlayer {
       this.getCurrentPreview() &&
       this.getCurrentPreview().audio.playing(this.currentPreviewId)
     );
+  }
+
+  getChartAudioStatus() {
+    return store.getState().audio.chartAudio.status;
   }
 }
 
