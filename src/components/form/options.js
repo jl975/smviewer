@@ -34,6 +34,7 @@ export const options = {
     turn: ["off", "mirror", "left", "right", "shuffle"],
     shuffle: [1, 2, 3, 4, 5, 6, 7, 8],
     noteskin: ["rainbow", "note", "vivid", "flat"],
+    comboDisplay: ["behind", "inFront", "hidden"],
   },
 };
 
@@ -47,6 +48,7 @@ const optionDefaultValues = {
     shuffle: 1,
     noteskin: "note",
     guidelines: true,
+    comboDisplay: "behind",
     colorFreezes: false,
   },
 };

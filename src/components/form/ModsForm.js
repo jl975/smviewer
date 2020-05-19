@@ -126,6 +126,22 @@ const ModsForm = (props) => {
             </div>
           )}
 
+          <div className="form-field">
+            <h4 className="form-label">Combo display</h4>
+            {options.mods.comboDisplay.map((comboDisplay, i) => {
+              return (
+                <Radio
+                  key={`comboDisplay_${comboDisplay}`}
+                  label={["Behind arrows", "In front of arrows", "Hidden"][i]}
+                  name="comboDisplay"
+                  value={comboDisplay}
+                  checked={mods.comboDisplay === comboDisplay}
+                  onChange={() => updateMods({ comboDisplay })}
+                />
+              );
+            })}
+          </div>
+
           <h4>Miscellaneous</h4>
           <div className="form-field">
             <Checkbox

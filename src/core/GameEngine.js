@@ -490,7 +490,8 @@ class GameEngine {
     t1 = performance.now();
     // console.log(`drawBackground: ${(t1 - t0).toFixed(3)} ms`);
 
-    const mode = store.getState().songSelect.mode;
+    const { songSelect, mods } = store.getState();
+    const { mode } = songSelect;
 
     if (this.stepZone) {
       t0 = performance.now();
@@ -505,8 +506,12 @@ class GameEngine {
       // console.log(`guidelines.render: ${(t1 - t0).toFixed(3)} ms`);
     }
 
-    this.comboDisplay.render(this.canvas, this.globalParams.combo);
+    /* Combo display, if behind arrows */
+    if (mods.comboDisplay === "behind") {
+      this.comboDisplay.render(this.canvas, this.globalParams.combo);
+    }
 
+    /* Arrows */
     t0 = performance.now();
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {
       const shockArrow = this.shockArrows[i];
@@ -584,8 +589,9 @@ class GameEngine {
     t1 = performance.now();
     renderArrowPerf += parseFloat((t1 - t0).toFixed(3));
     // console.log(`arrows renderArrow: ${(t1 - t0).toFixed(3)} ms`);
+    /* End arrows */
 
-    // target flashes
+    /* Target flashes */
     t0 = performance.now();
     for (let beatStamp in this.globalParams.targetFlashes) {
       const targetFlash = this.globalParams.targetFlashes[beatStamp];
@@ -598,6 +604,11 @@ class GameEngine {
     }
     t1 = performance.now();
     // console.log(`targetFlash render: ${(t1 - t0).toFixed(3)} ms`);
+
+    /* Combo display, if in front of arrows */
+    if (mods.comboDisplay === "inFront") {
+      this.comboDisplay.render(this.canvas, this.globalParams.combo);
+    }
 
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);

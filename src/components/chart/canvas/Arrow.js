@@ -110,8 +110,6 @@ class Arrow {
 
       let partialDestY = destY - (totalBodyHeight + ARROW_HEIGHT / 2);
       let freezeBeingHeld = false;
-      partialDestY = (partialDestY + 0.5) | 0;
-      destY = (destY + 0.5) | 0;
 
       // shrink in size once it reaches the target
       // this is also where the freeze starts to be held down
@@ -156,7 +154,6 @@ class Arrow {
           bodyFrameY -= bodyDestY;
           bodyDestY = 0;
         }
-        bodyDestY = (bodyDestY + 0.5) | 0;
         if (bodyDestY > -bodyHeight && bodyDestY < bottomBoundary) {
           c.drawImage(
             arrowBodyImg,
@@ -180,7 +177,7 @@ class Arrow {
       // Because we need to overwrite destY for proper sprite placement in the event that the
       // top of the sprite needs to be cut off, store the actual Y position of the arrow
       // in a separate variable
-      let actualDestY = (destY + 0.5) | 0;
+      let actualDestY = destY;
 
       if (
         this.holdBeats[directionIdx] * ARROW_HEIGHT * this.speed <
@@ -199,7 +196,6 @@ class Arrow {
         destY = ARROW_HEIGHT / 2;
       }
 
-      destY = (destY + 0.5) | 0;
       if (actualDestY > topBoundary && actualDestY < bottomBoundary) {
         c.drawImage(
           arrowImg,
