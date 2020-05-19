@@ -207,11 +207,13 @@ class AudioPlayer {
     // if (this.audioResyncFrames <= 0) {
     if (isAudioStable && this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
-      const currentBpm = getCurrentBpm(this.getCurrentSong().globalParams);
+      const currentBpm = getCurrentBpm(currentSong.globalParams);
       store.dispatch(changeActiveBpm(currentBpm));
       // document.querySelector(".bpm-value").textContent = Math.round(currentBpm);
 
-      const currentCombo = getCurrentCombo(this.getCurrentSong());
+      const currentCombo = getCurrentCombo(currentSong);
+      // currentSong.globalParams.combo = currentCombo;
+
       // store.dispatch(setCombo(currentCombo));
       const comboTemp = document.querySelector("#combo-temp .combo-num");
       if (comboTemp) comboTemp.textContent = currentCombo;
@@ -292,6 +294,11 @@ class AudioPlayer {
 
   updateProgressOnce() {
     this.updateProgress(null, null, 0);
+
+    const currentSong = this.getCurrentSong();
+    const currentCombo = getCurrentCombo(currentSong);
+    currentSong.globalParams.combo = currentCombo;
+
     this.updateAnimationLoopOnce();
   }
 

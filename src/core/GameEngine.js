@@ -437,12 +437,15 @@ class GameEngine {
         this.tl.set(
           this.globalParams,
           {
-            combo: arrow.combo,
+            // combo: arrow.combo,
             onStart: () => {
               // store.dispatch(actions.setCombo(arrow.combo));
+
               if (comboTemp) {
                 comboTemp.textContent = arrow.combo;
               }
+              this.globalParams.combo = arrow.combo;
+
               if (arrow instanceof Arrow) {
                 // AudioPlayer.playAssistTick();
                 // console.log(arrow);
@@ -502,9 +505,7 @@ class GameEngine {
       // console.log(`guidelines.render: ${(t1 - t0).toFixed(3)} ms`);
     }
 
-    // this.comboDisplay.render(this.canvas, this.globalParams.combo);
-
-    // console.log(this.globalParams.combo);
+    this.comboDisplay.render(this.canvas, this.globalParams.combo);
 
     t0 = performance.now();
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {

@@ -81,6 +81,7 @@ class Progress {
     }
 
     if (progressPercent < 0 || progressPercent > 1) return;
+
     this.setProgress(progressPercent);
     AudioPlayer.seekProgress(progressPercent);
   }

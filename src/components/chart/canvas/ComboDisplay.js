@@ -11,7 +11,7 @@ class ComboDisplay {
     this.combo = 0;
   }
 
-  render(canvas, comboNum) {
+  render(canvas, comboNum = 0) {
     const c = canvas.getContext("2d");
     if (comboNum < 4) return;
 

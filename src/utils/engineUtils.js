@@ -69,13 +69,30 @@ export const getCurrentCombo = (song) => {
   const { arrows } = globalParams;
   if (!arrows.length) return 0;
 
+  const currentTime = audio.seek();
+
+  let currentCombo;
+
   // Go through the chart until the arrow following the current timestamp is reached,
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < arrows.length; i++) {
     const arrow = arrows[i];
-    if (arrow.timestamp > audio.seek() + GLOBAL_OFFSET) {
-      return arrow.combo - 1;
+    if (arrow.combo && arrow.timestamp > currentTime + GLOBAL_OFFSET) {
+      currentCombo = arrow.combo - 1;
+      return currentCombo;
     }
   }
-  return arrows[arrows.length - 1].combo;
+
+  // If end of chart is reached, use the combo of the last arrow.
+  // Need to go back if the last "note" is the end of a freeze, which is common
+  // Expected to short circuit out of loop after ~1-2 iterations
+  for (let i = arrows.length - 1; i >= 0; i--) {
+    const arrow = arrows[i];
+    if (arrow.combo) {
+      currentCombo = arrow.combo;
+      return currentCombo;
+    }
+  }
+
+  return -1; // should never reach this. return -1 to make debugging easier
 };
