@@ -196,9 +196,8 @@ class AudioPlayer {
         }
         this.audioResyncFrames--;
       } else {
-        console.log("audio restabilizing");
+        // console.log("audio restabilizing");
         currentSong.tl.pause();
-        // console.log("audio restabilizing", currentSong.tl._time);
         this.audioReloadFrames++;
       }
     } catch (err) {}

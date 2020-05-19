@@ -5,6 +5,7 @@ import ShockArrow from "../components/chart/canvas/ShockArrow";
 import StepZone from "../components/chart/canvas/StepZone";
 import Guidelines from "../components/chart/canvas/Guidelines";
 import TargetFlash from "../components/chart/canvas/TargetFlash";
+import ComboDisplay from "../components/chart/canvas/ComboDisplay";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
 import {
@@ -260,6 +261,7 @@ class GameEngine {
     });
 
     this.stepZone = new StepZone();
+    this.comboDisplay = new ComboDisplay();
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
@@ -499,6 +501,10 @@ class GameEngine {
       t1 = performance.now();
       // console.log(`guidelines.render: ${(t1 - t0).toFixed(3)} ms`);
     }
+
+    // this.comboDisplay.render(this.canvas, this.globalParams.combo);
+
+    // console.log(this.globalParams.combo);
 
     t0 = performance.now();
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {

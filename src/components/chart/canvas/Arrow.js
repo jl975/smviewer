@@ -235,7 +235,7 @@ class Arrow {
   }
 
   renderArrow(canvas, beatTick, directionIdx) {
-    const c = canvas.getContext("2d", { alpha: false });
+    const c = canvas.getContext("2d");
 
     const topBoundary = 0; // used to simulate the arrows being hit and disappearing
     const bottomBoundary = canvas.height; // can be adjusted with SUDDEN+

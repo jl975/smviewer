@@ -145,8 +145,6 @@ const ChartArea = (props) => {
       }`}
     >
       <div className="view-wrapper chartArea-container">
-        {/* {!loadingAudio && (
-        <> */}
         <div
           className={`canvas-container ${selectedMode}`}
           ref={canvasContainer}
@@ -182,8 +180,6 @@ const ChartArea = (props) => {
             ) : null}
           </div>
         </div>
-        {/* </>
-        )} */}
         {/* <canvas id="chartArea" width="256" height="18000" /> */}
         <div className="row">
           <PlayControls
@@ -191,7 +187,6 @@ const ChartArea = (props) => {
             setShareModalOpen={setShareModalOpen}
           />
         </div>
-        {/* <div className="row">{JSON.stringify(window.localStorage)}</div> */}
         <div className="row">
           <SongInfo />
         </div>
