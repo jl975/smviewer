@@ -220,7 +220,7 @@ const SongForm = (props) => {
         if (level === selectedFilters.level) {
           const difficulties =
             selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
-          console.log("match", difficulties[i], level);
+          // console.log("match", difficulties[i], level);
           handleDifficultySelect(difficulties[i]);
           break;
         }

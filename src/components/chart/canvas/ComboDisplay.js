@@ -1,10 +1,13 @@
 import { getAssetPath } from "../../../utils";
 
 const comboImages = {};
-comboImages.numA20 = new Image();
-comboImages.numA20.src = getAssetPath(`combo_numbers.png`);
-comboImages.comboA20 = new Image();
-comboImages.comboA20.src = getAssetPath(`combo.png`);
+
+["A20", "A"].forEach((type) => {
+  comboImages[`num_${type}`] = new Image();
+  comboImages[`num_${type}`].src = getAssetPath(`combo_numbers_${type}.png`);
+  comboImages[`combo_${type}`] = new Image();
+  comboImages[`combo_${type}`].src = getAssetPath(`combo_${type}.png`);
+});
 
 class ComboDisplay {
   constructor() {
@@ -15,8 +18,10 @@ class ComboDisplay {
     const c = canvas.getContext("2d");
     if (comboNum < 4) return;
 
-    const comboImg = comboImages[`comboA20`];
-    const numImg = comboImages[`numA20`];
+    let type = "A";
+
+    const comboImg = comboImages[`combo_${type}`];
+    const numImg = comboImages[`num_${type}`];
 
     // draw combo word
     c.drawImage(
@@ -25,14 +30,15 @@ class ComboDisplay {
       0,
       comboImg.width,
       comboImg.height,
-      128,
-      200,
+      136,
+      180,
       comboImg.width / 2,
       comboImg.height / 2
     );
 
     // draw combo number
     comboNum = comboNum.toString();
+    // console.log("comboNum", comboNum, "comboNum.length", comboNum.length);
     for (let i = comboNum.length - 1; i >= 0; i--) {
       const digit = comboNum[i];
 
@@ -43,16 +49,23 @@ class ComboDisplay {
       const imageX = imageCol * digitWidth;
       const imageY = imageRow * digitHeight;
 
+      let destX = 83 - (comboNum.length - (i + 1)) * 44;
+      let destY = 155;
+
+      // console.log(
+      //   `digit ${digit}, i ${i}, imageX ${imageX}, imageY ${imageY}, destX ${destX}, destY ${destY}`
+      // );
+
       c.drawImage(
         numImg,
         imageX,
         imageY,
         digitWidth,
         digitHeight,
-        128 - (comboNum.length - i) * (digitWidth / 3),
-        200,
-        digitWidth / 2,
-        digitHeight / 2
+        destX,
+        destY,
+        63,
+        70
       );
     }
   }
