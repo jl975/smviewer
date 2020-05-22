@@ -10,6 +10,8 @@ import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
+import { updateMods } from "../../actions/ModsActions";
+import { LANE_COVER_INCREMENT } from "../../constants";
 
 const ChartArea = (props) => {
   const {
@@ -17,8 +19,8 @@ const ChartArea = (props) => {
     selectedMode,
     selectedSong,
     sm,
-    chart,
     mods,
+    updateMods,
     screen,
     loadingAudio,
     gameEngine,
@@ -30,6 +32,7 @@ const ChartArea = (props) => {
   const chartArea = useRef();
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
+  const laneCoverFn = useRef();
 
   const prevState = usePrevious({
     canvas,
@@ -86,6 +89,59 @@ const ChartArea = (props) => {
       gameEngine.updateLoopOnce();
     }
   };
+
+  const adjustLaneCoverHeight = (e) => {
+    const laneCoverHeight = mods.laneCoverHeight;
+
+    // up key
+    if (e.keyCode === 38) {
+      e.preventDefault();
+      switch (mods.appearance) {
+        case "hidden":
+          laneCoverHeight[0] -= LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        case "sudden":
+          laneCoverHeight[1] += LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        case "hiddensudden":
+          laneCoverHeight[2] += LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        default:
+          break;
+      }
+    }
+    // down key
+    else if (e.keyCode === 40) {
+      e.preventDefault();
+
+      switch (mods.appearance) {
+        case "hidden":
+          laneCoverHeight[0] += LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        case "sudden":
+          laneCoverHeight[1] -= LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        case "hiddensudden":
+          laneCoverHeight[2] -= LANE_COVER_INCREMENT;
+          updateMods({ laneCoverHeight });
+          break;
+        default:
+          break;
+      }
+    }
+  };
+  const toggleLaneCover = () => {};
+
+  useEffect(() => {
+    document.removeEventListener("keydown", laneCoverFn.current);
+    laneCoverFn.current = adjustLaneCoverHeight;
+    document.addEventListener("keydown", laneCoverFn.current);
+  }, [mods.appearance]);
 
   // reset chart if mode, difficulty, or mods change
   useEffect(() => {
@@ -149,7 +205,11 @@ const ChartArea = (props) => {
           className={`canvas-container ${selectedMode}`}
           ref={canvasContainer}
         >
-          <div className="canvas-wrapper">
+          <div
+            className="canvas-wrapper"
+            onKeyDown={adjustLaneCoverHeight}
+            tabIndex={0}
+          >
             <canvas id="chartArea" width="256" height="448" />
             {loadingAudio && (
               <div className={`chart-loading-screen ${selectedMode}`}>
@@ -212,7 +272,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    updateMods: (mods) => dispatch(updateMods(mods)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);

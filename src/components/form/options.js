@@ -31,7 +31,7 @@ export const options = {
       7.5,
       8,
     ],
-    appearance: ["visible", "hidden", "sudden", "hiddenSudden", "stealth"],
+    appearance: ["visible", "hidden", "sudden", "hiddensudden", "stealth"],
     turn: ["off", "mirror", "left", "right", "shuffle"],
     shuffle: [1, 2, 3, 4, 5, 6, 7, 8],
     stepZone: ["on", "off"],
@@ -49,6 +49,7 @@ const optionDefaultValues = {
   mods: {
     speed: 3,
     appearance: "visible",
+    laneCoverHeight: [8, 8, 8],
     turn: "off",
     shuffle: 1,
     stepZone: "on",

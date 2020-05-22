@@ -1,11 +1,13 @@
 import { ARROW_HEIGHT } from "../../../constants";
+import { getReverseCoord } from "../../../utils/engineUtils";
 
 class Guidelines {
   constructor(attrs) {
     const { mods } = attrs;
-    const { speed, guidelines } = mods;
+    const { speed, guidelines, scroll } = mods;
 
     this.speed = speed;
+    this.scroll = scroll;
     this.finalBeat = attrs.finalBeat;
     this.showGuidelines = guidelines;
   }
@@ -30,6 +32,9 @@ class Guidelines {
       const lineWidth = beat % 4 === 0 ? 2 : 1;
 
       if (destY > topBoundary && destY < bottomBoundary) {
+        if (this.scroll === "reverse") {
+          destY = getReverseCoord(destY, 0, canvas);
+        }
         // console.log(destY);
         c.beginPath();
         c.moveTo(0, destY);

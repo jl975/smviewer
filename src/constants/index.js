@@ -4,6 +4,9 @@ export const ARROW_HEIGHT = 64;
 /* Height of one repetition of the freeze body pattern */
 export const FREEZE_BODY_HEIGHT = 128;
 
+/* Amount of pixels the Hidden+ and Sudden+ lane covers are moved with one nudge */
+export const LANE_COVER_INCREMENT = 4;
+
 export const DIRECTIONS = ["left", "down", "up", "right"];
 
 /* Number of seconds that the visuals are delayed relative to the audio */

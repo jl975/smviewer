@@ -6,6 +6,7 @@ import StepZone from "../components/chart/canvas/StepZone";
 import Guidelines from "../components/chart/canvas/Guidelines";
 import TargetFlash from "../components/chart/canvas/TargetFlash";
 import ComboDisplay from "../components/chart/canvas/ComboDisplay";
+import LaneCover from "../components/chart/canvas/LaneCover";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
 import {
@@ -262,6 +263,7 @@ class GameEngine {
 
     this.stepZone = new StepZone({ mods, mode });
     this.comboDisplay = new ComboDisplay({ mods, mode });
+    this.laneCover = new LaneCover({ mods, mode });
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
@@ -591,6 +593,16 @@ class GameEngine {
     // console.log(`arrows renderArrow: ${(t1 - t0).toFixed(3)} ms`);
     /* End arrows */
 
+    /* Combo display, if in front of arrows */
+    if (mods.comboDisplay === "inFront") {
+      this.comboDisplay.render(this.canvas, this.globalParams.combo);
+    }
+
+    /* Hidden+ and/or Sudden+ lane cover */
+    if (["hidden", "sudden", "hiddensudden"].includes(mods.appearance)) {
+      this.laneCover.render(this.canvas);
+    }
+
     /* Target flashes */
     t0 = performance.now();
     for (let beatStamp in this.globalParams.targetFlashes) {
@@ -604,11 +616,6 @@ class GameEngine {
     }
     t1 = performance.now();
     // console.log(`targetFlash render: ${(t1 - t0).toFixed(3)} ms`);
-
-    /* Combo display, if in front of arrows */
-    if (mods.comboDisplay === "inFront") {
-      this.comboDisplay.render(this.canvas, this.globalParams.combo);
-    }
 
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);
