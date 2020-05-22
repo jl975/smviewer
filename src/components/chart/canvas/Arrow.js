@@ -5,6 +5,7 @@ import {
   FREEZE_BODY_HEIGHT,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
+import { getReverseCoord } from "../../../utils/engineUtils";
 
 const arrowImages = {};
 DIRECTIONS.forEach((direction) => {
@@ -54,7 +55,7 @@ miscImages.forEach((imageName) => {
 class Arrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, noteskin, colorFreezes } = mods;
+    const { speed, noteskin, colorFreezes, scroll } = mods;
 
     this.key = key; // arrow index
     this.speed = speed;
@@ -64,6 +65,7 @@ class Arrow {
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
     this.colorFreezes = colorFreezes;
+    this.scroll = scroll;
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
@@ -133,7 +135,13 @@ class Arrow {
           ARROW_WIDTH,
           partialHeight,
           destX,
-          partialDestY + ARROW_HEIGHT / 2,
+          this.scroll === "reverse"
+            ? getReverseCoord(
+                partialDestY + ARROW_HEIGHT / 2,
+                partialHeight,
+                canvas
+              )
+            : partialDestY + ARROW_HEIGHT / 2,
           ARROW_WIDTH,
           partialHeight
         );
@@ -162,7 +170,13 @@ class Arrow {
             ARROW_WIDTH,
             bodyHeight,
             destX,
-            bodyDestY + ARROW_HEIGHT / 2,
+            this.scroll === "reverse"
+              ? getReverseCoord(
+                  bodyDestY + ARROW_HEIGHT / 2,
+                  bodyHeight,
+                  canvas
+                )
+              : bodyDestY + ARROW_HEIGHT / 2,
             ARROW_WIDTH,
             bodyHeight
           );
@@ -204,7 +218,9 @@ class Arrow {
           ARROW_WIDTH,
           tailHeight,
           destX,
-          destY,
+          this.scroll === "reverse"
+            ? getReverseCoord(destY, tailHeight, canvas)
+            : destY,
           ARROW_WIDTH,
           tailHeight
         );
@@ -220,7 +236,9 @@ class Arrow {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           directionIdx * ARROW_WIDTH,
-          0,
+          this.scroll === "reverse"
+            ? getReverseCoord(0, ARROW_HEIGHT, canvas)
+            : 0,
           ARROW_WIDTH,
           ARROW_HEIGHT
         );
@@ -346,7 +364,9 @@ class Arrow {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           destX,
-          destY,
+          this.scroll === "reverse"
+            ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
+            : destY,
           ARROW_WIDTH,
           ARROW_HEIGHT
         );
@@ -373,7 +393,9 @@ class Arrow {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           destX,
-          destY,
+          this.scroll === "reverse"
+            ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
+            : destY,
           ARROW_WIDTH,
           ARROW_HEIGHT
         );

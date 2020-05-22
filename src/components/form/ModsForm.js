@@ -127,6 +127,38 @@ const ModsForm = (props) => {
           )}
 
           <div className="form-field">
+            <h4 className="form-label">Step zone</h4>
+            {options.mods.stepZone.map((stepZone, i) => {
+              return (
+                <Radio
+                  key={`stepZone_${stepZone}`}
+                  label={capitalize(stepZone)}
+                  name="stepZone"
+                  value={stepZone}
+                  checked={mods.stepZone === stepZone}
+                  onChange={() => updateMods({ stepZone })}
+                />
+              );
+            })}
+          </div>
+
+          <div className="form-field">
+            <h4 className="form-label">Scroll</h4>
+            {options.mods.scroll.map((scroll, i) => {
+              return (
+                <Radio
+                  key={`scroll_${scroll}`}
+                  label={capitalize(scroll)}
+                  name="scroll"
+                  value={scroll}
+                  checked={mods.scroll === scroll}
+                  onChange={() => updateMods({ scroll })}
+                />
+              );
+            })}
+          </div>
+
+          <div className="form-field">
             <h4 className="form-label">Combo display</h4>
             {options.mods.comboDisplay.map((comboDisplay, i) => {
               return (

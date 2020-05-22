@@ -260,7 +260,7 @@ class GameEngine {
       }
     });
 
-    this.stepZone = new StepZone();
+    this.stepZone = new StepZone({ mods, mode });
     this.comboDisplay = new ComboDisplay({ mods, mode });
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
@@ -451,7 +451,7 @@ class GameEngine {
                 // console.log(arrow);
                 this.globalParams.targetFlashes[
                   arrow.originalBeatPosition
-                ] = new TargetFlash(arrow);
+                ] = new TargetFlash(arrow, { mods });
               }
             },
           },
@@ -466,7 +466,7 @@ class GameEngine {
             onStart: () => {
               this.globalParams.targetFlashes[
                 arrow.originalBeatPosition
-              ] = new TargetFlash(arrow);
+              ] = new TargetFlash(arrow, { mods });
             },
           },
           arrowTimestamp - 0.008
@@ -493,7 +493,7 @@ class GameEngine {
     const { songSelect, mods } = store.getState();
     const { mode } = songSelect;
 
-    if (this.stepZone) {
+    if (this.stepZone && mods.stepZone !== "off") {
       t0 = performance.now();
       this.stepZone.render(this.canvas, this.globalParams.beatTick, mode);
       t1 = performance.now();

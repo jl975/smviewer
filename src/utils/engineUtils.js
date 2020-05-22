@@ -96,3 +96,11 @@ export const getCurrentCombo = (song) => {
 
   return -1; // should never reach this. return -1 to make debugging easier
 };
+
+/*
+  Method for finding the coordinate of a sprite on Reverse scroll
+  given the corresponding coordinate on Normal scroll and its height
+*/
+export const getReverseCoord = (originalCoord, height, canvas) => {
+  return canvas.height - (originalCoord + height);
+};

@@ -1,5 +1,6 @@
 import { DIRECTIONS, ARROW_WIDTH, ARROW_HEIGHT } from "../../../constants";
 import { getAssetPath } from "../../../utils";
+import { getReverseCoord } from "../../../utils/engineUtils";
 
 const arrowImages = {};
 DIRECTIONS.forEach((direction) => {
@@ -12,12 +13,13 @@ DIRECTIONS.forEach((direction) => {
 class ShockArrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, noteskin } = mods;
+    const { speed, noteskin, scroll } = mods;
 
     this.key = key;
     this.speed = speed;
     this.note = attrs.note;
     this.noteskin = noteskin;
+    this.scroll = scroll;
 
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
@@ -52,7 +54,9 @@ class ShockArrow {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           destX,
-          destY,
+          this.scroll === "reverse"
+            ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
+            : destY,
           ARROW_WIDTH,
           ARROW_HEIGHT
         );

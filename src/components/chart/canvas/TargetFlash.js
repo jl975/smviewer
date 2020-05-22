@@ -5,12 +5,17 @@ import {
   MARVELOUS_FLASH_FRAMES,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
+import { getReverseCoord } from "../../../utils/engineUtils";
 
 const image = new Image();
 image.src = getAssetPath("tap_explosion.png");
 
 class TargetFlash {
-  constructor(arrow) {
+  constructor(arrow, attrs) {
+    const { mods } = attrs;
+    const { scroll } = mods;
+    this.scroll = scroll;
+
     this.frame = -1;
 
     this.directions = [];
@@ -36,7 +41,9 @@ class TargetFlash {
         ARROW_WIDTH,
         ARROW_HEIGHT,
         destX - this.frame,
-        0 - this.frame,
+        this.scroll === "reverse"
+          ? getReverseCoord(0 + this.frame, ARROW_HEIGHT, canvas)
+          : 0 - this.frame,
         ARROW_WIDTH + this.frame * 2,
         ARROW_HEIGHT + this.frame * 2
       );
