@@ -72,6 +72,30 @@ const ModsForm = (props) => {
           </div>
 
           <div className="form-field">
+            <h4 className="form-label">Appearance</h4>
+            {options.mods.appearance.map((appearance, i) => {
+              return (
+                <Radio
+                  key={`appearance_${appearance}`}
+                  label={
+                    [
+                      "Visible",
+                      "Hidden+",
+                      "Sudden+",
+                      "Hidden+ / Sudden+",
+                      "Stealth",
+                    ][i]
+                  }
+                  name="appearance"
+                  value={appearance}
+                  checked={mods.appearance === appearance}
+                  onChange={() => updateMods({ appearance })}
+                />
+              );
+            })}
+          </div>
+
+          <div className="form-field">
             <h4 className="form-label">Arrow color</h4>
             {options.mods.noteskin.map((noteskin) => {
               return (
@@ -128,7 +152,7 @@ const ModsForm = (props) => {
 
           <div className="form-field">
             <h4 className="form-label">Step zone</h4>
-            {options.mods.stepZone.map((stepZone, i) => {
+            {options.mods.stepZone.map((stepZone) => {
               return (
                 <Radio
                   key={`stepZone_${stepZone}`}
@@ -144,7 +168,7 @@ const ModsForm = (props) => {
 
           <div className="form-field">
             <h4 className="form-label">Scroll</h4>
-            {options.mods.scroll.map((scroll, i) => {
+            {options.mods.scroll.map((scroll) => {
               return (
                 <Radio
                   key={`scroll_${scroll}`}
@@ -176,7 +200,7 @@ const ModsForm = (props) => {
 
           <div className="form-field">
             <h4 className="form-label">Combo font</h4>
-            {options.mods.comboFont.map((comboFont, i) => {
+            {options.mods.comboFont.map((comboFont) => {
               return (
                 <Radio
                   key={`comboFont_${comboFont}`}

@@ -55,7 +55,7 @@ miscImages.forEach((imageName) => {
 class Arrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, noteskin, colorFreezes, scroll } = mods;
+    const { speed, noteskin, colorFreezes, scroll, appearance } = mods;
 
     this.key = key; // arrow index
     this.speed = speed;
@@ -66,6 +66,7 @@ class Arrow {
     this.measureD = attrs.measureD;
     this.colorFreezes = colorFreezes;
     this.scroll = scroll;
+    this.appearance = appearance;
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
@@ -127,7 +128,11 @@ class Arrow {
       }
 
       // draw partial
-      if (partialDestY > -partialHeight && partialDestY < bottomBoundary) {
+      if (
+        partialDestY > -partialHeight &&
+        partialDestY < bottomBoundary &&
+        this.appearance !== "stealth"
+      ) {
         c.drawImage(
           arrowBodyImg,
           0,
@@ -162,7 +167,11 @@ class Arrow {
           bodyFrameY -= bodyDestY;
           bodyDestY = 0;
         }
-        if (bodyDestY > -bodyHeight && bodyDestY < bottomBoundary) {
+        if (
+          bodyDestY > -bodyHeight &&
+          bodyDestY < bottomBoundary &&
+          this.appearance !== "stealth"
+        ) {
           c.drawImage(
             arrowBodyImg,
             0,
@@ -210,7 +219,11 @@ class Arrow {
         destY = ARROW_HEIGHT / 2;
       }
 
-      if (actualDestY > topBoundary && actualDestY < bottomBoundary) {
+      if (
+        actualDestY > topBoundary &&
+        actualDestY < bottomBoundary &&
+        this.appearance !== "stealth"
+      ) {
         c.drawImage(
           arrowImg,
           frameX,
@@ -256,6 +269,9 @@ class Arrow {
 
     // nothing
     if (this.note[directionIdx] === "0") return;
+
+    // stealth
+    if (this.appearance === "stealth") return;
 
     let arrowImg;
     let frameX, frameY, destX, destY;

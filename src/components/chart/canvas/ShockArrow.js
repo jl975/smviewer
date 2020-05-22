@@ -13,13 +13,14 @@ DIRECTIONS.forEach((direction) => {
 class ShockArrow {
   constructor(attrs) {
     const { key, mods } = attrs;
-    const { speed, noteskin, scroll } = mods;
+    const { speed, noteskin, scroll, appearance } = mods;
 
     this.key = key;
     this.speed = speed;
     this.note = attrs.note;
     this.noteskin = noteskin;
     this.scroll = scroll;
+    this.appearance = appearance;
 
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
@@ -31,6 +32,8 @@ class ShockArrow {
 
   render(canvas, frame, beatTick) {
     const c = canvas.getContext("2d");
+
+    if (this.appearance === "stealth") return;
 
     const topBoundary = -ARROW_HEIGHT; // used to simulate the arrows being hit and disappearing
     const bottomBoundary = canvas.height;

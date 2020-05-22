@@ -31,6 +31,7 @@ export const options = {
       7.5,
       8,
     ],
+    appearance: ["visible", "hidden", "sudden", "hiddenSudden", "stealth"],
     turn: ["off", "mirror", "left", "right", "shuffle"],
     shuffle: [1, 2, 3, 4, 5, 6, 7, 8],
     stepZone: ["on", "off"],
@@ -47,6 +48,7 @@ const optionDefaultValues = {
   mode: "single",
   mods: {
     speed: 3,
+    appearance: "visible",
     turn: "off",
     shuffle: 1,
     stepZone: "on",
