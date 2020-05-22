@@ -142,6 +142,22 @@ const ModsForm = (props) => {
             })}
           </div>
 
+          <div className="form-field">
+            <h4 className="form-label">Combo font</h4>
+            {options.mods.comboFont.map((comboFont, i) => {
+              return (
+                <Radio
+                  key={`comboFont_${comboFont}`}
+                  label={comboFont}
+                  name="comboFont"
+                  value={comboFont}
+                  checked={mods.comboFont === comboFont}
+                  onChange={() => updateMods({ comboFont })}
+                />
+              );
+            })}
+          </div>
+
           <h4>Miscellaneous</h4>
           <div className="form-field">
             <Checkbox

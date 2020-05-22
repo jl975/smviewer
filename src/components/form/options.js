@@ -35,6 +35,7 @@ export const options = {
     shuffle: [1, 2, 3, 4, 5, 6, 7, 8],
     noteskin: ["rainbow", "note", "vivid", "flat"],
     comboDisplay: ["behind", "inFront", "hidden"],
+    comboFont: ["A20", "A"],
   },
 };
 
@@ -49,6 +50,7 @@ const optionDefaultValues = {
     noteskin: "note",
     guidelines: true,
     comboDisplay: "behind",
+    comboFont: "A20",
     colorFreezes: false,
   },
 };

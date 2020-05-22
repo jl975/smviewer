@@ -261,7 +261,7 @@ class GameEngine {
     });
 
     this.stepZone = new StepZone();
-    this.comboDisplay = new ComboDisplay();
+    this.comboDisplay = new ComboDisplay({ mods, mode });
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
