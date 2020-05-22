@@ -18,20 +18,20 @@ const HoldButton = (props) => {
   const pressingDown = (e) => {
     e.preventDefault();
     if (props.onClick) {
-      props.onClick();
+      props.onClick(e);
     }
-    requestRef.current = requestAnimationFrame(handleHold);
+    requestRef.current = requestAnimationFrame(handleHold.bind(null, e));
   };
 
   const notPressingDown = (e) => {
     cancelAnimationFrame(requestRef.current);
   };
 
-  const handleHold = () => {
+  const handleHold = (e) => {
     if (props.onClick) {
-      props.onClick();
+      props.onClick(e);
     }
-    requestRef.current = requestAnimationFrame(handleHold);
+    requestRef.current = requestAnimationFrame(handleHold.bind(null, e));
   };
 
   return (

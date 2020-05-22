@@ -599,7 +599,10 @@ class GameEngine {
     }
 
     /* Hidden+ and/or Sudden+ lane cover */
-    if (["hidden", "sudden", "hiddensudden"].includes(mods.appearance)) {
+    if (
+      ["hidden", "sudden", "hiddensudden"].includes(mods.appearance) &&
+      mods.laneCoverVisible
+    ) {
       this.laneCover.render(this.canvas);
     }
 

@@ -99,6 +99,7 @@
 .canvas-wrapper {
   position: relative;
   margin: 0 auto;
+  outline: none;
 }
 
 .chart-loading-screen {
@@ -128,6 +129,48 @@
   }
 
   .chart-loading-message {
+  }
+}
+
+.cab-buttons-container {
+  position: absolute;
+  height: 200px;
+  width: 60px;
+  bottom: 0;
+  right: 0;
+  transform: translateX(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  outline: none;
+
+  img {
+    margin: 7px 0;
+    pointer-events: none;
+  }
+  .directional-button {
+    padding: 0;
+    margin: 0;
+    background-color: unset;
+    &:focus {
+      background-color: unset;
+    }
+
+    img {
+      width: 38px;
+    }
+  }
+  .center-button {
+    padding: 0;
+    margin: 0;
+    background-color: unset;
+    &:focus {
+      background-color: unset;
+    }
+    img {
+      width: 30px;
+    }
   }
 }
 

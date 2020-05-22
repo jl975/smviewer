@@ -13,39 +13,39 @@ const comboImages = {};
 
 comboImages["A20"].coords = {
   1: {
-    combo: { destX: 104, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [51], destY: 155, width: 63, height: 70 },
+    combo: { destX: 104, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [51], destY: 170, width: 63, height: 70 },
   },
   2: {
-    combo: { destX: 114, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [17, 61], destY: 155, width: 63, height: 70 },
+    combo: { destX: 114, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [17, 61], destY: 170, width: 63, height: 70 },
   },
   3: {
-    combo: { destX: 134, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [-7, 37, 81], destY: 155, width: 63, height: 70 },
+    combo: { destX: 134, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [-7, 37, 81], destY: 170, width: 63, height: 70 },
   },
   4: {
-    combo: { destX: 134, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [-51, -7, 37, 81], destY: 155, width: 63, height: 70 },
+    combo: { destX: 134, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [-51, -7, 37, 81], destY: 170, width: 63, height: 70 },
   },
 };
 
 comboImages["A"].coords = {
   1: {
-    combo: { destX: 104, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [51], destY: 155, width: 63, height: 70 },
+    combo: { destX: 104, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [51], destY: 170, width: 63, height: 70 },
   },
   2: {
-    combo: { destX: 114, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [17, 61], destY: 155, width: 63, height: 70 },
+    combo: { destX: 114, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [17, 61], destY: 170, width: 63, height: 70 },
   },
   3: {
-    combo: { destX: 134, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [-7, 37, 81], destY: 155, width: 63, height: 70 },
+    combo: { destX: 134, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [-7, 37, 81], destY: 170, width: 63, height: 70 },
   },
   4: {
-    combo: { destX: 134, destY: 180, width: 124.5, height: 41 },
-    num: { destX: [-51, -7, 37, 81], destY: 155, width: 63, height: 70 },
+    combo: { destX: 134, destY: 195, width: 124.5, height: 41 },
+    num: { destX: [-51, -7, 37, 81], destY: 170, width: 63, height: 70 },
   },
 };
 

@@ -50,6 +50,7 @@ const optionDefaultValues = {
     speed: 3,
     appearance: "visible",
     laneCoverHeight: [8, 8, 8],
+    laneCoverVisible: true,
     turn: "off",
     shuffle: 1,
     stepZone: "on",

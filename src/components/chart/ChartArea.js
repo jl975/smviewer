@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { Button } from "semantic-ui-react";
 import "inobounce";
 
-import { presetParams, getJacketPath } from "../../utils";
+import { presetParams, getJacketPath, getAssetPath } from "../../utils";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
@@ -12,6 +13,7 @@ import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
 import { updateMods } from "../../actions/ModsActions";
 import { LANE_COVER_INCREMENT } from "../../constants";
+import HoldButton from "../ui/HoldButton";
 
 const ChartArea = (props) => {
   const {
@@ -91,7 +93,7 @@ const ChartArea = (props) => {
   };
 
   const adjustLaneCoverHeight = (e) => {
-    const laneCoverHeight = mods.laneCoverHeight;
+    const { laneCoverHeight } = mods;
 
     // up key
     if (e.keyCode === 38) {
@@ -135,7 +137,11 @@ const ChartArea = (props) => {
       }
     }
   };
-  const toggleLaneCover = () => {};
+  const toggleLaneCover = (e) => {
+    e.preventDefault();
+    const { laneCoverVisible } = mods;
+    updateMods({ laneCoverVisible: !laneCoverVisible });
+  };
 
   useEffect(() => {
     document.removeEventListener("keydown", laneCoverFn.current);
@@ -218,6 +224,36 @@ const ChartArea = (props) => {
                   src={getJacketPath(`${selectedSong.hash}.png`)}
                 />
                 <div className="chart-loading-message">Loading chart...</div>
+              </div>
+            )}
+            {["hidden", "sudden", "hiddensudden"].includes(mods.appearance) && (
+              <div className="cab-buttons-container">
+                <HoldButton
+                  className="directional-button"
+                  onClick={(e) => {
+                    e.keyCode = 38;
+                    adjustLaneCoverHeight(e);
+                  }}
+                >
+                  <img src={getAssetPath(`directional_button.png`)} />
+                </HoldButton>
+                <Button
+                  className="center-button"
+                  onClick={(e) => {
+                    toggleLaneCover(e);
+                  }}
+                >
+                  <img src={getAssetPath(`center_button.png`)} />
+                </Button>
+                <HoldButton
+                  className="directional-button"
+                  onClick={(e) => {
+                    e.keyCode = 40;
+                    adjustLaneCoverHeight(e);
+                  }}
+                >
+                  <img src={getAssetPath(`directional_button.png`)} />
+                </HoldButton>
               </div>
             )}
           </div>
