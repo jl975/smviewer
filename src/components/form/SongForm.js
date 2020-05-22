@@ -180,8 +180,6 @@ const SongForm = (props) => {
     const songHash = data.value;
     setSelectedSongOption(songHash);
 
-    // console.log("setSelectedSongOption", songHash);
-
     const song = simfileList.find((song) => song.hash === songHash);
 
     let initialProgress = 0;
@@ -206,26 +204,7 @@ const SongForm = (props) => {
       return;
     }
 
-    // if a specific level filter has been chosen, select the difficulty that
-    // corresponds to that level
-    if (selectedFilters.difficulty !== "all") {
-      handleDifficultySelect(selectedFilters.difficulty);
-    } else if (selectedFilters.level !== "all") {
-      const levels =
-        selectedMode === "double"
-          ? song.levels.slice(5, 9)
-          : song.levels.slice(0, 5);
-      for (let i = 0; i < levels.length; i++) {
-        const level = levels[i];
-        if (level === selectedFilters.level) {
-          const difficulties =
-            selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
-          // console.log("match", difficulties[i], level);
-          handleDifficultySelect(difficulties[i]);
-          break;
-        }
-      }
-    } else {
+    const selectClosestDifficulty = () => {
       const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
         selectedDifficultyOption
       );
@@ -240,6 +219,83 @@ const SongForm = (props) => {
         );
       }
       props.onDifficultySelect(difficultyToSelect);
+    };
+
+    // Auto-select the selected song's chart based on the applied level/difficulty filters.
+    // 4 possible cases
+
+    // Neither level nor difficulty filter applied
+    if (
+      selectedFilters.level === "all" &&
+      selectedFilters.difficulty === "all"
+    ) {
+      // select the chart corresponding to the selected difficulty option.
+      // if the song does not have a chart for that difficulty, choose the closest difficulty.
+      selectClosestDifficulty();
+    }
+
+    // Level filter applied but not difficulty
+    else if (
+      selectedFilters.level !== "all" &&
+      selectedFilters.difficulty === "all"
+    ) {
+      const levels =
+        selectedMode === "double"
+          ? song.levels.slice(5, 9)
+          : song.levels.slice(0, 5);
+
+      // if the song has a chart that matches the level filter, choose that chart
+      if (levels.includes(selectedFilters.level)) {
+        for (let i = 0; i < levels.length; i++) {
+          const level = levels[i];
+          if (level === selectedFilters.level) {
+            const difficulties =
+              selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
+            props.onDifficultySelect(difficulties[i]);
+            break;
+          }
+        }
+      }
+
+      // if the song does not have a chart that matches the level filter, go with the closest difficulty
+      else {
+        selectClosestDifficulty();
+      }
+    }
+
+    // Difficulty filter applied but not level
+    else if (
+      selectedFilters.difficulty !== "all" &&
+      selectedFilters.level === "all"
+    ) {
+      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
+      if (selectedMode === "double") difficultyIdx += 4;
+
+      // if the song has a chart that matches the difficulty filter, choose that chart
+      if (typeof song.levels[difficultyIdx] === "number") {
+        props.onDifficultySelect(selectedFilters.difficulty);
+      }
+
+      // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
+      else {
+        selectClosestDifficulty();
+      }
+    }
+
+    // Both level and difficulty filters applied
+    // equivalent to a regular else block but condition listed explicitly for clarity
+    else if (
+      selectedFilters.difficulty !== "all" &&
+      selectedFilters.level !== "all"
+    ) {
+      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
+      if (selectedMode === "double") difficultyIdx += 4;
+
+      if (song.levels[difficultyIdx] === selectedFilters.level) {
+        props.onDifficultySelect(selectedFilters.difficulty);
+      } else {
+        selectClosestDifficulty();
+      }
     }
   };
 
@@ -448,7 +504,6 @@ const SongForm = (props) => {
             onSongSelect={onSongSelect}
             selectedSongOption={selectedSongOption}
             selectedMode={selectedMode}
-            // selectedDifficulty={selectedDifficulty}
             selectedDifficultyOption={selectedDifficultyOption}
             selectedFilters={selectedFilters}
           />
