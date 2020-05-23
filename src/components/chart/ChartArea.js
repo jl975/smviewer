@@ -286,13 +286,10 @@ const ChartArea = (props) => {
             <div>Combo</div>
             <div className="combo-num"></div>
           </div> */}
-          <div id="combo-debug">
+          {/* <div id="combo-debug">
             <div>combo debug</div>
             <div className="combo-debug-num"></div>
-            <br />
-            <div>global combo debug</div>
-            <div className="global-combo-debug-num"></div>
-          </div>
+          </div> */}
         </div>
         <div className="progress-container">
           <div className="progress-wrapper">

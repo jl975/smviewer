@@ -82,18 +82,12 @@ export const getCurrentCombo = (song) => {
 
   let currentCombo;
 
-  const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
-
   // Go through the chart until the arrow following the current timestamp is reached,
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < arrows.length; i++) {
     const arrow = arrows[i];
     if (arrow.combo && arrow.timestamp > currentTime + GLOBAL_OFFSET) {
       currentCombo = arrow.combo - 1;
-
-      // if (comboDebug) {
-      //   comboDebug.textContent = currentCombo;
-      // }
       return currentCombo;
     }
   }
@@ -105,10 +99,6 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo) {
       currentCombo = arrow.combo;
-
-      // if (comboDebug) {
-      //   comboDebug.textContent = currentCombo;
-      // }
       return currentCombo;
     }
   }

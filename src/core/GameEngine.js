@@ -510,14 +510,6 @@ class GameEngine {
 
     /* Combo display, if behind arrows */
     if (mods.comboDisplay === "behind") {
-      const globalComboDebug = document.querySelector(
-        "#combo-debug .global-combo-debug-num"
-      );
-      if (globalComboDebug) {
-        globalComboDebug.textContent = this.globalParams.combo;
-      }
-
-      // console.log("mainloop render combo", this.globalParams.combo);
       this.comboDisplay.render(this.canvas, this.globalParams.combo);
     }
 
