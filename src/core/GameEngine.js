@@ -69,6 +69,7 @@ class GameEngine {
   }
 
   resetChart({ mode, difficulty, mods }) {
+    console.log("resetting chart");
     const self = this;
     const { audio } = store.getState();
 
@@ -246,7 +247,7 @@ class GameEngine {
 
     chart.forEach((note, key) => {
       if (note.note[0] === "M" || note.note[4] === "M") {
-        const shockArrow = new ShockArrow({ key, ...note, mods });
+        const shockArrow = new ShockArrow({ key, ...note });
         this.shockArrows.push(shockArrow);
         this.allArrows.push(shockArrow);
       }
@@ -255,15 +256,15 @@ class GameEngine {
         note.note.includes("2") ||
         note.note.includes("3")
       ) {
-        const arrow = new Arrow({ key, ...note, mods });
+        const arrow = new Arrow({ key, ...note });
         this.arrows.push(arrow);
         this.allArrows.push(arrow);
       }
     });
 
-    this.stepZone = new StepZone({ mods, mode });
-    this.comboDisplay = new ComboDisplay({ mods, mode });
-    this.laneCover = new LaneCover({ mods, mode });
+    this.stepZone = new StepZone();
+    this.comboDisplay = new ComboDisplay();
+    this.laneCover = new LaneCover();
 
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
@@ -453,7 +454,7 @@ class GameEngine {
                 // console.log(arrow);
                 this.globalParams.targetFlashes[
                   arrow.originalBeatPosition
-                ] = new TargetFlash(arrow, { mods });
+                ] = new TargetFlash(arrow);
               }
             },
           },
@@ -468,7 +469,7 @@ class GameEngine {
             onStart: () => {
               this.globalParams.targetFlashes[
                 arrow.originalBeatPosition
-              ] = new TargetFlash(arrow, { mods });
+              ] = new TargetFlash(arrow);
             },
           },
           arrowTimestamp - 0.008
@@ -476,7 +477,7 @@ class GameEngine {
       }
     });
 
-    this.guidelines = new Guidelines({ mods, finalBeat });
+    this.guidelines = new Guidelines(finalBeat);
     AudioPlayer.setTimeline(this.tl);
 
     this.updateLoopOnce();
@@ -497,20 +498,26 @@ class GameEngine {
 
     if (this.stepZone && mods.stepZone !== "off") {
       t0 = performance.now();
-      this.stepZone.render(this.canvas, this.globalParams.beatTick, mode);
+      this.stepZone.render(this.canvas, this.globalParams.beatTick, {
+        mode,
+        mods,
+      });
       t1 = performance.now();
       // console.log(`stepZone.render: ${(t1 - t0).toFixed(3)} ms`);
     }
     if (this.guidelines) {
       t0 = performance.now();
-      this.guidelines.render(this.canvas, this.globalParams.beatTick);
+      this.guidelines.render(this.canvas, this.globalParams.beatTick, { mods });
       t1 = performance.now();
       // console.log(`guidelines.render: ${(t1 - t0).toFixed(3)} ms`);
     }
 
     /* Combo display, if behind arrows */
     if (mods.comboDisplay === "behind") {
-      this.comboDisplay.render(this.canvas, this.globalParams.combo);
+      this.comboDisplay.render(this.canvas, this.globalParams.combo, {
+        mode,
+        mods,
+      });
     }
 
     /* Arrows */
@@ -520,7 +527,8 @@ class GameEngine {
       shockArrow.render(
         this.canvas,
         this.globalParams.frame,
-        this.globalParams.beatTick
+        this.globalParams.beatTick,
+        { mods }
       );
     }
     t1 = performance.now();
@@ -540,7 +548,8 @@ class GameEngine {
         arrow.renderFreezeBody(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          { mods }
         );
       });
     }
@@ -554,7 +563,8 @@ class GameEngine {
         arrow.renderFreezeBody(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          { mods }
         );
       });
     }
@@ -570,7 +580,8 @@ class GameEngine {
         arrow.renderArrow(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          { mods }
         );
       });
     }
@@ -584,7 +595,8 @@ class GameEngine {
         arrow.renderArrow(
           this.canvas,
           this.globalParams.beatTick,
-          directionIdx
+          directionIdx,
+          { mods }
         );
       });
     }
@@ -595,7 +607,10 @@ class GameEngine {
 
     /* Combo display, if in front of arrows */
     if (mods.comboDisplay === "inFront") {
-      this.comboDisplay.render(this.canvas, this.globalParams.combo);
+      this.comboDisplay.render(this.canvas, this.globalParams.combo, {
+        mode,
+        mods,
+      });
     }
 
     /* Hidden+ and/or Sudden+ lane cover */
@@ -603,7 +618,7 @@ class GameEngine {
       ["hidden", "sudden", "hiddensudden"].includes(mods.appearance) &&
       mods.laneCoverVisible
     ) {
-      this.laneCover.render(this.canvas);
+      this.laneCover.render(this.canvas, { mode, mods });
     }
 
     /* Target flashes */
@@ -614,7 +629,7 @@ class GameEngine {
       if (targetFlash.frame > MARVELOUS_FLASH_FRAMES) {
         delete this.globalParams.targetFlashes[beatStamp];
       } else {
-        targetFlash.render(this.canvas);
+        targetFlash.render(this.canvas, { mods });
       }
     }
     t1 = performance.now();
@@ -643,6 +658,9 @@ class GameEngine {
   }
   pauseTl() {
     this.tl.pause();
+  }
+  isTlPaused() {
+    return this.tl.paused();
   }
 }
 

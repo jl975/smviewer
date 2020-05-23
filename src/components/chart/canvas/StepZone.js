@@ -19,16 +19,13 @@ DIRECTIONS.forEach((direction) => {
 });
 
 class StepZone {
-  constructor(attrs) {
+  constructor(attrs) {}
+
+  render(canvas, beatTick, attrs) {
+    const c = canvas.getContext("2d");
+
     const { mode, mods } = attrs;
     const { scroll } = mods;
-
-    this.mode = mode;
-    this.scroll = scroll;
-  }
-
-  render(canvas, beatTick) {
-    const c = canvas.getContext("2d");
 
     // flash starts at the beginning of the quarter beat and lasts for 1/16 beat
     const isFlash = beatTick % 1 > 0 && beatTick % 1 < 0.25;
@@ -41,14 +38,12 @@ class StepZone {
         ARROW_WIDTH,
         ARROW_HEIGHT,
         i * ARROW_WIDTH,
-        this.scroll === "reverse"
-          ? getReverseCoord(0, ARROW_HEIGHT, canvas)
-          : 0,
+        scroll === "reverse" ? getReverseCoord(0, ARROW_HEIGHT, canvas) : 0,
         ARROW_WIDTH,
         ARROW_HEIGHT
       );
 
-      if (this.mode === "double") {
+      if (mode === "double") {
         c.drawImage(
           isFlash ? flashImages[direction] : receptorImages[direction],
           0,
@@ -56,9 +51,7 @@ class StepZone {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           (i + 4) * ARROW_WIDTH,
-          this.scroll === "reverse"
-            ? getReverseCoord(0, ARROW_HEIGHT, canvas)
-            : 0,
+          scroll === "reverse" ? getReverseCoord(0, ARROW_HEIGHT, canvas) : 0,
           ARROW_WIDTH,
           ARROW_HEIGHT
         );

@@ -12,15 +12,10 @@ DIRECTIONS.forEach((direction) => {
 
 class ShockArrow {
   constructor(attrs) {
-    const { key, mods } = attrs;
-    const { speed, noteskin, scroll, appearance } = mods;
+    const { key } = attrs;
 
     this.key = key;
-    this.speed = speed;
     this.note = attrs.note;
-    this.noteskin = noteskin;
-    this.scroll = scroll;
-    this.appearance = appearance;
 
     // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
@@ -30,10 +25,13 @@ class ShockArrow {
     return this.originalBeatPosition - beatTick;
   }
 
-  render(canvas, frame, beatTick) {
+  render(canvas, frame, beatTick, attrs) {
     const c = canvas.getContext("2d");
 
-    if (this.appearance === "stealth") return;
+    const { mods } = attrs;
+    const { speed, scroll, appearance } = mods;
+
+    if (appearance === "stealth") return;
 
     const topBoundary = -ARROW_HEIGHT; // used to simulate the arrows being hit and disappearing
     const bottomBoundary = canvas.height;
@@ -46,8 +44,7 @@ class ShockArrow {
       const frameX = (frame % 4) * ARROW_WIDTH;
       const frameY = Math.floor(frame / 4) * ARROW_HEIGHT;
       const destX = i * ARROW_WIDTH;
-      const destY =
-        this.currentBeatPosition(beatTick) * ARROW_HEIGHT * this.speed;
+      const destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
 
       if (destY > topBoundary && destY < bottomBoundary) {
         c.drawImage(
@@ -57,7 +54,7 @@ class ShockArrow {
           ARROW_WIDTH,
           ARROW_HEIGHT,
           destX,
-          this.scroll === "reverse"
+          scroll === "reverse"
             ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
             : destY,
           ARROW_WIDTH,

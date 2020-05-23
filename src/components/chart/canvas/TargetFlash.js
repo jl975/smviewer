@@ -11,11 +11,7 @@ const image = new Image();
 image.src = getAssetPath("tap_explosion.png");
 
 class TargetFlash {
-  constructor(arrow, attrs) {
-    const { mods } = attrs;
-    const { scroll } = mods;
-    this.scroll = scroll;
-
+  constructor(arrow) {
     this.frame = -1;
 
     this.directions = [];
@@ -26,8 +22,12 @@ class TargetFlash {
     });
   }
 
-  render(canvas) {
+  render(canvas, attrs) {
     const c = canvas.getContext("2d");
+
+    const { mods } = attrs;
+    const { scroll } = mods;
+
     this.directions.forEach((directionIdx) => {
       if (this.frame < 0 || this.frame >= MARVELOUS_FLASH_FRAMES) return;
       const destX = directionIdx * ARROW_WIDTH;
@@ -41,7 +41,7 @@ class TargetFlash {
         ARROW_WIDTH,
         ARROW_HEIGHT,
         destX - this.frame,
-        this.scroll === "reverse"
+        scroll === "reverse"
           ? getReverseCoord(0 + this.frame, ARROW_HEIGHT, canvas)
           : 0 - this.frame,
         ARROW_WIDTH + this.frame * 2,

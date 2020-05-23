@@ -197,6 +197,22 @@ const ChartArea = (props) => {
           let ge = new GameEngine(canvas, sm, simfileType, chartParams);
           ge.pauseTl();
           setGameEngine(ge);
+        } else if (thing === "mods") {
+          Object.keys(prevState.mods).forEach((mod) => {
+            const prev = JSON.stringify(prevState.mods[mod]);
+            const curr = JSON.stringify(currentState.mods[mod]);
+            const modChanged = prev !== curr;
+
+            if (gameEngine && modChanged) {
+              if (mod === "turn") {
+                gameEngine.resetChart(chartParams);
+              } else {
+                if (gameEngine.isTlPaused()) {
+                  gameEngine.updateLoopOnce();
+                }
+              }
+            }
+          });
         }
         // mode, difficulty, or mods
         else {
@@ -204,7 +220,6 @@ const ChartArea = (props) => {
           // console.log(
           //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
           // );
-
           if (gameEngine) {
             gameEngine.resetChart(chartParams);
           }

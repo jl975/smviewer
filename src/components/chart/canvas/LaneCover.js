@@ -12,53 +12,50 @@ images.lower.src = getAssetPath("lower_lanecover.png");
 const appearanceIdx = ["hidden", "sudden", "hiddensudden"];
 
 class LaneCover {
-  constructor(attrs) {
-    const { mods, mode } = attrs;
-    const { appearance, laneCoverHeight, scroll } = mods;
+  constructor(attrs) {}
 
-    this.appearance = appearance;
-    this.laneCoverHeight = laneCoverHeight[appearanceIdx.indexOf(appearance)];
-    this.scroll = scroll;
-    this.mode = mode;
-  }
-
-  render(canvas) {
+  render(canvas, attrs) {
     const c = canvas.getContext("2d");
 
+    const { mods, mode } = attrs;
+    const { appearance, scroll } = mods;
+    const laneCoverHeight =
+      mods.laneCoverHeight[appearanceIdx.indexOf(appearance)];
+
     if (
-      (this.appearance.includes("hidden") && this.scroll === "normal") ||
-      (this.appearance.includes("sudden") && this.scroll === "reverse")
+      (appearance.includes("hidden") && scroll === "normal") ||
+      (appearance.includes("sudden") && scroll === "reverse")
     ) {
       let img = images.upper;
       c.drawImage(
         img,
         0,
-        getReverseCoord(this.laneCoverHeight, 0, canvas),
+        getReverseCoord(laneCoverHeight, 0, canvas),
         img.width,
-        this.laneCoverHeight,
+        laneCoverHeight,
         0,
         0,
         img.width,
-        this.laneCoverHeight
+        laneCoverHeight
       );
 
-      if (this.mode === "double") {
+      if (mode === "double") {
         c.drawImage(
           img,
           0,
-          getReverseCoord(this.laneCoverHeight, 0, canvas),
+          getReverseCoord(laneCoverHeight, 0, canvas),
           img.width,
-          this.laneCoverHeight,
+          laneCoverHeight,
           ARROW_WIDTH * 4,
           0,
           img.width,
-          this.laneCoverHeight
+          laneCoverHeight
         );
       }
     }
     if (
-      (this.appearance.includes("sudden") && this.scroll === "normal") ||
-      (this.appearance.includes("hidden") && this.scroll === "reverse")
+      (appearance.includes("sudden") && scroll === "normal") ||
+      (appearance.includes("hidden") && scroll === "reverse")
     ) {
       let img = images.lower;
       c.drawImage(
@@ -66,24 +63,24 @@ class LaneCover {
         0,
         0,
         img.width,
-        this.laneCoverHeight,
+        laneCoverHeight,
         0,
-        getReverseCoord(this.laneCoverHeight, 0, canvas),
+        getReverseCoord(laneCoverHeight, 0, canvas),
         img.width,
-        this.laneCoverHeight
+        laneCoverHeight
       );
 
-      if (this.mode === "double") {
+      if (mode === "double") {
         c.drawImage(
           img,
           0,
           0,
           img.width,
-          this.laneCoverHeight,
+          laneCoverHeight,
           ARROW_WIDTH * 4,
-          getReverseCoord(this.laneCoverHeight, 0, canvas),
+          getReverseCoord(laneCoverHeight, 0, canvas),
           img.width,
-          this.laneCoverHeight
+          laneCoverHeight
         );
       }
     }

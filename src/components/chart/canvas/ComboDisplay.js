@@ -52,20 +52,16 @@ comboImages["A"].coords = {
 const doubleXOffset = 128;
 
 class ComboDisplay {
-  constructor(attrs) {
-    const { mods, mode } = attrs;
-    const { comboFont } = mods;
+  constructor(attrs) {}
 
-    this.combo = 0;
-    this.comboFont = comboFont;
-    this.mode = mode;
-  }
-
-  render(canvas, comboNum = 0) {
+  render(canvas, comboNum = 0, attrs) {
     const c = canvas.getContext("2d");
     if (comboNum < 4) return;
 
-    let type = this.comboFont;
+    const { mods, mode } = attrs;
+    const { comboFont } = mods;
+
+    let type = comboFont;
 
     comboNum = comboNum.toString();
     const numDigits = comboNum.length;
@@ -76,7 +72,7 @@ class ComboDisplay {
 
     const comboDestX =
       comboImages[type].coords[numDigits].combo.destX +
-      (this.mode === "double" ? doubleXOffset : 0);
+      (mode === "double" ? doubleXOffset : 0);
     const comboDestY = comboImages[type].coords[numDigits].combo.destY;
     const comboWidth = comboImages[type].coords[numDigits].combo.width;
     const comboHeight = comboImages[type].coords[numDigits].combo.height;
@@ -107,7 +103,7 @@ class ComboDisplay {
 
       const numDestX =
         comboImages[type].coords[numDigits].num.destX[i] +
-        (this.mode === "double" ? doubleXOffset : 0);
+        (mode === "double" ? doubleXOffset : 0);
       const numDestY = comboImages[type].coords[numDigits].num.destY;
       const numWidth = comboImages[type].coords[numDigits].num.width;
       const numHeight = comboImages[type].coords[numDigits].num.height;

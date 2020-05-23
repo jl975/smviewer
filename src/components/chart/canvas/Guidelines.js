@@ -2,18 +2,16 @@ import { ARROW_HEIGHT } from "../../../constants";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
 class Guidelines {
-  constructor(attrs) {
-    const { mods } = attrs;
-    const { speed, guidelines, scroll } = mods;
-
-    this.speed = speed;
-    this.scroll = scroll;
-    this.finalBeat = attrs.finalBeat;
-    this.showGuidelines = guidelines;
+  constructor(finalBeat) {
+    this.finalBeat = finalBeat;
   }
 
-  render(canvas, beatTick) {
-    if (!this.showGuidelines) return;
+  render(canvas, beatTick, attrs) {
+    const { mods } = attrs;
+    const { speed, scroll } = mods;
+
+    const showGuidelines = mods.guidelines;
+    if (!showGuidelines) return;
 
     const c = canvas.getContext("2d");
     c.strokeStyle = "#fff";
@@ -22,8 +20,7 @@ class Guidelines {
     const bottomBoundary = canvas.height;
 
     for (let beat = 0; beat <= this.finalBeat; beat++) {
-      let destY =
-        (beat - beatTick) * ARROW_HEIGHT * this.speed + ARROW_HEIGHT / 2;
+      let destY = (beat - beatTick) * ARROW_HEIGHT * speed + ARROW_HEIGHT / 2;
 
       destY = (destY + 0.5) | 0;
 
@@ -32,7 +29,7 @@ class Guidelines {
       const lineWidth = beat % 4 === 0 ? 2 : 1;
 
       if (destY > topBoundary && destY < bottomBoundary) {
-        if (this.scroll === "reverse") {
+        if (scroll === "reverse") {
           destY = getReverseCoord(destY, 0, canvas);
         }
         // console.log(destY);
