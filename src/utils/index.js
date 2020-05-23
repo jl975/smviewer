@@ -1,3 +1,5 @@
+import { DEBUG_MODE } from "../constants";
+
 export const getOriginPath = () => {
   if (window.location.search)
     return window.location.href.slice(
@@ -47,3 +49,11 @@ const parseUrlParams = () => {
   }
 };
 export const presetParams = parseUrlParams();
+
+export const debugLog = (text, divNum = 1) => {
+  if (!DEBUG_MODE) return;
+  const debugDiv = document.querySelector(`#debugLog .debug-text${divNum}`);
+  if (debugDiv) {
+    debugDiv.textContent = text;
+  }
+};

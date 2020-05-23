@@ -1,3 +1,5 @@
+export const DEBUG_MODE = false;
+
 export const ARROW_WIDTH = 64;
 export const ARROW_HEIGHT = 64;
 

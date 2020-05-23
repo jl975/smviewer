@@ -15,6 +15,7 @@ import {
 } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
 import loadStore from "../../utils/loadStore";
+import { DEBUG_MODE } from "../../constants";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -122,6 +123,14 @@ const MainContainer = (props) => {
             />
           </div>
         </>
+      )}
+      {DEBUG_MODE && (
+        <div id="debugLog">
+          <div className="debug-text1" />
+          <div className="debug-text2" />
+          <div className="debug-text3" />
+          <div className="debug-text4" />
+        </div>
       )}
     </div>
   );
