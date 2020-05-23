@@ -1,12 +1,13 @@
+import { ARROW_WIDTH } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
 const images = {};
 
-images.hidden = new Image();
-images.hidden.src = getAssetPath("hidden_cover.png");
-images.sudden = new Image();
-images.sudden.src = getAssetPath("sudden_cover.png");
+images.upper = new Image();
+images.upper.src = getAssetPath("upper_lanecover.png");
+images.lower = new Image();
+images.lower.src = getAssetPath("lower_lanecover.png");
 
 const appearanceIdx = ["hidden", "sudden", "hiddensudden"];
 
@@ -24,8 +25,11 @@ class LaneCover {
   render(canvas) {
     const c = canvas.getContext("2d");
 
-    if (this.appearance.includes("hidden")) {
-      const img = images.hidden;
+    if (
+      (this.appearance.includes("hidden") && this.scroll === "normal") ||
+      (this.appearance.includes("sudden") && this.scroll === "reverse")
+    ) {
+      let img = images.upper;
       c.drawImage(
         img,
         0,
@@ -37,9 +41,26 @@ class LaneCover {
         img.width,
         this.laneCoverHeight
       );
+
+      if (this.mode === "double") {
+        c.drawImage(
+          img,
+          0,
+          getReverseCoord(this.laneCoverHeight, 0, canvas),
+          img.width,
+          this.laneCoverHeight,
+          ARROW_WIDTH * 4,
+          0,
+          img.width,
+          this.laneCoverHeight
+        );
+      }
     }
-    if (this.appearance.includes("sudden")) {
-      const img = images.sudden;
+    if (
+      (this.appearance.includes("sudden") && this.scroll === "normal") ||
+      (this.appearance.includes("hidden") && this.scroll === "reverse")
+    ) {
+      let img = images.lower;
       c.drawImage(
         img,
         0,
@@ -51,6 +72,20 @@ class LaneCover {
         img.width,
         this.laneCoverHeight
       );
+
+      if (this.mode === "double") {
+        c.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          this.laneCoverHeight,
+          ARROW_WIDTH * 4,
+          getReverseCoord(this.laneCoverHeight, 0, canvas),
+          img.width,
+          this.laneCoverHeight
+        );
+      }
     }
   }
 }

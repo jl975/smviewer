@@ -46,7 +46,7 @@ const ModsForm = (props) => {
       }`}
     >
       <div className="view-wrapper">
-        <form>
+        <form className="modsForm">
           <div className="form-field">
             <h4 className="form-label">
               Speed

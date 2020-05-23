@@ -74,6 +74,18 @@
 }
 .modsView {
   padding: 20px;
+
+  .view-wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.modsForm {
+  .form-field:last-child {
+    margin-bottom: 200px;
+  }
 }
 
 .chartArea-container {
@@ -93,6 +105,14 @@
   &.double {
     #combo-temp {
       display: none;
+    }
+
+    // hide on doubles for now until I figure out where to put it
+    .cab-buttons-container {
+      height: auto;
+      right: 0;
+      // transform: translateX(50%) scale(0.75) translateY(12.5%);
+      transform: translateX(50%);
     }
   }
 }
@@ -114,13 +134,28 @@
   margin: 0 auto;
   color: #fff;
 
+  &:not(.loading) {
+    display: none;
+  }
+
   &.single {
     height: 448px;
     width: 256px;
   }
   &.double {
-    height: 448px;
-    width: 512px;
+    // height: 448px;
+    height: 100vw * (448/512);
+    width: 100vw;
+    transform: translateX(-50%);
+
+    // @media only screen and (min-width: 982px) {
+    @media only screen and (min-width: 512px) {
+      height: 448px;
+      width: 512px;
+    }
+    @media only screen and (min-width: 982px) {
+      transform: none;
+    }
   }
 
   .chart-loading-jacket {
@@ -134,7 +169,7 @@
 
 .cab-buttons-container {
   position: absolute;
-  height: 200px;
+  // height: 200px;
   width: 60px;
   bottom: 0;
   right: 0;
@@ -144,6 +179,8 @@
   align-items: center;
   flex-direction: column;
   outline: none;
+  background-color: rgba(200, 200, 200, 0.5);
+  border-radius: 10px;
 
   img {
     margin: 7px 0;
@@ -369,6 +406,13 @@
 
     .view-wrapper {
       overflow-y: auto;
+    }
+
+    .modsForm {
+      overflow: visible;
+      .form-field:last-child {
+        margin-bottom: 50px;
+      }
     }
   }
 }

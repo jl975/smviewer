@@ -5,15 +5,31 @@ const HoldButton = (props) => {
   const button = useRef();
   const requestRef = useRef();
 
+  const pressingDownRef = useRef();
+  const notPressingDownRef = useRef();
+
+  const buttonProps = { ...props };
+  delete buttonProps.onClick; // to avoid having the button invoke onClick an extra time
+
   useEffect(() => {
     const el = button.current.ref.current;
-    el.addEventListener("mousedown", pressingDown, false);
-    el.addEventListener("mouseup", notPressingDown, false);
-    el.addEventListener("mouseleave", notPressingDown, false);
+    el.removeEventListener("mousedown", pressingDownRef.current, false);
+    el.removeEventListener("mouseup", notPressingDownRef.current, false);
+    el.removeEventListener("mouseleave", notPressingDownRef.current, false);
 
-    el.addEventListener("touchstart", pressingDown, false);
-    el.addEventListener("touchend", notPressingDown, false);
-  }, []);
+    el.removeEventListener("touchstart", pressingDownRef.current, false);
+    el.removeEventListener("touchend", notPressingDownRef.current, false);
+
+    pressingDownRef.current = pressingDown;
+    notPressingDownRef.current = notPressingDown;
+
+    el.addEventListener("mousedown", pressingDownRef.current, false);
+    el.addEventListener("mouseup", notPressingDownRef.current, false);
+    el.addEventListener("mouseleave", notPressingDownRef.current, false);
+
+    el.addEventListener("touchstart", pressingDownRef.current, false);
+    el.addEventListener("touchend", notPressingDownRef.current, false);
+  }, [props.onClick]);
 
   const pressingDown = (e) => {
     e.preventDefault();
@@ -24,6 +40,7 @@ const HoldButton = (props) => {
   };
 
   const notPressingDown = (e) => {
+    e.preventDefault();
     cancelAnimationFrame(requestRef.current);
   };
 
@@ -35,7 +52,7 @@ const HoldButton = (props) => {
   };
 
   return (
-    <Button {...props} ref={button}>
+    <Button {...buttonProps} ref={button}>
       {props.children}
     </Button>
   );

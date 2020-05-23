@@ -75,7 +75,7 @@ const ChartArea = (props) => {
         const scaleFactor = wrapper.width / chartArea.current.width;
         const xOffset = (chartArea.current.width - wrapper.width) / 2;
         const yOffset = xOffset * (7 / 8);
-        chartArea.current.style.transform = `scale(${scaleFactor})`;
+        chartArea.current.style.transform = `scale(${scaleFactor}) translate(-50%)`;
         chartArea.current.style.position = "absolute";
         chartArea.current.style.left = `-${xOffset}px`;
         chartArea.current.style.top = `-${yOffset}px`;
@@ -93,23 +93,36 @@ const ChartArea = (props) => {
   };
 
   const adjustLaneCoverHeight = (e) => {
-    const { laneCoverHeight } = mods;
+    // if key pressed is up or down, prevent default behavior
+    // ignore if key pressed is not up or down
+    if (e.keyCode !== 38 && e.keyCode !== 40) return;
+    else {
+      e.preventDefault();
+    }
+
+    // after preventing default behavior, ignore if no lane cover mod is being used
+    if (!["hidden", "sudden", "hiddensudden"].includes(mods.appearance)) {
+      return;
+    }
+
+    // the following code will only run if a lane cover mod is being used
+    // and if the key pressed was either up or down
+
+    const { laneCoverHeight, scroll } = mods;
+
+    const reverseFactor = scroll === "reverse" ? -1 : 1;
 
     // up key
     if (e.keyCode === 38) {
-      e.preventDefault();
       switch (mods.appearance) {
         case "hidden":
-          laneCoverHeight[0] -= LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
+          laneCoverHeight[0] -= LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "sudden":
-          laneCoverHeight[1] += LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
+          laneCoverHeight[1] += LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "hiddensudden":
           laneCoverHeight[2] += LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
           break;
         default:
           break;
@@ -117,26 +130,33 @@ const ChartArea = (props) => {
     }
     // down key
     else if (e.keyCode === 40) {
-      e.preventDefault();
-
       switch (mods.appearance) {
         case "hidden":
-          laneCoverHeight[0] += LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
+          laneCoverHeight[0] += LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "sudden":
-          laneCoverHeight[1] -= LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
+          laneCoverHeight[1] -= LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "hiddensudden":
           laneCoverHeight[2] -= LANE_COVER_INCREMENT;
-          updateMods({ laneCoverHeight });
           break;
         default:
           break;
       }
     }
+
+    // don't let lane covers go beyond the chart area boundary
+    const lowerBoundary = 0,
+      upperBoundary = canvas.height;
+    for (let i = 0; i < laneCoverHeight.length; i++) {
+      const height = laneCoverHeight[i];
+      if (height < lowerBoundary) laneCoverHeight[i] = lowerBoundary;
+      else if (height > upperBoundary) laneCoverHeight[i] = upperBoundary;
+    }
+
+    updateMods({ laneCoverHeight });
   };
+
   const toggleLaneCover = (e) => {
     e.preventDefault();
     const { laneCoverVisible } = mods;
@@ -147,7 +167,7 @@ const ChartArea = (props) => {
     document.removeEventListener("keydown", laneCoverFn.current);
     laneCoverFn.current = adjustLaneCoverHeight;
     document.addEventListener("keydown", laneCoverFn.current);
-  }, [mods.appearance]);
+  }, [mods.appearance, mods.scroll, canvas]);
 
   // reset chart if mode, difficulty, or mods change
   useEffect(() => {
@@ -211,51 +231,56 @@ const ChartArea = (props) => {
           className={`canvas-container ${selectedMode}`}
           ref={canvasContainer}
         >
-          <div
-            className="canvas-wrapper"
-            onKeyDown={adjustLaneCoverHeight}
-            tabIndex={0}
-          >
+          <div className="canvas-wrapper">
             <canvas id="chartArea" width="256" height="448" />
-            {loadingAudio && (
-              <div className={`chart-loading-screen ${selectedMode}`}>
+            <div
+              className={`chart-loading-screen ${selectedMode} ${
+                loadingAudio ? "loading" : ""
+              } `}
+              ref={chartLoadingScreen}
+            >
+              {selectedSong && (
                 <img
                   className="chart-loading-jacket"
                   src={getJacketPath(`${selectedSong.hash}.png`)}
                 />
-                <div className="chart-loading-message">Loading chart...</div>
-              </div>
-            )}
-            {["hidden", "sudden", "hiddensudden"].includes(mods.appearance) && (
-              <div className="cab-buttons-container">
-                <HoldButton
-                  className="directional-button"
-                  onClick={(e) => {
-                    e.keyCode = 38;
-                    adjustLaneCoverHeight(e);
-                  }}
-                >
-                  <img src={getAssetPath(`directional_button.png`)} />
-                </HoldButton>
-                <Button
-                  className="center-button"
-                  onClick={(e) => {
-                    toggleLaneCover(e);
-                  }}
-                >
-                  <img src={getAssetPath(`center_button.png`)} />
-                </Button>
-                <HoldButton
-                  className="directional-button"
-                  onClick={(e) => {
-                    e.keyCode = 40;
-                    adjustLaneCoverHeight(e);
-                  }}
-                >
-                  <img src={getAssetPath(`directional_button.png`)} />
-                </HoldButton>
-              </div>
-            )}
+              )}
+              <div className="chart-loading-message">Loading chart...</div>
+            </div>
+            {selectedSong &&
+              !loadingAudio &&
+              ["hidden", "sudden", "hiddensudden"].includes(
+                mods.appearance
+              ) && (
+                <div className="cab-buttons-container">
+                  <HoldButton
+                    className="directional-button"
+                    onClick={(e) => {
+                      e.keyCode = 38;
+                      adjustLaneCoverHeight(e);
+                    }}
+                  >
+                    <img src={getAssetPath(`directional_button.png`)} />
+                  </HoldButton>
+                  <Button
+                    className="center-button"
+                    onClick={(e) => {
+                      toggleLaneCover(e);
+                    }}
+                  >
+                    <img src={getAssetPath(`center_button.png`)} />
+                  </Button>
+                  <HoldButton
+                    className="directional-button"
+                    onClick={(e) => {
+                      e.keyCode = 40;
+                      adjustLaneCoverHeight(e);
+                    }}
+                  >
+                    <img src={getAssetPath(`directional_button.png`)} />
+                  </HoldButton>
+                </div>
+              )}
           </div>
           <div id="combo-temp">
             <div>Combo</div>
