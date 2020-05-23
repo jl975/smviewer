@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { Button } from "semantic-ui-react";
 import "inobounce";
 
-import { presetParams, getJacketPath, getAssetPath } from "../../utils";
+import { presetParams, getJacketPath } from "../../utils";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
@@ -11,9 +10,8 @@ import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
-import { updateMods } from "../../actions/ModsActions";
-import { LANE_COVER_INCREMENT } from "../../constants";
-import HoldButton from "../ui/HoldButton";
+
+import CabButtons from "./CabButtons";
 
 const ChartArea = (props) => {
   const {
@@ -22,7 +20,6 @@ const ChartArea = (props) => {
     selectedSong,
     sm,
     mods,
-    updateMods,
     screen,
     loadingAudio,
     gameEngine,
@@ -34,7 +31,6 @@ const ChartArea = (props) => {
   const chartArea = useRef();
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
-  const laneCoverFn = useRef();
 
   const prevState = usePrevious({
     canvas,
@@ -92,83 +88,6 @@ const ChartArea = (props) => {
     }
   };
 
-  const adjustLaneCoverHeight = (e) => {
-    // if key pressed is up or down, prevent default behavior
-    // ignore if key pressed is not up or down
-    if (e.keyCode !== 38 && e.keyCode !== 40) return;
-    else {
-      e.preventDefault();
-    }
-
-    // after preventing default behavior, ignore if no lane cover mod is being used
-    if (!["hidden", "sudden", "hiddensudden"].includes(mods.appearance)) {
-      return;
-    }
-
-    // the following code will only run if a lane cover mod is being used
-    // and if the key pressed was either up or down
-
-    const { laneCoverHeight, scroll } = mods;
-
-    const reverseFactor = scroll === "reverse" ? -1 : 1;
-
-    // up key
-    if (e.keyCode === 38) {
-      switch (mods.appearance) {
-        case "hidden":
-          laneCoverHeight[0] -= LANE_COVER_INCREMENT * reverseFactor;
-          break;
-        case "sudden":
-          laneCoverHeight[1] += LANE_COVER_INCREMENT * reverseFactor;
-          break;
-        case "hiddensudden":
-          laneCoverHeight[2] += LANE_COVER_INCREMENT;
-          break;
-        default:
-          break;
-      }
-    }
-    // down key
-    else if (e.keyCode === 40) {
-      switch (mods.appearance) {
-        case "hidden":
-          laneCoverHeight[0] += LANE_COVER_INCREMENT * reverseFactor;
-          break;
-        case "sudden":
-          laneCoverHeight[1] -= LANE_COVER_INCREMENT * reverseFactor;
-          break;
-        case "hiddensudden":
-          laneCoverHeight[2] -= LANE_COVER_INCREMENT;
-          break;
-        default:
-          break;
-      }
-    }
-
-    // don't let lane covers go beyond the chart area boundary
-    const lowerBoundary = 0,
-      upperBoundary = canvas.height;
-    for (let i = 0; i < laneCoverHeight.length; i++) {
-      const height = laneCoverHeight[i];
-      if (height < lowerBoundary) laneCoverHeight[i] = lowerBoundary;
-      else if (height > upperBoundary) laneCoverHeight[i] = upperBoundary;
-    }
-
-    updateMods({ laneCoverHeight });
-  };
-
-  const toggleLaneCover = (e) => {
-    e.preventDefault();
-    const { laneCoverVisible } = mods;
-    updateMods({ laneCoverVisible: !laneCoverVisible });
-  };
-
-  useEffect(() => {
-    document.removeEventListener("keydown", laneCoverFn.current);
-    laneCoverFn.current = adjustLaneCoverHeight;
-    document.addEventListener("keydown", laneCoverFn.current);
-  }, [mods.appearance, mods.scroll, canvas]);
-
   // reset chart if mode, difficulty, or mods change
   useEffect(() => {
     const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods };
@@ -207,6 +126,7 @@ const ChartArea = (props) => {
               if (mod === "turn") {
                 gameEngine.resetChart(chartParams);
               } else {
+                // console.log(prev, curr);
                 if (gameEngine.isTlPaused()) {
                   gameEngine.updateLoopOnce();
                 }
@@ -214,9 +134,8 @@ const ChartArea = (props) => {
             }
           });
         }
-        // mode, difficulty, or mods
+        // mode or difficulty
         else {
-          // console.log(`${thing} changed`);
           // console.log(
           //   `${thing} changed from ${prevState[thing]} to ${currentState[thing]}`
           // );
@@ -266,45 +185,8 @@ const ChartArea = (props) => {
               !loadingAudio &&
               ["hidden", "sudden", "hiddensudden"].includes(
                 mods.appearance
-              ) && (
-                <div className="cab-buttons-container">
-                  <HoldButton
-                    className="directional-button"
-                    onClick={(e) => {
-                      e.keyCode = 38;
-                      adjustLaneCoverHeight(e);
-                    }}
-                  >
-                    <img src={getAssetPath(`directional_button.png`)} />
-                  </HoldButton>
-                  <Button
-                    className="center-button"
-                    onClick={(e) => {
-                      toggleLaneCover(e);
-                    }}
-                  >
-                    <img src={getAssetPath(`center_button.png`)} />
-                  </Button>
-                  <HoldButton
-                    className="directional-button"
-                    onClick={(e) => {
-                      e.keyCode = 40;
-                      adjustLaneCoverHeight(e);
-                    }}
-                  >
-                    <img src={getAssetPath(`directional_button.png`)} />
-                  </HoldButton>
-                </div>
-              )}
+              ) && <CabButtons mods={mods} canvas={canvas} />}
           </div>
-          {/* <div id="combo-temp">
-            <div>Combo</div>
-            <div className="combo-num"></div>
-          </div> */}
-          {/* <div id="combo-debug">
-            <div>combo debug</div>
-            <div className="combo-debug-num"></div>
-          </div> */}
         </div>
         <div className="progress-container">
           <div className="progress-wrapper">
@@ -352,9 +234,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    updateMods: (mods) => dispatch(updateMods(mods)),
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);
