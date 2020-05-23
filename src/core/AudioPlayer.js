@@ -162,7 +162,7 @@ class AudioPlayer {
     this.audioResyncFrames = 10;
 
     gsap.ticker.add(this.updateTimeline);
-    this.updateProgressOnce();
+    // this.updateProgressOnce();
   }
 
   // when audio is played, resync timeline with audio a few times until audio playback
@@ -190,6 +190,7 @@ class AudioPlayer {
         // );
         // console.log("stabilized to", currentTime);
         currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
+        this.updateProgressOnce();
 
         if (this.getChartAudioStatus() === "playing") {
           currentSong.tl.play();
@@ -297,6 +298,12 @@ class AudioPlayer {
 
     const currentSong = this.getCurrentSong();
     const currentCombo = getCurrentCombo(currentSong);
+
+    const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
+    if (comboDebug) {
+      comboDebug.textContent = currentCombo;
+    }
+
     currentSong.globalParams.combo = currentCombo;
 
     this.updateAnimationLoopOnce();

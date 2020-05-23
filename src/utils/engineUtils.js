@@ -64,6 +64,7 @@ export const getCurrentBpm = (params) => {
   Find the current combo given the song timestamp. This should be invoked
   every time the audio is resynced.
 */
+
 export const getCurrentCombo = (song) => {
   const { audio, globalParams } = song;
   const { arrows } = globalParams;
@@ -71,7 +72,17 @@ export const getCurrentCombo = (song) => {
 
   const currentTime = audio.seek();
 
+  // if audio is not properly loaded by the time this runs, currentTime will
+  // return the Howl object, causing this method to return the full combo.
+  // Return 0 instead in this case; seeing no combo is better than seeing
+  // an incorrect full combo number
+  if (typeof currentTime !== "number") {
+    return 0;
+  }
+
   let currentCombo;
+
+  const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
 
   // Go through the chart until the arrow following the current timestamp is reached,
   // then set the combo to one less than that arrow's combo
@@ -79,6 +90,10 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo && arrow.timestamp > currentTime + GLOBAL_OFFSET) {
       currentCombo = arrow.combo - 1;
+
+      // if (comboDebug) {
+      //   comboDebug.textContent = currentCombo;
+      // }
       return currentCombo;
     }
   }
@@ -90,6 +105,10 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo) {
       currentCombo = arrow.combo;
+
+      // if (comboDebug) {
+      //   comboDebug.textContent = currentCombo;
+      // }
       return currentCombo;
     }
   }
