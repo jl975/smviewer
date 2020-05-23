@@ -7,8 +7,13 @@ import Progress from "../components/chart/canvas/Progress";
 import { changeActiveBpm, setCombo } from "../actions/ChartActions";
 import { getAssetPath } from "../utils";
 import { saveSongProgress } from "../utils/userSettings";
-import { getCurrentBpm, getCurrentCombo } from "../utils/engineUtils";
+import {
+  getCurrentBpm,
+  getCurrentCombo,
+  getFullCombo,
+} from "../utils/engineUtils";
 import { GLOBAL_OFFSET } from "../constants";
+import { debugLog } from "../utils";
 
 class AudioPlayer {
   constructor() {
@@ -299,10 +304,12 @@ class AudioPlayer {
     const currentSong = this.getCurrentSong();
     const currentCombo = getCurrentCombo(currentSong);
 
-    const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
-    if (comboDebug) {
-      comboDebug.textContent = currentCombo;
-    }
+    // const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
+    // if (comboDebug) {
+    //   comboDebug.textContent = currentCombo;
+    // }
+
+    debugLog(`FC: ${getFullCombo(currentSong)}`);
 
     currentSong.globalParams.combo = currentCombo;
 

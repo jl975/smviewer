@@ -1,4 +1,4 @@
-export const DEBUG_MODE = false;
+export const DEBUG_MODE = true;
 
 export const ARROW_WIDTH = 64;
 export const ARROW_HEIGHT = 64;

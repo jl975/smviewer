@@ -77,9 +77,10 @@ export const getCurrentCombo = (song) => {
   // return the Howl object, causing this method to return the full combo.
   // Return 0 instead in this case; seeing no combo is better than seeing
   // an incorrect full combo number
-  if (typeof currentTime !== "number") {
-    return 0;
-  }
+
+  // if (typeof currentTime !== "number") {
+  //   return 0;
+  // }
 
   let currentCombo;
 
@@ -89,6 +90,7 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo && arrow.timestamp > currentTime + GLOBAL_OFFSET) {
       currentCombo = arrow.combo - 1;
+      // console.log(currentCombo);
       return currentCombo;
     }
   }
@@ -100,11 +102,25 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo) {
       currentCombo = arrow.combo;
+      console.log(currentCombo);
       return currentCombo;
     }
   }
 
   return -1; // should never reach this. return -1 to make debugging easier
+};
+
+export const getFullCombo = (song) => {
+  const { globalParams } = song;
+  const { arrows } = globalParams;
+  if (!arrows.length) return 0;
+  for (let i = arrows.length - 1; i >= 0; i--) {
+    const arrow = arrows[i];
+    if (arrow.combo) {
+      return arrow.combo;
+    }
+  }
+  return 0;
 };
 
 /*

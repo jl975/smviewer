@@ -69,7 +69,6 @@ class GameEngine {
   }
 
   resetChart({ mode, difficulty, mods }) {
-    console.log("resetting chart");
     const self = this;
     const { audio } = store.getState();
 
