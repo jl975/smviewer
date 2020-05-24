@@ -11,6 +11,11 @@ const HoldButton = (props) => {
   const buttonProps = { ...props };
   delete buttonProps.onClick; // to avoid having the button invoke onClick an extra time
 
+  // Component needs to constantly refresh its event listeners to use the
+  // most up-to-date version of props.onClick.
+  // Unfortunately, this current implementation is not able to update state in between
+  // consecutive onClick invocations while held.
+  // Try to limit logic to those that do not depend on changing state while being held
   useEffect(() => {
     const el = button.current.ref.current;
     el.removeEventListener("mousedown", pressingDownRef.current, false);

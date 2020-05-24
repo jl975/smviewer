@@ -4,11 +4,11 @@ import { Button } from "semantic-ui-react";
 
 import { LANE_COVER_INCREMENT } from "../../constants";
 import HoldButton from "../ui/HoldButton";
-import { updateMods } from "../../actions/ModsActions";
+import { updateMods, updateLaneCoverHeight } from "../../actions/ModsActions";
 import { getAssetPath } from "../../utils";
 
 const CabButtons = (props) => {
-  const { canvas, mods, updateMods } = props;
+  const { canvas, mods, updateMods, updateLaneCoverHeight } = props;
 
   const laneCoverFn = useRef();
 
@@ -29,7 +29,8 @@ const CabButtons = (props) => {
     // and if the key pressed was either up or down
 
     const { scroll } = mods;
-    const laneCoverHeight = [...mods.laneCoverHeight];
+
+    const laneCoverHeightDiff = [0, 0, 0];
 
     const reverseFactor = scroll === "reverse" ? -1 : 1;
 
@@ -37,13 +38,13 @@ const CabButtons = (props) => {
     if (e.keyCode === 38) {
       switch (mods.appearance) {
         case "hidden":
-          laneCoverHeight[0] -= LANE_COVER_INCREMENT * reverseFactor;
+          laneCoverHeightDiff[0] -= LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "sudden":
-          laneCoverHeight[1] += LANE_COVER_INCREMENT * reverseFactor;
+          laneCoverHeightDiff[1] += LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "hiddensudden":
-          laneCoverHeight[2] += LANE_COVER_INCREMENT;
+          laneCoverHeightDiff[2] += LANE_COVER_INCREMENT;
           break;
         default:
           break;
@@ -53,29 +54,23 @@ const CabButtons = (props) => {
     else if (e.keyCode === 40) {
       switch (mods.appearance) {
         case "hidden":
-          laneCoverHeight[0] += LANE_COVER_INCREMENT * reverseFactor;
+          laneCoverHeightDiff[0] += LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "sudden":
-          laneCoverHeight[1] -= LANE_COVER_INCREMENT * reverseFactor;
+          laneCoverHeightDiff[1] -= LANE_COVER_INCREMENT * reverseFactor;
           break;
         case "hiddensudden":
-          laneCoverHeight[2] -= LANE_COVER_INCREMENT;
+          laneCoverHeightDiff[2] -= LANE_COVER_INCREMENT;
           break;
         default:
           break;
       }
     }
 
-    // don't let lane covers go beyond the chart area boundary
-    const lowerBoundary = 0,
-      upperBoundary = canvas.height;
-    for (let i = 0; i < laneCoverHeight.length; i++) {
-      const height = laneCoverHeight[i];
-      if (height < lowerBoundary) laneCoverHeight[i] = lowerBoundary;
-      else if (height > upperBoundary) laneCoverHeight[i] = upperBoundary;
-    }
-
-    updateMods({ laneCoverHeight });
+    updateLaneCoverHeight({
+      diff: laneCoverHeightDiff,
+      canvasHeight: canvas.height,
+    });
   };
 
   const toggleLaneCover = (e) => {
@@ -84,10 +79,14 @@ const CabButtons = (props) => {
     updateMods({ laneCoverVisible: !laneCoverVisible });
   };
 
-  useEffect(() => {
+  const updateLaneCoverFn = () => {
     document.removeEventListener("keydown", laneCoverFn.current);
     laneCoverFn.current = adjustLaneCoverHeight;
     document.addEventListener("keydown", laneCoverFn.current);
+  };
+
+  useEffect(() => {
+    updateLaneCoverFn();
   }, [mods.appearance, mods.scroll, mods.laneCoverHeight, canvas]);
 
   return (
@@ -125,6 +124,7 @@ const CabButtons = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
+    updateLaneCoverHeight: (diff) => dispatch(updateLaneCoverHeight(diff)),
   };
 };
 
