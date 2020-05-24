@@ -62,13 +62,8 @@ class Arrow {
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
 
-    // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
     this.holdBeats = attrs.holdBeats || null;
-
-    // can be used to detect the moment that the arrow passes a certain position
-    // even without landing precisely on it
-    this.previousBeatPosition = null;
   }
 
   currentBeatPosition(beatTick) {
@@ -252,8 +247,6 @@ class Arrow {
         );
       }
     }
-
-    this.previousBeatPosition = this.currentBeatPosition(beatTick);
   }
 
   renderArrow(canvas, beatTick, directionIdx, attrs) {
@@ -416,8 +409,6 @@ class Arrow {
         // console.log(destY);
       }
     }
-
-    this.previousBeatPosition = this.currentBeatPosition(beatTick);
   }
 }
 
