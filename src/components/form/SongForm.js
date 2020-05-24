@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
+import { Helmet } from "react-helmet";
 
 import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
@@ -384,6 +385,17 @@ const SongForm = (props) => {
         props.activeView === "song" ? "active" : ""
       }`}
     >
+      {/* meta tags defined here */}
+      {selectedSong && (
+        <Helmet>
+          <title>{selectedSong.title} - SMViewer</title>
+          <meta
+            property="og:title"
+            content={`${selectedSong.title} - SMViewer`}
+          />
+        </Helmet>
+      )}
+      {/* end meta tags */}
       <div className="view-wrapper">
         <form className="songForm">
           <div className="form-inner-wrapper">
