@@ -43,6 +43,10 @@
     // opacity: 1;
   }
 
+  &.logView1:not(.active) {
+    display: none;
+  }
+
   .form-field {
     margin-bottom: 15px;
 
@@ -61,7 +65,7 @@
     }
   }
 
-  .effective-scroll-speed {
+  .form-sublabel {
     margin-left: 20px;
     font-weight: normal;
   }
@@ -79,6 +83,16 @@
     height: 100%;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
+  }
+}
+.logView1 {
+  .view-wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+  #logView1 {
+    margin-bottom: 200px;
   }
 }
 

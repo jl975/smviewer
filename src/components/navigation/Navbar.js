@@ -8,6 +8,7 @@ import { setActiveView } from "../../actions/ScreenActions";
 import { ReactComponent as ChartIcon } from "../../svg/arrows.svg";
 import { ReactComponent as ModsIcon } from "../../svg/mods.svg";
 import { ReactComponent as SongIcon } from "../../svg/music_search.svg";
+import { DEBUG_MODE } from "../../constants";
 
 const Navbar = (props) => {
   const { activeView, chartAudio } = props;
@@ -16,7 +17,7 @@ const Navbar = (props) => {
     { view: "song", icon: "music", svgIcon: SongIcon, text: "Song" },
     { view: "mods", icon: "sidebar", svgIcon: ModsIcon, text: "Mods" },
     { view: "chart", svgIcon: ChartIcon, text: "Chart" },
-    { view: "2", icon: "", text: "" },
+    { view: DEBUG_MODE ? "logView1" : "", icon: "", text: "" },
     { view: "3", icon: "", text: "" },
   ];
 

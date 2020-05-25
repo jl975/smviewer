@@ -16,6 +16,7 @@ import {
 import { resizeScreen } from "../../actions/ScreenActions";
 import loadStore from "../../utils/loadStore";
 import { DEBUG_MODE } from "../../constants";
+import LogView from "../../components/debug/LogView";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -121,6 +122,7 @@ const MainContainer = (props) => {
               onModeSelect={onModeSelect}
               loadingAudio={loadingAudio}
             />
+            {DEBUG_MODE && <LogView />}
           </div>
         </>
       )}

@@ -123,7 +123,7 @@ const ChartArea = (props) => {
             const modChanged = prev !== curr;
 
             if (gameEngine && modChanged) {
-              if (mod === "turn") {
+              if (["turn", "shuffle"].includes(mod)) {
                 gameEngine.resetChart(chartParams);
               } else {
                 // console.log(prev, curr);

@@ -1,5 +1,5 @@
 import { GLOBAL_OFFSET } from "../constants";
-import { debugLog } from "./index";
+import { debugLog } from "./debugUtils";
 
 export const applyTurnMods = (chart, mods, mode) => {
   const { turn, shuffle } = mods;
@@ -102,7 +102,6 @@ export const getCurrentCombo = (song) => {
     const arrow = arrows[i];
     if (arrow.combo) {
       currentCombo = arrow.combo;
-      console.log(currentCombo);
       return currentCombo;
     }
   }

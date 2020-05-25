@@ -17,6 +17,7 @@ import {
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
 import * as actions from "../actions/ChartActions";
+import { debugLogView, debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
   constructor(canvas, sm, simfileType = "sm", chartParams) {
@@ -64,6 +65,7 @@ class GameEngine {
 
     // init logic
     this.simfiles = parseSimfile(this.sm, simfileType);
+    console.log("this.simfiles", this.simfiles);
 
     this.resetChart(chartParams);
   }
@@ -96,6 +98,8 @@ class GameEngine {
     // then immediately seek to where the chart's progress was before it was recreated
     const simfile = this.simfiles[`${mode}_${difficulty}`];
     if (simfile) {
+      debugSimfileChart(simfile);
+
       this.generateEventList(simfile);
       this.generateArrows(simfile, mods);
       this.initTimeline(mods);

@@ -51,7 +51,7 @@ const ModsForm = (props) => {
             <h4 className="form-label">
               Speed
               {song && (
-                <span className="effective-scroll-speed">
+                <span className="form-sublabel">
                   (Effective scroll speed:{" "}
                   <strong>{getEffectiveScrollSpeed()}</strong>)
                 </span>
@@ -134,12 +134,28 @@ const ModsForm = (props) => {
           </div>
           {mods.turn === "shuffle" && (
             <div className="form-field">
-              <h4 className="form-label">Shuffle pattern</h4>
-              {options.mods.shuffle.map((shuffle) => {
+              <h4 className="form-label">
+                Shuffle pattern
+                <span className="form-sublabel">
+                  (compare to original LDUR)
+                </span>
+              </h4>
+              {options.mods.shuffle.map((shuffle, i) => {
                 return (
                   <Radio
                     key={`shuffle_${shuffle}`}
-                    label={shuffle}
+                    label={
+                      [
+                        "LRDU",
+                        "UDRL",
+                        "LRUD",
+                        "DURL",
+                        "DLUR",
+                        "DULR",
+                        "RLUD",
+                        "RULD",
+                      ][i]
+                    }
                     name="shuffle"
                     value={shuffle}
                     checked={mods.shuffle === shuffle}

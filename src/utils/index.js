@@ -57,3 +57,11 @@ export const debugLog = (text, divNum = 1) => {
     debugDiv.textContent = text;
   }
 };
+
+export const debugLogView = (text, viewNum = 1) => {
+  if (!DEBUG_MODE) return;
+  const debugDiv = document.querySelector(`#logView${viewNum}`);
+  if (debugDiv) {
+    debugDiv.textContent = text;
+  }
+};

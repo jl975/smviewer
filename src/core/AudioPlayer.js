@@ -13,7 +13,7 @@ import {
   getFullCombo,
 } from "../utils/engineUtils";
 import { GLOBAL_OFFSET } from "../constants";
-import { debugLog } from "../utils";
+import { debugLog } from "../utils/debugUtils";
 
 class AudioPlayer {
   constructor() {
@@ -327,7 +327,10 @@ class AudioPlayer {
     if (this.getChartAudioStatus() === "pending") {
       return;
     }
-    this.currentSongId = this.getCurrentSong().audio.play();
+    const currentSong = this.getCurrentSong();
+    this.currentSongId = currentSong.audio.play();
+
+    debugLog(`last played: ${currentSong.title}`, 2);
     store.dispatch(actions.setChartAudioStatus("pending"));
   }
 
