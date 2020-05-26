@@ -28,6 +28,10 @@ export const audio = (state = initialState, action) => {
       const chartAudio = { ...state.chartAudio, status: "stopped" };
       return { ...state, chartAudio };
     }
+    case actions.SET_PREVIEW_AUDIO_STATUS: {
+      const previewAudio = { ...state.previewAudio, status: action.payload };
+      return { ...state, previewAudio };
+    }
     case actions.PLAY_PREVIEW_AUDIO: {
       const previewAudio = { ...state.previewAudio, status: "playing" };
       return { ...state, previewAudio };

@@ -117,27 +117,45 @@ class AudioPlayer {
         },
       });
 
-      this.sources.preview[song.hash] = { title: song.title };
-      this.sources.preview[song.hash].audio = new Howl({
+      const thisPreview = (this.sources.preview[song.hash] = {
+        title: song.title,
+      });
+      thisPreview.audio = new Howl({
         src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
         format: ["mp3"],
         html5: true,
         sprite: {
           sample: [
-            parseFloat(song.sampleStart * 1000),
-            parseFloat(song.sampleLength * 1000),
+            parseFloat((song.sampleStart - GLOBAL_OFFSET) * 1000),
+            parseFloat((song.sampleLength - GLOBAL_OFFSET) * 1000),
           ],
         },
+        onload: () => {
+          // thisPreview.audio.volume(0);
+        },
         onplay: () => {
+          // const preview = this.getCurrentPreview().audio;
+          thisPreview.audio.volume(1);
+
+          const fadeinTime = 0;
+          const fadeoutTime = 2000;
+          // thisPreview.audio.fade(0, 1, fadeinTime);
+
+          this.previewFadeTimeout = setTimeout(() => {
+            thisPreview.audio.fade(1, 0, fadeoutTime);
+          }, song.sampleLength * 1000 - fadeoutTime);
+
           store.dispatch(actions.playPreviewAudio());
         },
         onstop: () => {
           clearTimeout(this.previewFadeTimeout);
+          // thisPreview.audio.volume(0);
           this.currentPreviewId = null;
           store.dispatch(actions.stopPreviewAudio());
         },
         onend: () => {
           clearTimeout(this.previewFadeTimeout);
+          // thisPreview.audio.volume(0);
           this.currentPreviewId = null;
           store.dispatch(actions.stopPreviewAudio());
         },
@@ -380,6 +398,9 @@ class AudioPlayer {
   }
 
   playSongPreview(song) {
+    if (this.getPreviewAudioStatus() === "pending") {
+      return;
+    }
     if (this.currentPreview) {
       this.getCurrentPreview().audio.stop(this.currentPreviewId);
     }
@@ -390,18 +411,7 @@ class AudioPlayer {
     const preview = this.getCurrentPreview().audio;
 
     this.currentPreviewId = preview.play("sample");
-
-    preview.on("play", () => {
-      const preview = this.getCurrentPreview().audio;
-
-      const fadeinTime = 200;
-      const fadeoutTime = 2000;
-      preview.fade(0, 1, fadeinTime);
-
-      this.previewFadeTimeout = setTimeout(() => {
-        preview.fade(1, 0, fadeoutTime);
-      }, song.sampleLength * 1000 - fadeoutTime);
-    });
+    store.dispatch(actions.setPreviewAudioStatus("pending"));
   }
 
   stopSongPreview() {
@@ -422,6 +432,9 @@ class AudioPlayer {
 
   getChartAudioStatus() {
     return store.getState().audio.chartAudio.status;
+  }
+  getPreviewAudioStatus() {
+    return store.getState().audio.previewAudio.status;
   }
 }
 
