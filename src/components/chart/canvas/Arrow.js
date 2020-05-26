@@ -21,33 +21,17 @@ DIRECTIONS.forEach((direction) => {
   );
   arrowImages[`flat_${direction}`] = new Image();
   arrowImages[`flat_${direction}`].src = getAssetPath(`vivid_${direction}.png`);
-
-  arrowImages[`freeze_tail_active_${direction}`] = new Image();
-  arrowImages[`freeze_tail_active_${direction}`].src = getAssetPath(
-    `freeze_tail_active_${direction}.png`
-  );
-  arrowImages[`freeze_tail_inactive_${direction}`] = new Image();
-  arrowImages[`freeze_tail_inactive_${direction}`].src = getAssetPath(
-    `freeze_tail_inactive_${direction}.png`
-  );
-
-  arrowImages[`freeze_body_active_${direction}`] = new Image();
-  arrowImages[`freeze_body_active_${direction}`].src = getAssetPath(
-    `freeze_body_active_${direction}.png`
-  );
-  arrowImages[`freeze_body_inactive_${direction}`] = new Image();
-  arrowImages[`freeze_body_inactive_${direction}`].src = getAssetPath(
-    `freeze_body_inactive_${direction}.png`
-  );
-
-  arrowImages[`shock_${direction}`] = new Image();
-  arrowImages[`shock_${direction}`].src = getAssetPath(
-    `shock_${direction}.png`
-  );
 });
 
-const miscImages = ["freeze_head", "tap_explosion"];
-miscImages.forEach((imageName) => {
+const freezeImages = [
+  "freeze_head",
+  "tap_explosion",
+  "freeze_tail_active",
+  "freeze_tail_inactive",
+  "freeze_body_active",
+  "freeze_body_inactive",
+];
+freezeImages.forEach((imageName) => {
   arrowImages[imageName] = new Image();
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`);
 });
@@ -85,8 +69,10 @@ class Arrow {
 
     // freeze body and tail
     if (this.note[directionIdx] === "3") {
-      arrowImg = arrowImages[`freeze_tail_inactive_${direction}`];
-      frameX = 0;
+      arrowImg = arrowImages[`freeze_tail_inactive`];
+
+      frameX =
+        ((directionIdx % 4) + (scroll === "reverse" ? 4 : 0)) * ARROW_WIDTH;
       frameY = 0;
 
       destX = directionIdx * ARROW_WIDTH;
@@ -96,7 +82,8 @@ class Arrow {
       // and line up with the top of the freeze tail.
       // Extend the freeze body upwards using as many repetitions of the 128px height image as needed.
       // Top of freeze body is cut off at the midpoint of the freeze head.
-      let arrowBodyImg = arrowImages[`freeze_body_inactive_${direction}`];
+      let arrowBodyImg = arrowImages[`freeze_body_inactive`];
+
       const totalBodyHeight =
         this.holdBeats[directionIdx] * ARROW_HEIGHT * speed - ARROW_HEIGHT / 2;
       const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
@@ -111,10 +98,10 @@ class Arrow {
       if (partialDestY <= 0) {
         partialHeight += partialDestY;
         partialDestY = 0;
-        arrowImg = arrowImages[`freeze_tail_active_${direction}`];
-        arrowBodyImg = arrowImages[`freeze_body_active_${direction}`];
+        arrowImg = arrowImages[`freeze_tail_active`];
+        arrowBodyImg = arrowImages[`freeze_body_active`];
 
-        if (destY >= 0) {
+        if (destY > 0) {
           freezeBeingHeld = true;
         }
       }
@@ -127,8 +114,8 @@ class Arrow {
       ) {
         c.drawImage(
           arrowBodyImg,
-          0,
-          FREEZE_BODY_HEIGHT - partialHeight,
+          frameX,
+          scroll === "reverse" ? 0 : FREEZE_BODY_HEIGHT - partialHeight,
           ARROW_WIDTH,
           partialHeight,
           destX,
@@ -166,8 +153,8 @@ class Arrow {
         ) {
           c.drawImage(
             arrowBodyImg,
-            0,
-            bodyFrameY,
+            frameX,
+            scroll === "reverse" ? 0 : bodyFrameY,
             ARROW_WIDTH,
             bodyHeight,
             destX,
@@ -199,7 +186,7 @@ class Arrow {
         ARROW_HEIGHT / 2
       ) {
         const tailPartialHeight =
-          this.holdBeats[directionIdx] * ARROW_HEIGHT * speed; // distance between head note and tail note
+          this.holdBeats[directionIdx] * ARROW_HEIGHT * speed; // distance between head note and tail note, less than half arrow height
         frameY += ARROW_HEIGHT / 2 - tailPartialHeight;
         destY += ARROW_HEIGHT / 2 - tailPartialHeight;
         tailHeight = tailPartialHeight + ARROW_HEIGHT / 2;
@@ -219,15 +206,15 @@ class Arrow {
         c.drawImage(
           arrowImg,
           frameX,
-          frameY,
+          scroll === "reverse" ? 0 : frameY,
           ARROW_WIDTH,
-          tailHeight,
+          scroll === "reverse" ? ARROW_HEIGHT - frameY : tailHeight,
           destX,
           scroll === "reverse"
-            ? getReverseCoord(destY, tailHeight, canvas)
+            ? getReverseCoord(actualDestY, ARROW_HEIGHT, canvas)
             : destY,
           ARROW_WIDTH,
-          tailHeight
+          scroll === "reverse" ? ARROW_HEIGHT - frameY : tailHeight
         );
       }
 
