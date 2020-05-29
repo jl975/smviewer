@@ -25,7 +25,7 @@ class ShockArrow {
     return this.originalBeatPosition - beatTick;
   }
 
-  render(canvas, frame, beatTick, attrs) {
+  render(canvas, frame, { beatTick, timeTick }, attrs) {
     const c = canvas.getContext("2d");
 
     const { mods } = attrs;

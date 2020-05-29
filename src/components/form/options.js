@@ -47,7 +47,8 @@ const optionDefaultValues = {
   difficulty: "Expert",
   mode: "single",
   mods: {
-    speed: 3,
+    speed: 2.5,
+    // cmod: 600,
     appearance: "visible",
     laneCoverHeight: [8, 8, 8],
     laneCoverVisible: true,

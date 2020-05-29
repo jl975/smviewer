@@ -6,7 +6,7 @@ class Guidelines {
     this.finalBeat = finalBeat;
   }
 
-  render(canvas, beatTick, attrs) {
+  render(canvas, { beatTick, timeTick }, attrs) {
     const { mods } = attrs;
     const { speed, scroll } = mods;
 
@@ -32,7 +32,6 @@ class Guidelines {
         if (scroll === "reverse") {
           destY = getReverseCoord(destY, 0, canvas);
         }
-        // console.log(destY);
         c.beginPath();
         c.moveTo(0, destY);
         c.lineTo(canvas.width, destY);

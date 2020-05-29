@@ -21,7 +21,7 @@ DIRECTIONS.forEach((direction) => {
 class StepZone {
   constructor(attrs) {}
 
-  render(canvas, beatTick, attrs) {
+  render(canvas, { beatTick }, attrs) {
     const c = canvas.getContext("2d");
 
     const { mode, mods } = attrs;

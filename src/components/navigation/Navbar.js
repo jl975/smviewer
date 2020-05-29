@@ -34,13 +34,14 @@ const Navbar = (props) => {
 
   return (
     <nav className="navbar">
-      {navItems.map((navItem) => {
+      {navItems.map((navItem, i) => {
         const { view, icon, text } = navItem;
         const SVGIcon = navItem.svgIcon;
-        if (!view) return <div className="navbar_item" />;
+        if (!view)
+          return <div key={`navbarItem_${i}`} className="navbar_item" />;
         return (
           <div
-            key={`navbarItem_${view}`}
+            key={`navbarItem_${i}`}
             className={`navbar_item ${activeView === view ? "active" : ""} ${
               isDisabled(view) ? "disabled" : ""
             }`}

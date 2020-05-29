@@ -44,7 +44,7 @@ const SongForm = (props) => {
   const [selectedFilters, setSelectedFilters] = useState(
     userSettings.filters || {
       title: "all",
-      version: 15,
+      version: 16,
       level: "all",
       difficulty: "all",
       // level: 10,

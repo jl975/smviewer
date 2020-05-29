@@ -53,12 +53,15 @@ class Arrow {
   currentBeatPosition(beatTick) {
     return this.originalBeatPosition - beatTick;
   }
+  currentTimePosition(timeTick) {
+    return this.timestamp - timeTick;
+  }
 
-  renderFreezeBody(canvas, beatTick, directionIdx, attrs) {
+  renderFreezeBody(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
     const { mods } = attrs;
-    const { speed, scroll, appearance } = mods;
+    const { speed, cmod, scroll, appearance } = mods;
 
     const topBoundary = 0;
     const bottomBoundary = canvas.height;
@@ -76,7 +79,12 @@ class Arrow {
       frameY = 0;
 
       destX = directionIdx * ARROW_WIDTH;
-      destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+
+      if (cmod) {
+        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+      } else {
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      }
 
       // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
       // and line up with the top of the freeze tail.
@@ -84,8 +92,14 @@ class Arrow {
       // Top of freeze body is cut off at the midpoint of the freeze head.
       let arrowBodyImg = arrowImages[`freeze_body_inactive`];
 
-      const totalBodyHeight =
-        this.holdBeats[directionIdx] * ARROW_HEIGHT * speed - ARROW_HEIGHT / 2;
+      let totalBodyHeight;
+      if (cmod) {
+        // totalBodyHeight =
+      } else {
+        totalBodyHeight =
+          this.holdBeats[directionIdx] * ARROW_HEIGHT * speed -
+          ARROW_HEIGHT / 2;
+      }
       const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
       let partialHeight = totalBodyHeight % FREEZE_BODY_HEIGHT;
       const originalPartialHeight = partialHeight;
@@ -236,11 +250,11 @@ class Arrow {
     }
   }
 
-  renderArrow(canvas, beatTick, directionIdx, attrs) {
+  renderArrow(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
     const { mods } = attrs;
-    const { speed, noteskin, colorFreezes, scroll, appearance } = mods;
+    const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods;
 
     const topBoundary = 0; // used to simulate the arrows being hit and disappearing
     const bottomBoundary = canvas.height; // can be adjusted with SUDDEN+
@@ -347,7 +361,11 @@ class Arrow {
       }
 
       destX = directionIdx * ARROW_WIDTH;
-      destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      if (cmod) {
+        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+      } else {
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      }
       destY = (destY + 0.5) | 0;
 
       if (destY > topBoundary && destY < bottomBoundary) {
@@ -375,7 +393,11 @@ class Arrow {
       frameY = 0;
 
       destX = directionIdx * ARROW_WIDTH;
-      destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      if (cmod) {
+        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+      } else {
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      }
       destY = (destY + 0.5) | 0;
 
       // draw freeze head
