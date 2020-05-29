@@ -44,7 +44,7 @@ export const options = {
 
 // Default values when user opens app for the first time
 const optionDefaultValues = {
-  difficulty: "Challenge",
+  difficulty: "Expert",
   mode: "single",
   mods: {
     speed: 3,
@@ -63,53 +63,55 @@ const optionDefaultValues = {
   },
 };
 
-// Values stored in localStorage user settings override default values
-const userSettings = getUserSettings();
-["song", "difficulty", "mode"].forEach((key) => {
-  if (userSettings[key]) {
-    optionDefaultValues[key] = userSettings[key];
-  }
-});
-
-if (userSettings.mods) {
-  Object.keys(optionDefaultValues.mods).forEach((mod) => {
-    if (typeof userSettings.mods[mod] !== "undefined") {
-      optionDefaultValues.mods[mod] = userSettings.mods[mod];
+export const generateInitialValues = (params = presetParams) => {
+  // Values stored in localStorage user settings override default values
+  const userSettings = getUserSettings();
+  ["song", "difficulty", "mode"].forEach((key) => {
+    if (userSettings[key]) {
+      optionDefaultValues[key] = userSettings[key];
     }
   });
-}
 
-// Preset params in the url override default values AND user settings
-if (presetParams.difficulty) {
-  const difficulties = {
-    b: "Beginner",
-    B: "Basic",
-    D: "Difficult",
-    E: "Expert",
-    C: "Challenge",
-  };
-  if (Object.keys(difficulties).includes(presetParams.difficulty[0])) {
-    optionDefaultValues.difficulty = difficulties[presetParams.difficulty[0]];
+  if (userSettings.mods) {
+    Object.keys(optionDefaultValues.mods).forEach((mod) => {
+      if (typeof userSettings.mods[mod] !== "undefined") {
+        optionDefaultValues.mods[mod] = userSettings.mods[mod];
+      }
+    });
   }
-  if (presetParams.difficulty[1] === "S") {
-    optionDefaultValues.mode = "single";
-  } else if (presetParams.difficulty[1] === "D") {
-    optionDefaultValues.mode = "double";
+
+  // Preset params in the url override default values AND user settings
+  if (params.difficulty) {
+    const difficulties = {
+      b: "Beginner",
+      B: "Basic",
+      D: "Difficult",
+      E: "Expert",
+      C: "Challenge",
+    };
+    if (Object.keys(difficulties).includes(params.difficulty[0])) {
+      optionDefaultValues.difficulty = difficulties[params.difficulty[0]];
+    }
+    if (params.difficulty[1] === "S") {
+      optionDefaultValues.mode = "single";
+    } else if (params.difficulty[1] === "D") {
+      optionDefaultValues.mode = "double";
+    }
   }
-}
-if (presetParams.speed) {
-  const value = parseFloat(
-    `${presetParams.speed[0]}.${presetParams.speed.slice(1)}`
-  );
-  if (options.mods.speed.includes(value)) {
-    optionDefaultValues.mods.speed = value;
+  if (params.speed) {
+    const value = parseFloat(`${params.speed[0]}.${params.speed.slice(1)}`);
+    if (options.mods.speed.includes(value)) {
+      optionDefaultValues.mods.speed = value;
+    }
   }
-}
-if (presetParams.turn) {
-  const turnValue = presetParams.turn.toLowerCase();
-  if (options.mods.turn.includes(turnValue)) {
-    optionDefaultValues.mods.turn = turnValue;
+  if (params.turn) {
+    const turnValue = params.turn.toLowerCase();
+    if (options.mods.turn.includes(turnValue)) {
+      optionDefaultValues.mods.turn = turnValue;
+    }
   }
-}
+
+  return optionDefaultValues;
+};
 
 export { optionDefaultValues };

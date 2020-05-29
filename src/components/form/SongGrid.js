@@ -17,7 +17,7 @@ const SongGrid = (props) => {
   let songs = displayedSongs;
 
   const selectSong = (song) => {
-    onSongSelect(null, { value: song.hash });
+    onSongSelect(song.hash);
   };
 
   const renderSongLevel = (song) => {

@@ -31,7 +31,7 @@ export const capitalize = (str) => {
   return str.slice(0, 1).toUpperCase() + str.slice(1);
 };
 
-const parseUrlParams = () => {
+export const parseUrlParams = () => {
   if (!window.location.search) return {};
   const obj = {};
   try {

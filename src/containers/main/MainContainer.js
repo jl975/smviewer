@@ -121,6 +121,7 @@ const MainContainer = (props) => {
               onDifficultySelect={onDifficultySelect}
               onModeSelect={onModeSelect}
               loadingAudio={loadingAudio}
+              location={props.location}
             />
             {DEBUG_MODE && <LogView />}
           </div>

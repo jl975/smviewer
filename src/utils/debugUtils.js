@@ -17,7 +17,7 @@ export const debugLogView = (text, viewNum = 1) => {
 };
 
 export const debugSimfileChart = (simfile) => {
-  console.log("DSC", simfile);
+  // console.log("DSC", simfile);
   const chart = simfile.chart;
   // console.log(chart);
 

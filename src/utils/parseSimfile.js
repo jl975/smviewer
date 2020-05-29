@@ -55,7 +55,7 @@ const parseSimfile = (sm, simfileType = "sm") => {
       .slice(1);
   }
 
-  console.log("chartStrs", chartStrs);
+  // console.log("chartStrs", chartStrs);
 
   chartStrs.forEach((chartStr) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double

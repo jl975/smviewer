@@ -269,6 +269,7 @@ class GameEngine {
     this.comboDisplay = new ComboDisplay();
     this.laneCover = new LaneCover();
 
+    // console.log("all arrows", this.allArrows);
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
 

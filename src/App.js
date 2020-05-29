@@ -1,13 +1,16 @@
 import React from "react";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 import MainContainer from "./containers/main/MainContainer";
 
 function App() {
   return (
     <div className="app-container">
-      <MainContainer />
+      <Switch>
+        <Route exact path="/" component={MainContainer} />
+      </Switch>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);

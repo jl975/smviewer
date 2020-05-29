@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 
 import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
-import { getJacketPath, presetParams } from "../../utils";
+import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
 import {
   getUserSettings,
@@ -21,6 +21,7 @@ import {
   levelSortOptions,
   difficultySortOptions,
 } from "./songFormOptions";
+import { generateInitialValues } from "./options";
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
 
@@ -38,6 +39,7 @@ const SongForm = (props) => {
   const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(
     selectedDifficulty
   );
+  const [loadingFirstSong, setLoadingFirstSong] = useState(true);
 
   const [selectedFilters, setSelectedFilters] = useState(
     userSettings.filters || {
@@ -119,6 +121,21 @@ const SongForm = (props) => {
   // NOT the song currently playing in the main view
   const [selectedSong, setSelectedSong] = useState(null);
 
+  // // respond to changes in share link url params
+  // useEffect(() => {
+  //   if (loadingFirstSong) return;
+  //   try {
+  //     console.log("share link params:", props.location.search);
+  //     const parsedParams = parseUrlParams();
+  //     console.log("parsedParams", parsedParams);
+  //     const initialValues = generateInitialValues(parsedParams);
+  //     console.log("initialValues", initialValues);
+  //     onSongSelect(parsedParams.song, { preserveShareUrl: true });
+  //   } catch (error) {
+  //     console.log("error while trying to respond to url param change");
+  //   }
+  // }, [props.location]);
+
   // initialize song for testing
   useEffect(() => {
     /*
@@ -128,40 +145,47 @@ const SongForm = (props) => {
     */
     document.body.click();
 
+    // Select a pre-selected song
+    // Highest priority: song contained in share url
     if (presetParams.song) {
-      onSongSelect(null, { value: presetParams.song });
-    } else if (userSettings.song) {
-      onSongSelect(null, { value: userSettings.song });
-    } else {
-      // onSongSelect(null, { value: "99OQb9b0IQ98P6IQdPOiqi8q16o16iqP" }); // ORCA
-      // onSongSelect(null, { value: "PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O" }); // DEGRS
-      // onSongSelect(null, { value: "q0QIob1PDI6IP86dlPb6I6il9d6bP606" }); // einya
-      // onSongSelect(null, { value: "bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l" }); // lachryma
-      // onSongSelect(null, { value: "06O0ObdQobq86lPDo6P18dQ1QPdilIQO" }); // ayakashi
-      // onSongSelect(null, { value: "9bI0dQdb01Dl1bQq1Pq998i0l096D99P" }); // second heaven
-      // onSongSelect(null, { value: "8o1iQPiId8P6Db9Iqo1Oo119QDoq8qQ8" }); // chaos
-      // onSongSelect(null, { value: "dD6PqbboDil89DPIID86Pldi6obI1b8l" }); // pluto
-      // onSongSelect(null, { value: "loP08P1PPi990lPD0O060d888O9o6qb8" }); // seasons
-      // onSongSelect(null, { value: "8QbqP80q9PI8bbi0qOoiibOQD08OPdli" }); // felm
-      // onSongSelect(null, { value: "6bid6d9qPQ80DOqiidQQ891o6Od8801l" }); // otp
-      // onSongSelect(null, { value: "9i0q91lPPiO61b9P891O1i86iOP1I08O" }); // egoism
-      // onSongSelect(null, { value: "lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0" }); // downer & upper
-      // onSongSelect(null, { value: "PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD" }); // paranoia eternal
-      // onSongSelect(null, { value: "QI06q9lPIoo80DlI18Ooi6dbPl89bqi0" }); // our soul
-      // onSongSelect(null, { value: "POq8OPlOO9199i11Od0P00801Qo01DQo" }); // rtswy
-      // onSongSelect(null, { value: "QQldo10ObPPQPlliODiDIIl0Q1oPoo61" }); // deltamax
-      // onSongSelect(null, { value: "06loOQ0DQb0DqbOibl6qO81qlIdoP9DI" }); // paranoia
-      // onSongSelect(null, { value: "0dOi10q9Q6oi0Q9960iQQDO6olqlDDqo" }); // private eye
-      // onSongSelect(null, { value: "9I00D9Id61iD6QP8i8Dd6698PoQ9bdi9" }); // okome
-      // onSongSelect(null, { value: "O9qDQOQO8dDDIiO9dPP0Pb8qQo9l89D9" }); // triperfect
-      // onSongSelect(null, { value: "0IldoDlDQql99DqQo0Qq9ioPIiiPoIoi" }); // pluto relinquish
-      // onSongSelect(null, { value: "PIO8dod8P9OOP1bi0D1POIi6OdOdQDql" }); // pluto the first
-      // onSongSelect(null, { value: "8O6b1D9PDO0ll1IO9d1ODDPPo0QPQbob" }); // tme
-      // onSongSelect(null, { value: "ld6P1lbb0bPO9doqbbPOoPb8qoDo8id0" }); // A4A
-      // onSongSelect(null, { value: "O06Id8PIDbDblO109ddi1dldd0bqDdQ1" }); // sexy planet from nonstop
-      // onSongSelect(null, { value: "IQqOIb6ob8bIbOII66ID0oIQDPl6bdbb" }); // pyfim jazzy groove
-      onSongSelect(null, { value: "08QP8bOQ6OOdd11Dq81db1l8IdiDbod6" }); // lesson by dj
+      onSongSelect(presetParams.song, { preserveShareUrl: true });
     }
+    // Second highest priority: song saved from user's previous session
+    else if (userSettings.song) {
+      onSongSelect(userSettings.song);
+    }
+    // Lowest priority: arbitrary song chosen to be the default
+    else {
+      onSongSelect("99OQb9b0IQ98P6IQdPOiqi8q16o16iqP"); // ORCA
+      // onSongSelect("PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O"); // DEGRS
+      // onSongSelect("q0QIob1PDI6IP86dlPb6I6il9d6bP606"); // einya
+      // onSongSelect("bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l"); // lachryma
+      // onSongSelect("06O0ObdQobq86lPDo6P18dQ1QPdilIQO"); // ayakashi
+      // onSongSelect("9bI0dQdb01Dl1bQq1Pq998i0l096D99P"); // second heaven
+      // onSongSelect("8o1iQPiId8P6Db9Iqo1Oo119QDoq8qQ8"); // chaos
+      // onSongSelect("dD6PqbboDil89DPIID86Pldi6obI1b8l"); // pluto
+      // onSongSelect("loP08P1PPi990lPD0O060d888O9o6qb8"); // seasons
+      // onSongSelect("8QbqP80q9PI8bbi0qOoiibOQD08OPdli"); // felm
+      // onSongSelect("6bid6d9qPQ80DOqiidQQ891o6Od8801l"); // otp
+      // onSongSelect("9i0q91lPPiO61b9P891O1i86iOP1I08O"); // egoism
+      // onSongSelect("lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0"); // downer & upper
+      // onSongSelect("PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD"); // paranoia eternal
+      // onSongSelect("QI06q9lPIoo80DlI18Ooi6dbPl89bqi0"); // our soul
+      // onSongSelect("POq8OPlOO9199i11Od0P00801Qo01DQo"); // rtswy
+      // onSongSelect("QQldo10ObPPQPlliODiDIIl0Q1oPoo61"); // deltamax
+      // onSongSelect("06loOQ0DQb0DqbOibl6qO81qlIdoP9DI"); // paranoia
+      // onSongSelect("0dOi10q9Q6oi0Q9960iQQDO6olqlDDqo"); // private eye
+      // onSongSelect("9I00D9Id61iD6QP8i8Dd6698PoQ9bdi9"); // okome
+      // onSongSelect("O9qDQOQO8dDDIiO9dPP0Pb8qQo9l89D9"); // triperfect
+      // onSongSelect("0IldoDlDQql99DqQo0Qq9ioPIiiPoIoi"); // pluto relinquish
+      // onSongSelect("PIO8dod8P9OOP1bi0D1POIi6OdOdQDql"); // pluto the first
+      // onSongSelect("8O6b1D9PDO0ll1IO9d1ODDPPo0QPQbob"); // tme
+      // onSongSelect("ld6P1lbb0bPO9doqbbPOoPb8qoDo8id0"); // A4A
+      // onSongSelect("O06Id8PIDbDblO109ddi1dldd0bqDdQ1"); // sexy planet from nonstop
+      // onSongSelect("IQqOIb6ob8bIbOII66ID0oIQDPl6bdbb"); // pyfim jazzy groove
+      // onSongSelect("08QP8bOQ6OOdd11Dq81db1l8IdiDbod6"); // lesson by dj
+    }
+    setLoadingFirstSong(false);
   }, []);
 
   useEffect(() => {
@@ -172,16 +196,15 @@ const SongForm = (props) => {
     }
   }, [selectedSongOption]);
 
-  const onSongSelect = async (_, data) => {
+  const onSongSelect = async (songId, params = {}) => {
     AudioPlayer.stopSongPreview();
     if (selectedSong) {
       AudioPlayer.killImmediately(selectedSong.hash);
     }
 
-    const songHash = data.value;
-    setSelectedSongOption(songHash);
+    setSelectedSongOption(songId);
 
-    const song = simfileList.find((song) => song.hash === songHash);
+    const song = simfileList.find((song) => song.hash === songId);
 
     let initialProgress = 0;
 
@@ -190,7 +213,7 @@ const SongForm = (props) => {
       initialProgress = getSavedSongProgress();
     }
 
-    if (presetParams.song === songHash && presetParams.progress) {
+    if (presetParams.song === songId && presetParams.progress) {
       initialProgress = presetParams.progress / 100000;
     } else {
       // remove preset progress marker if it is no longer relevant to the new song
@@ -297,6 +320,13 @@ const SongForm = (props) => {
       } else {
         selectClosestDifficulty();
       }
+    }
+
+    /* Miscellaneous side effects of selecting a song */
+
+    // if the user got here via a share url and changes the song/difficulty, remove the share params
+    if (!params.preserveShareUrl) {
+      window.history.pushState(null, null, ".");
     }
   };
 
@@ -422,7 +452,7 @@ const SongForm = (props) => {
                   search
                   selection
                   value={selectedSongOption}
-                  onChange={onSongSelect}
+                  onChange={(e, data) => onSongSelect(data.value)}
                   options={simfileOptions}
                   selectOnBlur={false}
                   selectOnNavigation={false}
