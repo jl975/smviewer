@@ -269,7 +269,7 @@ class GameEngine {
     this.comboDisplay = new ComboDisplay();
     this.laneCover = new LaneCover();
 
-    console.log("all arrows", this.allArrows);
+    // console.log("all arrows", this.allArrows);
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
 
@@ -302,7 +302,7 @@ class GameEngine {
     // this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
 
     // note events (combo, assist tick, target flash)
-    console.log("eventList", this.eventList);
+    // console.log("eventList", this.eventList);
     const bpmChangeQueue = this.globalParams.bpmChangeQueue;
     // console.log("bpmChangeQueue", bpmChangeQueue);
 
