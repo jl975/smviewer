@@ -115,5 +115,6 @@ export const generateInitialValues = (params = presetParams) => {
 
   return optionDefaultValues;
 };
+generateInitialValues(presetParams);
 
 export { optionDefaultValues };

@@ -473,11 +473,13 @@ class GameEngine {
     this.tl = this.tl.set({}, {}, 0);
 
     // time tick timeline for cmod
+    // extend duration by an arbitrarily long buffer so rounding error does not cause the
+    // last arrow to stop a tiny decimal before reaching 0
     this.tl = this.tl.to(
       this.globalParams,
       {
-        timeTick: this.globalParams.lastEntity.timestamp,
-        duration: this.globalParams.lastEntity.timestamp,
+        timeTick: this.globalParams.lastEntity.timestamp + 1,
+        duration: this.globalParams.lastEntity.timestamp + 1,
         ease: "none",
       },
       ">"

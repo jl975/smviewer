@@ -105,7 +105,7 @@ const ModsForm = (props) => {
                 max={1000}
                 name="cmod"
                 value={mods.cmod}
-                onChange={(e, data) => updateMods({ cmod: data.value })}
+                onChange={(_, data) => updateMods({ cmod: data.value })}
                 onBlur={resetCmodIfInvalid}
               />
             </div>

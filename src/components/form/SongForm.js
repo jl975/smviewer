@@ -47,7 +47,6 @@ const SongForm = (props) => {
       version: 16,
       level: "all",
       difficulty: "all",
-      // level: 10,
     }
   );
 
@@ -157,33 +156,6 @@ const SongForm = (props) => {
     // Lowest priority: arbitrary song chosen to be the default
     else {
       onSongSelect("99OQb9b0IQ98P6IQdPOiqi8q16o16iqP"); // ORCA
-      // onSongSelect("PooiIP8qP0IPd9D1Ibi6l9bDoqdi9P8O"); // DEGRS
-      // onSongSelect("q0QIob1PDI6IP86dlPb6I6il9d6bP606"); // einya
-      // onSongSelect("bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l"); // lachryma
-      // onSongSelect("06O0ObdQobq86lPDo6P18dQ1QPdilIQO"); // ayakashi
-      // onSongSelect("9bI0dQdb01Dl1bQq1Pq998i0l096D99P"); // second heaven
-      // onSongSelect("8o1iQPiId8P6Db9Iqo1Oo119QDoq8qQ8"); // chaos
-      // onSongSelect("dD6PqbboDil89DPIID86Pldi6obI1b8l"); // pluto
-      // onSongSelect("loP08P1PPi990lPD0O060d888O9o6qb8"); // seasons
-      // onSongSelect("8QbqP80q9PI8bbi0qOoiibOQD08OPdli"); // felm
-      // onSongSelect("6bid6d9qPQ80DOqiidQQ891o6Od8801l"); // otp
-      // onSongSelect("9i0q91lPPiO61b9P891O1i86iOP1I08O"); // egoism
-      // onSongSelect("lldPQPDP0qq8iqQ910l8b8PoQ6O668Q0"); // downer & upper
-      // onSongSelect("PP1q0iii1D6Dq9QOd0qqDOQD0160QoPD"); // paranoia eternal
-      // onSongSelect("QI06q9lPIoo80DlI18Ooi6dbPl89bqi0"); // our soul
-      // onSongSelect("POq8OPlOO9199i11Od0P00801Qo01DQo"); // rtswy
-      // onSongSelect("QQldo10ObPPQPlliODiDIIl0Q1oPoo61"); // deltamax
-      // onSongSelect("06loOQ0DQb0DqbOibl6qO81qlIdoP9DI"); // paranoia
-      // onSongSelect("0dOi10q9Q6oi0Q9960iQQDO6olqlDDqo"); // private eye
-      // onSongSelect("9I00D9Id61iD6QP8i8Dd6698PoQ9bdi9"); // okome
-      // onSongSelect("O9qDQOQO8dDDIiO9dPP0Pb8qQo9l89D9"); // triperfect
-      // onSongSelect("0IldoDlDQql99DqQo0Qq9ioPIiiPoIoi"); // pluto relinquish
-      // onSongSelect("PIO8dod8P9OOP1bi0D1POIi6OdOdQDql"); // pluto the first
-      // onSongSelect("8O6b1D9PDO0ll1IO9d1ODDPPo0QPQbob"); // tme
-      // onSongSelect("ld6P1lbb0bPO9doqbbPOoPb8qoDo8id0"); // A4A
-      // onSongSelect("O06Id8PIDbDblO109ddi1dldd0bqDdQ1"); // sexy planet from nonstop
-      // onSongSelect("IQqOIb6ob8bIbOII66ID0oIQDPl6bdbb"); // pyfim jazzy groove
-      // onSongSelect("08QP8bOQ6OOdd11Dq81db1l8IdiDbod6"); // lesson by dj
     }
     setLoadingFirstSong(false);
   }, []);
