@@ -62,6 +62,18 @@ class GameEngine {
 
       arrows: self.allArrows,
       targetFlashes: {},
+
+      // "global" variables for creating the timeline
+      /*
+        lol for lack of a better word. Refers to the last arrow or last bpm change/stop event,
+        whichever comes later
+      */
+      lastEntity: null,
+
+      /*
+        The beat that the timeline ends on. Will be defined as the beat of the lastEntity
+      */
+      finalBeat: 0,
     };
 
     AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
@@ -110,6 +122,7 @@ class GameEngine {
 
       this.generateEventList(simfile);
       this.generateArrows(simfile, mods);
+      this.generateTimestamps();
       this.initTimeline(mods);
       this.restartTl();
       if (audio.chartAudio.status !== "playing") {
@@ -232,26 +245,6 @@ class GameEngine {
       // calculate starting position currentBeatPosition
       const { measureIdx, measureN, measureD } = note;
       note.originalBeatPosition = (measureIdx + measureN / measureD) * 4;
-
-      // // If the note is the tail of a freeze arrow, calculate the number of beats
-      // // from the head of the freeze arrow
-      // for (let i = 0; i < note.note.length; i++) {
-      //   if (note.note[i] !== "3") continue;
-
-      //   // Find the most recent freeze head on the same direction as the tail
-      //   // and retroactively fill in the length of the hold in beats
-      //   for (let j = key - 1; j >= 0; j--) {
-      //     if (chart[j].note[i] === "2") {
-      //       if (!chart[j].holdBeats) chart[j].holdBeats = [];
-      //       if (!note.holdBeats) note.holdBeats = [];
-      //       chart[j].holdBeats[i] =
-      //         note.currentBeatPosition - chart[j].currentBeatPosition;
-      //       note.holdBeats[i] =
-      //         note.currentBeatPosition - chart[j].currentBeatPosition;
-      //       break;
-      //     }
-      //   }
-      // }
     });
 
     // generate arrays of arrows by category
@@ -267,34 +260,8 @@ class GameEngine {
         note.note.includes("3")
       ) {
         const arrow = new Arrow({ key, ...note });
-        // console.log("note", note);
-        // console.log("created arrow", arrow);
         this.arrows.push(arrow);
         this.allArrows.push(arrow);
-      }
-    });
-
-    console.log("chart", chart);
-
-    this.allArrows.forEach((arrow) => {
-      // If the note is the tail of a freeze arrow, calculate the number of beats
-      // from the head of the freeze arrow
-      for (let i = 0; i < arrow.note.length; i++) {
-        if (arrow.note[i] !== "3") continue;
-
-        // Find the most recent freeze head on the same direction as the tail
-        // and retroactively fill in the length of the hold in beats
-        for (let j = arrow.key - 1; j >= 0; j--) {
-          if (chart[j].note[i] === "2") {
-            if (!chart[j].holdBeats) chart[j].holdBeats = [];
-            if (!arrow.holdBeats) arrow.holdBeats = [];
-            chart[j].holdBeats[i] =
-              arrow.originalBeatPosition - chart[j].originalBeatPosition;
-            arrow.holdBeats[i] =
-              arrow.originalBeatPosition - chart[j].originalBeatPosition;
-            break;
-          }
-        }
       }
     });
 
@@ -306,48 +273,30 @@ class GameEngine {
     // console.log(`chart for ${simfile.difficulty}`, chart);
   }
 
-  // Calculate the gsap tweens before playing the chart
-  initTimeline(mods) {
-    // console.log(`this.allArrows.length: ${this.allArrows.length}`);
-
-    /*
-      The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
-      Create a tween to animate the global beat tick for each of these sections and chain them together.
-      The position and/or frame animation of each canvas object (e.g. arrows, step zone, guidelines) can be
-      determined as a function of the beat tick value at any given point.
-    */
-    let bpm;
-
-    let accumulatedBeatTick = 0;
-
+  generateTimestamps() {
     // Designate the "end" of the chart as an arbitrary number of beats (8?) after either the last arrow
     // or the last event in the chart, whichever comes later
     const lastArrow = this.arrows[this.arrows.length - 1];
     const lastEvent = this.eventList[this.eventList.length - 1];
 
-    let lastEntity = null; // lol for lack of a better word. whichever of lastArrow or lastEvent comes later
-
-    let finalBeat = 0;
     if (lastArrow && lastEvent) {
       const lastArrowBeat = lastArrow.originalBeatPosition;
       const lastEventBeat = lastEvent.beat;
       if (lastEventBeat > lastArrowBeat) {
-        finalBeat = lastEventBeat;
-        lastEntity = lastEvent;
+        this.globalParams.finalBeat = lastEventBeat;
+        this.globalParams.lastEntity = lastEvent;
       } else {
-        finalBeat = lastArrowBeat;
-        lastEntity = lastArrow;
+        this.globalParams.finalBeat = lastArrowBeat;
+        this.globalParams.lastEntity = lastArrow;
       }
-
-      // finalBeat = Math.max(lastArrow.originalBeatPosition, lastEvent.beat);
     } else if (lastArrow) {
-      finalBeat = lastArrow.originalBeatPosition;
-      lastEntity = lastArrow;
+      this.globalParams.finalBeat = lastArrow.originalBeatPosition;
+      this.globalParams.lastEntity = lastArrow;
     } else if (lastEvent) {
-      finalBeat = lastEvent.beat;
-      lastEntity = lastEvent;
+      this.globalParams.finalBeat = lastEvent.beat;
+      this.globalParams.lastEntity = lastEvent;
     }
-    finalBeat += END_EXTRA_BEATS;
+    this.globalParams.finalBeat += END_EXTRA_BEATS;
 
     // // hack to implement global offset of -12 ms
     // this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
@@ -419,6 +368,7 @@ class GameEngine {
       const beatDiff = arrow.originalBeatPosition - bpmSectionStartBeat;
       const timeDiff = beatDiff * (60 / currentBpm);
       const arrowTimestamp = bpmSectionStartTime + timeDiff + currentStopOffset;
+      arrow.timestamp = arrowTimestamp;
 
       // combo arrows (includes regular notes and freeze heads)
       if (
@@ -428,22 +378,64 @@ class GameEngine {
       ) {
         currentCombo++;
         arrow.combo = currentCombo;
-        arrow.timestamp = arrowTimestamp;
 
         this.comboArrows.push(arrow);
+      }
+      // freeze ends that are not simultaneous with combo arrows
+      else if (arrow.note.includes("3")) {
+      }
+    });
 
-        const comboTemp = document.querySelector("#combo-temp .combo-num");
+    this.allArrows.forEach((arrow) => {
+      // If the note is the tail of a freeze arrow, calculate the number of beats
+      // from the head of the freeze arrow
+      for (let i = 0; i < arrow.note.length; i++) {
+        if (arrow.note[i] !== "3") continue;
 
+        // Find the most recent freeze head on the same direction as the tail
+        // and retroactively fill in the length of the hold in beats
+        for (let j = arrow.key - 1; j >= 0; j--) {
+          if (this.allArrows[j].note[i] === "2") {
+            if (!this.allArrows[j].holdBeats) {
+              this.allArrows[j].holdBeats = [];
+              this.allArrows[j].holdTimes = [];
+            }
+            if (!arrow.holdBeats) {
+              arrow.holdBeats = [];
+              arrow.holdTimes = [];
+            }
+            this.allArrows[j].holdBeats[i] =
+              arrow.originalBeatPosition -
+              this.allArrows[j].originalBeatPosition;
+            this.allArrows[j].holdTimes[i] =
+              arrow.timestamp - this.allArrows[j].timestamp;
+
+            arrow.holdBeats[i] =
+              arrow.originalBeatPosition -
+              this.allArrows[j].originalBeatPosition;
+            arrow.holdTimes[i] = arrow.timestamp - this.allArrows[j].timestamp;
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  // Calculate the gsap tweens before playing the chart
+  initTimeline(mods) {
+    /* Timestamp-based arrow events timeline */
+
+    this.allArrows.forEach((arrow) => {
+      // combo arrows (includes regular notes and freeze heads)
+      if (
+        arrow.note.includes("1") ||
+        arrow.note.includes("2") ||
+        arrow.note.includes("M")
+      ) {
         this.tl.set(
           this.globalParams,
           {
-            // combo: arrow.combo,
             onStart: () => {
-              // store.dispatch(actions.setCombo(arrow.combo));
-
-              if (comboTemp) {
-                comboTemp.textContent = arrow.combo;
-              }
               this.globalParams.combo = arrow.combo;
 
               if (arrow instanceof Arrow) {
@@ -455,9 +447,10 @@ class GameEngine {
               }
             },
           },
-          arrowTimestamp - 0.008
+          arrow.timestamp - 0.008
         );
       }
+
       // freeze ends that are not simultaneous with combo arrows
       else if (arrow.note.includes("3")) {
         this.tl.set(
@@ -469,7 +462,7 @@ class GameEngine {
               ] = new TargetFlash(arrow);
             },
           },
-          arrowTimestamp - 0.008
+          arrow.timestamp - 0.008
         );
       }
     });
@@ -483,8 +476,8 @@ class GameEngine {
     this.tl = this.tl.to(
       this.globalParams,
       {
-        timeTick: lastEntity.timestamp,
-        duration: lastEntity.timestamp,
+        timeTick: this.globalParams.lastEntity.timestamp,
+        duration: this.globalParams.lastEntity.timestamp,
         ease: "none",
       },
       ">"
@@ -492,6 +485,15 @@ class GameEngine {
 
     // set tween starting point back to 0
     this.tl = this.tl.set({}, {}, 0);
+
+    /*
+      The space in between each event (i.e. a bpm change or stop) denotes a continous section of constant bpm.
+      Create a tween to animate the global beat tick for each of these sections and chain them together.
+      The position and/or frame animation of each canvas object (e.g. arrows, step zone, guidelines) can be
+      determined as a function of the beat tick value at any given point.
+    */
+    let accumulatedBeatTick = 0;
+    let bpm;
 
     // beat tick timeline for normal speed mods
     for (let i = 0; i < this.eventList.length; i++) {
@@ -534,8 +536,9 @@ class GameEngine {
         this.tl = this.tl.to(
           this.globalParams,
           {
-            beatTick: finalBeat,
-            duration: ((finalBeat - accumulatedBeatTick) / bpm) * 60,
+            beatTick: this.globalParams.finalBeat,
+            duration:
+              ((this.globalParams.finalBeat - accumulatedBeatTick) / bpm) * 60,
             ease: "none",
             onStart: () => {
               if (startEvent.type === "bpm") {
@@ -548,7 +551,7 @@ class GameEngine {
       }
     }
 
-    this.guidelines = new Guidelines(finalBeat);
+    this.guidelines = new Guidelines(this.globalParams.finalBeat);
     AudioPlayer.setTimeline(this.tl);
 
     this.updateLoopOnce();

@@ -94,7 +94,9 @@ class Arrow {
 
       let totalBodyHeight;
       if (cmod) {
-        // totalBodyHeight =
+        totalBodyHeight =
+          this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60) -
+          ARROW_HEIGHT / 2;
       } else {
         totalBodyHeight =
           this.holdBeats[directionIdx] * ARROW_HEIGHT * speed -
@@ -195,12 +197,16 @@ class Arrow {
       // in a separate variable
       let actualDestY = destY;
 
-      if (
-        this.holdBeats[directionIdx] * ARROW_HEIGHT * speed <
-        ARROW_HEIGHT / 2
-      ) {
-        const tailPartialHeight =
-          this.holdBeats[directionIdx] * ARROW_HEIGHT * speed; // distance between head note and tail note, less than half arrow height
+      let bodyDistance;
+      if (cmod) {
+        bodyDistance =
+          this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60);
+      } else {
+        bodyDistance = this.holdBeats[directionIdx] * ARROW_HEIGHT * speed;
+      }
+
+      if (bodyDistance < ARROW_HEIGHT / 2) {
+        const tailPartialHeight = bodyDistance; // distance between head note and tail note, less than half arrow height
         frameY += ARROW_HEIGHT / 2 - tailPartialHeight;
         destY += ARROW_HEIGHT / 2 - tailPartialHeight;
         tailHeight = tailPartialHeight + ARROW_HEIGHT / 2;

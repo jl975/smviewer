@@ -48,7 +48,7 @@ const optionDefaultValues = {
   mode: "single",
   mods: {
     speed: 2.5,
-    // cmod: 600,
+    cmod: 600,
     appearance: "visible",
     laneCoverHeight: [8, 8, 8],
     laneCoverVisible: true,
