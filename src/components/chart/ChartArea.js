@@ -59,9 +59,14 @@ const ChartArea = (props) => {
     if (selectedMode === "single") {
       chartArea.current.width = 256;
       chartArea.current.style.transform = "none";
-      chartArea.current.style.position = "relative";
       chartArea.current.style.left = 0;
       chartArea.current.style.top = 0;
+
+      // hack to resolve positioning issues
+      chartArea.current.style.position = "static";
+      setTimeout(() => {
+        chartArea.current.style.position = "relative";
+      });
     } else if (selectedMode === "double") {
       chartArea.current.width = 512;
 
@@ -77,9 +82,13 @@ const ChartArea = (props) => {
         chartArea.current.style.top = `-${yOffset}px`;
       } else {
         chartArea.current.style.transform = "none";
-        chartArea.current.style.position = "relative";
         chartArea.current.style.left = 0;
         chartArea.current.style.top = 0;
+
+        chartArea.current.style.position = "static";
+        setTimeout(() => {
+          chartArea.current.style.position = "relative";
+        });
       }
     }
 
