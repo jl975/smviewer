@@ -10,9 +10,9 @@ import LaneCover from "../components/chart/canvas/LaneCover";
 import parseSimfile from "../utils/parseSimfile";
 import { applyTurnMods } from "../utils/engineUtils";
 import {
-  GLOBAL_OFFSET,
   END_EXTRA_BEATS,
   MARVELOUS_FLASH_FRAMES,
+  DEFAULT_CMOD,
 } from "../constants";
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
@@ -571,6 +571,10 @@ class GameEngine {
 
     const { songSelect, mods } = store.getState();
     const { mode } = songSelect;
+
+    if (mods.cmod < 100 || mods.cmod > 1000) {
+      mods.cmod = DEFAULT_CMOD;
+    }
 
     const { beatTick, timeTick } = this.globalParams;
 

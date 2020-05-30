@@ -80,7 +80,7 @@ class Arrow {
 
       destX = directionIdx * ARROW_WIDTH;
 
-      if (cmod) {
+      if (speed === "cmod") {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
       } else {
         destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
@@ -93,7 +93,7 @@ class Arrow {
       let arrowBodyImg = arrowImages[`freeze_body_inactive`];
 
       let totalBodyHeight;
-      if (cmod) {
+      if (speed === "cmod") {
         totalBodyHeight =
           this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60) -
           ARROW_HEIGHT / 2;
@@ -198,7 +198,7 @@ class Arrow {
       let actualDestY = destY;
 
       let bodyDistance;
-      if (cmod) {
+      if (speed === "cmod") {
         bodyDistance =
           this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60);
       } else {
@@ -367,7 +367,7 @@ class Arrow {
       }
 
       destX = directionIdx * ARROW_WIDTH;
-      if (cmod) {
+      if (speed === "cmod") {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
       } else {
         destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
@@ -399,7 +399,7 @@ class Arrow {
       frameY = 0;
 
       destX = directionIdx * ARROW_WIDTH;
-      if (cmod) {
+      if (speed === "cmod") {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
       } else {
         destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;

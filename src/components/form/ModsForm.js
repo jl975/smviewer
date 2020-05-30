@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Radio, Checkbox } from "semantic-ui-react";
+import { Radio, Checkbox, Input } from "semantic-ui-react";
 
 import { options } from "./options";
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
+import { SP_DIFFICULTIES, DEFAULT_CMOD } from "../../constants";
 import { capitalize } from "../../utils";
 import { updateMods } from "../../actions/ModsActions";
 
@@ -20,7 +20,16 @@ const ModsForm = (props) => {
 
   const getEffectiveScrollSpeed = () => {
     if (!song) return null;
-    let displayBpm = song.displayBpm;
+
+    let displayBpm;
+    if (mods.speed === "cmod") {
+      if (mods.cmod < 100 || mods.cmod > 1000) {
+        displayBpm = DEFAULT_CMOD;
+      } else displayBpm = mods.cmod;
+      return <strong>{displayBpm}</strong>;
+    }
+
+    displayBpm = song.displayBpm;
     if (displayBpm.includes(",")) {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty);
       if (mode === "double") difficultyIdx += 4;
@@ -36,6 +45,17 @@ const ModsForm = (props) => {
           highBpm * mods.speed
         )}`}</strong>
       );
+    }
+  };
+
+  const resetCmodIfInvalid = (e) => {
+    const fieldValue = e.target.value;
+    if (
+      !fieldValue ||
+      parseInt(fieldValue) < 100 ||
+      parseInt(fieldValue) > 1000
+    ) {
+      updateMods({ cmod: DEFAULT_CMOD });
     }
   };
 
@@ -69,6 +89,27 @@ const ModsForm = (props) => {
                 />
               );
             })}
+            <div>
+              <Radio
+                key="speed_cmod"
+                label="Cmod"
+                name="speed"
+                value="cmod"
+                checked={mods.speed === "cmod"}
+                onChange={() => updateMods({ speed: "cmod" })}
+              />
+              <Input
+                type="number"
+                disabled={mods.speed !== "cmod"}
+                min={100}
+                max={1000}
+                name="cmod"
+                value={mods.cmod}
+                onChange={(e, data) => updateMods({ cmod: data.value })}
+                onBlur={resetCmodIfInvalid}
+              />
+            </div>
+            <small>(Valid range: 100-1000; default: {DEFAULT_CMOD})</small>
           </div>
 
           <div className="form-field">

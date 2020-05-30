@@ -1,4 +1,5 @@
 import { presetParams } from "../../utils";
+import { DEFAULT_CMOD } from "../../constants";
 import { getUserSettings } from "../../utils/userSettings";
 
 export const options = {
@@ -48,7 +49,7 @@ const optionDefaultValues = {
   mode: "single",
   mods: {
     speed: 2.5,
-    cmod: 600,
+    cmod: DEFAULT_CMOD,
     appearance: "visible",
     laneCoverHeight: [8, 8, 8],
     laneCoverVisible: true,

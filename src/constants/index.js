@@ -26,6 +26,9 @@ export const MARVELOUS_FLASH_FRAMES = 12;
 /* Number of beats played after the last note or event until the timeline ends */
 export const END_EXTRA_BEATS = 8;
 
+/* Default cmod value; also serves as fallback speed if cmod form field value is invalid */
+export const DEFAULT_CMOD = 550;
+
 export const DDR_VERSIONS = [
   "DDR 1st",
   "DDR 2ndMIX",

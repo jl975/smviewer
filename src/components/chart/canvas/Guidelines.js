@@ -8,10 +8,13 @@ class Guidelines {
 
   render(canvas, { beatTick, timeTick }, attrs) {
     const { mods } = attrs;
-    const { speed, scroll } = mods;
+    const { speed, scroll, cmod } = mods;
 
     const showGuidelines = mods.guidelines;
     if (!showGuidelines) return;
+
+    // FIXME: do an actual spacing calculation for cmod
+    if (speed === "cmod") return;
 
     const c = canvas.getContext("2d");
     c.strokeStyle = "#fff";

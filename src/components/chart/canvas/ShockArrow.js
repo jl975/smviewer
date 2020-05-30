@@ -17,19 +17,21 @@ class ShockArrow {
     this.key = key;
     this.note = attrs.note;
 
-    // this.currentBeatPosition = attrs.currentBeatPosition;
     this.originalBeatPosition = attrs.originalBeatPosition;
   }
 
   currentBeatPosition(beatTick) {
     return this.originalBeatPosition - beatTick;
   }
+  currentTimePosition(timeTick) {
+    return this.timestamp - timeTick;
+  }
 
   render(canvas, frame, { beatTick, timeTick }, attrs) {
     const c = canvas.getContext("2d");
 
     const { mods } = attrs;
-    const { speed, scroll, appearance } = mods;
+    const { speed, cmod, scroll, appearance } = mods;
 
     if (appearance === "stealth") return;
 
@@ -44,7 +46,12 @@ class ShockArrow {
       const frameX = (frame % 4) * ARROW_WIDTH;
       const frameY = Math.floor(frame / 4) * ARROW_HEIGHT;
       const destX = i * ARROW_WIDTH;
-      const destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      let destY;
+      if (speed === "cmod") {
+        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+      } else {
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      }
 
       if (destY > topBoundary && destY < bottomBoundary) {
         c.drawImage(
