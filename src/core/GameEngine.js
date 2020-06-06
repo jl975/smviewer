@@ -120,6 +120,8 @@ class GameEngine {
     if (simfile) {
       debugSimfileChart(simfile);
 
+      this.globalParams.offset = simfile.offset;
+
       this.generateEventList(simfile);
       this.generateArrows(simfile, mods);
       this.generateTimestamps();
@@ -297,9 +299,6 @@ class GameEngine {
       this.globalParams.lastEntity = lastEvent;
     }
     this.globalParams.finalBeat += END_EXTRA_BEATS;
-
-    // // hack to implement global offset of -12 ms
-    // this.tl = this.tl.to({}, { duration: 0 }, GLOBAL_OFFSET);
 
     // note events (combo, assist tick, target flash)
     // console.log("eventList", this.eventList);

@@ -19,6 +19,7 @@ const parseSimfile = (sm, simfileType = "sm") => {
 
   let bpms = [];
   let stops = [];
+  let offset = 0;
 
   // default bpms
   if (/#BPMS:/i.test(chartMetadata)) {
@@ -40,8 +41,13 @@ const parseSimfile = (sm, simfileType = "sm") => {
       });
     }
   }
+  // offset
 
   let chartStrs;
+  if (/#OFFSET:/i.test(chartMetadata)) {
+    offset = /#OFFSET:([\s\S]*?)\s*;/i.exec(chartMetadata)[1];
+    offset = parseFloat(offset);
+  }
 
   if (simfileType === "ssc") {
     chartStrs = sm
@@ -63,7 +69,13 @@ const parseSimfile = (sm, simfileType = "sm") => {
     let smDifficulty = difficultyRegex.exec(chartStr)[1];
     const difficulty = difficultyMap[smDifficulty];
 
-    simfiles[`${mode}_${difficulty}`] = { difficulty, mode, bpms, stops };
+    simfiles[`${mode}_${difficulty}`] = {
+      difficulty,
+      mode,
+      bpms,
+      stops,
+      offset,
+    };
     const simfile = simfiles[`${mode}_${difficulty}`];
 
     let level;

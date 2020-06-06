@@ -212,7 +212,9 @@ class AudioPlayer {
         //   "frames"
         // );
         // console.log("stabilized to", currentTime);
-        currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
+        currentSong.tl.seek(
+          currentTime + GLOBAL_OFFSET + currentSong.globalParams.offset
+        );
         this.updateProgressOnce();
 
         if (this.getChartAudioStatus() === "playing") {
@@ -281,7 +283,9 @@ class AudioPlayer {
         currentTime
       );
       if (typeof currentTime === "number") {
-        currentSong.tl.seek(currentTime + GLOBAL_OFFSET);
+        currentSong.tl.seek(
+          currentTime + GLOBAL_OFFSET + currentSong.globalParams.offset
+        );
       } else {
         console.log("audio unstable after frame skip, resyncing");
         this.resync();
