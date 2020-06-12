@@ -1,4 +1,4 @@
-import { GLOBAL_OFFSET } from "../constants";
+import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "./debugUtils";
 
 export const applyTurnMods = (chart, mods, mode) => {
@@ -88,7 +88,7 @@ export const getCurrentCombo = (song) => {
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < arrows.length; i++) {
     const arrow = arrows[i];
-    if (arrow.combo && arrow.timestamp > currentTime + GLOBAL_OFFSET) {
+    if (arrow.combo && arrow.timestamp > currentTime + DEFAULT_OFFSET) {
       currentCombo = arrow.combo - 1;
       // console.log(currentCombo);
       return currentCombo;

@@ -290,6 +290,21 @@ const ModsForm = (props) => {
               onChange={() => updateMods({ colorFreezes: !mods.colorFreezes })}
             />
           </div>
+          <div className="form-field">
+            <h4 className="form-label">Global offset</h4>
+            <Input
+              type="range"
+              name="globalOffset"
+              min="-0.20"
+              max="0.20"
+              step="0.01"
+              value={mods.globalOffset}
+              onChange={(_, data) =>
+                updateMods({ globalOffset: parseFloat(data.value) })
+              }
+            />
+            <span>{mods.globalOffset}</span>
+          </div>
         </form>
       </div>
     </div>

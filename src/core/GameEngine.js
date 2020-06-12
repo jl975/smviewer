@@ -114,6 +114,9 @@ class GameEngine {
     this.globalParams.targetFlashes = {};
     AudioPlayer.setGlobalParams(this.globalParams);
 
+    // debugging
+    window.globalParams = this.globalParams;
+
     // recreate the chart with the new given parameters
     // then immediately seek to where the chart's progress was before it was recreated
     const simfile = this.simfiles[`${mode}_${difficulty}`];

@@ -1,5 +1,5 @@
 import { presetParams } from "../../utils";
-import { DEFAULT_CMOD } from "../../constants";
+import { DEFAULT_CMOD, DEFAULT_OFFSET } from "../../constants";
 import { getUserSettings } from "../../utils/userSettings";
 
 export const options = {
@@ -62,6 +62,7 @@ const optionDefaultValues = {
     comboDisplay: "behind",
     comboFont: "A20",
     colorFreezes: false,
+    globalOffset: DEFAULT_OFFSET,
   },
 };
 

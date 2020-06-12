@@ -12,7 +12,7 @@ import {
   getCurrentCombo,
   getFullCombo,
 } from "../utils/engineUtils";
-import { GLOBAL_OFFSET } from "../constants";
+import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "../utils/debugUtils";
 
 class AudioPlayer {
@@ -34,7 +34,6 @@ class AudioPlayer {
       },
     }; // map of song hash to associated Howl object
 
-    window.sources = this.sources;
     this.currentSong = null; // hash of current song
     this.currentPreview = null; // hash of current preview
 
@@ -126,8 +125,8 @@ class AudioPlayer {
         html5: true,
         sprite: {
           sample: [
-            parseFloat((song.sampleStart - GLOBAL_OFFSET) * 1000),
-            parseFloat((song.sampleLength - GLOBAL_OFFSET) * 1000),
+            parseFloat((song.sampleStart - DEFAULT_OFFSET) * 1000),
+            parseFloat((song.sampleLength - DEFAULT_OFFSET) * 1000),
           ],
         },
         onload: () => {
@@ -212,8 +211,12 @@ class AudioPlayer {
         //   "frames"
         // );
         // console.log("stabilized to", currentTime);
+
+        const globalOffset = store.getState().mods.globalOffset;
+
         currentSong.tl.seek(
-          currentTime + GLOBAL_OFFSET + currentSong.globalParams.offset
+          // currentTime + DEFAULT_OFFSET + currentSong.globalParams.offset
+          currentTime + globalOffset + currentSong.globalParams.offset
         );
         this.updateProgressOnce();
 
@@ -283,8 +286,10 @@ class AudioPlayer {
         currentTime
       );
       if (typeof currentTime === "number") {
+        const globalOffset = store.getState().mods.globalOffset;
+
         currentSong.tl.seek(
-          currentTime + GLOBAL_OFFSET + currentSong.globalParams.offset
+          currentTime + globalOffset + currentSong.globalParams.offset
         );
       } else {
         console.log("audio unstable after frame skip, resyncing");
