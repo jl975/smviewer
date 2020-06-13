@@ -412,24 +412,38 @@ class GameEngine {
         if (arrow.note[i] !== "3") continue;
 
         // Find the most recent freeze head on the same direction as the tail
-        // and retroactively fill in the length of the hold in beats
-        for (let j = arrow.key - 1; j >= 0; j--) {
-          if (this.allArrows[j].note[i] === "2") {
-            if (!this.allArrows[j].holdBeats) {
-              this.allArrows[j].holdBeats = [];
-              this.allArrows[j].holdTimes = [];
-            }
-            if (!arrow.holdBeats) {
-              arrow.holdBeats = [];
-              arrow.holdTimes = [];
-            }
-            this.allArrows[j].holdBeats[i] =
-              arrow.beatstamp - this.allArrows[j].beatstamp;
-            this.allArrows[j].holdTimes[i] =
-              arrow.timestamp - this.allArrows[j].timestamp;
+        // and retroactively fill in the beats of the head and tail
+        // Also apply this to every regular note that occurs during the freeze
 
-            arrow.holdBeats[i] = arrow.beatstamp - this.allArrows[j].beatstamp;
-            arrow.holdTimes[i] = arrow.timestamp - this.allArrows[j].timestamp;
+        const arrowsDuringFreeze = [];
+
+        for (let j = arrow.key - 1; j >= 0; j--) {
+          if (!this.allArrows[j].holdStartBeats) {
+            this.allArrows[j].holdStartBeats = [];
+            this.allArrows[j].holdEndBeats = [];
+            this.allArrows[j].holdStartTimes = [];
+            this.allArrows[j].holdEndTimes = [];
+          }
+          arrowsDuringFreeze.push(this.allArrows[j]);
+
+          if (this.allArrows[j].note[i] === "2") {
+            const freezeHead = this.allArrows[j];
+            const freezeTail = arrow;
+
+            if (!freezeTail.holdStartBeats) {
+              freezeTail.holdStartBeats = [];
+              freezeTail.holdEndBeats = [];
+              freezeTail.holdStartTimes = [];
+              freezeTail.holdEndTimes = [];
+            }
+            arrowsDuringFreeze.push(freezeTail);
+
+            arrowsDuringFreeze.forEach((arrowDuringFreeze) => {
+              arrowDuringFreeze.holdStartBeats[i] = freezeHead.beatstamp;
+              arrowDuringFreeze.holdEndBeats[i] = freezeTail.beatstamp;
+              arrowDuringFreeze.holdStartTimes[i] = freezeHead.timestamp;
+              arrowDuringFreeze.holdEndTimes[i] = freezeTail.timestamp;
+            });
             break;
           }
         }
