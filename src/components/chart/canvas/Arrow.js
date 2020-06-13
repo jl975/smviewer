@@ -46,12 +46,12 @@ class Arrow {
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
 
-    this.originalBeatPosition = attrs.originalBeatPosition;
+    this.beatstamp = attrs.beatstamp;
     this.holdBeats = attrs.holdBeats || null;
   }
 
   currentBeatPosition(beatTick) {
-    return this.originalBeatPosition - beatTick;
+    return this.beatstamp - beatTick;
   }
   currentTimePosition(timeTick) {
     return this.timestamp - timeTick;

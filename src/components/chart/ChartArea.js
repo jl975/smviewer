@@ -154,6 +154,10 @@ const ChartArea = (props) => {
         }
       }
     });
+
+    if (gameEngine) {
+      gameEngine.updateExternalGlobalParams({ mods });
+    }
   }, [canvas, sm, selectedDifficulty, selectedMode, mods]);
 
   const shareParams = {

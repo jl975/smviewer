@@ -8,7 +8,11 @@ import TargetFlash from "../components/chart/canvas/TargetFlash";
 import ComboDisplay from "../components/chart/canvas/ComboDisplay";
 import LaneCover from "../components/chart/canvas/LaneCover";
 import parseSimfile from "../utils/parseSimfile";
-import { applyTurnMods } from "../utils/engineUtils";
+import {
+  applyTurnMods,
+  initializeBeatWindow,
+  updateBeatWindow,
+} from "../utils/engineUtils";
 import {
   END_EXTRA_BEATS,
   MARVELOUS_FLASH_FRAMES,
@@ -74,6 +78,11 @@ class GameEngine {
         The beat that the timeline ends on. Will be defined as the beat of the lastEntity
       */
       finalBeat: 0,
+
+      /*
+        Miscellaneous constant parameters for ease of access
+      */
+      chartAreaHeight: canvas.height,
     };
 
     AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
@@ -112,6 +121,7 @@ class GameEngine {
     this.globalParams.bpmChangeQueue = [];
     this.globalParams.arrows = self.allArrows;
     this.globalParams.targetFlashes = {};
+    this.globalParams.mods = mods;
     AudioPlayer.setGlobalParams(this.globalParams);
 
     // debugging
@@ -147,6 +157,13 @@ class GameEngine {
   }
   updateLoopOnce() {
     window.requestAnimationFrame(this.mainLoop.bind(this, false));
+  }
+
+  updateExternalGlobalParams(params) {
+    for (let param in params) {
+      this.globalParams[param] = params[param];
+    }
+    initializeBeatWindow(this.globalParams);
   }
 
   // bpm changes and stops converted to timestamps
@@ -249,7 +266,7 @@ class GameEngine {
     chart.forEach((note, key) => {
       // calculate starting position currentBeatPosition
       const { measureIdx, measureN, measureD } = note;
-      note.originalBeatPosition = (measureIdx + measureN / measureD) * 4;
+      note.beatstamp = (measureIdx + measureN / measureD) * 4;
     });
 
     // generate arrays of arrows by category
@@ -285,7 +302,7 @@ class GameEngine {
     const lastEvent = this.eventList[this.eventList.length - 1];
 
     if (lastArrow && lastEvent) {
-      const lastArrowBeat = lastArrow.originalBeatPosition;
+      const lastArrowBeat = lastArrow.beatstamp;
       const lastEventBeat = lastEvent.beat;
       if (lastEventBeat > lastArrowBeat) {
         this.globalParams.finalBeat = lastEventBeat;
@@ -295,7 +312,7 @@ class GameEngine {
         this.globalParams.lastEntity = lastArrow;
       }
     } else if (lastArrow) {
-      this.globalParams.finalBeat = lastArrow.originalBeatPosition;
+      this.globalParams.finalBeat = lastArrow.beatstamp;
       this.globalParams.lastEntity = lastArrow;
     } else if (lastEvent) {
       this.globalParams.finalBeat = lastEvent.beat;
@@ -322,7 +339,7 @@ class GameEngine {
       // Find the latest bpm section that starts before this note
       while (
         currentBpmPtr < bpmChangeQueue.length - 1 &&
-        bpmChangeQueue[currentBpmPtr + 1].beat < arrow.originalBeatPosition
+        bpmChangeQueue[currentBpmPtr + 1].beat < arrow.beatstamp
       ) {
         // if this block was entered, a new bpm section was entered
         currentBpmPtr++;
@@ -353,7 +370,7 @@ class GameEngine {
       // Accumulate total time of any stops that exist in this bpm section before this note.
       // Keep track of the next pending stop so it can be added to the total stop time as soon as
       // the first arrow following it is reached
-      while (pendingStop && pendingStop.beat < arrow.originalBeatPosition) {
+      while (pendingStop && pendingStop.beat < arrow.beatstamp) {
         currentStopOffset += pendingStop.value;
         const nextEvent = this.eventList[pendingStopPtr + 1];
         if (nextEvent && nextEvent.type === "stop") {
@@ -367,7 +384,7 @@ class GameEngine {
       const bpmSectionStartBeat = bpmChangeQueue[currentBpmPtr].beat;
       const bpmSectionStartTime = bpmChangeQueue[currentBpmPtr].timestamp;
 
-      const beatDiff = arrow.originalBeatPosition - bpmSectionStartBeat;
+      const beatDiff = arrow.beatstamp - bpmSectionStartBeat;
       const timeDiff = beatDiff * (60 / currentBpm);
       const arrowTimestamp = bpmSectionStartTime + timeDiff + currentStopOffset;
       arrow.timestamp = arrowTimestamp;
@@ -407,14 +424,11 @@ class GameEngine {
               arrow.holdTimes = [];
             }
             this.allArrows[j].holdBeats[i] =
-              arrow.originalBeatPosition -
-              this.allArrows[j].originalBeatPosition;
+              arrow.beatstamp - this.allArrows[j].beatstamp;
             this.allArrows[j].holdTimes[i] =
               arrow.timestamp - this.allArrows[j].timestamp;
 
-            arrow.holdBeats[i] =
-              arrow.originalBeatPosition -
-              this.allArrows[j].originalBeatPosition;
+            arrow.holdBeats[i] = arrow.beatstamp - this.allArrows[j].beatstamp;
             arrow.holdTimes[i] = arrow.timestamp - this.allArrows[j].timestamp;
             break;
           }
@@ -444,7 +458,7 @@ class GameEngine {
                 // AudioPlayer.playAssistTick();
                 // console.log(arrow);
                 this.globalParams.targetFlashes[
-                  arrow.originalBeatPosition
+                  arrow.beatstamp
                 ] = new TargetFlash(arrow);
               }
             },
@@ -460,7 +474,7 @@ class GameEngine {
           {
             onStart: () => {
               this.globalParams.targetFlashes[
-                arrow.originalBeatPosition
+                arrow.beatstamp
               ] = new TargetFlash(arrow);
             },
           },
@@ -610,6 +624,8 @@ class GameEngine {
       });
     }
 
+    updateBeatWindow(this.globalParams);
+
     /* Arrows */
     t0 = performance.now();
     for (let i = this.shockArrows.length - 1; i >= 0; i--) {
@@ -711,11 +727,11 @@ class GameEngine {
 
     /* Target flashes */
     t0 = performance.now();
-    for (let beatStamp in this.globalParams.targetFlashes) {
-      const targetFlash = this.globalParams.targetFlashes[beatStamp];
+    for (let beatstamp in this.globalParams.targetFlashes) {
+      const targetFlash = this.globalParams.targetFlashes[beatstamp];
       targetFlash.frame++;
       if (targetFlash.frame > MARVELOUS_FLASH_FRAMES) {
-        delete this.globalParams.targetFlashes[beatStamp];
+        delete this.globalParams.targetFlashes[beatstamp];
       } else {
         targetFlash.render(this.canvas, { mods });
       }

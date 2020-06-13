@@ -1,4 +1,4 @@
-import { DEFAULT_OFFSET } from "../constants";
+import { DEFAULT_OFFSET, ARROW_HEIGHT } from "../constants";
 import { debugLog } from "./debugUtils";
 
 export const applyTurnMods = (chart, mods, mode) => {
@@ -128,4 +128,228 @@ export const getFullCombo = (song) => {
 */
 export const getReverseCoord = (originalCoord, height, canvas) => {
   return canvas.height - (originalCoord + height);
+};
+
+/*
+  Based on the current beat tick, calculates the index of the first
+  arrow to fall within the visible beat window
+*/
+export const initializeBeatWindow = (globalParams) => {
+  const { beatTick, arrows, chartAreaHeight, mods } = globalParams;
+
+  // calculate number of beats (on 1x scroll) covered by the visible chart area
+  // = number of arrow heights that can fit on screen + 1 extra arrow height on top and bottom
+  // then divided by the scroll speed mod
+  // let numVisibleBeats = (chartAreaHeight + ARROW_HEIGHT) / ARROW_HEIGHT;
+  let numVisibleBeats = chartAreaHeight / ARROW_HEIGHT;
+  numVisibleBeats /= mods.speed;
+
+  const beatWindowStart = beatTick; // FIXME: later change this to 1 arrow height before the beat tick
+  const beatWindowEnd = beatWindowStart + numVisibleBeats;
+
+  let beatWindowStartPtr, beatWindowEndPtr;
+
+  // set ptr to -1 if there is no corresponding arrow on screen
+
+  // if no more arrows left
+  if (arrows[arrows.length - 1].beatstamp < beatWindowStart) {
+    beatWindowStartPtr = arrows.length;
+  }
+
+  // before the first arrow shows up
+  else if (!arrows.length || arrows[0].beatstamp > beatWindowEnd) {
+    beatWindowStartPtr = -1;
+  }
+  // when the first arrow is on screen
+  else if (
+    arrows[0].beatstamp <= beatWindowEnd &&
+    arrows[0].beatstamp > beatWindowStart
+  ) {
+    beatWindowStartPtr = 0;
+  }
+  // if at least one arrow has passed
+  // binary search would be ideal. for now, just use an ordinary O(n) search
+  else {
+    for (let i = 1; i < arrows.length; i++) {
+      const previousArrow = arrows[i - 1];
+      const currentArrow = arrows[i];
+
+      // return the index of the first arrow that lies on or after the current beat tick
+      if (
+        previousArrow.beatstamp < beatWindowStart &&
+        currentArrow.beatstamp >= beatWindowStart
+      ) {
+        beatWindowStartPtr = i;
+        break;
+      }
+    }
+  }
+
+  // repeat for end pointer
+
+  // if no more arrows left
+  if (arrows[arrows.length - 1].beatstamp < beatWindowStart) {
+    beatWindowEndPtr = arrows.length;
+  }
+
+  // before the first arrow shows up
+  else if (!arrows.length || arrows[0].beatstamp > beatWindowEnd) {
+    beatWindowEndPtr = -1;
+  }
+
+  // if only the first arrow is on screen
+  else if (
+    arrows[0].beatstamp <= beatWindowEnd &&
+    (!arrows[1] || arrows[1].beatstamp > beatWindowEnd)
+  ) {
+    beatWindowEndPtr = 0;
+  }
+
+  // if at least one arrow has passed
+  else {
+    for (let j = beatWindowStartPtr; j < arrows.length; j++) {
+      const currentArrow = arrows[j];
+      const nextArrow = arrows[j + 1];
+
+      console.log(
+        "currentArrow",
+        currentArrow,
+        "nextArrow",
+        nextArrow,
+        "beatWindowEnd",
+        beatWindowEnd
+      );
+
+      // if there are no arrows on screen and the next "top arrow" is pointing to an arrow
+      // that has yet to appear, point the next "bottom arrow" to the arrow BEFORE the top arrow.
+      // This replicates the way the pointers naturally update when the screen reaches a section
+      // with no visible arrows, essentially meaning there are no arrows to iterate over and render
+      if (currentArrow.beatstamp > beatWindowEnd) {
+        beatWindowEndPtr = j - 1;
+        break;
+      }
+
+      if (
+        !nextArrow ||
+        (currentArrow.beatstamp <= beatWindowEnd &&
+          nextArrow.beatstamp > beatWindowEnd)
+      ) {
+        if (j === arrows.length - 1) {
+          console.log(
+            "did it",
+            j,
+            `for beatWindowStart ${beatWindowStart}, beatWindowEnd ${beatWindowEnd}, beatWindwoStartPtr ${beatWindowStartPtr}, beatWindowEndPtr ${beatWindowEndPtr}`
+          );
+        }
+        beatWindowEndPtr = j;
+        break;
+      }
+    }
+  }
+
+  const currentBeatWindow = [beatWindowStart, beatWindowEnd];
+
+  globalParams.beatWindowStartPtr = beatWindowStartPtr;
+  globalParams.beatWindowEndPtr = beatWindowEndPtr;
+  globalParams.currentBeatWindow = currentBeatWindow;
+
+  // console.log("initialize beat window", currentBeatWindow);
+};
+
+/*
+  Assuming the beat pointer is already defined, invoke this method on every subsequent
+  frame to incrementally update the window values and determine if the pointer needs
+  to be shifted
+*/
+export const updateBeatWindow = (globalParams) => {
+  const {
+    beatTick,
+    arrows,
+    chartAreaHeight,
+    mods,
+    beatWindowStartPtr,
+    beatWindowEndPtr,
+  } = globalParams;
+
+  if (
+    typeof globalParams.beatWindowStartPtr === "undefined" ||
+    typeof globalParams.beatWindowEndPtr === "undefined"
+  )
+    return;
+
+  // calculate number of beats (on 1x scroll) covered by the visible chart area
+  // = number of arrow heights that can fit on screen + 1 extra arrow height on top and bottom
+  // then divided by the scroll speed mod
+  let numVisibleBeats = (chartAreaHeight + ARROW_HEIGHT) / ARROW_HEIGHT;
+  numVisibleBeats /= mods.speed;
+
+  const beatWindowStart = beatTick; // FIXME: later change this to 1 arrow height before the beat tick
+  const beatWindowEnd = beatTick + numVisibleBeats;
+  const currentBeatWindow = [beatWindowStart, beatWindowEnd];
+  globalParams.currentBeatWindow = currentBeatWindow;
+
+  // short-circuit if chart is over
+  if (beatWindowStartPtr === arrows.length) return;
+
+  // if chart is just beginning, watch for the first arrow
+  if (beatWindowStartPtr === -1) {
+    // if the first arrow has finally appeared, set both ptrs and short-circuit
+    if (arrows[0].beatstamp <= beatWindowEnd) {
+      globalParams.beatWindowStartPtr = 0;
+      globalParams.beatWindowEndPtr = 0;
+      console.log("updated ptrs", [
+        globalParams.beatWindowStartPtr,
+        globalParams.beatWindowEndPtr,
+      ]);
+    }
+    return;
+  }
+
+  // if there are arrows on the screen, and the topmost arrow from the previous frame is
+  // now behind the updated beatWindowStart
+  const topmostArrow = arrows[beatWindowStartPtr];
+
+  let nextTopmostArrow = topmostArrow;
+
+  // topmost arrow is no longer the topmost arrow when it is behind beatWindowStart
+  while (nextTopmostArrow.beatstamp < beatWindowStart) {
+    globalParams.beatWindowStartPtr++;
+
+    console.log("updated ptrs", [
+      globalParams.beatWindowStartPtr,
+      globalParams.beatWindowEndPtr,
+    ]);
+
+    // no more arrows left
+    if (globalParams.beatWindowStartPtr >= arrows.length) {
+      globalParams.beatWindowEndPtr++;
+      console.log("reached end of chart");
+      return;
+    }
+
+    nextTopmostArrow = arrows[globalParams.beatWindowStartPtr];
+  }
+
+  // if there are arrows on the screen, and the arrow AFTER the bottommost arrow from the previous
+  // frame is now behind the updated beatWindowEnd
+  const bottommostArrow = arrows[beatWindowEndPtr];
+
+  let nextBottommostArrow = bottommostArrow;
+  let nextBottommostArrowAdj = arrows[beatWindowEndPtr + 1];
+
+  // bottommost arrow is no longer bottommost arrow when the next arrow is behind beatWindowEnd
+  while (
+    nextBottommostArrowAdj &&
+    nextBottommostArrowAdj.beatstamp <= beatWindowEnd
+  ) {
+    globalParams.beatWindowEndPtr++;
+    nextBottommostArrow = arrows[globalParams.beatWindowEndPtr];
+    nextBottommostArrowAdj = arrows[globalParams.beatWindowEndPtr + 1];
+    console.log("updated ptrs", [
+      globalParams.beatWindowStartPtr,
+      globalParams.beatWindowEndPtr,
+    ]);
+  }
+
+  console.log([globalParams.beatWindowStartPtr, globalParams.beatWindowEndPtr]);
 };

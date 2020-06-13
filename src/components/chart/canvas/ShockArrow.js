@@ -17,11 +17,11 @@ class ShockArrow {
     this.key = key;
     this.note = attrs.note;
 
-    this.originalBeatPosition = attrs.originalBeatPosition;
+    this.beatstamp = attrs.beatstamp;
   }
 
   currentBeatPosition(beatTick) {
-    return this.originalBeatPosition - beatTick;
+    return this.beatstamp - beatTick;
   }
   currentTimePosition(timeTick) {
     return this.timestamp - timeTick;

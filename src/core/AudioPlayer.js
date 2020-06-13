@@ -11,6 +11,7 @@ import {
   getCurrentBpm,
   getCurrentCombo,
   getFullCombo,
+  initializeBeatWindow,
 } from "../utils/engineUtils";
 import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "../utils/debugUtils";
@@ -339,6 +340,8 @@ class AudioPlayer {
     debugLog(`FC: ${getFullCombo(currentSong)}`);
 
     currentSong.globalParams.combo = currentCombo;
+
+    initializeBeatWindow(currentSong.globalParams);
 
     this.updateAnimationLoopOnce();
   }
