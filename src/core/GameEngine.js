@@ -35,6 +35,7 @@ class GameEngine {
     this.eventList = [];
     this.arrows = [];
     this.shockArrows = [];
+    this.freezes = [];
     this.allArrows = [];
 
     this.mainLoopRequestRef = null;
@@ -119,7 +120,14 @@ class GameEngine {
     this.globalParams.frame = 0;
     this.globalParams.combo = 0;
     this.globalParams.bpmChangeQueue = [];
-    this.globalParams.arrows = self.allArrows;
+    // this.globalParams.arrows = self.allArrows;
+    this.globalParams.arrows = this.arrows;
+    this.globalParams.freezes = this.freezes;
+    this.globalParams.shockArrows = this.shockArrows;
+
+    this.globalParams.beatWindowStartPtr = {};
+    this.globalParams.beatWindowEndPtr = {};
+
     this.globalParams.targetFlashes = {};
     this.globalParams.mods = mods;
     AudioPlayer.setGlobalParams(this.globalParams);
@@ -284,6 +292,10 @@ class GameEngine {
         const arrow = new Arrow({ key, ...note });
         this.arrows.push(arrow);
         this.allArrows.push(arrow);
+
+        if (note.note.includes("2") || note.note.includes("3")) {
+          this.freezes.push(arrow);
+        }
       }
     });
 
@@ -641,87 +653,151 @@ class GameEngine {
     updateBeatWindow(this.globalParams);
 
     /* Arrows */
-    t0 = performance.now();
-    for (let i = this.shockArrows.length - 1; i >= 0; i--) {
-      const shockArrow = this.shockArrows[i];
-      shockArrow.render(
-        this.canvas,
-        this.globalParams.frame,
-        { beatTick, timeTick },
-        { mods }
-      );
-    }
-    t1 = performance.now();
-    // console.log(`shockArrow.render: ${(t1 - t0).toFixed(3)} ms`);
-
-    // render arrows in the opposite order so the earlier arrows are layered over the later ones
-    // Up arrow is the exception: later arrows are layered over the earlier ones
 
     const upArrows = mode === "double" ? [2, 6] : [2];
     const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
 
-    // draw freeze bodies first because they need to be at the bottom layer
-    t0 = performance.now();
-    for (let i = this.arrows.length - 1; i >= 0; i--) {
-      const arrow = this.arrows[i];
+    const { beatWindowStartPtr, beatWindowEndPtr } = this.globalParams;
+    // console.log(`GameEngine`, [
+    //   beatWindowStartPtr.arrow,
+    //   beatWindowEndPtr.arrow,
+    // ]);
+
+    for (let i = beatWindowEndPtr.freeze; i >= beatWindowStartPtr.freeze; i--) {
+      const freeze = this.globalParams.freezes[i];
       notUpArrows.forEach((directionIdx) => {
-        arrow.renderFreezeBody(
+        freeze.renderFreezeBody(
           this.canvas,
           { beatTick, timeTick },
           directionIdx,
-          {
-            mods,
-          }
+          { mods }
         );
       });
     }
-    t1 = performance.now();
-    let renderFreezeBodyPerf = parseFloat((t1 - t0).toFixed(3));
-
-    t0 = performance.now();
-    for (let i = 0; i < this.arrows.length; i++) {
-      const arrow = this.arrows[i];
+    for (let i = beatWindowStartPtr.freeze; i <= beatWindowEndPtr.freeze; i++) {
+      const freeze = this.globalParams.freezes[i];
       upArrows.forEach((directionIdx) => {
-        arrow.renderFreezeBody(
+        freeze.renderFreezeBody(
           this.canvas,
           { beatTick, timeTick },
           directionIdx,
-          {
-            mods,
-          }
+          { mods }
         );
       });
     }
-    t1 = performance.now();
-    renderFreezeBodyPerf += parseFloat((t1 - t0).toFixed(3));
-    // console.log(`arrows renderFreezeBody: ${(t1 - t0).toFixed(3)} ms`);
 
-    // then draw the arrow heads over the freeze bodies
-    t0 = performance.now();
-    for (let i = this.arrows.length - 1; i >= 0; i--) {
-      const arrow = this.arrows[i];
+    for (let i = beatWindowEndPtr.arrow; i >= beatWindowStartPtr.arrow; i--) {
+      const arrow = this.globalParams.arrows[i];
       notUpArrows.forEach((directionIdx) => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
           mods,
         });
       });
     }
-    t1 = performance.now();
-    let renderArrowPerf = parseFloat((t1 - t0).toFixed(3));
 
-    t0 = performance.now();
-    for (let i = 0; i < this.arrows.length; i++) {
-      const arrow = this.arrows[i];
+    // t0 = performance.now();
+    for (let i = beatWindowStartPtr.arrow; i <= beatWindowEndPtr.arrow; i++) {
+      const arrow = this.globalParams.arrows[i];
       upArrows.forEach((directionIdx) => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
           mods,
         });
       });
     }
-    t1 = performance.now();
-    renderArrowPerf += parseFloat((t1 - t0).toFixed(3));
+    // t1 = performance.now();
+
     // console.log(`arrows renderArrow: ${(t1 - t0).toFixed(3)} ms`);
-    /* End arrows */
+
+    //   const arrow = this.arrows[i];
+    //   notUpArrows.forEach((directionIdx) => {
+    //     arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
+    //       mods,
+    //     });
+    //   });
+    // }
+
+    // /* Arrows */
+    // t0 = performance.now();
+    // for (let i = this.shockArrows.length - 1; i >= 0; i--) {
+    //   const shockArrow = this.shockArrows[i];
+    //   shockArrow.render(
+    //     this.canvas,
+    //     this.globalParams.frame,
+    //     { beatTick, timeTick },
+    //     { mods }
+    //   );
+    // }
+    // t1 = performance.now();
+    // // console.log(`shockArrow.render: ${(t1 - t0).toFixed(3)} ms`);
+
+    // // render arrows in the opposite order so the earlier arrows are layered over the later ones
+    // // Up arrow is the exception: later arrows are layered over the earlier ones
+
+    // const upArrows = mode === "double" ? [2, 6] : [2];
+    // const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
+
+    // // draw freeze bodies first because they need to be at the bottom layer
+    // t0 = performance.now();
+    // for (let i = this.arrows.length - 1; i >= 0; i--) {
+    //   const arrow = this.arrows[i];
+    //   notUpArrows.forEach((directionIdx) => {
+    //     arrow.renderFreezeBody(
+    //       this.canvas,
+    //       { beatTick, timeTick },
+    //       directionIdx,
+    //       {
+    //         mods,
+    //       }
+    //     );
+    //   });
+    // }
+    // t1 = performance.now();
+    // let renderFreezeBodyPerf = parseFloat((t1 - t0).toFixed(3));
+
+    // t0 = performance.now();
+    // for (let i = 0; i < this.arrows.length; i++) {
+    //   const arrow = this.arrows[i];
+    //   upArrows.forEach((directionIdx) => {
+    //     arrow.renderFreezeBody(
+    //       this.canvas,
+    //       { beatTick, timeTick },
+    //       directionIdx,
+    //       {
+    //         mods,
+    //       }
+    //     );
+    //   });
+    // }
+    // t1 = performance.now();
+    // renderFreezeBodyPerf += parseFloat((t1 - t0).toFixed(3));
+    // // console.log(`arrows renderFreezeBody: ${(t1 - t0).toFixed(3)} ms`);
+
+    // // then draw the arrow heads over the freeze bodies
+    // t0 = performance.now();
+    // for (let i = this.arrows.length - 1; i >= 0; i--) {
+    //   const arrow = this.arrows[i];
+    //   notUpArrows.forEach((directionIdx) => {
+    //     arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
+    //       mods,
+    //     });
+    //   });
+    // }
+    // t1 = performance.now();
+    // let renderArrowPerf = parseFloat((t1 - t0).toFixed(3));
+
+    // t0 = performance.now();
+    // for (let i = 0; i < this.arrows.length; i++) {
+    //   const arrow = this.arrows[i];
+    //   upArrows.forEach((directionIdx) => {
+    //     arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
+    //       mods,
+    //     });
+    //   });
+    // }
+    // t1 = performance.now();
+    // renderArrowPerf += parseFloat((t1 - t0).toFixed(3));
+    // // console.log(`arrows renderArrow: ${(t1 - t0).toFixed(3)} ms`);
+    // /* End arrows */
 
     /* Combo display, if in front of arrows */
     if (mods.comboDisplay === "inFront") {

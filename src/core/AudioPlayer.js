@@ -230,7 +230,9 @@ class AudioPlayer {
         currentSong.tl.pause();
         this.audioReloadFrames++;
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
 
     // if (this.getCurrentSong().globalParams) return;
 
