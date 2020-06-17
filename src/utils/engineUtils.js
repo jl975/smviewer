@@ -139,7 +139,7 @@ export const initializeBeatWindow = (globalParams) => {
     beatTick,
     arrows,
     freezes,
-    shockArrows,
+    shocks,
     chartAreaHeight,
     mods,
   } = globalParams;
@@ -308,7 +308,7 @@ export const updateBeatWindow = (globalParams) => {
     beatTick,
     arrows,
     freezes,
-    shockArrows,
+    shocks,
     chartAreaHeight,
     mods,
     beatWindowStartPtr,

@@ -34,7 +34,7 @@ class GameEngine {
     this.tl = gsap.timeline();
     this.eventList = [];
     this.arrows = [];
-    this.shockArrows = [];
+    this.shocks = [];
     this.freezes = [];
     this.allArrows = [];
 
@@ -112,7 +112,7 @@ class GameEngine {
     // reinitialize all chart-specific values
     this.eventList.length = 0;
     this.arrows.length = 0;
-    this.shockArrows.length = 0;
+    this.shocks.length = 0;
     this.allArrows.length = 0;
 
     this.globalParams.beatTick = 0;
@@ -123,7 +123,7 @@ class GameEngine {
     // this.globalParams.arrows = self.allArrows;
     this.globalParams.arrows = this.arrows;
     this.globalParams.freezes = this.freezes;
-    this.globalParams.shockArrows = this.shockArrows;
+    this.globalParams.shocks = this.shocks;
 
     this.globalParams.beatWindowStartPtr = {};
     this.globalParams.beatWindowEndPtr = {};
@@ -281,7 +281,7 @@ class GameEngine {
     chart.forEach((note, key) => {
       if (note.note[0] === "M" || note.note[4] === "M") {
         const shockArrow = new ShockArrow({ key, ...note });
-        this.shockArrows.push(shockArrow);
+        this.shocks.push(shockArrow);
         this.allArrows.push(shockArrow);
       }
       if (
