@@ -128,6 +128,8 @@ class GameEngine {
 
     this.globalParams.beatWindowStartPtr = {};
     this.globalParams.beatWindowEndPtr = {};
+    this.globalParams.timeWindowStartPtr = {};
+    this.globalParams.timeWindowEndPtr = {};
 
     this.globalParams.targetFlashes = {};
     this.globalParams.mods = mods;
@@ -658,12 +660,20 @@ class GameEngine {
     const upArrows = mode === "double" ? [2, 6] : [2];
     const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
 
-    const { beatWindowStartPtr, beatWindowEndPtr } = this.globalParams;
+    let windowStartPtr, windowEndPtr;
+    if (mods.speed === "cmod") {
+      windowStartPtr = this.globalParams.timeWindowStartPtr;
+      windowEndPtr = this.globalParams.timeWindowEndPtr;
+    } else {
+      windowStartPtr = this.globalParams.beatWindowStartPtr;
+      windowEndPtr = this.globalParams.beatWindowEndPtr;
+    }
+
     // console.log(`GameEngine`, [
     //   beatWindowStartPtr.arrow,
     //   beatWindowEndPtr.arrow,
     // ]);
-    for (let i = beatWindowEndPtr.shock; i >= beatWindowStartPtr.shock; i--) {
+    for (let i = windowEndPtr.shock; i >= windowStartPtr.shock; i--) {
       const shockArrow = this.globalParams.shocks[i];
       shockArrow.render(
         this.canvas,
@@ -673,7 +683,7 @@ class GameEngine {
       );
     }
 
-    for (let i = beatWindowEndPtr.freeze; i >= beatWindowStartPtr.freeze; i--) {
+    for (let i = windowEndPtr.freeze; i >= windowStartPtr.freeze; i--) {
       const freeze = this.globalParams.freezes[i];
       notUpArrows.forEach((directionIdx) => {
         freeze.renderFreezeBody(
@@ -684,7 +694,7 @@ class GameEngine {
         );
       });
     }
-    for (let i = beatWindowStartPtr.freeze; i <= beatWindowEndPtr.freeze; i++) {
+    for (let i = windowStartPtr.freeze; i <= windowEndPtr.freeze; i++) {
       const freeze = this.globalParams.freezes[i];
       upArrows.forEach((directionIdx) => {
         freeze.renderFreezeBody(
@@ -696,7 +706,7 @@ class GameEngine {
       });
     }
 
-    for (let i = beatWindowEndPtr.arrow; i >= beatWindowStartPtr.arrow; i--) {
+    for (let i = windowEndPtr.arrow; i >= windowStartPtr.arrow; i--) {
       const arrow = this.globalParams.arrows[i];
       notUpArrows.forEach((directionIdx) => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
@@ -706,7 +716,7 @@ class GameEngine {
     }
 
     // t0 = performance.now();
-    for (let i = beatWindowStartPtr.arrow; i <= beatWindowEndPtr.arrow; i++) {
+    for (let i = windowStartPtr.arrow; i <= windowEndPtr.arrow; i++) {
       const arrow = this.globalParams.arrows[i];
       upArrows.forEach((directionIdx) => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
