@@ -112,6 +112,7 @@ class GameEngine {
     // reinitialize all chart-specific values
     this.eventList.length = 0;
     this.arrows.length = 0;
+    this.freezes.length = 0;
     this.shocks.length = 0;
     this.allArrows.length = 0;
 
@@ -662,6 +663,15 @@ class GameEngine {
     //   beatWindowStartPtr.arrow,
     //   beatWindowEndPtr.arrow,
     // ]);
+    for (let i = beatWindowEndPtr.shock; i >= beatWindowStartPtr.shock; i--) {
+      const shockArrow = this.globalParams.shocks[i];
+      shockArrow.render(
+        this.canvas,
+        this.globalParams.frame,
+        { beatTick, timeTick },
+        { mods }
+      );
+    }
 
     for (let i = beatWindowEndPtr.freeze; i >= beatWindowStartPtr.freeze; i--) {
       const freeze = this.globalParams.freezes[i];

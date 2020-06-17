@@ -151,7 +151,7 @@ export const initializeBeatWindow = (globalParams) => {
   let numVisibleBeats = chartAreaHeight / ARROW_HEIGHT;
   numVisibleBeats /= mods.speed;
 
-  const beatWindowStart = beatTick; // FIXME: later change this to 1 arrow height before the beat tick
+  const beatWindowStart = beatTick - 1 / mods.speed;
   const beatWindowEnd = beatWindowStart + numVisibleBeats;
 
   const beatWindowStartPtr = {};
@@ -178,6 +178,23 @@ export const initializeBeatWindow = (globalParams) => {
         currentArrow.beatstamp >= beatWindowStart
       ) {
         beatWindowStartPtr.arrow = i;
+        break;
+      }
+    }
+  }
+
+  // start pointer for shock arrows
+  if (!shocks.length || shocks[0].beatstamp > beatWindowStart) {
+    beatWindowStartPtr.shock = 0;
+  } else if (shocks[shocks.length - 1].beatstamp < beatWindowStart) {
+    beatWindowStartPtr.shock = shocks.length;
+  } else {
+    for (let i = 1; i < shocks.length; i++) {
+      if (
+        shocks[i - 1].beatstamp < beatWindowStart &&
+        shocks[i].beatstamp >= beatWindowStart
+      ) {
+        beatWindowStartPtr.shock = i;
         break;
       }
     }
@@ -232,6 +249,28 @@ export const initializeBeatWindow = (globalParams) => {
         nextArrow.beatstamp > beatWindowEnd
       ) {
         beatWindowEndPtr.arrow = j;
+        break;
+      }
+    }
+  }
+
+  // end pointer for shock arrows
+  let nextTopShock = shocks[beatWindowStartPtr.shock];
+  if (
+    beatWindowStartPtr.shock >= shocks.length ||
+    nextTopShock.beatstamp > beatWindowEnd
+  ) {
+    beatWindowEndPtr.shock = beatWindowStartPtr.shock - 1;
+  } else {
+    for (let i = beatWindowStartPtr.shock; i < shocks.length; i++) {
+      const currentShock = shocks[i];
+      const nextShock = shocks[i + 1];
+      if (
+        !nextShock ||
+        (currentShock.beatstamp <= beatWindowEnd &&
+          nextShock.beatstamp > beatWindowEnd)
+      ) {
+        beatWindowEndPtr.shock = i;
         break;
       }
     }
@@ -330,7 +369,7 @@ export const updateBeatWindow = (globalParams) => {
   let numVisibleBeats = chartAreaHeight / ARROW_HEIGHT;
   numVisibleBeats /= mods.speed;
 
-  const beatWindowStart = beatTick; // FIXME: later change this to 1 arrow height before the beat tick
+  const beatWindowStart = beatTick - 1 / mods.speed;
   const beatWindowEnd = beatTick + numVisibleBeats;
   const currentBeatWindow = [beatWindowStart, beatWindowEnd];
   globalParams.currentBeatWindow = currentBeatWindow;
@@ -344,7 +383,16 @@ export const updateBeatWindow = (globalParams) => {
     // if the first arrow has finally appeared, set the end ptr
     if (arrows[0].beatstamp <= beatWindowEnd) {
       beatWindowEndPtr.arrow = 0;
-    } else return;
+    }
+  }
+
+  // watch for first shock if applicable
+  if (
+    shocks.length &&
+    beatWindowEndPtr.shock === -1 &&
+    shocks[0].beatstamp <= beatWindowEnd
+  ) {
+    beatWindowEndPtr.shock = 0;
   }
 
   // Watching top arrow
@@ -369,9 +417,15 @@ export const updateBeatWindow = (globalParams) => {
     nextTopArrow = arrows[beatWindowStartPtr.arrow];
   }
 
+  // watching top shock arrow
+  let nextTopShock = shocks[beatWindowStartPtr.shock];
+  while (nextTopShock && nextTopShock.beatstamp < beatWindowStart) {
+    beatWindowStartPtr.shock++;
+    nextTopShock = shocks[beatWindowStartPtr.shock];
+  }
+
   // watching top freeze arrow
-  const topFreeze = freezes[beatWindowStartPtr.freeze];
-  let nextTopFreeze = topFreeze;
+  let nextTopFreeze = freezes[beatWindowStartPtr.freeze];
   while (nextTopFreeze && nextTopFreeze.beatstamp < beatWindowStart) {
     beatWindowStartPtr.freeze++;
     nextTopFreeze = freezes[beatWindowStartPtr.freeze];
@@ -381,9 +435,7 @@ export const updateBeatWindow = (globalParams) => {
   //
   // if there are arrows on the screen, and the arrow AFTER the bottommost arrow from the previous
   // frame is now behind the updated beatWindowEnd
-  const bottommostArrow = arrows[beatWindowEndPtr.arrow];
-
-  let nextBottomArrow = bottommostArrow;
+  let nextBottomArrow = arrows[beatWindowEndPtr.arrow];
   let nextBottomArrowAdj = arrows[beatWindowEndPtr.arrow + 1];
 
   // bottommost arrow is no longer bottommost arrow when the next arrow is behind beatWindowEnd
@@ -393,9 +445,17 @@ export const updateBeatWindow = (globalParams) => {
     nextBottomArrowAdj = arrows[beatWindowEndPtr.arrow + 1];
   }
 
+  // watching bottom shock arrow
+  let nextBottomShock = shocks[beatWindowEndPtr.shock];
+  let nextBottomShockAdj = shocks[beatWindowEndPtr.shock + 1];
+  while (nextBottomShockAdj && nextBottomShockAdj.beatstamp <= beatWindowEnd) {
+    beatWindowEndPtr.shock++;
+    nextBottomShock = shocks[beatWindowEndPtr.shock];
+    nextBottomShockAdj = shocks[beatWindowEndPtr.shock + 1];
+  }
+
   // watching bottom freeze arrow
-  const bottomFreeze = freezes[beatWindowEndPtr.freeze];
-  let nextBottomFreeze = bottomFreeze;
+  let nextBottomFreeze = freezes[beatWindowEndPtr.freeze];
   let nextBottomFreezeAdj = freezes[beatWindowEndPtr.freeze + 1];
   while (
     nextBottomFreezeAdj &&
