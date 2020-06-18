@@ -24,6 +24,7 @@ class Guidelines {
 
     for (let beat = 0; beat <= this.finalBeat; beat++) {
       let destY = (beat - beatTick) * ARROW_HEIGHT * speed + ARROW_HEIGHT / 2;
+      // let destY = (beat - beatTick) * ARROW_HEIGHT * speed;
 
       destY = (destY + 0.5) | 0;
 

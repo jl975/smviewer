@@ -46,12 +46,11 @@ class Arrow {
     this.measureN = attrs.measureN;
     this.measureD = attrs.measureD;
 
-    this.originalBeatPosition = attrs.originalBeatPosition;
-    this.holdBeats = attrs.holdBeats || null;
+    this.beatstamp = attrs.beatstamp;
   }
 
   currentBeatPosition(beatTick) {
-    return this.originalBeatPosition - beatTick;
+    return this.beatstamp - beatTick;
   }
   currentTimePosition(timeTick) {
     return this.timestamp - timeTick;
@@ -95,11 +94,17 @@ class Arrow {
       let totalBodyHeight;
       if (speed === "cmod") {
         totalBodyHeight =
-          this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60) -
+          (this.holdEndTimes[directionIdx] -
+            this.holdStartTimes[directionIdx]) *
+            ARROW_HEIGHT *
+            (cmod / 60) -
           ARROW_HEIGHT / 2;
       } else {
         totalBodyHeight =
-          this.holdBeats[directionIdx] * ARROW_HEIGHT * speed -
+          (this.holdEndBeats[directionIdx] -
+            this.holdStartBeats[directionIdx]) *
+            ARROW_HEIGHT *
+            speed -
           ARROW_HEIGHT / 2;
       }
       const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
@@ -200,9 +205,16 @@ class Arrow {
       let bodyDistance;
       if (speed === "cmod") {
         bodyDistance =
-          this.holdTimes[directionIdx] * ARROW_HEIGHT * (cmod / 60);
+          (this.holdEndTimes[directionIdx] -
+            this.holdStartTimes[directionIdx]) *
+          ARROW_HEIGHT *
+          (cmod / 60);
       } else {
-        bodyDistance = this.holdBeats[directionIdx] * ARROW_HEIGHT * speed;
+        bodyDistance =
+          (this.holdEndBeats[directionIdx] -
+            this.holdStartBeats[directionIdx]) *
+          ARROW_HEIGHT *
+          speed;
       }
 
       if (bodyDistance < ARROW_HEIGHT / 2) {
