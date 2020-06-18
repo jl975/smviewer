@@ -57,7 +57,7 @@ const MainContainer = (props) => {
   };
 
   const onSongSelect = async (song, initialProgress = 0) => {
-    console.log("MainContainer selected song", song);
+    // console.log("MainContainer selected song", song);
     AudioPlayer.selectSong(song, initialProgress);
     // setSelectedSong(song);
 
