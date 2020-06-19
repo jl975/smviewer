@@ -291,6 +291,17 @@ const ModsForm = (props) => {
             />
           </div>
           <div className="form-field">
+            <Checkbox
+              toggle
+              label="Display BPM/stop values"
+              name="bpmStopDisplay"
+              checked={mods.bpmStopDisplay}
+              onChange={() =>
+                updateMods({ bpmStopDisplay: !mods.bpmStopDisplay })
+              }
+            />
+          </div>
+          <div className="form-field">
             <h4 className="form-label">Global offset</h4>
             <Input
               type="range"

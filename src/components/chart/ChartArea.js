@@ -12,6 +12,8 @@ import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
 
 import CabButtons from "./CabButtons";
+import BpmDisplay from "./BpmDisplay";
+import StopDisplay from "./StopDisplay";
 
 const ChartArea = (props) => {
   const {
@@ -39,6 +41,8 @@ const ChartArea = (props) => {
     selectedMode,
     mods,
   });
+
+  console.log("ChartArea");
 
   // define canvas and resize listener on mount
   useEffect(() => {
@@ -178,27 +182,37 @@ const ChartArea = (props) => {
           className={`canvas-container ${selectedMode}`}
           ref={canvasContainer}
         >
-          <div className="canvas-wrapper">
-            <canvas id="chartArea" width="256" height="448" />
-            <div
-              className={`chart-loading-screen ${selectedMode} ${
-                loadingAudio ? "loading" : ""
-              } `}
-              ref={chartLoadingScreen}
-            >
-              {selectedSong && (
-                <img
-                  className="chart-loading-jacket"
-                  src={getJacketPath(`${selectedSong.hash}.png`)}
-                />
-              )}
-              <div className="chart-loading-message">Loading chart...</div>
+          <div className="chartArea-wrapper">
+            {gameEngine && (
+              <BpmDisplay
+                bpmChangeQueue={gameEngine.globalParams.bpmChangeQueue}
+              />
+            )}
+            <div className="canvas-wrapper">
+              <canvas id="chartArea" width="256" height="448" />
+              <div
+                className={`chart-loading-screen ${selectedMode} ${
+                  loadingAudio ? "loading" : ""
+                } `}
+                ref={chartLoadingScreen}
+              >
+                {selectedSong && (
+                  <img
+                    className="chart-loading-jacket"
+                    src={getJacketPath(`${selectedSong.hash}.png`)}
+                  />
+                )}
+                <div className="chart-loading-message">Loading chart...</div>
+              </div>
+              {selectedSong &&
+                !loadingAudio &&
+                ["hidden", "sudden", "hiddensudden"].includes(
+                  mods.appearance
+                ) && <CabButtons mods={mods} canvas={canvas} />}
             </div>
-            {selectedSong &&
-              !loadingAudio &&
-              ["hidden", "sudden", "hiddensudden"].includes(
-                mods.appearance
-              ) && <CabButtons mods={mods} canvas={canvas} />}
+            {gameEngine && (
+              <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />
+            )}
           </div>
         </div>
         <div className="progress-container">

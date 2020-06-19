@@ -17,6 +17,7 @@ import {
   END_EXTRA_BEATS,
   MARVELOUS_FLASH_FRAMES,
   DEFAULT_CMOD,
+  ARROW_HEIGHT,
 } from "../constants";
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
@@ -39,6 +40,9 @@ class GameEngine {
     this.allArrows = [];
 
     this.mainLoopRequestRef = null;
+
+    this.bpmReel = document.getElementById("bpmReel");
+    this.stopReel = document.getElementById("stopReel");
 
     this.drawBackground();
 
@@ -119,6 +123,7 @@ class GameEngine {
     this.globalParams.frame = 0;
     this.globalParams.combo = 0;
     this.globalParams.bpmChangeQueue = [];
+    this.globalParams.stopQueue = [];
     // this.globalParams.arrows = self.allArrows;
     this.globalParams.arrows = this.arrows;
     this.globalParams.freezes = this.freezes;
@@ -135,7 +140,7 @@ class GameEngine {
     AudioPlayer.setGlobalParams(this.globalParams);
 
     // debugging
-    // window.globalParams = this.globalParams;
+    window.globalParams = this.globalParams;
 
     // recreate the chart with the new given parameters
     // then immediately seek to where the chart's progress was before it was recreated
@@ -191,19 +196,6 @@ class GameEngine {
       const bpm = bpms[bpmPtr];
       const stop = stops[stopPtr];
 
-      // bpm changes before stops when they fall on the same beat
-      // // add stop event, keeping track of the bpm at this point
-      // if (bpm.beat <= stop.beat) {
-      //   eventList.push({ ...bpm, type: "bpm" });
-      //   currentBpm = bpm.value;
-      //   bpmPtr++;
-      // }
-      // // add bpm event, replacing the currently tracked bpm
-      // else {
-      //   eventList.push({ ...stop, bpm: currentBpm, type: "stop" });
-      //   stopPtr++;
-      // }
-
       // stops before bpm changes when they fall on the same beat
       // add stop event, keeping track of the bpm at this point
       if (stop.beat <= bpm.beat) {
@@ -251,6 +243,8 @@ class GameEngine {
 
       if (currentEvent.type === "bpm") {
         this.globalParams.bpmChangeQueue.push(currentEvent);
+      } else if (currentEvent.type === "stop") {
+        this.globalParams.stopQueue.push(currentEvent);
       }
     }
 
@@ -758,6 +752,24 @@ class GameEngine {
     }
     t1 = performance.now();
     // console.log(`targetFlash render: ${(t1 - t0).toFixed(3)} ms`);
+
+    /* Manual css property updates for DOM-based components */
+
+    if (!this.bpmReel) {
+      this.bpmReel = document.getElementById("bpmReel");
+    }
+    if (!this.stopReel) {
+      this.stopReel = document.getElementById("stopReel");
+    }
+    if (mods.speed !== "cmod" && mods.bpmStopDisplay) {
+      [this.bpmReel, this.stopReel].forEach((reel) => {
+        reel.style.height =
+          this.globalParams.finalBeat * ARROW_HEIGHT * mods.speed;
+        reel.style.transform = `translateY(-${
+          this.globalParams.beatTick * ARROW_HEIGHT * mods.speed
+        }px)`;
+      });
+    }
 
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);

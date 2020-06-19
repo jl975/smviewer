@@ -1,0 +1,95 @@
+.bpm-display {
+  position: relative;
+  width: 60px;
+  height: 100%;
+  background: black;
+  color: #dadada;
+  text-align: right;
+  overflow: hidden;
+
+  .current-bpm-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 64px;
+    width: 100%;
+    background-color: black;
+    font-size: 20px;
+    text-align: center;
+
+    .current-bpm-wrapper {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      height: 50px;
+      width: 100%;
+      padding: 5px;
+      // background-color: #627c92;
+      background-color: #421e8f;
+      border: 1px solid #6739c9;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 5px;
+      // color: #fff;
+    }
+    .current-bpm-header {
+      color: #fff;
+      font-size: 14px;
+    }
+    .current-bpm-value {
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  }
+
+  #bpmReel {
+    position: relative;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  .bpm-value {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    color: #b6ffff;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 800;
+    padding-right: 5px;
+  }
+}
+
+.stop-display {
+  position: relative;
+  width: 60px;
+  height: 100%;
+  border: 1px solid black;
+  background: black;
+  color: #dadada;
+  text-align: left;
+  overflow: hidden;
+
+  #stopReel {
+    position: relative;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  .stop-value {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    color: red;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: 800;
+    padding-left: 5px;
+  }
+}
+
+.canvas-container.double .bpm-display {
+  display: none;
+}
+
+@import "./cab-buttons";

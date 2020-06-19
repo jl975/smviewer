@@ -63,6 +63,7 @@ const optionDefaultValues = {
     comboFont: "A20",
     colorFreezes: false,
     globalOffset: DEFAULT_OFFSET,
+    bpmStopDisplay: false,
   },
 };
 
