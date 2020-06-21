@@ -6,6 +6,7 @@ import StepZone from "../components/chart/canvas/StepZone";
 import Guidelines from "../components/chart/canvas/Guidelines";
 import TargetFlash from "../components/chart/canvas/TargetFlash";
 import ComboDisplay from "../components/chart/canvas/ComboDisplay";
+import BpmAndStopDisplay from "../components/chart/canvas/BpmAndStopDisplay";
 import LaneCover from "../components/chart/canvas/LaneCover";
 import parseSimfile from "../utils/parseSimfile";
 import {
@@ -26,7 +27,6 @@ import { debugLogView, debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
   constructor(canvas, sm, simfileType = "sm", chartParams) {
-    const self = this;
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
     this.sm = sm;
@@ -43,6 +43,9 @@ class GameEngine {
 
     this.bpmReel = document.getElementById("bpmReel");
     this.stopReel = document.getElementById("stopReel");
+
+    if (this.bpmReel) this.bpmReel.innerHTML = "";
+    if (this.stopReel) this.stopReel.innerHTML = "";
 
     this.drawBackground();
 
@@ -67,7 +70,7 @@ class GameEngine {
       frame: 0,
 
       combo: 0,
-      bpmChangeQueue: [], // this is the one that is used
+      bpmQueue: [], // this is the one that is used
 
       targetFlashes: {},
 
@@ -118,11 +121,15 @@ class GameEngine {
     this.shocks.length = 0;
     this.allArrows.length = 0;
 
+    if (this.bpmAndStopDisplay) {
+      this.bpmAndStopDisplay.clearWindow();
+    }
+
     this.globalParams.beatTick = 0;
     this.globalParams.timeTick = 0;
     this.globalParams.frame = 0;
     this.globalParams.combo = 0;
-    this.globalParams.bpmChangeQueue = [];
+    this.globalParams.bpmQueue = [];
     this.globalParams.stopQueue = [];
     // this.globalParams.arrows = self.allArrows;
     this.globalParams.arrows = this.arrows;
@@ -220,7 +227,7 @@ class GameEngine {
 
     eventList[0].timestamp = 0;
 
-    this.globalParams.bpmChangeQueue = [eventList[0]];
+    this.globalParams.bpmQueue = [eventList[0]];
 
     for (let i = 1; i < eventList.length; i++) {
       const prevEvent = eventList[i - 1];
@@ -242,7 +249,7 @@ class GameEngine {
       currentEvent.timestamp = currentTimestamp;
 
       if (currentEvent.type === "bpm") {
-        this.globalParams.bpmChangeQueue.push(currentEvent);
+        this.globalParams.bpmQueue.push(currentEvent);
       } else if (currentEvent.type === "stop") {
         this.globalParams.stopQueue.push(currentEvent);
       }
@@ -330,8 +337,8 @@ class GameEngine {
 
     // note events (combo, assist tick, target flash)
     // console.log("eventList", this.eventList);
-    const bpmChangeQueue = this.globalParams.bpmChangeQueue;
-    // console.log("bpmChangeQueue", bpmChangeQueue);
+    const bpmQueue = this.globalParams.bpmQueue;
+    // console.log("bpmQueue", bpmQueue);
 
     // subset of arrows that specifically count for combo (e.g. excluding ends of freeze arrows)
     this.comboArrows = [];
@@ -346,12 +353,12 @@ class GameEngine {
     this.allArrows.forEach((arrow, idx) => {
       // Find the latest bpm section that starts before this note
       while (
-        currentBpmPtr < bpmChangeQueue.length - 1 &&
-        bpmChangeQueue[currentBpmPtr + 1].beat < arrow.beatstamp
+        currentBpmPtr < bpmQueue.length - 1 &&
+        bpmQueue[currentBpmPtr + 1].beat < arrow.beatstamp
       ) {
         // if this block was entered, a new bpm section was entered
         currentBpmPtr++;
-        const bpmSection = bpmChangeQueue[currentBpmPtr];
+        const bpmSection = bpmQueue[currentBpmPtr];
         currentBpm = bpmSection.value;
 
         // reset the accumulated stop time
@@ -389,8 +396,8 @@ class GameEngine {
         pendingStop = this.eventList[pendingStopPtr];
       }
 
-      const bpmSectionStartBeat = bpmChangeQueue[currentBpmPtr].beat;
-      const bpmSectionStartTime = bpmChangeQueue[currentBpmPtr].timestamp;
+      const bpmSectionStartBeat = bpmQueue[currentBpmPtr].beat;
+      const bpmSectionStartTime = bpmQueue[currentBpmPtr].timestamp;
 
       const beatDiff = arrow.beatstamp - bpmSectionStartBeat;
       const timeDiff = beatDiff * (60 / currentBpm);
@@ -592,12 +599,21 @@ class GameEngine {
     }
 
     this.guidelines = new Guidelines(this.globalParams.finalBeat);
+    this.bpmAndStopDisplay = new BpmAndStopDisplay();
+
     AudioPlayer.setTimeline(this.tl);
 
     this.updateLoopOnce();
   }
 
   mainLoop(loop = true) {
+    // if this gameEngine is replaced and flagged for garbage deletion, squash any residual
+    // attempts to invoke its mainLoop
+    if (this.killed) {
+      // console.log("old mainLoop squashed");
+      return;
+    }
+
     // console.log("mainLoop running");
     // console.log("\n\n\n");
     let t0, t1;
@@ -648,11 +664,6 @@ class GameEngine {
 
     updateBeatWindow(this.globalParams);
 
-    /* Arrows */
-
-    const upArrows = mode === "double" ? [2, 6] : [2];
-    const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
-
     let windowStartPtr, windowEndPtr;
     if (mods.speed === "cmod") {
       windowStartPtr = this.globalParams.timeWindowStartPtr;
@@ -662,6 +673,53 @@ class GameEngine {
       windowEndPtr = this.globalParams.beatWindowEndPtr;
     }
 
+    /* Bpm and stop display */
+
+    if (mods.bpmStopDisplay) {
+      if (!this.bpmReel) {
+        this.bpmReel = document.getElementById("bpmReel");
+      }
+      if (!this.stopReel) {
+        this.stopReel = document.getElementById("stopReel");
+      }
+
+      this.bpmAndStopDisplay.refreshWindow(
+        mods.speed === "cmod"
+          ? this.globalParams.currentTimeWindow
+          : this.globalParams.currentBeatWindow,
+        { mods }
+      );
+
+      // console.log("mainLoop for", songSelect.song.title, this.sm.slice(0, 30));
+
+      for (let i = windowStartPtr.bpm; i <= windowEndPtr.bpm; i++) {
+        const bpm = this.globalParams.bpmQueue[i];
+        // visibleBpmChanges.push(bpm.value);
+        this.bpmAndStopDisplay.renderBpm(
+          this.bpmReel,
+          bpm,
+          { beatTick, timeTick },
+          { mods }
+        );
+      }
+      for (let i = windowStartPtr.stop; i <= windowEndPtr.stop; i++) {
+        const stop = this.globalParams.stopQueue[i];
+        // visibleBpmChanges.push(stop.value);
+        this.bpmAndStopDisplay.renderStop(
+          this.stopReel,
+          stop,
+          { beatTick, timeTick },
+          { mods }
+        );
+      }
+      window.bpmAndStopDisplay = this.bpmAndStopDisplay;
+      // console.log(visibleBpmChanges);
+    }
+
+    /* Arrows */
+
+    const upArrows = mode === "double" ? [2, 6] : [2];
+    const notUpArrows = mode === "double" ? [0, 1, 3, 4, 5, 7] : [0, 1, 3];
     // console.log(`GameEngine`, [
     //   windowStartPtr.arrow,
     //   windowEndPtr.arrow,
@@ -755,21 +813,21 @@ class GameEngine {
 
     /* Manual css property updates for DOM-based components */
 
-    if (!this.bpmReel) {
-      this.bpmReel = document.getElementById("bpmReel");
-    }
-    if (!this.stopReel) {
-      this.stopReel = document.getElementById("stopReel");
-    }
-    if (mods.speed !== "cmod" && mods.bpmStopDisplay) {
-      [this.bpmReel, this.stopReel].forEach((reel) => {
-        reel.style.height =
-          this.globalParams.finalBeat * ARROW_HEIGHT * mods.speed;
-        reel.style.transform = `translateY(-${
-          this.globalParams.beatTick * ARROW_HEIGHT * mods.speed
-        }px)`;
-      });
-    }
+    // if (!this.bpmReel) {
+    //   this.bpmReel = document.getElementById("bpmReel");
+    // }
+    // if (!this.stopReel) {
+    //   this.stopReel = document.getElementById("stopReel");
+    // }
+    // if (mods.speed !== "cmod" && mods.bpmStopDisplay) {
+    //   [this.bpmReel, this.stopReel].forEach((reel) => {
+    //     reel.style.height =
+    //       this.globalParams.finalBeat * ARROW_HEIGHT * mods.speed;
+    //     reel.style.transform = `translateY(-${
+    //       this.globalParams.beatTick * ARROW_HEIGHT * mods.speed
+    //     }px)`;
+    //   });
+    // }
 
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);

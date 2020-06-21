@@ -197,8 +197,7 @@ class AudioPlayer {
 
     let isAudioStable = false;
 
-    // the line that syncs the timeline with the audio time
-    // sometimes this will still error on load, just bypass it
+    // NOTE: the following block will run 10 times on every resync
     try {
       const currentTime = this.getCurrentTime();
       // console.log("currentTime", currentTime);
@@ -234,9 +233,7 @@ class AudioPlayer {
       console.log(err);
     }
 
-    // if (this.getCurrentSong().globalParams) return;
-
-    // if (this.audioResyncFrames <= 0) {
+    // This block will only run once on every resync
     if (isAudioStable && this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(currentSong.globalParams);
@@ -249,6 +246,8 @@ class AudioPlayer {
       // store.dispatch(setCombo(currentCombo));
       const comboTemp = document.querySelector("#combo-temp .combo-num");
       if (comboTemp) comboTemp.textContent = currentCombo;
+
+      // console.log("doOnce");
 
       gsap.ticker.remove(this.updateTimeline);
     }
@@ -379,6 +378,7 @@ class AudioPlayer {
       return;
     }
     this.getCurrentSong().audio.stop(this.currentSongId);
+    this.stopAnimationLoop();
     this.seekTime(0);
     this.currentSongId = null;
   }
@@ -388,10 +388,10 @@ class AudioPlayer {
     if (currentSong) {
       if (currentSong.tl) {
         this.sources.song[songId].tl.kill();
-        // console.log("kill", this.sources.song[songId].title);
       }
       this.stop();
     }
+    store.dispatch(actions.setChartAudioStatus("stopped"));
   }
 
   isPlaying() {

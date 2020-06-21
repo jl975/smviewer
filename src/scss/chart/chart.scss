@@ -47,16 +47,21 @@
     width: 100%;
     top: 0;
     left: 0;
+    // height: 100%;
   }
   .bpm-value {
     position: absolute;
     left: 0;
+    top: 0;
     width: 100%;
     color: #b6ffff;
-    transform: translateY(-50%);
     font-size: 16px;
     font-weight: 800;
     padding-right: 5px;
+
+    > div {
+      transform: translateY(-50%);
+    }
   }
 }
 
@@ -85,6 +90,10 @@
     font-size: 16px;
     font-weight: 800;
     padding-left: 5px;
+
+    > div {
+      transform: translateY(-50%);
+    }
   }
 }
 

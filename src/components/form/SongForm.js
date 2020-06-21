@@ -7,6 +7,7 @@ import * as actions from "../../actions/SongSelectActions";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
+import { clearBpmAndStopDisplay } from "../../utils/engineUtils";
 import {
   getUserSettings,
   updateUserSettings,
@@ -172,6 +173,7 @@ const SongForm = (props) => {
     AudioPlayer.stopSongPreview();
     if (selectedSong) {
       AudioPlayer.killImmediately(selectedSong.hash);
+      clearBpmAndStopDisplay();
     }
 
     setSelectedSongOption(songId);

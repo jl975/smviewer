@@ -2,7 +2,6 @@ import * as actions from "../actions/ChartActions";
 
 const initialState = {
   activeBpm: null,
-  bpmChangeQueue: [],
   combo: 0,
 };
 

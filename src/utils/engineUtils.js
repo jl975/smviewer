@@ -43,16 +43,16 @@ export const applyTurnMods = (chart, mods, mode) => {
 };
 
 /*
-  Given the bpmChangeQueue and the current beat tick, find the latest bpm
+  Given the bpmQueue and the current beat tick, find the latest bpm
   change event that happened before the current beat and set the current bpm
   to that bpm value. This should be invoked every time the audio is resynced
   (which will happen whenever progress is skipped)
 */
 export const getCurrentBpm = (params) => {
-  const { beatTick, bpmChangeQueue } = params;
+  const { beatTick, bpmQueue } = params;
   let lastBpmValue = 0;
-  for (let i = 0; i < bpmChangeQueue.length; i++) {
-    const bpmEvent = bpmChangeQueue[i];
+  for (let i = 0; i < bpmQueue.length; i++) {
+    const bpmEvent = bpmQueue[i];
     if (bpmEvent.beat > beatTick) {
       return lastBpmValue;
     }
@@ -130,6 +130,20 @@ export const getReverseCoord = (originalCoord, height, canvas) => {
   return canvas.height - (originalCoord + height);
 };
 
+/* Remove all bpm/stop display elements from the DOM */
+export const clearBpmAndStopDisplay = () => {
+  const bpmReel = document.getElementById("bpmReel");
+  if (bpmReel) {
+    bpmReel.innerHTML = "";
+    // console.log("cleared bpm reel", bpmReel);
+  }
+  const stopReel = document.getElementById("stopReel");
+  if (stopReel) {
+    stopReel.innerHTML = "";
+    // console.log("cleared stop reel", stopReel);
+  }
+};
+
 /*
   Based on the current beat tick, calculates the index of the first
   arrow to fall within the visible beat window
@@ -204,6 +218,24 @@ export const initializeBeatWindow = (globalParams) => {
       }
     }
   }
+
+  // start pointer for bpm/stop values
+  ["bpm", "stop"].forEach((event) => {
+    const events = globalParams[`${event}Queue`];
+    const ts = mods.speed === "cmod" ? "timestamp" : "beat";
+    if (!events.length || events[0][ts] > windowStart) {
+      windowStartPtr[event] = 0;
+    } else if (events[events.length - 1][ts] < windowStart) {
+      windowStartPtr[event] = events.length;
+    } else {
+      for (let i = 1; i < events.length; i++) {
+        if (events[i - 1][ts] < windowStart && events[i][ts] >= windowStart) {
+          windowStartPtr[event] = i;
+          break;
+        }
+      }
+    }
+  });
 
   // find start pointer for freeze bodies. copy of above logic for regular arrows
   if (!freezes.length || freezes[0][timestamp] > windowStart) {
@@ -280,6 +312,31 @@ export const initializeBeatWindow = (globalParams) => {
       }
     }
   }
+
+  // end pointer for bpm/stop values
+  ["bpm", "stop"].forEach((event) => {
+    const events = globalParams[`${event}Queue`];
+    const ts = mods.speed === "cmod" ? "timestamp" : "beat";
+    let nextTopEvent = events[windowStartPtr[event]];
+    if (
+      windowStartPtr[event] >= events.length ||
+      nextTopEvent[ts] > windowEnd
+    ) {
+      windowEndPtr[event] = windowStartPtr[event] - 1;
+    } else {
+      for (let i = windowStartPtr[event]; i < events.length; i++) {
+        const currentEvent = events[i];
+        const nextEvent = events[i + 1];
+        if (
+          !nextEvent ||
+          (currentEvent[ts] <= windowEnd && nextEvent[ts] > windowEnd)
+        ) {
+          windowEndPtr[event] = i;
+          break;
+        }
+      }
+    }
+  });
 
   const holdEnds = mods.speed === "cmod" ? "holdEndTimes" : "holdEndBeats";
 
@@ -418,6 +475,19 @@ export const updateBeatWindow = (globalParams) => {
     windowEndPtr.shock = 0;
   }
 
+  // watch for first bpm change/stop
+  ["bpm", "stop"].forEach((event) => {
+    const events = globalParams[`${event}Queue`];
+    const ts = mods.speed === "cmod" ? "timestamp" : "beat";
+    if (
+      events.length &&
+      windowEndPtr[event] === -1 &&
+      events[0][ts] <= windowEnd
+    ) {
+      windowEndPtr[event] = 0;
+    }
+  });
+
   // Watching top arrow
   //
   // if there are arrows on the screen, and the topmost arrow from the previous frame is
@@ -442,6 +512,17 @@ export const updateBeatWindow = (globalParams) => {
     windowStartPtr.shock++;
     nextTopShock = shocks[windowStartPtr.shock];
   }
+
+  // watch for first bpm change/stop
+  ["bpm", "stop"].forEach((event) => {
+    const events = globalParams[`${event}Queue`];
+    const ts = mods.speed === "cmod" ? "timestamp" : "beat";
+    let nextTopEvent = events[windowStartPtr[event]];
+    while (nextTopEvent && nextTopEvent[ts] < windowStart) {
+      windowStartPtr[event]++;
+      nextTopEvent = events[windowStartPtr[event]];
+    }
+  });
 
   // watching top freeze arrow
   let nextTopFreeze = freezes[windowStartPtr.freeze];
@@ -472,6 +553,19 @@ export const updateBeatWindow = (globalParams) => {
     nextBottomShock = shocks[windowEndPtr.shock];
     nextBottomShockAdj = shocks[windowEndPtr.shock + 1];
   }
+
+  // watch for first bpm change/stop
+  ["bpm", "stop"].forEach((event) => {
+    const events = globalParams[`${event}Queue`];
+    const ts = mods.speed === "cmod" ? "timestamp" : "beat";
+    let nextBottomEvent = events[windowEndPtr[event]];
+    let nextBottomEventAdj = events[windowEndPtr[event] + 1];
+    while (nextBottomEventAdj && nextBottomEventAdj[ts] <= windowEnd) {
+      windowEndPtr[event]++;
+      nextBottomEvent = events[windowEndPtr[event]];
+      nextBottomEventAdj = events[windowEndPtr[event] + 1];
+    }
+  });
 
   // watching bottom freeze arrow
   let nextBottomFreeze = freezes[windowEndPtr.freeze];

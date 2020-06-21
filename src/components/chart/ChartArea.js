@@ -42,8 +42,6 @@ const ChartArea = (props) => {
     mods,
   });
 
-  console.log("ChartArea");
-
   // define canvas and resize listener on mount
   useEffect(() => {
     chartArea.current = document.querySelector("#chartArea");
@@ -126,6 +124,13 @@ const ChartArea = (props) => {
           //   } \n\nto ${currentState[thing].slice(0, 30)}`
           // );
           const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+
+          // flag the old game engine as killed, so any residual invocations
+          // of its mainLoop can be squashed until it is garbage collected
+          if (gameEngine) {
+            gameEngine.killed = true;
+          }
+
           let ge = new GameEngine(canvas, sm, simfileType, chartParams);
           ge.pauseTl();
           setGameEngine(ge);
@@ -136,6 +141,18 @@ const ChartArea = (props) => {
             const modChanged = prev !== curr;
 
             if (gameEngine && modChanged) {
+              if (mod === "bpmStopDisplay") {
+                if (gameEngine.bpmAndStopDisplay) {
+                  gameEngine.bpmAndStopDisplay.clearWindow();
+                }
+                gameEngine.bpmReel = currentState.mods[mod]
+                  ? document.getElementById("bpmReel")
+                  : null;
+                gameEngine.stopReel = currentState.mods[mod]
+                  ? document.getElementById("stopReel")
+                  : null;
+              }
+
               if (["turn", "shuffle"].includes(mod)) {
                 gameEngine.resetChart(chartParams);
               } else {
@@ -184,9 +201,7 @@ const ChartArea = (props) => {
         >
           <div className="chartArea-wrapper">
             {gameEngine && (
-              <BpmDisplay
-                bpmChangeQueue={gameEngine.globalParams.bpmChangeQueue}
-              />
+              <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />
             )}
             <div className="canvas-wrapper">
               <canvas id="chartArea" width="256" height="448" />
