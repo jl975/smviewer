@@ -5,7 +5,7 @@ import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 
 // displays song information on the chart view
 const SongInfo = (props) => {
-  const { chart, selectedSong, selectedDifficulty, selectedMode } = props;
+  const { selectedSong, selectedDifficulty, selectedMode } = props;
   return (
     <div className="song-info-row">
       <div className="song-information">
@@ -15,10 +15,6 @@ const SongInfo = (props) => {
             <div className="song-artist">{selectedSong.artist}</div>
           </>
         )}
-      </div>
-      <div className="bpm-information">
-        <div className="bpm-header">BPM</div>
-        <div className="bpm-value">{chart.activeBpm}</div>
       </div>
       <div className="level-information">
         {selectedSong && (
@@ -41,9 +37,8 @@ const SongInfo = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { chart, songSelect } = state;
+  const { songSelect } = state;
   return {
-    chart,
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,

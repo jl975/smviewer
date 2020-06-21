@@ -293,7 +293,7 @@ const ModsForm = (props) => {
           <div className="form-field">
             <Checkbox
               toggle
-              label="Display BPM/stop values"
+              label="Scrolling BPM/stop values"
               name="bpmStopDisplay"
               checked={mods.bpmStopDisplay}
               onChange={() =>

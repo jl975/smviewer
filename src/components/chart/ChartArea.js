@@ -196,7 +196,7 @@ const ChartArea = (props) => {
     >
       <div className="view-wrapper chartArea-container">
         <div
-          className={`canvas-container ${selectedMode}`}
+          className={`canvas-container ${selectedMode} ${mods.scroll}`}
           ref={canvasContainer}
         >
           <div className="chartArea-wrapper">

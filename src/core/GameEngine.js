@@ -13,6 +13,7 @@ import {
   applyTurnMods,
   initializeBeatWindow,
   updateBeatWindow,
+  changeActiveBpm,
 } from "../utils/engineUtils";
 import {
   END_EXTRA_BEATS,
@@ -570,7 +571,7 @@ class GameEngine {
             ease: "none",
             onStart: () => {
               if (startEvent.type === "bpm") {
-                store.dispatch(actions.changeActiveBpm(startEvent.value));
+                changeActiveBpm(startEvent.value, this.globalParams);
               }
             },
           },
@@ -589,7 +590,7 @@ class GameEngine {
             ease: "none",
             onStart: () => {
               if (startEvent.type === "bpm") {
-                store.dispatch(actions.changeActiveBpm(startEvent.value));
+                changeActiveBpm(startEvent.value, this.globalParams);
               }
             },
           },

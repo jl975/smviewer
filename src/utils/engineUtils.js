@@ -62,6 +62,33 @@ export const getCurrentBpm = (params) => {
 };
 
 /*
+  Change current displayed bpm. Going with direct DOM text manipulation
+  rather than dispatching an action
+*/
+export const changeActiveBpm = (bpmValue, globalParams) => {
+  const currentBpmEl = document.querySelector(".current-bpm-value");
+  if (!currentBpmEl) return;
+
+  const { bpmQueue, beatTick } = globalParams;
+
+  // Several charts start with an "offset" bpm on the first measure and are corrected
+  // to the "real" bpm on the second measure. If the chart follows this pattern,
+  // don't show the offset bpm as it can be very different and misleading
+  if (
+    beatTick < 4 &&
+    bpmQueue.length >= 2 &&
+    bpmQueue[0].beat === 0 &&
+    bpmQueue[1].beat === 4
+  ) {
+    currentBpmEl.textContent = "";
+  } else {
+    currentBpmEl.textContent = Math.round(bpmValue);
+  }
+
+  // console.log("globalParams", globalParams);
+};
+
+/*
   Find the current combo given the song timestamp. This should be invoked
   every time the audio is resynced.
 */

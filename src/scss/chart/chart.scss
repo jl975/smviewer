@@ -47,7 +47,7 @@
     width: 100%;
     top: 0;
     left: 0;
-    // height: 100%;
+    height: 100%;
   }
   .bpm-value {
     position: absolute;
@@ -80,6 +80,7 @@
     width: 100%;
     top: 0;
     left: 0;
+    height: 100%;
   }
   .stop-value {
     position: absolute;
@@ -97,8 +98,24 @@
   }
 }
 
-.canvas-container.double .bpm-display {
-  display: none;
+.canvas-container.reverse {
+  .current-bpm-container {
+    top: auto;
+    bottom: 0;
+    .current-bpm-wrapper {
+      bottom: auto;
+      top: 0;
+    }
+  }
+}
+
+// come up with a better way to detect if there is enough
+// space to show these on doubles. for now, just hide
+.canvas-container.double {
+  .bpm-display,
+  .stop-display {
+    display: none;
+  }
 }
 
 @import "./cab-buttons";

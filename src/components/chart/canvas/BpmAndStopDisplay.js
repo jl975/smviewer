@@ -1,5 +1,5 @@
 import { ARROW_HEIGHT } from "../../../constants";
-import {} from "../../../utils/engineUtils";
+import { getReverseCoord } from "../../../utils/engineUtils";
 
 class BpmAndStopDisplay {
   constructor() {
@@ -61,7 +61,12 @@ class BpmAndStopDisplay {
   renderBpm(bpmReel, bpm, { beatTick, timeTick }, { mods }) {
     const key = bpm.beat;
 
-    const pxPosition = getPxPosition(bpm, { beatTick, timeTick }, mods);
+    const pxPosition = getPxPosition(
+      bpm,
+      { beatTick, timeTick },
+      mods,
+      bpmReel
+    );
     if (!this.bpmElements[key]) {
       const element = document.createElement("div");
       element.className = "bpm-value";
@@ -80,7 +85,12 @@ class BpmAndStopDisplay {
 
   renderStop(stopReel, stop, { beatTick, timeTick }, { mods }) {
     const key = stop.beat;
-    const pxPosition = getPxPosition(stop, { beatTick, timeTick }, mods);
+    const pxPosition = getPxPosition(
+      stop,
+      { beatTick, timeTick },
+      mods,
+      stopReel
+    );
     if (!this.stopElements[key]) {
       const element = document.createElement("div");
       element.className = "stop-value";
@@ -98,7 +108,7 @@ class BpmAndStopDisplay {
   }
 }
 
-const getPxPosition = (event, { beatTick, timeTick }, mods) => {
+const getPxPosition = (event, { beatTick, timeTick }, mods, reel) => {
   let pxPosition;
   if (mods.speed === "cmod") {
     const timeDiff = event.timestamp - timeTick;
@@ -108,6 +118,10 @@ const getPxPosition = (event, { beatTick, timeTick }, mods) => {
     pxPosition = beatDiff * ARROW_HEIGHT * mods.speed;
   }
   pxPosition += ARROW_HEIGHT / 2;
+
+  if (mods.scroll === "reverse") {
+    pxPosition = getReverseCoord(pxPosition, 0, { height: reel.clientHeight });
+  }
   return pxPosition;
 };
 

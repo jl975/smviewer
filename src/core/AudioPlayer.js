@@ -4,11 +4,12 @@ import { gsap } from "gsap";
 import store from "../store";
 import * as actions from "../actions/AudioActions";
 import Progress from "../components/chart/canvas/Progress";
-import { changeActiveBpm, setCombo } from "../actions/ChartActions";
+// import { changeActiveBpm, setCombo } from "../actions/ChartActions";
 import { getAssetPath } from "../utils";
 import { saveSongProgress } from "../utils/userSettings";
 import {
   getCurrentBpm,
+  changeActiveBpm,
   getCurrentCombo,
   getFullCombo,
   initializeBeatWindow,
@@ -237,7 +238,7 @@ class AudioPlayer {
     if (isAudioStable && this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(currentSong.globalParams);
-      store.dispatch(changeActiveBpm(currentBpm));
+      changeActiveBpm(currentBpm, currentSong.globalParams);
       // document.querySelector(".bpm-value").textContent = Math.round(currentBpm);
 
       const currentCombo = getCurrentCombo(currentSong);
@@ -379,7 +380,7 @@ class AudioPlayer {
     }
     this.getCurrentSong().audio.stop(this.currentSongId);
     this.stopAnimationLoop();
-    this.seekTime(0);
+    setTimeout(() => this.seekTime(0));
     this.currentSongId = null;
   }
 
