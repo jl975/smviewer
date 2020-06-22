@@ -101,7 +101,7 @@ class GameEngine {
 
     // init logic
     this.simfiles = parseSimfile(this.sm, simfileType);
-    // console.log("this.simfiles", this.simfiles);
+    console.log("this.simfiles", this.simfiles);
 
     this.resetChart(chartParams);
   }

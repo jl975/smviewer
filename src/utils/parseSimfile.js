@@ -61,9 +61,11 @@ const parseSimfile = (sm, simfileType = "sm") => {
       .slice(1);
   }
 
-  // console.log("chartStrs", chartStrs);
+  console.log("chartStrs.length", chartStrs.length);
+  simfiles.finishedLoading = false;
+  let loadedSimfilesNum = 0;
 
-  chartStrs.forEach((chartStr) => {
+  chartStrs.forEach((chartStr, i) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double
 
     let smDifficulty = difficultyRegex.exec(chartStr)[1];
@@ -113,37 +115,47 @@ const parseSimfile = (sm, simfileType = "sm") => {
       }
     }
 
-    const measures = chartStr
+    let measures = chartStr
       .slice(chartStr.lastIndexOf(":") + 1, chartStr.lastIndexOf(";"))
       .trim()
-      .split(",")
-      .map((measure, measureIdx) => {
-        const ticks = measure
-          .trim()
-          .split("\r\n")
-          .filter((n) => !n.startsWith("//")); // filter out comment lines
+      .split(",");
+    measures = measures.map((measure, measureIdx) => {
+      const ticks = measure
+        .trim()
+        .split("\r\n")
+        .filter((n) => !n.startsWith("//")); // filter out comment lines
 
-        const numTicks = ticks.length;
+      const numTicks = ticks.length;
 
-        const noteObjects = [];
-        ticks.forEach((tick, tickIdx) => {
-          // skip empty ticks and comment lines
-          if (!tick.split("").filter((n) => n !== "0").length) return;
+      const noteObjects = [];
+      ticks.forEach((tick, tickIdx) => {
+        // skip empty ticks and comment lines
+        if (!tick.split("").filter((n) => n !== "0").length) return;
 
-          const noteObj = {};
-          noteObj.note = tick;
-          noteObj.measureIdx = measureIdx; // index of the measure relative to the whole song (starting at 0)
-          noteObj.measureN = tickIdx; // numerator of the fraction describing where note falls in this measure
-          noteObj.measureD = numTicks; // denominator of the fraction describing where note falls in this measure
+        const noteObj = {};
+        noteObj.note = tick;
+        noteObj.measureIdx = measureIdx; // index of the measure relative to the whole song (starting at 0)
+        noteObj.measureN = tickIdx; // numerator of the fraction describing where note falls in this measure
+        noteObj.measureD = numTicks; // denominator of the fraction describing where note falls in this measure
 
-          noteObjects.push(noteObj);
-        });
-
-        return noteObjects;
+        noteObjects.push(noteObj);
       });
+      if (measureIdx >= measures.length - 1) {
+        console.log(`finished loading ${mode}_${difficulty}`);
+        loadedSimfilesNum++;
+      }
+
+      return noteObjects;
+    });
 
     simfile.chart = measures;
   });
+
+  if (loadedSimfilesNum === chartStrs.length) {
+    simfiles.finishedLoading = true;
+  }
+
+  window.simfiles = simfiles;
 
   return simfiles;
 };
