@@ -61,12 +61,13 @@ const parseSimfile = (sm, simfileType = "sm") => {
       .slice(1);
   }
 
-  console.log("chartStrs.length", chartStrs.length);
-  simfiles.finishedLoading = false;
-  let loadedSimfilesNum = 0;
+  // console.log(chartStrs);
+
+  let numLoadedCharts = 0;
 
   chartStrs.forEach((chartStr, i) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double
+    if (mode !== "single" && mode !== "double") return;
 
     let smDifficulty = difficultyRegex.exec(chartStr)[1];
     const difficulty = difficultyMap[smDifficulty];
@@ -141,8 +142,8 @@ const parseSimfile = (sm, simfileType = "sm") => {
         noteObjects.push(noteObj);
       });
       if (measureIdx >= measures.length - 1) {
-        console.log(`finished loading ${mode}_${difficulty}`);
-        loadedSimfilesNum++;
+        // console.log(`finished loading ${mode}_${difficulty}`);
+        numLoadedCharts++;
       }
 
       return noteObjects;
@@ -151,9 +152,7 @@ const parseSimfile = (sm, simfileType = "sm") => {
     simfile.chart = measures;
   });
 
-  if (loadedSimfilesNum === chartStrs.length) {
-    simfiles.finishedLoading = true;
-  }
+  simfiles.numLoadedCharts = numLoadedCharts;
 
   window.simfiles = simfiles;
 

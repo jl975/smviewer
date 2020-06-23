@@ -76,7 +76,7 @@
     padding-top: 5px;
   }
 
-  .song-title-dropdown.ui.search.dropdown {
+  .song-title-search.ui.search {
     width: 100%;
     min-width: 0;
     height: 40px;
@@ -107,6 +107,17 @@
 
     .menu {
       max-height: 300px;
+
+      > .item {
+        display: flex;
+        flex-direction: column-reverse;
+        padding: 6px 12px !important;
+
+        > .description {
+          margin: 5px 0 0 0;
+          font-size: 11px;
+        }
+      }
     }
   }
   .song-artist {

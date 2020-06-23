@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Search } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet";
 
 import * as actions from "../../actions/SongSelectActions";
+import SongSearch from "./SongSearch";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
@@ -33,10 +34,15 @@ const SongForm = (props) => {
   const songGridContainer = useRef();
 
   const simfileOptions = simfileList.map((song) => {
-    return { key: song.hash, value: song.hash, text: song.title };
+    return {
+      key: song.hash,
+      value: song.hash,
+      text: song.title,
+      description: song.smName,
+    };
   });
 
-  const [selectedSongOption, setSelectedSongOption] = useState(null);
+  const [selectedSongOption, setSelectedSongOption] = useState("");
   const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(
     selectedDifficulty
   );
@@ -420,9 +426,9 @@ const SongForm = (props) => {
                 />
               </div>
               <div className="selectedSong-info">
-                <Dropdown
+                {/* <Dropdown
                   placeholder="Choose a song"
-                  className="song-title-dropdown"
+                  className="song-title-search"
                   search
                   selection
                   value={selectedSongOption}
@@ -430,6 +436,11 @@ const SongForm = (props) => {
                   options={simfileOptions}
                   selectOnBlur={false}
                   selectOnNavigation={false}
+                /> */}
+                <SongSearch
+                  selectedSongOption={selectedSongOption}
+                  onSongSelect={onSongSelect}
+                  simfileOptions={simfileOptions}
                 />
                 <div className="song-artist">
                   {selectedSong && selectedSong.artist}

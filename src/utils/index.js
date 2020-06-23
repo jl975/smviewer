@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import { DEBUG_MODE } from "../constants";
 
 export const getOriginPath = () => {
@@ -10,13 +12,8 @@ export const getOriginPath = () => {
 };
 
 export const fetchDocument = async (path) => {
-  const response = await fetch(path, {
-    mode: "cors",
-  });
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder("utf-8");
-  const readResult = await reader.read();
-  return decoder.decode(readResult.value);
+  const response = await axios.get(path);
+  return response.data;
 };
 
 export const getAssetPath = (path) => {

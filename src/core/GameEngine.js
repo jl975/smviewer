@@ -8,7 +8,6 @@ import TargetFlash from "../components/chart/canvas/TargetFlash";
 import ComboDisplay from "../components/chart/canvas/ComboDisplay";
 import BpmAndStopDisplay from "../components/chart/canvas/BpmAndStopDisplay";
 import LaneCover from "../components/chart/canvas/LaneCover";
-import parseSimfile from "../utils/parseSimfile";
 import {
   applyTurnMods,
   initializeBeatWindow,
@@ -27,11 +26,11 @@ import * as actions from "../actions/ChartActions";
 import { debugLogView, debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
-  constructor(canvas, sm, simfileType = "sm", chartParams) {
+  constructor(canvas, simfiles, chartParams) {
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
-    this.sm = sm;
-    this.simfiles = {};
+    // this.sm = sm;
+    this.simfiles = simfiles;
 
     this.tl = gsap.timeline();
     this.eventList = [];
@@ -97,10 +96,10 @@ class GameEngine {
     AudioPlayer.stopAnimationLoop = this.stopLoop.bind(this);
     AudioPlayer.updateAnimationLoopOnce = this.updateLoopOnce.bind(this);
 
-    if (!this.sm) return;
+    // if (!this.sm) return;
 
     // init logic
-    this.simfiles = parseSimfile(this.sm, simfileType);
+    // this.simfiles = parseSimfile(this.sm, simfileType);
     console.log("this.simfiles", this.simfiles);
 
     this.resetChart(chartParams);

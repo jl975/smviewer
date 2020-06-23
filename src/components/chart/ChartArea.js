@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import "inobounce";
 
 import { presetParams, getJacketPath } from "../../utils";
+import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
@@ -123,7 +124,6 @@ const ChartArea = (props) => {
           //       : prevState[thing]
           //   } \n\nto ${currentState[thing].slice(0, 30)}`
           // );
-          const simfileType = selectedSong.useSsc ? "ssc" : "sm";
 
           // flag the old game engine as killed, so any residual invocations
           // of its mainLoop can be squashed until it is garbage collected
@@ -131,7 +131,20 @@ const ChartArea = (props) => {
             gameEngine.killed = true;
           }
 
-          let ge = new GameEngine(canvas, sm, simfileType, chartParams);
+          if (!sm) return;
+
+          const simfileType = selectedSong.useSsc ? "ssc" : "sm";
+
+          // console.log(selectedSong);
+          const numSongLevels = selectedSong.levels.filter((a) => a).length;
+
+          // console.log(sm);
+          const simfiles = parseSimfile(sm, simfileType);
+
+          // console.log("available song levels:", numSongLevels);
+          // console.log("num loaded charts", simfiles.numLoadedCharts);
+
+          let ge = new GameEngine(canvas, simfiles, chartParams);
           ge.pauseTl();
           setGameEngine(ge);
         } else if (thing === "mods") {
