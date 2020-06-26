@@ -302,7 +302,7 @@ class Arrow {
         frameY = 0;
       } else {
         if (noteskin === "rainbow") {
-          frameX = (Math.floor(beatTick * 4) % 8) * ARROW_WIDTH;
+          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * ARROW_WIDTH;
 
           const beatD = this.measureD / 4;
           const beatN = this.measureN % beatD;
@@ -319,7 +319,7 @@ class Arrow {
           }
           frameY *= ARROW_HEIGHT;
         } else if (noteskin === "note") {
-          frameX = (Math.floor(beatTick * 4) % 8) * ARROW_WIDTH;
+          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * ARROW_WIDTH;
 
           /* 
               NOTE: In the future, if we want to support color codes for 12ths, 24ths, etc.
