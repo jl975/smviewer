@@ -155,9 +155,6 @@ const ChartArea = (props) => {
 
             if (gameEngine && modChanged) {
               if (mod === "bpmStopDisplay") {
-                if (gameEngine.bpmAndStopDisplay) {
-                  gameEngine.bpmAndStopDisplay.clearWindow();
-                }
                 gameEngine.bpmReel = currentState.mods[mod]
                   ? document.getElementById("bpmReel")
                   : null;
