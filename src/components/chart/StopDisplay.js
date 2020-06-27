@@ -6,7 +6,8 @@ const StopDisplay = (props) => {
 
   return (
     <div className={`stop-display`}>
-      {mods.bpmStopDisplay && <div id="stopReel"></div>}
+      {/* {mods.bpmStopDisplay && <div id="stopReel"></div>} */}
+      <canvas id="stopReel" />
     </div>
   );
 };

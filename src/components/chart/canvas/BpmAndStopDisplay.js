@@ -1,109 +1,123 @@
 import { ARROW_HEIGHT } from "../../../constants";
+import { getAssetPath } from "../../../utils";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
+const image = new Image();
+image.src = getAssetPath("bpm_stop_values.png");
+
+const DIGIT_WIDTH = 9;
+const DOT_WIDTH = 3;
+const DIGIT_HEIGHT = 19;
+
 class BpmAndStopDisplay {
-  constructor() {
-    // store key-value pairs for the bpm and stop values
-    // key: the index of the bpm/stop in its queue
-    // value: reference to the DOM element displaying the value
-    this.bpmElements = {};
-    this.stopElements = {};
-  }
-
-  /*
-    Go through the DOM element maps and delete any elements that no longer
-    fall within the window, both from the maps and from the actual DOM.
-  */
-  refreshWindow(eventWindow, attrs) {
-    if (!eventWindow) return;
-    const [windowStart, windowEnd] = eventWindow;
-    const { mods } = attrs;
-    ["bpm", "stop"].forEach((event) => {
-      const elementMap = this[`${event}Elements`];
-      for (let domKey in elementMap) {
-        const { obj, element } = elementMap[domKey];
-        const ts = mods.speed === "cmod" ? "timestamp" : "beat";
-        if (obj[ts] < windowStart || obj[ts] > windowEnd) {
-          // remove from DOM (if it is still on the DOM) and from map
-          if (element.parentNode) {
-            element.parentNode.removeChild(element);
-          }
-          delete elementMap[domKey];
-        }
-      }
-    });
-
-    // console.log("bpmElements after refreshWindow", this.bpmElements);
-  }
-
-  /*
-    Delete all elements from the DOM, usually when changing the song or difficulty
-  */
-  clearWindow() {
-    ["bpm", "stop"].forEach((event) => {
-      const elementMap = this[`${event}Elements`];
-      for (let domKey in elementMap) {
-        const { obj, element } = elementMap[domKey];
-        if (element.parentNode) {
-          element.parentNode.removeChild(element);
-        }
-        delete elementMap[domKey];
-      }
+  refreshWindow({ bpmReel, stopReel }) {
+    [bpmReel, stopReel].forEach((canvas) => {
+      const c = canvas.getContext("2d");
+      c.fillStyle = "black";
+      c.fillRect(0, 0, canvas.width, canvas.height);
     });
   }
 
-  /*
-    Check if the event is in its corresponding map by its key.
-    If it exists, update the properties on the existing DOM element.
-    If not, create the DOM element, append it to the reel and store it in the map.
-    Elements in the map that are no longer within the window are deleted
-  */
   renderBpm(bpmReel, bpm, { beatTick, timeTick }, { mods }) {
-    const key = bpm.beat;
-
+    const c = bpmReel.getContext("2d");
     const pxPosition = getPxPosition(
       bpm,
       { beatTick, timeTick },
       mods,
       bpmReel
     );
-    if (!this.bpmElements[key]) {
-      const element = document.createElement("div");
-      element.className = "bpm-value";
-      // element.dataset["val"] = bpm.value;
-      element.style.transform = `translateY(${pxPosition}px)`;
-      const valueNode = document.createElement("div");
-      valueNode.textContent = bpm.value;
-      element.appendChild(valueNode);
-      bpmReel.appendChild(element);
-      this.bpmElements[key] = { value: bpm.value, obj: bpm, element };
-    } else {
-      const element = this.bpmElements[key].element;
-      element.style.transform = `translateY(${pxPosition}px)`;
+
+    const topBoundary = -DIGIT_HEIGHT;
+    const bottomBoundary = bpmReel.height;
+
+    let destY = pxPosition - 10;
+    destY = (destY + 0.5) | 0;
+    const imageHeight = DIGIT_HEIGHT;
+
+    const digits = bpm.value.toString();
+    const numDigits = digits.length;
+    const imageY = 0;
+
+    if (destY > topBoundary && destY < bottomBoundary) {
+      let destX = bpmReel.width - 2;
+      for (let i = numDigits - 1; i >= 0; i--) {
+        const digit = digits[i];
+        let imageX, imageWidth;
+        if (digit === ".") {
+          imageX = DIGIT_WIDTH * 10 + (DIGIT_WIDTH - DOT_WIDTH) / 2;
+          imageWidth = DOT_WIDTH;
+          destX -= DOT_WIDTH;
+        } else {
+          imageX = DIGIT_WIDTH * parseInt(digit);
+          imageWidth = DIGIT_WIDTH;
+          destX -= DIGIT_WIDTH;
+        }
+        // console.log(
+        //   `digit ${digit}: imageX ${imageX}, imageY ${imageY}, imageWidth ${imageWidth}, imageHeight ${imageHeight}`
+        // );
+        c.drawImage(
+          image,
+          imageX,
+          imageY,
+          imageWidth,
+          imageHeight,
+          destX,
+          destY,
+          imageWidth,
+          imageHeight
+        );
+      }
     }
   }
 
   renderStop(stopReel, stop, { beatTick, timeTick }, { mods }) {
-    const key = stop.beat;
+    const c = stopReel.getContext("2d");
     const pxPosition = getPxPosition(
       stop,
       { beatTick, timeTick },
       mods,
       stopReel
     );
-    if (!this.stopElements[key]) {
-      const element = document.createElement("div");
-      element.className = "stop-value";
-      // element.dataset["val"] = stop.value;
-      element.style.transform = `translateY(${pxPosition}px)`;
-      const valueNode = document.createElement("div");
-      valueNode.textContent = stop.value;
-      element.appendChild(valueNode);
-      stopReel.appendChild(element);
-      this.stopElements[key] = { value: stop.value, obj: stop, element };
-    } else {
-      const element = this.stopElements[key].element;
-      element.style.transform = `translateY(${pxPosition}px)`;
+
+    const topBoundary = -DIGIT_HEIGHT;
+    const bottomBoundary = stopReel.height;
+
+    const destY = pxPosition - 10;
+    const imageHeight = DIGIT_HEIGHT;
+
+    const digits = stop.value.toString();
+    const numDigits = digits.length;
+    const imageY = DIGIT_HEIGHT;
+
+    if (destY > topBoundary && destY < bottomBoundary) {
+      let destX = 2;
+      for (let i = 0; i < numDigits; i++) {
+        const digit = digits[i];
+        let imageX, imageWidth;
+        if (digit === ".") {
+          imageX = DIGIT_WIDTH * 10 + (DIGIT_WIDTH - DOT_WIDTH) / 2;
+          imageWidth = DOT_WIDTH;
+        } else {
+          imageX = DIGIT_WIDTH * parseInt(digit);
+          imageWidth = DIGIT_WIDTH;
+        }
+        // console.log(
+        //   `digit ${digit}: imageX ${imageX}, imageY ${imageY}, imageWidth ${imageWidth}, imageHeight ${imageHeight}, destX ${destX}`
+        // );
+        c.drawImage(
+          image,
+          imageX,
+          imageY,
+          imageWidth,
+          imageHeight,
+          destX,
+          destY,
+          imageWidth,
+          imageHeight
+        );
+
+        destX += digit === "." ? DOT_WIDTH : DIGIT_WIDTH;
+      }
     }
   }
 }

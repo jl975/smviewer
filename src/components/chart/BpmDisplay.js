@@ -6,7 +6,8 @@ const BpmDisplay = (props) => {
 
   return (
     <div className={`bpm-display`}>
-      {mods.bpmStopDisplay && <div id="bpmReel"></div>}
+      {/* {mods.bpmStopDisplay && <div id="bpmReel"></div>} */}
+      <canvas id="bpmReel"></canvas>
       <div className={`current-bpm-container `}>
         <div className="current-bpm-wrapper">
           <div className="current-bpm-header">BPM</div>

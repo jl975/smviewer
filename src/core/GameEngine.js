@@ -121,10 +121,6 @@ class GameEngine {
     this.shocks.length = 0;
     this.allArrows.length = 0;
 
-    if (this.bpmAndStopDisplay) {
-      this.bpmAndStopDisplay.clearWindow();
-    }
-
     this.globalParams.beatTick = 0;
     this.globalParams.timeTick = 0;
     this.globalParams.frame = 0;
@@ -677,27 +673,24 @@ class GameEngine {
     }
 
     /* Bpm and stop display */
+    if (!this.bpmReel) {
+      this.bpmReel = document.getElementById("bpmReel");
+      this.bpmReel.height = this.canvas.height;
+      this.bpmReel.width = this.bpmReel.clientWidth;
+    }
+    if (!this.stopReel) {
+      this.stopReel = document.getElementById("stopReel");
+      this.stopReel.height = this.canvas.height;
+      this.stopReel.width = this.stopReel.clientWidth;
+    }
+    this.bpmAndStopDisplay.refreshWindow({
+      bpmReel: this.bpmReel,
+      stopReel: this.stopReel,
+    });
 
     if (mods.bpmStopDisplay) {
-      if (!this.bpmReel) {
-        this.bpmReel = document.getElementById("bpmReel");
-      }
-      if (!this.stopReel) {
-        this.stopReel = document.getElementById("stopReel");
-      }
-
-      this.bpmAndStopDisplay.refreshWindow(
-        mods.speed === "cmod"
-          ? this.globalParams.currentTimeWindow
-          : this.globalParams.currentBeatWindow,
-        { mods }
-      );
-
-      // console.log("mainLoop for", songSelect.song.title, this.sm.slice(0, 30));
-
       for (let i = windowStartPtr.bpm; i <= windowEndPtr.bpm; i++) {
         const bpm = this.globalParams.bpmQueue[i];
-        // visibleBpmChanges.push(bpm.value);
         this.bpmAndStopDisplay.renderBpm(
           this.bpmReel,
           bpm,
@@ -707,7 +700,6 @@ class GameEngine {
       }
       for (let i = windowStartPtr.stop; i <= windowEndPtr.stop; i++) {
         const stop = this.globalParams.stopQueue[i];
-        // visibleBpmChanges.push(stop.value);
         this.bpmAndStopDisplay.renderStop(
           this.stopReel,
           stop,
@@ -715,8 +707,7 @@ class GameEngine {
           { mods }
         );
       }
-      window.bpmAndStopDisplay = this.bpmAndStopDisplay;
-      // console.log(visibleBpmChanges);
+      // window.bpmAndStopDisplay = this.bpmAndStopDisplay;
     }
 
     /* Arrows */
