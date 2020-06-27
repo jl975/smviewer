@@ -27,7 +27,10 @@ const parseSimfile = (sm, simfileType = "sm") => {
     if (bpms.length) {
       bpms = bpms.split(",").map((point) => {
         const [beat, value] = point.split("=");
-        return { beat: parseFloat(beat), value: parseFloat(value) };
+        return {
+          beat: Math.round(parseFloat(beat) * 1000) / 1000,
+          value: parseFloat(value),
+        };
       });
     }
   }
@@ -37,7 +40,10 @@ const parseSimfile = (sm, simfileType = "sm") => {
     if (stops.length) {
       stops = stops.split(",").map((point) => {
         const [beat, value] = point.split("=");
-        return { beat: parseFloat(beat), value: parseFloat(value) };
+        return {
+          beat: Math.round(parseFloat(beat) * 1000) / 1000,
+          value: parseFloat(value),
+        };
       });
     }
   }

@@ -278,6 +278,9 @@ class GameEngine {
       // calculate starting position currentBeatPosition
       const { measureIdx, measureN, measureD } = note;
       note.beatstamp = (measureIdx + measureN / measureD) * 4;
+
+      // truncate to 3 decimal places in a consistent manner as stop beatstamps
+      note.beatstamp = Math.floor(note.beatstamp * 1000) / 1000;
     });
 
     // generate arrays of arrows by category
