@@ -10,14 +10,6 @@ const DOT_WIDTH = 3;
 const DIGIT_HEIGHT = 19;
 
 class BpmAndStopDisplay {
-  refreshWindow({ bpmReel, stopReel }) {
-    [bpmReel, stopReel].forEach((canvas) => {
-      const c = canvas.getContext("2d");
-      c.fillStyle = "black";
-      c.fillRect(0, 0, canvas.width, canvas.height);
-    });
-  }
-
   renderBpm(bpmReel, bpm, { beatTick, timeTick }, { mods }) {
     const c = bpmReel.getContext("2d");
     const pxPosition = getPxPosition(

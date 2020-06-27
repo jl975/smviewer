@@ -174,6 +174,7 @@ class GameEngine {
     window.cancelAnimationFrame(this.mainLoopRequestRef);
   }
   updateLoopOnce() {
+    this.clearBpmAndStopDisplay();
     window.requestAnimationFrame(this.mainLoop.bind(this, false));
   }
 
@@ -683,12 +684,15 @@ class GameEngine {
       this.stopReel.height = this.canvas.height;
       this.stopReel.width = this.stopReel.clientWidth;
     }
-    this.bpmAndStopDisplay.refreshWindow({
-      bpmReel: this.bpmReel,
-      stopReel: this.stopReel,
-    });
 
     if (mods.bpmStopDisplay) {
+      if (
+        windowStartPtr.bpm <= windowEndPtr.bpm ||
+        windowStartPtr.stop <= windowEndPtr.stop
+      ) {
+        this.clearBpmAndStopDisplay();
+      }
+
       for (let i = windowStartPtr.bpm; i <= windowEndPtr.bpm; i++) {
         const bpm = this.globalParams.bpmQueue[i];
         this.bpmAndStopDisplay.renderBpm(
@@ -838,6 +842,18 @@ class GameEngine {
   drawBackground() {
     this.c.fillStyle = "black";
     this.c.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+  clearBpmAndStopDisplay() {
+    if (this.bpmReel) {
+      const c = this.bpmReel.getContext("2d");
+      c.fillStyle = "black";
+      c.fillRect(0, 0, this.bpmReel.width, this.bpmReel.height);
+    }
+    if (this.stopReel) {
+      const c = this.stopReel.getContext("2d");
+      c.fillStyle = "black";
+      c.fillRect(0, 0, this.stopReel.width, this.stopReel.height);
+    }
   }
 
   restartTl() {
