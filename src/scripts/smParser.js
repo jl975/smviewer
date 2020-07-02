@@ -1,5 +1,6 @@
 const fs = require("fs");
 const simfileDirectoryPath = "../../public/simfiles";
+const chartLevels = require("../../public/data/chart_levels.json");
 
 const modeRegex = /dance-([a-z]+)/;
 const difficultyRegex = /(Beginner|Easy|Medium|Hard|Challenge|Edit)/;
@@ -25,12 +26,11 @@ const difficultyMap = {
 };
 
 const getMetadataFromSM = (json) => {
-  // console.log(json);
-
   for (let i = 0; i < json.length; i++) {
     const song = json[i];
     const { smName } = song;
 
+    // console.log(song);
     let sm;
 
     try {
@@ -82,21 +82,27 @@ const getMetadataFromSM = (json) => {
 
     const levelList = Array(9);
 
-    chartStrs.forEach((chartStr) => {
-      const mode = modeRegex.exec(chartStr)[1]; // single or double
-      const smDifficulty = difficultyRegex.exec(chartStr)[1];
+    // chartStrs.forEach((chartStr) => {
+    //   const mode = modeRegex.exec(chartStr)[1]; // single or double
+    //   const smDifficulty = difficultyRegex.exec(chartStr)[1];
 
-      if (!Object.keys(difficultyMap).includes(smDifficulty)) return;
+    //   if (!Object.keys(difficultyMap).includes(smDifficulty)) return;
 
-      const levelRegex = new RegExp(`${smDifficulty}:\\s+([0-9]+):`);
-      const level = parseInt(levelRegex.exec(chartStr)[1]);
+    //   const levelRegex = new RegExp(`${smDifficulty}:\\s+([0-9]+):`);
+    //   const level = parseInt(levelRegex.exec(chartStr)[1]);
 
-      const difficultyIndex = difficultyIndices.indexOf(
-        `${mode} ${smDifficulty}`
-      );
-      levelList[difficultyIndex] = level;
-    });
-    song.levels = levelList.join(",");
+    //   const difficultyIndex = difficultyIndices.indexOf(
+    //     `${mode} ${smDifficulty}`
+    //   );
+    //   levelList[difficultyIndex] = level;
+    // });
+    // song.levels = levelList.join(",");
+
+    // Some simfile levels are inaccurate. Use official eAmuse data for these
+    if (chartLevels[song.hash]) {
+      song.levels = chartLevels[song.hash].levels;
+      console.log(`${song.title} ${song.levels}`);
+    }
   }
 
   return json;

@@ -39,6 +39,8 @@ const MainContainer = (props) => {
     window.addEventListener("resize", props.resizeScreen);
   }, []);
 
+  const diffs = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
+
   const fetchSimfiles = async () => {
     try {
       const parsedTsv = await tsv(getOriginPath() + "data/simfiles.tsv");

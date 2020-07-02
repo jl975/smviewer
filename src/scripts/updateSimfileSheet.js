@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 const simfileTsvPath = "../../public/data/simfiles.tsv";
+
 const { getMetadataFromSM } = require("./smParser");
 
 const parseSimfileTsv = () => {
@@ -27,7 +28,7 @@ const parseSimfileTsv = () => {
 const writeSimfileTsv = (json) => {
   let output = "";
 
-  console.log(json);
+  // console.log(json);
   const headers = Object.keys(json[0]);
 
   output += headers.join("\t");
@@ -42,8 +43,6 @@ const writeSimfileTsv = (json) => {
     output += row;
   });
 
-  console.log(output);
-
   fs.writeFile(simfileTsvPath, output, "utf8", (err) => {
     if (err) console.log(err);
   });
@@ -54,7 +53,8 @@ const init = async () => {
 
   parsedTsv = getMetadataFromSM(parsedTsv);
 
-  console.log(parsedTsv);
+  // console.log(parsedTsv);
+  // console.log(chartLevels);
 
   // // one-time script of filling in empty smName and mp3 url columns
   // parsedTsv.forEach((song) => {
