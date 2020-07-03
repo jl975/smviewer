@@ -45,6 +45,7 @@ export const DDR_VERSIONS = [
   "DDR (2014)",
   "DDR A",
   "DDR A20",
+  "DDR A20 PLUS",
 ];
 
 export const SP_DIFFICULTIES = [
