@@ -419,12 +419,12 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	sampl
 417	10oQOoD00O1ql8qD88dI0i0biP69blq6	GRADUATION ～それぞれの明日～	GRADUATION	BeForU	7	2,3,7,9,,3,7,9,	125	G	uh6qosc197larhz/GRADUATION.mp3	31.928	15	
 418	Ib01P6O8OPl8qqQi9QO6dii18ID69I8P	Grand Chariot	Grand Chariot	xi	15	3,7,11,13,,7,11,13,	191	G	iie4v414aaz56ud/Grand%20Chariot.mp3	95.486	15	
 419	I90bd6obO890P0d1iiPD0dol8o8QloQD	Grip & Break down !!	Grip & Break down !!	SOUND HOLIC feat. Nana Takahashi	15	3,6,9,12,,5,10,13,	160	G	se61thnel8agdg1/Grip%20%26%20Break%20down%20%21%21.mp3	51.052	15	
-420	QbdQold98oq9lODoIloIbPiIqld6i0Qb	GUILTY DIAMONDS	GUILTY DIAMONDS	SOUND HOLIC Vs. Eurobeat Union feat. Nana Takahashi	17	3,6,10,14,,6,10,14	84-168	G	m4x0c8fl3uwaww4/GUILTY%20DIAMONDS.mp3	76.071	15	
+420	QbdQold98oq9lODoIloIbPiIqld6i0Qb	GUILTY DIAMONDS	GUILTY DIAMONDS	SOUND HOLIC Vs. Eurobeat Union feat. Nana Takahashi	17	3,6,10,14,,6,10,14	84-168	G	zdfzid9s3oehnk0/GUILTY%20DIAMONDS.mp3	76.071	15	
 421	890q91iIbO96OOD10Qlob6qOObQoq1bd	Habibe (Antuh muhleke)	Habibe(Antuh muhleke)	Wendy Parr	14	3,5,10,13,,6,11,13,	144	H	sqvevzfbvkyue8k/Habibe%28Antuh%20muhleke%29.mp3	65	15	
 422	l6qQi9qlO8diPd18dl6DdqPid01P91iQ	Ha･lle･lu･jah	Ha-lle-lu-jah	SOUND HOLIC feat. Nana Takahashi	15	1,5,9,12,,4,9,12,	150	H	uazxg6ieah5hlug/Ha-lle-lu-jah.mp3	61.578	15	
 423	8OIqIi996QI18Oo0q8iiiO8bbb6dI1l6	HANDS UP IN THE AIR	HANDS UP IN THE AIR	U1	15	1,5,9,13,,5,9,13,	128	H	mpmpxa2481mmj3y/HANDS%20UP%20IN%20THE%20AIR.mp3	84.395	15	
 424	9OP0iqDD8PDIb8lblD0ol09oP1I1d9PO	Happy	Happy	Pharrell Williams	15	3,5,9,12,,6,8,13,	160	H	xshv6mykmtqymlp/Happy.mp3	26.066	15	
-425	8DdIqobi0liOPDO1qld6lQ9Dq00I66qi	HAPPY☆ANGEL	HAPPY ANGEL	jun with TAHIRIH	8	4,4,8,12,,3,8,11,	180	H	7anv0ucqx358s97/HAPPY%20ANGEL.mp3	31.173	15	
+425	8DdIqobi0liOPDO1qld6lQ9Dq00I66qi	HAPPY☆ANGEL	HAPPY ANGEL	jun with TAHIRIH	8	4,4,8,12,16,3,8,11,16	180	H	7anv0ucqx358s97/HAPPY%20ANGEL.mp3	31.173	15	
 426	ol6IDd019O0qq8dblPQ96ol1oPbI990b	HAPPY☆LUCKY☆YEAPPY	HAPPY LUCKY YEAPPY	DJ ミラクル☆ストーン	14	6,10,13,16,,9,13,16,	190-380	H	6qwfwa316sqcdab/HAPPY%20LUCKY%20YEAPPY.mp3	61.895	15	
 427	oo8DId90dbDliiQQlQPQQoIq6lPliqo9	Happy Wedding	Happy Wedding	ASKA	7	3,4,6,10,,5,6,9,	126	H	c4tlfq5fg15hi7e/Happy%20Wedding.mp3	47.633	15	
 428	POl689q8ODbPI0PDo8l8oD81Plio8qlP	Haunted Rhapsody	Haunted Rhapsody	Architect ft. Jasmine Nii	12	2,5,7,13,,4,7,13,	155	H	2j2qrb54sbggv2v/Haunted%20Rhapsody.mp3	66.6	15	
@@ -908,7 +908,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	sampl
 906	D8I68Ibib9ldQDIPIQdO6lqI61PQlPO9	You gotta move it (feat. Julie Rugaard)	You gotta move it (feat. Julie Rugaard)	古代祐三	8	4,5,8,10,,5,7,10,	134	Y	ug4u8xl5iv7kjuh/You%20gotta%20move%20it%20%28feat.%20Julie%20Rugaard%29.mp3	35.78	15	
 907	oiIob81i6d6P6qbddOP6Q0d0obQ0PID9	Your Angel	Your Angel	DM Ashura feat. kors k	11	2,4,7,10,,4,7,11,	175	Y	cxask9pl3qh3baz/Your%20Angel.mp3	72.71	15	
 908	I61ioI01IOPDPbP1OO0l98PD0iDbid0D	ZEPHYRANTHES	ZEPHYRANTHES	TAG	15	3,7,11,15,,7,11,15,	180	Z	sqnkvadwywel29y/ZEPHYRANTHES.mp3	65.365	15	
-909	96QPqq0q6Id0Ii0QbD1bQqPbiDqb0lPo	ZETA～素数の世界と超越者～	ZETA ~The World of Prime Numbers and the Transcendental Being~	Zektbach	11	3,6,11,15,,6,9,14,	90-180	Z	49jf7qe66txe19r/ZETA%20~The%20World%20of%20Prime%20Numbers%20and%20the%20Transcendental%20Being~.mp3	92.34	15	
+909	96QPqq0q6Id0Ii0QbD1bQqPbiDqb0lPo	ZETA～素数の世界と超越者～	ZETA ~The World of Prime Numbers and the Transcendental Being~	Zektbach	11	3,6,11,15,17,6,9,14,17	90-180	Z	49jf7qe66txe19r/ZETA%20~The%20World%20of%20Prime%20Numbers%20and%20the%20Transcendental%20Being~.mp3	92.34	15	
 910	IQ0dIiDql9Q68d9ddQIiQbq1OPq8Db69	.59	59	dj TAKA	3	3,5,8,11,,5,8,10,	110-135	NUM	tnltzoancgxas54/59.mp3	74.67	15	
 911	ddOOOibQ6qIi9DI1bl8b108I1Ib6QDl9	1998	1998	NAOKI	7	3,4,6,9,,5,6,9,	150	NUM	5iiw9v6wixb35xx/1998.mp3	28.009	15	
 912	i9Pidb18b9O8bdqQ91QQP0oPdIdIODq1	30 Lives (Up-Up-Down-Dance Mix)	30 Lives (Up-Up-Down-Dance Mix)	The Motion Sick	10	2,4,7,8,,3,6,8,	144	NUM	a6j185c1wsu195r/30%20Lives%20%28Up-Up-Down-Dance%20Mix%29.mp3	45.83	15	
@@ -919,3 +919,5 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	sampl
 917	0IIO08bII0QQDOdobqbl8Ib8Q8O8q1li	50th Memorial Songs -Flagship medley-	50th Memorial Songs -Flagship medley-	BEMANI Sound Team	16	3,7,9,12,,8,10,13,	135-175	NUM	q62zaefj3ajva35/50th%20Memorial%20Songs%20-Flagship%20medley-.mp3	12.348	15	
 918	D0iDbio81PIbI8dD6QOIP9IidDOP0PDP	50th Memorial Songs -The BEMANI History-	50th Memorial Songs -The BEMANI History-	BEMANI Sound Team	16	2,5,9,13,,5,9,13,	136	NUM	sn5gfla0gljemaz/50th%20Memorial%20Songs%20-The%20BEMANI%20History-.mp3	30	15	
 919	Dd98lDdo8Ob698d9qbO9iD0PqO19oQbI	8000000	8000000	kors k	14	4,7,10,14,,7,11,14,	100-200	NUM	bongpmr6mgn83mu/8000000.mp3	78	15	
+920	id9oObq9P6Q6Pq6lQPqI88OP1DD8D0O1	888	888	DJ TECHNORCH	11	3,6,13,14,18,7,12,15,18	111-888	NUM	jka2d1w0uoi328t/888.mp3	4.33	15	
+921	00obPO6oPIPOoD9qb0dIl6q6D8P6o9bI	IX	IX	dj TAKA VS DJ TOTTO feat.藍	14	5,11,14,17,18,10,14,17,18	99-396	NUM	2etsna481mo15t8/IX.mp3	72.412	15	
