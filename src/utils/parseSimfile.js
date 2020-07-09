@@ -12,14 +12,13 @@ const difficultyMap = {
 const parseSimfile = (sm, simfileType = "sm") => {
   const simfiles = {};
 
-  const chartMetadata = sm.slice(
-    0,
-    sm.indexOf(simfileType === "ssc" ? "#NOTEDATA:" : "#NOTES:")
-  );
+  const chartMetadata = sm.slice(0, sm.indexOf(simfileType === "ssc" ? "#NOTEDATA:" : "#NOTES:"));
 
   let bpms = [];
   let stops = [];
   let offset = 0;
+  let sampleStart = 0,
+    sampleLength = 15;
 
   // default bpms
   if (/#BPMS:/i.test(chartMetadata)) {
@@ -47,9 +46,10 @@ const parseSimfile = (sm, simfileType = "sm") => {
       });
     }
   }
-  // offset
 
   let chartStrs;
+
+  // offset
   if (/#OFFSET:/i.test(chartMetadata)) {
     offset = /#OFFSET:([\s\S]*?)\s*;/i.exec(chartMetadata)[1];
     offset = parseFloat(offset);
@@ -65,6 +65,12 @@ const parseSimfile = (sm, simfileType = "sm") => {
       .slice(sm.indexOf("#NOTES:"))
       .split(/#NOTES:\s+/)
       .slice(1);
+  }
+
+  // sample start and length
+  if (/#SAMPLESTART:/i.test(chartMetadata)) {
+    sampleStart = /#SAMPLESTART:([\s\S]*?)\s*;/i.exec(sm)[1];
+    sampleStart = parseFloat(sampleStart);
   }
 
   // console.log(chartStrs);
@@ -84,6 +90,8 @@ const parseSimfile = (sm, simfileType = "sm") => {
       bpms,
       stops,
       offset,
+      sampleStart,
+      sampleLength,
     };
     const simfile = simfiles[`${mode}_${difficulty}`];
 

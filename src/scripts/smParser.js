@@ -2,29 +2,6 @@ const fs = require("fs");
 const simfileDirectoryPath = "../../public/simfiles";
 const chartLevels = require("../../public/data/chart_levels.json");
 
-const modeRegex = /dance-([a-z]+)/;
-const difficultyRegex = /(Beginner|Easy|Medium|Hard|Challenge|Edit)/;
-
-const difficultyIndices = [
-  "single Beginner",
-  "single Easy",
-  "single Medium",
-  "single Hard",
-  "single Challenge",
-  "double Easy",
-  "double Medium",
-  "double Hard",
-  "double Challenge",
-];
-
-const difficultyMap = {
-  Beginner: "Beginner",
-  Easy: "Basic",
-  Medium: "Difficult",
-  Hard: "Expert",
-  Challenge: "Challenge",
-};
-
 const getMetadataFromSM = (json) => {
   for (let i = 0; i < json.length; i++) {
     const song = json[i];
@@ -74,29 +51,6 @@ const getMetadataFromSM = (json) => {
       displayBpm = displayBpm.join("-");
       song.displayBpm = displayBpm;
     }
-
-    const chartStrs = sm
-      .slice(sm.indexOf("#NOTES:"))
-      .split(/#NOTES:\s+/)
-      .slice(1);
-
-    const levelList = Array(9);
-
-    // chartStrs.forEach((chartStr) => {
-    //   const mode = modeRegex.exec(chartStr)[1]; // single or double
-    //   const smDifficulty = difficultyRegex.exec(chartStr)[1];
-
-    //   if (!Object.keys(difficultyMap).includes(smDifficulty)) return;
-
-    //   const levelRegex = new RegExp(`${smDifficulty}:\\s+([0-9]+):`);
-    //   const level = parseInt(levelRegex.exec(chartStr)[1]);
-
-    //   const difficultyIndex = difficultyIndices.indexOf(
-    //     `${mode} ${smDifficulty}`
-    //   );
-    //   levelList[difficultyIndex] = level;
-    // });
-    // song.levels = levelList.join(",");
 
     // Some simfile levels are inaccurate. Use official eAmuse data for these
     if (chartLevels[song.hash]) {

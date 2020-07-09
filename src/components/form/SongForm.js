@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Dropdown, Search } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { Helmet } from "react-helmet";
 
 import * as actions from "../../actions/SongSelectActions";
 import SongSearch from "./SongSearch";
@@ -9,20 +8,11 @@ import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
 import { clearBpmAndStopDisplay } from "../../utils/engineUtils";
-import {
-  getUserSettings,
-  updateUserSettings,
-  getSavedSongProgress,
-} from "../../utils/userSettings";
+import { getUserSettings, updateUserSettings, getSavedSongProgress } from "../../utils/userSettings";
 import loadStore from "../../utils/loadStore";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
-import {
-  titleSortOptions,
-  versionSortOptions,
-  levelSortOptions,
-  difficultySortOptions,
-} from "./songFormOptions";
+import { titleSortOptions, versionSortOptions, levelSortOptions, difficultySortOptions } from "./songFormOptions";
 import { generateInitialValues } from "./options";
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
@@ -43,9 +33,7 @@ const SongForm = (props) => {
   });
 
   const [selectedSongOption, setSelectedSongOption] = useState("");
-  const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(
-    selectedDifficulty
-  );
+  const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(selectedDifficulty);
   const [loadingFirstSong, setLoadingFirstSong] = useState(true);
 
   const [selectedFilters, setSelectedFilters] = useState(
@@ -80,16 +68,10 @@ const SongForm = (props) => {
           (version === "all" || version === parseInt(song.version)) &&
           // if a level filter is selected, song matches level filter
           // if level is not being filtered, song has at least one chart on the chosen mode
-          ((level === "all" &&
-            selectedMode === "single" &&
-            singleDiffs.some((level) => !!level)) ||
-            (level === "all" &&
-              selectedMode === "double" &&
-              doubleDiffs.some((level) => !!level)) ||
-            (selectedMode === "single" &&
-              song.levels.slice(0, 5).includes(level)) ||
-            (selectedMode === "double" &&
-              song.levels.slice(5, 9).includes(level)))
+          ((level === "all" && selectedMode === "single" && singleDiffs.some((level) => !!level)) ||
+            (level === "all" && selectedMode === "double" && doubleDiffs.some((level) => !!level)) ||
+            (selectedMode === "single" && song.levels.slice(0, 5).includes(level)) ||
+            (selectedMode === "double" && song.levels.slice(5, 9).includes(level)))
         );
       })
       .filter((song) => {
@@ -100,9 +82,7 @@ const SongForm = (props) => {
             if (selectedMode === "single") {
               return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] !== null;
             } else if (selectedMode === "double") {
-              return (
-                song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] !== null
-              );
+              return song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] !== null;
             }
           }
           // if level is specified, only show if the difficulty is that level
@@ -110,9 +90,7 @@ const SongForm = (props) => {
             if (selectedMode === "single") {
               return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] === level;
             } else if (selectedMode === "double") {
-              return (
-                song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] === level
-              );
+              return song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] === level;
             }
           }
         }
@@ -209,18 +187,12 @@ const SongForm = (props) => {
     }
 
     const selectClosestDifficulty = () => {
-      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
-        selectedDifficultyOption
-      );
+      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(selectedDifficultyOption);
       let difficultyToSelect;
       if (song.levels[selectedDiffOptionIndex]) {
         difficultyToSelect = selectedDifficultyOption;
       } else {
-        difficultyToSelect = getClosestDifficulty(
-          song,
-          selectedDifficultyOption,
-          selectedMode
-        );
+        difficultyToSelect = getClosestDifficulty(song, selectedDifficultyOption, selectedMode);
       }
       props.onDifficultySelect(difficultyToSelect);
     };
@@ -229,32 +201,22 @@ const SongForm = (props) => {
     // 4 possible cases
 
     // Neither level nor difficulty filter applied
-    if (
-      selectedFilters.level === "all" &&
-      selectedFilters.difficulty === "all"
-    ) {
+    if (selectedFilters.level === "all" && selectedFilters.difficulty === "all") {
       // select the chart corresponding to the selected difficulty option.
       // if the song does not have a chart for that difficulty, choose the closest difficulty.
       selectClosestDifficulty();
     }
 
     // Level filter applied but not difficulty
-    else if (
-      selectedFilters.level !== "all" &&
-      selectedFilters.difficulty === "all"
-    ) {
-      const levels =
-        selectedMode === "double"
-          ? song.levels.slice(5, 9)
-          : song.levels.slice(0, 5);
+    else if (selectedFilters.level !== "all" && selectedFilters.difficulty === "all") {
+      const levels = selectedMode === "double" ? song.levels.slice(5, 9) : song.levels.slice(0, 5);
 
       // if the song has a chart that matches the level filter, choose that chart
       if (levels.includes(selectedFilters.level)) {
         for (let i = 0; i < levels.length; i++) {
           const level = levels[i];
           if (level === selectedFilters.level) {
-            const difficulties =
-              selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
+            const difficulties = selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
             props.onDifficultySelect(difficulties[i]);
             break;
           }
@@ -268,10 +230,7 @@ const SongForm = (props) => {
     }
 
     // Difficulty filter applied but not level
-    else if (
-      selectedFilters.difficulty !== "all" &&
-      selectedFilters.level === "all"
-    ) {
+    else if (selectedFilters.difficulty !== "all" && selectedFilters.level === "all") {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
       if (selectedMode === "double") difficultyIdx += 4;
 
@@ -288,10 +247,7 @@ const SongForm = (props) => {
 
     // Both level and difficulty filters applied
     // equivalent to a regular else block but condition listed explicitly for clarity
-    else if (
-      selectedFilters.difficulty !== "all" &&
-      selectedFilters.level !== "all"
-    ) {
+    else if (selectedFilters.difficulty !== "all" && selectedFilters.level !== "all") {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
       if (selectedMode === "double") difficultyIdx += 4;
 
@@ -324,18 +280,14 @@ const SongForm = (props) => {
 
     let levels;
     if (selectedMode === "single") levels = selectedSong.levels.slice(0, 5);
-    else if (selectedMode === "double")
-      levels = selectedSong.levels.slice(5, 9);
+    else if (selectedMode === "double") levels = selectedSong.levels.slice(5, 9);
 
     return levels.map((level, idx) => {
       if (!level) return null;
-      const difficulty =
-        selectedMode === "double" ? DP_DIFFICULTIES[idx] : SP_DIFFICULTIES[idx];
+      const difficulty = selectedMode === "double" ? DP_DIFFICULTIES[idx] : SP_DIFFICULTIES[idx];
       return (
         <div
-          className={`song-difficulty ${difficulty} ${
-            selectedDifficulty === difficulty ? "selected" : ""
-          }`}
+          className={`song-difficulty ${difficulty} ${selectedDifficulty === difficulty ? "selected" : ""}`}
           key={`${selectedMode}-difficulty_${difficulty}`}
           onClick={() => handleDifficultySelect(difficulty)}
         >
@@ -390,31 +342,12 @@ const SongForm = (props) => {
   };
 
   return (
-    <div
-      className={`view-section songView ${
-        props.activeView === "song" ? "active" : ""
-      }`}
-    >
-      {/* meta tags defined here */}
-      {selectedSong && (
-        <Helmet>
-          <title>{selectedSong.title} - SMViewer</title>
-          <meta
-            property="og:title"
-            content={`${selectedSong.title} - SMViewer`}
-          />
-        </Helmet>
-      )}
-      {/* end meta tags */}
+    <div className={`view-section songView ${props.activeView === "song" ? "active" : ""}`}>
       <div className="view-wrapper">
         <form className="songForm">
           <div className="form-inner-wrapper">
             <div className="selectedSong">
-              <div
-                className={`selectedSong-jacket-wrapper ${
-                  previewAudio.status === "playing" ? "playing" : ""
-                }`}
-              >
+              <div className={`selectedSong-jacket-wrapper ${previewAudio.status === "playing" ? "playing" : ""}`}>
                 <div className="selectedSong-jacket-overlay">
                   <AudioWave />
                 </div>
@@ -426,25 +359,12 @@ const SongForm = (props) => {
                 />
               </div>
               <div className="selectedSong-info">
-                {/* <Dropdown
-                  placeholder="Choose a song"
-                  className="song-title-search"
-                  search
-                  selection
-                  value={selectedSongOption}
-                  onChange={(e, data) => onSongSelect(data.value)}
-                  options={simfileOptions}
-                  selectOnBlur={false}
-                  selectOnNavigation={false}
-                /> */}
                 <SongSearch
                   selectedSongOption={selectedSongOption}
                   onSongSelect={onSongSelect}
                   simfileOptions={simfileOptions}
                 />
-                <div className="song-artist">
-                  {selectedSong && selectedSong.artist}
-                </div>
+                <div className="song-artist">{selectedSong && selectedSong.artist}</div>
 
                 <div className="song-difficulties">{renderDifficulties()}</div>
 

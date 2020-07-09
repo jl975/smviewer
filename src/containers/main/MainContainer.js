@@ -8,11 +8,7 @@ import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
 import AudioPlayer from "../../core/AudioPlayer";
 import { getOriginPath, fetchDocument } from "../../utils";
-import {
-  selectSong,
-  selectDifficulty,
-  selectMode,
-} from "../../actions/SongSelectActions";
+import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
 import loadStore from "../../utils/loadStore";
 import { DEBUG_MODE } from "../../constants";
@@ -39,15 +35,11 @@ const MainContainer = (props) => {
     window.addEventListener("resize", props.resizeScreen);
   }, []);
 
-  const diffs = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
-
   const fetchSimfiles = async () => {
     try {
       const parsedTsv = await tsv(getOriginPath() + "data/simfiles.tsv");
       parsedTsv.forEach((row) => {
-        row.levels = row.levels
-          .split(",")
-          .map((level) => (level ? parseInt(level) : null));
+        row.levels = row.levels.split(",").map((level) => (level ? parseInt(level) : null));
       });
 
       // console.log("simfiles", parsedTsv);
@@ -81,9 +73,7 @@ const MainContainer = (props) => {
       // Any pending requests that finish before the last song is loaded will be ignored
       loadStore.lastRequestedSong = song.title;
       const sm = await fetchDocument(
-        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${
-          song.useSsc ? "ssc" : "sm"
-        }`
+        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${song.useSsc ? "ssc" : "sm"}`
       );
 
       // User might try to select a new song before the simfile is fetched.
