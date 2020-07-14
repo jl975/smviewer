@@ -40,31 +40,19 @@ const ModsForm = (props) => {
     if (!highBpm) {
       return <strong>{Math.round(lowBpm * mods.speed)}</strong>;
     } else {
-      return (
-        <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(
-          highBpm * mods.speed
-        )}`}</strong>
-      );
+      return <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(highBpm * mods.speed)}`}</strong>;
     }
   };
 
   const resetCmodIfInvalid = (e) => {
     const fieldValue = e.target.value;
-    if (
-      !fieldValue ||
-      parseInt(fieldValue) < 100 ||
-      parseInt(fieldValue) > 1000
-    ) {
+    if (!fieldValue || parseInt(fieldValue) < 100 || parseInt(fieldValue) > 1000) {
       updateMods({ cmod: DEFAULT_CMOD });
     }
   };
 
   return (
-    <div
-      className={`view-section modsView ${
-        props.activeView === "mods" ? "active" : ""
-      }`}
-    >
+    <div className={`view-section modsView ${props.activeView === "mods" ? "active" : ""}`}>
       <div className="view-wrapper">
         <form className="modsForm">
           <div className="form-field">
@@ -72,8 +60,7 @@ const ModsForm = (props) => {
               Speed
               {song && (
                 <span className="form-sublabel">
-                  (Effective scroll speed:{" "}
-                  <strong>{getEffectiveScrollSpeed()}</strong>)
+                  (Effective scroll speed: <strong>{getEffectiveScrollSpeed()}</strong>)
                 </span>
               )}
             </h4>
@@ -118,15 +105,7 @@ const ModsForm = (props) => {
               return (
                 <Radio
                   key={`appearance_${appearance}`}
-                  label={
-                    [
-                      "Visible",
-                      "Hidden+",
-                      "Sudden+",
-                      "Hidden+ / Sudden+",
-                      "Stealth",
-                    ][i]
-                  }
+                  label={["Visible", "Hidden+", "Sudden+", "Hidden+ / Sudden+", "Stealth"][i]}
                   name="appearance"
                   value={appearance}
                   checked={mods.appearance === appearance}
@@ -156,8 +135,7 @@ const ModsForm = (props) => {
             <h4 className="form-label">Turn</h4>
             {options.mods.turn
               .filter((turn) => {
-                if (mode === "double")
-                  return turn === "off" || turn === "mirror";
+                if (mode === "double") return turn === "off" || turn === "mirror";
                 return true;
               })
               .map((turn) => {
@@ -177,26 +155,13 @@ const ModsForm = (props) => {
             <div className="form-field">
               <h4 className="form-label">
                 Shuffle pattern
-                <span className="form-sublabel">
-                  (compare to original LDUR)
-                </span>
+                <span className="form-sublabel">(compare to original LDUR)</span>
               </h4>
               {options.mods.shuffle.map((shuffle, i) => {
                 return (
                   <Radio
                     key={`shuffle_${shuffle}`}
-                    label={
-                      [
-                        "LRDU",
-                        "UDRL",
-                        "LRUD",
-                        "DURL",
-                        "DLUR",
-                        "DULR",
-                        "RLUD",
-                        "RULD",
-                      ][i]
-                    }
+                    label={["LRDU", "UDRL", "LRUD", "DURL", "DLUR", "DULR", "RLUD", "RULD"][i]}
                     name="shuffle"
                     value={shuffle}
                     checked={mods.shuffle === shuffle}
@@ -275,10 +240,19 @@ const ModsForm = (props) => {
           <div className="form-field">
             <Checkbox
               toggle
+              label="Assist tick"
+              name="assistTick"
+              checked={mods.assistTick}
+              onChange={(_, data) => updateMods({ assistTick: data.checked })}
+            />
+          </div>
+          <div className="form-field">
+            <Checkbox
+              toggle
               label="Guidelines"
               name="guidelines"
               checked={mods.guidelines}
-              onChange={() => updateMods({ guidelines: !mods.guidelines })}
+              onChange={(_, data) => updateMods({ guidelines: data.checked })}
             />
           </div>
           <div className="form-field">
@@ -287,7 +261,7 @@ const ModsForm = (props) => {
               label="Color freeze heads"
               name="colorFreezes"
               checked={mods.colorFreezes}
-              onChange={() => updateMods({ colorFreezes: !mods.colorFreezes })}
+              onChange={(_, data) => updateMods({ colorFreezes: data.checked })}
             />
           </div>
           <div className="form-field">
@@ -296,9 +270,7 @@ const ModsForm = (props) => {
               label="Scrolling BPM/stop values"
               name="bpmStopDisplay"
               checked={mods.bpmStopDisplay}
-              onChange={() =>
-                updateMods({ bpmStopDisplay: !mods.bpmStopDisplay })
-              }
+              onChange={(_, data) => updateMods({ bpmStopDisplay: data.checked })}
             />
           </div>
           <div className="form-field">
@@ -310,9 +282,7 @@ const ModsForm = (props) => {
               max="0.20"
               step="0.01"
               value={mods.globalOffset}
-              onChange={(_, data) =>
-                updateMods({ globalOffset: parseFloat(data.value) })
-              }
+              onChange={(_, data) => updateMods({ globalOffset: parseFloat(data.value) })}
             />
             <span>{mods.globalOffset}</span>
           </div>

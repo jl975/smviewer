@@ -7,6 +7,7 @@ import "semantic-ui-css/semantic.min.css";
 import "./styles.scss";
 import App from "./App";
 import store from "./store";
+// import "./lib/AudioContextMonkeyPatch";
 
 ReactDOM.render(
   <Provider store={store}>

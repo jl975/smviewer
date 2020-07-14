@@ -61,6 +61,7 @@ const optionDefaultValues = {
     guidelines: true,
     comboDisplay: "behind",
     comboFont: "A20",
+    assistTick: false,
     colorFreezes: false,
     globalOffset: DEFAULT_OFFSET,
     bpmStopDisplay: false,
