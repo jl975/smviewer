@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+}
+
+.formContainer {
+}
+
+.formField {
+  margin-bottom: 5px;
+  display: flex;
+
+  input {
+    height: 30px;
+    width: 300px;
+    border: 1px solid #888;
+    border-radius: 2px;
+    padding: 0 5px;
+  }
+
+  label {
+    display: inline-block;
+    font-weight: 800;
+    margin-right: 20px;
+    width: 130px;
+    text-align: right;
+  }
+}
+
+.jacketPreview {
+  width: 75px;
+  height: 75px;
+}
+
+.levels {
+  display: flex;
+  width: 300px;
+
+  .levelsSingle,
+  .levelsDouble {
+    width: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  label {
+    width: 25px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+  input {
+    width: 40px;
+    text-align: center;
+  }
+}
+
+.formPreContainer {
+  margin-left: 100px;
+}
+
+.formPre {
+  width: 400px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  font-size: 12px;
+}
