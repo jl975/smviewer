@@ -4,7 +4,7 @@ import Link from "next/link";
 import Layout from "../shared/Layout";
 import { getSimfilesTsv } from "../lib/songs";
 
-import Table from "./Table";
+import Table from "../components/Table";
 
 export async function getStaticProps() {
   const songs = getSimfilesTsv();
