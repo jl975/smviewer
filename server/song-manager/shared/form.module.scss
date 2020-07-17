@@ -9,12 +9,25 @@
   margin-bottom: 5px;
   display: flex;
 
-  input {
+  input,
+  select {
     height: 30px;
-    width: 300px;
     border: 1px solid #888;
     border-radius: 2px;
+  }
+
+  input {
+    padding: 0 10px;
+    width: 400px;
+  }
+  select {
     padding: 0 5px;
+    width: 170px;
+  }
+
+  input[type="file"] {
+    border: none;
+    padding: 0;
   }
 
   label {
@@ -24,6 +37,12 @@
     width: 130px;
     text-align: right;
   }
+}
+
+.manualEntryFields {
+  margin-bottom: 50px;
+}
+.automaticEntryFields {
 }
 
 .jacketPreview {

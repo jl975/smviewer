@@ -25,7 +25,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default function Song(props) {
+export default function EditSong(props) {
   const { song } = props;
   return (
     <Layout>
@@ -33,7 +33,7 @@ export default function Song(props) {
         <title>{song.title}</title>
       </Head>
 
-      <Form {...props} />
+      <Form {...props} isNew={false} />
 
       <Link href="/">
         <a>Back to table</a>
