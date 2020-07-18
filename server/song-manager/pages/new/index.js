@@ -3,10 +3,18 @@ import Link from "next/link";
 
 import Layout from "../../shared/Layout";
 
-import Form from "../../shared/Form";
+import Form from "../../components/Form";
+
+// import { getSongPosition } from "../../lib/eagate";
 
 // export async function getStaticProps({ params }) {
-//   return {};
+//   const json = await getSongPosition({
+//     // id: "61oIP0QIlO90d18ObDP1Dii6PoIQoOD8",
+//     title: "東京神話",
+//   });
+//   console.log(json);
+
+//   return { props: {} };
 // }
 
 export default function AddSong(props) {
@@ -22,7 +30,6 @@ export default function AddSong(props) {
     dAudioUrl: "",
   };
 
-  console.log("formInitialState", formInitialState);
   return (
     <Layout>
       <Head>

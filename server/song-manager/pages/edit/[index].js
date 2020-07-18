@@ -4,7 +4,7 @@ import Link from "next/link";
 import Layout from "../../shared/Layout";
 import { getAllSongIndices, getSongData, getJacketPath } from "../../lib/songs";
 
-import Form from "../../shared/Form";
+import Form from "../../components/Form";
 
 export async function getStaticPaths() {
   const songIndices = getAllSongIndices();
