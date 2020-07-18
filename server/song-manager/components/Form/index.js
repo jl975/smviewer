@@ -3,21 +3,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 import styles from "./form.module.scss";
-import { DDR_VERSIONS, TITLE_CATEGORIES } from "../data/constants";
-import { getDisplayBpm, getEagateData } from "../clientUtils";
+import { DDR_VERSIONS, TITLE_CATEGORIES } from "../../data/constants";
+import { getDisplayBpmFromSm, getEagateData, getSmFromUrl, getFileName, getSongPosition } from "../../clientUtils";
 // import "./form.module.scss";
-
-// import { getJacketPath } from "../lib/songs";
-
-// export async function getStaticProps() {
-//   const jacket = getJacketPath(song.hash);
-
-//   return {
-//     props: {
-//       jacket,
-//     },
-//   };
-// }
 
 export default function Form(props) {
   const { song, jacket, isNew } = props;
@@ -27,6 +15,9 @@ export default function Form(props) {
   const [smName, setSmName] = useState(song.smName);
 
   const [retrievingData, setRetrievingData] = useState(false);
+
+  const [songInputType, setSongInputType] = useState("id");
+  const [smInputType, setSmInputType] = useState("url");
 
   useEffect(() => {
     const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(",");
@@ -58,22 +49,49 @@ export default function Form(props) {
   };
 
   const fillAutomaticFields = async () => {
-    const fieldsToUpdate = {};
+    let fieldsToUpdate = {};
 
     setRetrievingData(true);
 
-    if (smName) {
-      fieldsToUpdate.smName = smName;
+    // if "Title" has been filled out under manual entry fields,
+    // the form will scrape eagate to find the song that matches this title
+    // (case and whitespace insensitive)
+    if (form.titleForSearch) {
+      const json = await getSongPosition({ title: form.titleForSearch });
+      fieldsToUpdate = { ...fieldsToUpdate, ...json, hash: json.songId };
+      fieldsToUpdate.titleForSearch = json.songTitle;
+      fieldsToUpdate.title = json.songTitle;
     }
-    if (sm) {
-      const displayBpm = getDisplayBpm(sm);
+
+    let smData, smNameData;
+
+    if (smName) {
+      smNameData = smName;
+    }
+    if (smInputType === "file" && sm) {
+      smData = sm;
+    } else if (smInputType === "url" && form.smUrl) {
+      try {
+        smData = await getSmFromUrl(form.smUrl);
+        setSm(smData);
+        smNameData = getFileName(form.smUrl);
+        console.log(smNameData);
+        setSmName(smNameData);
+      } catch (err) {}
+    }
+    if (smData) {
+      const displayBpm = getDisplayBpmFromSm(smData);
       fieldsToUpdate.displayBpm = displayBpm;
     }
 
-    if (form.hash) {
+    if (smNameData) {
+      fieldsToUpdate.smName = smNameData;
+    }
+
+    if (form.hash || fieldsToUpdate.hash) {
+      let hash = fieldsToUpdate.hash || form.hash;
       try {
-        const res = await getEagateData(form.hash);
-        console.log("res", res);
+        const res = await getEagateData(hash);
         let { title, artist, difficulties } = res;
         fieldsToUpdate.title = title;
         fieldsToUpdate.artist = artist;
@@ -82,6 +100,11 @@ export default function Form(props) {
           fieldsToUpdate[difficultyMap[idx]] = difficulty;
         });
       } catch (err) {}
+    }
+
+    if (form.dAudioUrl) {
+      const dAudioUrl = form.dAudioUrl.replace(`https://www.dropbox.com/s/`, "").replace("?dl=0", "");
+      fieldsToUpdate.dAudioUrl = dAudioUrl;
     }
 
     console.log("fieldsToUpdate", fieldsToUpdate);
@@ -99,18 +122,61 @@ export default function Form(props) {
         <section className={styles.manualEntryFields}>
           <h3>Manual entry fields</h3>
           <div className={styles.formField}>
-            <label>ID: </label>
-            <input
-              value={form.hash}
-              onChange={(e) => {
-                updateFields({ hash: e.target.value });
-              }}
-              placeholder='e.g. "8bQQ0lP96186D8Ibo8IoOd6o16qioiIo"'
-            />
+            {songInputType === "id" && (
+              <>
+                <label>ID: </label>
+                <input
+                  value={form.hash}
+                  onChange={(e) => {
+                    updateFields({ hash: e.target.value });
+                  }}
+                  placeholder='e.g. "8bQQ0lP96186D8Ibo8IoOd6o16qioiIo"'
+                />
+                <button type="button" className="link-btn" onClick={() => setSongInputType("title")}>
+                  Use song title
+                </button>
+              </>
+            )}
+            {songInputType === "title" && (
+              <>
+                <label>Title: </label>
+                <input
+                  value={form.titleForSearch}
+                  onChange={(e) => {
+                    updateFields({ titleForSearch: e.target.value });
+                  }}
+                  placeholder="All characters must match exactly with the official in-game title!"
+                />
+                <button type="button" className="link-btn" onClick={() => setSongInputType("id")}>
+                  Use song ID
+                </button>
+              </>
+            )}
           </div>
           <div className={styles.formField}>
-            <label>SM File: </label>
-            <input type="file" onChange={handleFileUpload} />
+            {smInputType === "url" && (
+              <>
+                <label>SM URL: </label>
+                <input
+                  value={form.smUrl}
+                  onChange={(e) => {
+                    updateFields({ smUrl: e.target.value });
+                  }}
+                />
+                <button type="button" className="link-btn" onClick={() => setSmInputType("file")}>
+                  Upload file
+                </button>
+              </>
+            )}
+            {smInputType === "file" && (
+              <>
+                <label>SM File: </label>
+                <input type="file" onChange={handleFileUpload} />
+                <button type="button" className="link-btn" onClick={() => setSmInputType("url")}>
+                  Use direct URL
+                </button>
+              </>
+            )}
           </div>
           <div className={styles.formField}>
             <label>Audio URL: </label>
@@ -131,28 +197,13 @@ export default function Form(props) {
               })}
             </select>
           </div>
-          <div className={styles.formField}>
-            <label>Title sort: </label>
-            <select value={form.abcSort} onChange={(e) => updateFields({ abcSort: e.target.value })}>
-              <option value="" disabled>
-                Choose title sort
-              </option>
-              {TITLE_CATEGORIES.map((abc) => {
-                return (
-                  <option key={`abc_${abc}`} value={abc}>
-                    {abc}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
 
           <button type="button" onClick={fillAutomaticFields}>
             Fill automatic fields
           </button>
         </section>
 
-        {retrievingData ? <p>Retrieving data, please wait...</p> : null}
+        {retrievingData ? <p>Retrieving data, please wait... (check terminal logs for progress information)</p> : null}
 
         <section className={styles.automaticEntryFields}>
           <h3>Automatic entry fields</h3>
@@ -162,12 +213,7 @@ export default function Form(props) {
               <span>{form.index}</span>
             </div>
           )}
-          {jacket && (
-            <div className={styles.formField}>
-              <label>Jacket preview:</label>
-              <img src={`data:image/png;base64,${jacket}`} alt={form.title} className={styles.jacketPreview} />
-            </div>
-          )}
+
           <div className={styles.formField}>
             <label>Title: </label>
             <input
@@ -177,6 +223,23 @@ export default function Form(props) {
               }}
             />
           </div>
+          {!isNew && jacket && (
+            <div className={styles.formField}>
+              <label>Jacket preview:</label>
+              <img src={`data:image/png;base64,${jacket}`} alt={form.title} className={styles.jacketPreview} />
+            </div>
+          )}
+          {isNew && form.hash && form.hash.length === 32 && (
+            <div className={styles.formField}>
+              <label>Jacket preview:</label>
+
+              <img
+                src={`https://p.eagate.573.jp/game/ddr/ddra20/p/images/binary_jk.html?img=${form.hash}&kind=1`}
+                alt={form.title}
+                className={styles.jacketPreview}
+              />
+            </div>
+          )}
           <div className={styles.formField}>
             <label>smName: </label>
             <input
@@ -206,6 +269,23 @@ export default function Form(props) {
               }}
             />
           </div>
+
+          <div className={styles.formField}>
+            <label>Title sort: </label>
+            <select value={form.abcSort} onChange={(e) => updateFields({ abcSort: e.target.value })}>
+              <option value="" disabled>
+                Choose title sort
+              </option>
+              {TITLE_CATEGORIES.map((abc) => {
+                return (
+                  <option key={`abc_${abc}`} value={abc}>
+                    {abc}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
           <div className={styles.formField}>
             <label>Levels: </label>
             <div className={styles.levels}>

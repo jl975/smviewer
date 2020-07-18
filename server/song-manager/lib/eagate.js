@@ -3,6 +3,9 @@ const tough = require("tough-cookie");
 const cheerio = require("cheerio");
 const encoding = require("encoding-japanese");
 const token573 = require("../../../config/m573ssid");
+const dancerIds = require("../../../config/dancerIds");
+
+const { getSimfilesTsv } = require("./songs");
 
 const createCookie = () => {
   return new tough.Cookie({
@@ -72,4 +75,123 @@ const fetchSongData = async (songId) => {
   return json;
 };
 
-module.exports = { fetchSongData };
+let totalPages = 6; // temp number
+let currentPage = 0;
+
+let songFound, followingSongFound;
+let orderedSongs = [];
+
+// find a song in the eagate song data table based on its id or title
+// then figure out its alphabetical position by noting the songs right before and after it
+
+const getSongPosition = async ({ title, id }) => {
+  let parsedTsv = getSimfilesTsv();
+
+  // parsedTsv = parsedTsv.map(({ index, hash, title, abcSort }) => {
+  //   return { index, hash, title, abcSort };
+  // });
+  // console.log(parsedTsv);
+
+  totalPages = 6;
+  currentPage = 0;
+  songFound = false;
+  followingSongFound = false;
+  orderedSongs = [];
+
+  while (currentPage < totalPages && !songFound && !followingSongFound) {
+    console.log(`traversing page ${currentPage} of ${totalPages}`);
+    await traversePage(currentPage, { title, id });
+    currentPage++;
+  }
+
+  if (songFound) {
+    console.log("Song position:");
+    console.log(orderedSongs[orderedSongs.length - 3].title);
+    console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
+    console.log(orderedSongs[orderedSongs.length - 1].title);
+    console.log("done");
+
+    const previousSong = orderedSongs[orderedSongs.length - 3];
+    const actualSong = orderedSongs[orderedSongs.length - 2];
+    const nextSong = orderedSongs[orderedSongs.length - 1];
+
+    const abcSort = parsedTsv.find((song) => song.hash === previousSong.id).abcSort;
+
+    const json = {
+      previousSongId: previousSong.id,
+      previousSongTitle: previousSong.title,
+      songId: actualSong.id,
+      songTitle: actualSong.title,
+      nextSongId: nextSong.id,
+      nextSongTitle: nextSong.title,
+      abcSort,
+    };
+    return json;
+  } else {
+    console.log(`Song ${title || id} not found!`);
+    throw new Error(`Song ${title || id} not found!`);
+  }
+};
+const traversePage = async (pageIndex = 0, { title, id }) => {
+  const dancerId = dancerIds[0];
+
+  let body = await RequestPromise({
+    jar: cookiejar,
+    uri: `https://p.eagate.573.jp/game/ddr/ddra20/p/rival/rival_musicdata_single.html?offset=${pageIndex}&filter=0&filtertype=0&sorttype=0&rival_id=${dancerId}`,
+    encoding: null,
+    headers: {
+      Connection: "keep-alive",
+      "Accept-Encoding": "",
+      "Accept-Language": "en-US,en;q=0.8",
+    },
+  });
+  const sjisArray = new Uint8Array(body);
+  const unicodeArray = encoding.convert(sjisArray, {
+    to: "UNICODE",
+    from: "SJIS",
+  });
+
+  console.log(
+    `https://p.eagate.573.jp/game/ddr/ddra20/p/rival/rival_musicdata_single.html?offset=${pageIndex}&filter=0&filtertype=0&sorttype=0&rival_id=${dancerId}`
+  );
+
+  // Join to string.
+  body = encoding.codeToString(unicodeArray);
+
+  const $ = cheerio.load(body);
+  totalPages = $(".page_num").length;
+
+  const tableRows = $("tr.data");
+
+  console.log("tableRows.length", tableRows.length);
+
+  for (let i = 0; i < tableRows.length; i++) {
+    const row = tableRows.eq(i);
+
+    const songTd = row.children().eq(0);
+    const songTitle = songTd.text();
+    const pageHref = songTd.children("a").attr("href");
+    const songId = /index=([0-9A-Za-z]+)/.exec(pageHref)[1];
+
+    const songObj = { id: songId, title: songTitle };
+    orderedSongs.push(songObj);
+
+    console.log("added", songTitle, songId);
+
+    // if song has already been found, this is the song right after it. done searching
+    if (songFound) {
+      followingSongFound = true;
+      break;
+    }
+
+    // if this is the song we're looking for, go through one more iteration
+    if (
+      (id && id === songId) ||
+      (title && title.toLowerCase().replace(/\s*/g, "") === songTitle.toLowerCase().replace(/\s*/g, ""))
+    ) {
+      songFound = true;
+    }
+  }
+};
+
+module.exports = { fetchSongData, getSongPosition };
