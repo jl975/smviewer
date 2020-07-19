@@ -16,7 +16,7 @@ import CabButtons from "./CabButtons";
 import BpmDisplay from "./BpmDisplay";
 import StopDisplay from "./StopDisplay";
 
-const ChartArea = (props) => {
+const ChartArea = props => {
   const {
     selectedDifficulty,
     selectedMode,
@@ -26,7 +26,7 @@ const ChartArea = (props) => {
     screen,
     loadingAudio,
     gameEngine,
-    setGameEngine,
+    setGameEngine
   } = props;
 
   const [canvas, setCanvas] = useState(null);
@@ -40,7 +40,7 @@ const ChartArea = (props) => {
     sm,
     selectedDifficulty,
     selectedMode,
-    mods,
+    mods
   });
 
   // define canvas and resize listener on mount
@@ -109,10 +109,10 @@ const ChartArea = (props) => {
     const chartParams = {
       mode: selectedMode,
       difficulty: selectedDifficulty,
-      mods,
+      mods
     };
 
-    Object.keys(currentState).forEach((thing) => {
+    Object.keys(currentState).forEach(thing => {
       if (prevState[thing] !== currentState[thing]) {
         // initial setup of game engine when canvas is mounted
         if (thing === "canvas") {
@@ -136,7 +136,7 @@ const ChartArea = (props) => {
           const simfileType = selectedSong.useSsc ? "ssc" : "sm";
 
           // console.log(selectedSong);
-          const numSongLevels = selectedSong.levels.filter((a) => a).length;
+          const numSongLevels = selectedSong.levels.filter(a => a).length;
 
           // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType);
@@ -148,7 +148,7 @@ const ChartArea = (props) => {
           ge.pauseTl();
           setGameEngine(ge);
         } else if (thing === "mods") {
-          Object.keys(prevState.mods).forEach((mod) => {
+          Object.keys(prevState.mods).forEach(mod => {
             const prev = JSON.stringify(prevState.mods[mod]);
             const curr = JSON.stringify(currentState.mods[mod]);
             const modChanged = prev !== curr;
@@ -195,7 +195,7 @@ const ChartArea = (props) => {
     song: selectedSong,
     difficulty: selectedDifficulty,
     mode: selectedMode,
-    mods,
+    mods
   };
 
   return (
@@ -212,6 +212,9 @@ const ChartArea = (props) => {
           <div className="chartArea-wrapper">
             {gameEngine && (
               <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />
+            )}
+            {gameEngine && (
+              <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />
             )}
             <div className="canvas-wrapper">
               <canvas id="chartArea" width="256" height="448" />
@@ -235,9 +238,6 @@ const ChartArea = (props) => {
                   mods.appearance
                 ) && <CabButtons mods={mods} canvas={canvas} />}
             </div>
-            {gameEngine && (
-              <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />
-            )}
           </div>
         </div>
         <div className="progress-container">
@@ -274,19 +274,22 @@ const ChartArea = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { mods, songSelect, screen } = state;
   return {
     mods,
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
-    screen,
+    screen
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChartArea);
