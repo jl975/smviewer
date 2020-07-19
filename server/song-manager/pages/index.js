@@ -5,6 +5,7 @@ import Layout from "../shared/Layout";
 import { getSimfilesTsv } from "../lib/songs";
 
 import Table from "../components/Table";
+import styles from "./index.module.scss";
 
 export async function getStaticProps() {
   const songs = getSimfilesTsv();
@@ -20,7 +21,12 @@ export default function Home(props) {
 
   return (
     <Layout>
-      <h2>Song Manager</h2>
+      <div className={styles.header}>
+        <h2>Song Manager</h2>
+        <Link href="/new">
+          <a>Add new song</a>
+        </Link>
+      </div>
 
       <Table songs={songs} />
     </Layout>
