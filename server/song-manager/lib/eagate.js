@@ -75,7 +75,7 @@ const fetchSongData = async (songId) => {
   return json;
 };
 
-let totalPages = 6; // temp number
+let totalPages = 69; // temp number
 let currentPage = 0;
 
 let songFound, followingSongFound;
@@ -92,24 +92,24 @@ const getSongPosition = async ({ title, id }) => {
   // });
   // console.log(parsedTsv);
 
-  totalPages = 6;
+  totalPages = 69;
   currentPage = 0;
   songFound = false;
   followingSongFound = false;
   orderedSongs = [];
 
   while (currentPage < totalPages && !songFound && !followingSongFound) {
-    console.log(`traversing page ${currentPage} of ${totalPages}`);
+    console.log(`traversing page ${currentPage} of ${totalPages === 69 ? "?" : totalPages}`);
     await traversePage(currentPage, { title, id });
     currentPage++;
   }
 
   if (songFound) {
-    console.log("Song position:");
+    console.log("\nSong position:");
     console.log(orderedSongs[orderedSongs.length - 3].title);
     console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
     console.log(orderedSongs[orderedSongs.length - 1].title);
-    console.log("done");
+    console.log("\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n");
 
     const previousSong = orderedSongs[orderedSongs.length - 3];
     const actualSong = orderedSongs[orderedSongs.length - 2];
@@ -151,10 +151,6 @@ const traversePage = async (pageIndex = 0, { title, id }) => {
     from: "SJIS",
   });
 
-  console.log(
-    `https://p.eagate.573.jp/game/ddr/ddra20/p/rival/rival_musicdata_single.html?offset=${pageIndex}&filter=0&filtertype=0&sorttype=0&rival_id=${dancerId}`
-  );
-
   // Join to string.
   body = encoding.codeToString(unicodeArray);
 
@@ -162,8 +158,6 @@ const traversePage = async (pageIndex = 0, { title, id }) => {
   totalPages = $(".page_num").length;
 
   const tableRows = $("tr.data");
-
-  console.log("tableRows.length", tableRows.length);
 
   for (let i = 0; i < tableRows.length; i++) {
     const row = tableRows.eq(i);
@@ -176,7 +170,7 @@ const traversePage = async (pageIndex = 0, { title, id }) => {
     const songObj = { id: songId, title: songTitle };
     orderedSongs.push(songObj);
 
-    console.log("added", songTitle, songId);
+    console.log("checking", songTitle);
 
     // if song has already been found, this is the song right after it. done searching
     if (songFound) {

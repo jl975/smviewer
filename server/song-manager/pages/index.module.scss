@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 20px;
+
+  > * {
+    margin-bottom: 0;
+  }
+
+  a {
+    margin-left: 50px;
+  }
+}

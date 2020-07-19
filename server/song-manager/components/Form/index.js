@@ -4,8 +4,17 @@ import { useState, useEffect } from "react";
 
 import styles from "./form.module.scss";
 import { DDR_VERSIONS, TITLE_CATEGORIES } from "../../data/constants";
-import { getDisplayBpmFromSm, getEagateData, getSmFromUrl, getFileName, getSongPosition } from "../../clientUtils";
-// import "./form.module.scss";
+import {
+  getDisplayBpmFromSm,
+  getEagateData,
+  getSmFromUrl,
+  getFileName,
+  getSongPosition,
+  addSimfile,
+  updateSimfiles,
+} from "../../clientUtils";
+
+const difficultyMap = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
 
 export default function Form(props) {
   const { song, jacket, isNew } = props;
@@ -14,10 +23,11 @@ export default function Form(props) {
   const [sm, setSm] = useState(null);
   const [smName, setSmName] = useState(song.smName);
 
-  const [retrievingData, setRetrievingData] = useState(false);
-
   const [songInputType, setSongInputType] = useState("id");
   const [smInputType, setSmInputType] = useState("url");
+
+  const [retrievingData, setRetrievingData] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(",");
@@ -35,8 +45,6 @@ export default function Form(props) {
     const fileReader = new FileReader();
     const file = e.target.files[0];
 
-    console.log(file);
-
     const smName = file.name.replace(/\.sm$/, "").replace(/\.ssc$/, "");
     setSmName(smName);
 
@@ -44,8 +52,6 @@ export default function Form(props) {
       setSm(fileLoadedEvent.target.result);
     };
     fileReader.readAsText(file, "UTF-8");
-
-    // console.log(file);
   };
 
   const fillAutomaticFields = async () => {
@@ -95,7 +101,6 @@ export default function Form(props) {
         let { title, artist, difficulties } = res;
         fieldsToUpdate.title = title;
         fieldsToUpdate.artist = artist;
-        const difficultyMap = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
         difficulties.forEach((difficulty, idx) => {
           fieldsToUpdate[difficultyMap[idx]] = difficulty;
         });
@@ -114,9 +119,36 @@ export default function Form(props) {
     updateFields(fieldsToUpdate);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("submit form", form);
+
+    let fieldsToUpdate = {};
+
+    const payload = { ...form };
+    payload.levels = difficultyMap.map((difficulty) => payload[difficulty]).join(",");
+    fieldsToUpdate.levels = payload.levels;
+
+    if (isNew) {
+      if (form.previousSongId && form.nextSongId) {
+        console.log("song position has already been determined");
+      } else {
+        const { previousSongId, nextSongId } = await getSongPosition({ title: form.titleForSearch, id: form.hash });
+        fieldsToUpdate = { ...fieldsToUpdate, previousSongId, nextSongId };
+        payload.previousSongId = previousSongId;
+        payload.nextSongId = nextSongId;
+      }
+      await addSimfile(payload);
+    } else {
+      await updateSimfiles(payload);
+    }
+
+    updateFields(fieldsToUpdate);
+  };
+
   return (
     <div className={styles.container}>
-      <form className={styles.formContainer}>
+      <form className={styles.formContainer} onSubmit={handleSubmit}>
         <h2>{isNew ? "Add" : "Edit"} song</h2>
 
         <section className={styles.manualEntryFields}>
@@ -162,6 +194,11 @@ export default function Form(props) {
                   onChange={(e) => {
                     updateFields({ smUrl: e.target.value });
                   }}
+                  placeholder={
+                    isNew
+                      ? "Copy link to .sm file from ZiV"
+                      : "Leave this blank unless changes have been made to the .sm file."
+                  }
                 />
                 <button type="button" className="link-btn" onClick={() => setSmInputType("file")}>
                   Upload file
@@ -180,7 +217,11 @@ export default function Form(props) {
           </div>
           <div className={styles.formField}>
             <label>Audio URL: </label>
-            <input value={form.dAudioUrl} onChange={(e) => updateFields({ dAudioUrl: e.target.value })} />
+            <input
+              value={form.dAudioUrl}
+              onChange={(e) => updateFields({ dAudioUrl: e.target.value })}
+              placeholder="Copy Dropbox link"
+            />
           </div>
           <div className={styles.formField}>
             <label>Version: </label>
@@ -194,16 +235,17 @@ export default function Form(props) {
                     {version}
                   </option>
                 );
-              })}
+              }).reverse()}
             </select>
           </div>
 
+          {retrievingData ? (
+            <p>Retrieving data, please wait... (check terminal logs for progress information)</p>
+          ) : null}
           <button type="button" onClick={fillAutomaticFields}>
-            Fill automatic fields
+            {isNew ? "Fill" : "Update"} automatic fields
           </button>
         </section>
-
-        {retrievingData ? <p>Retrieving data, please wait... (check terminal logs for progress information)</p> : null}
 
         <section className={styles.automaticEntryFields}>
           <h3>Automatic entry fields</h3>
@@ -213,7 +255,6 @@ export default function Form(props) {
               <span>{form.index}</span>
             </div>
           )}
-
           <div className={styles.formField}>
             <label>Title: </label>
             <input
@@ -249,7 +290,6 @@ export default function Form(props) {
               }}
             />
           </div>
-
           <div className={styles.formField}>
             <label>Artist: </label>
             <input
@@ -259,7 +299,6 @@ export default function Form(props) {
               }}
             />
           </div>
-
           <div className={styles.formField}>
             <label>Display BPM: </label>
             <input
@@ -269,7 +308,6 @@ export default function Form(props) {
               }}
             />
           </div>
-
           <div className={styles.formField}>
             <label>Title sort: </label>
             <select value={form.abcSort} onChange={(e) => updateFields({ abcSort: e.target.value })}>
@@ -285,7 +323,6 @@ export default function Form(props) {
               })}
             </select>
           </div>
-
           <div className={styles.formField}>
             <label>Levels: </label>
             <div className={styles.levels}>
@@ -321,6 +358,7 @@ export default function Form(props) {
               </div>
             </div>
           </div>
+          <button type="submit">Submit</button>
         </section>
       </form>
       <div className={styles.formPreContainer}>

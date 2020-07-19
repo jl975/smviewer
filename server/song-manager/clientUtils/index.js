@@ -43,3 +43,13 @@ export const getSongPosition = async ({ title, id }) => {
   const res = await axios.get("/api/eagate_song_search", { params: { title, id } });
   return res.data;
 };
+
+export const updateSimfiles = async (payload) => {
+  const res = await axios.put("/api/update_simfiles", payload);
+  return res.data;
+};
+
+export const addSimfile = async (payload) => {
+  const res = await axios.post("/api/add_simfile", payload);
+  return res.data;
+};
