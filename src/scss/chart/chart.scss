@@ -1,3 +1,18 @@
+.chartArea-wrapper {
+  margin: 0 auto;
+  display: flex;
+
+  .bpm-display {
+    order: 1;
+  }
+  .canvas-wrapper {
+    order: 2;
+  }
+  .stop-display {
+    order: 3;
+  }
+}
+
 .bpm-display {
   position: relative;
   width: 60px;
