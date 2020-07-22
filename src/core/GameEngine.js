@@ -8,8 +8,17 @@ import TargetFlash from "../components/chart/canvas/TargetFlash";
 import ComboDisplay from "../components/chart/canvas/ComboDisplay";
 import BpmAndStopDisplay from "../components/chart/canvas/BpmAndStopDisplay";
 import LaneCover from "../components/chart/canvas/LaneCover";
-import { applyTurnMods, initializeBeatWindow, updateBeatWindow, changeActiveBpm } from "../utils/engineUtils";
-import { END_EXTRA_BEATS, MARVELOUS_FLASH_FRAMES, DEFAULT_CMOD } from "../constants";
+import {
+  applyTurnMods,
+  initializeBeatWindow,
+  updateBeatWindow,
+  changeActiveBpm
+} from "../utils/engineUtils";
+import {
+  END_EXTRA_BEATS,
+  MARVELOUS_FLASH_FRAMES,
+  DEFAULT_CMOD
+} from "../constants";
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
 import { debugLogView, debugSimfileChart } from "../utils/debugUtils";
@@ -60,6 +69,11 @@ class GameEngine {
 
       targetFlashes: {},
 
+      /*
+        Parameters related to scheduling the assist tick    
+      */
+      assist: {},
+
       // "global" variables for creating the timeline
       /*
         lol for lack of a better word. Refers to the last arrow or last bpm change/stop event,
@@ -75,7 +89,7 @@ class GameEngine {
       /*
         Miscellaneous constant parameters for ease of access
       */
-      chartAreaHeight: canvas.height,
+      chartAreaHeight: canvas.height
     };
 
     AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
@@ -124,9 +138,17 @@ class GameEngine {
     this.globalParams.timeWindowStartPtr = {};
     this.globalParams.timeWindowEndPtr = {};
 
+    this.globalParams.assist = {
+      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
+      notesInQueue: [],
+      nextNotePtr: null
+    };
+
     this.globalParams.targetFlashes = {};
     this.globalParams.mods = mods;
     AudioPlayer.setGlobalParams(this.globalParams);
+
+    AudioPlayer.initializeAssistTick();
 
     // debugging
     window.globalParams = this.globalParams;
@@ -154,7 +176,9 @@ class GameEngine {
   }
 
   startLoop() {
-    this.mainLoopRequestRef = window.requestAnimationFrame(this.mainLoop.bind(this));
+    this.mainLoopRequestRef = window.requestAnimationFrame(
+      this.mainLoop.bind(this)
+    );
   }
   stopLoop() {
     window.cancelAnimationFrame(this.mainLoopRequestRef);
@@ -223,7 +247,8 @@ class GameEngine {
       // The timestamp of the current event is this number of seconds after the
       // timestamp of the previous event.
       const beatDiff = currentEvent.beat - prevEvent.beat;
-      const prevBpm = prevEvent.type === "bpm" ? prevEvent.value : prevEvent.bpm;
+      const prevBpm =
+        prevEvent.type === "bpm" ? prevEvent.value : prevEvent.bpm;
       let timestampDiff = (beatDiff / prevBpm) * 60;
       if (prevEvent.type === "stop") timestampDiff += prevEvent.value;
       const currentTimestamp = prevTimestamp + timestampDiff;
@@ -247,7 +272,7 @@ class GameEngine {
 
     if (Array.isArray(chart[0])) {
       const newChart = [];
-      chart.forEach((measure) => {
+      chart.forEach(measure => {
         newChart.push(...measure);
       });
       chart = newChart;
@@ -272,7 +297,11 @@ class GameEngine {
         this.shocks.push(shockArrow);
         this.allArrows.push(shockArrow);
       }
-      if (note.note.includes("1") || note.note.includes("2") || note.note.includes("3")) {
+      if (
+        note.note.includes("1") ||
+        note.note.includes("2") ||
+        note.note.includes("3")
+      ) {
         const arrow = new Arrow({ key, ...note });
         this.arrows.push(arrow);
         this.allArrows.push(arrow);
@@ -333,7 +362,10 @@ class GameEngine {
       currentCombo = 0;
     this.allArrows.forEach((arrow, idx) => {
       // Find the latest bpm section that starts before this note
-      while (currentBpmPtr < bpmQueue.length - 1 && bpmQueue[currentBpmPtr + 1].beat < arrow.beatstamp) {
+      while (
+        currentBpmPtr < bpmQueue.length - 1 &&
+        bpmQueue[currentBpmPtr + 1].beat < arrow.beatstamp
+      ) {
         // if this block was entered, a new bpm section was entered
         currentBpmPtr++;
         const bpmSection = bpmQueue[currentBpmPtr];
@@ -383,7 +415,11 @@ class GameEngine {
       arrow.timestamp = arrowTimestamp;
 
       // combo arrows (includes regular notes and freeze heads)
-      if (arrow.note.includes("1") || arrow.note.includes("2") || arrow.note.includes("M")) {
+      if (
+        arrow.note.includes("1") ||
+        arrow.note.includes("2") ||
+        arrow.note.includes("M")
+      ) {
         currentCombo++;
         arrow.combo = currentCombo;
 
@@ -394,7 +430,7 @@ class GameEngine {
       }
     });
 
-    this.allArrows.forEach((arrow) => {
+    this.allArrows.forEach(arrow => {
       // If the note is the tail of a freeze arrow, calculate the number of beats
       // from the head of the freeze arrow
       for (let i = 0; i < arrow.note.length; i++) {
@@ -427,7 +463,7 @@ class GameEngine {
             }
             arrowsDuringFreeze.push(freezeTail);
 
-            arrowsDuringFreeze.forEach((arrowDuringFreeze) => {
+            arrowsDuringFreeze.forEach(arrowDuringFreeze => {
               arrowDuringFreeze.holdStartBeats[i] = freezeHead.beatstamp;
               arrowDuringFreeze.holdEndBeats[i] = freezeTail.beatstamp;
               arrowDuringFreeze.holdStartTimes[i] = freezeHead.timestamp;
@@ -444,9 +480,13 @@ class GameEngine {
   initTimeline(mods) {
     /* Timestamp-based arrow events timeline */
 
-    this.allArrows.forEach((arrow) => {
+    this.allArrows.forEach(arrow => {
       // combo arrows (includes regular notes and freeze heads)
-      if (arrow.note.includes("1") || arrow.note.includes("2") || arrow.note.includes("M")) {
+      if (
+        arrow.note.includes("1") ||
+        arrow.note.includes("2") ||
+        arrow.note.includes("M")
+      ) {
         this.tl.set(
           this.globalParams,
           {
@@ -454,11 +494,13 @@ class GameEngine {
               this.globalParams.combo = arrow.combo;
 
               if (arrow instanceof Arrow) {
-                AudioPlayer.playAssistTick();
+                // AudioPlayer.playAssistTick();
                 // console.log(arrow);
-                this.globalParams.targetFlashes[arrow.beatstamp] = new TargetFlash(arrow);
+                this.globalParams.targetFlashes[
+                  arrow.beatstamp
+                ] = new TargetFlash(arrow);
               }
-            },
+            }
           },
           arrow.timestamp - 0.008
         );
@@ -470,8 +512,10 @@ class GameEngine {
           this.globalParams,
           {
             onStart: () => {
-              this.globalParams.targetFlashes[arrow.beatstamp] = new TargetFlash(arrow);
-            },
+              this.globalParams.targetFlashes[
+                arrow.beatstamp
+              ] = new TargetFlash(arrow);
+            }
           },
           arrow.timestamp - 0.008
         );
@@ -491,7 +535,7 @@ class GameEngine {
       {
         timeTick: this.globalParams.lastEntity.timestamp + 1,
         duration: this.globalParams.lastEntity.timestamp + 1,
-        ease: "none",
+        ease: "none"
       },
       ">"
     );
@@ -538,7 +582,7 @@ class GameEngine {
               if (startEvent.type === "bpm") {
                 changeActiveBpm(startEvent.value, this.globalParams);
               }
-            },
+            }
           },
           `>${delay}`
         );
@@ -550,13 +594,14 @@ class GameEngine {
           this.globalParams,
           {
             beatTick: this.globalParams.finalBeat,
-            duration: ((this.globalParams.finalBeat - accumulatedBeatTick) / bpm) * 60,
+            duration:
+              ((this.globalParams.finalBeat - accumulatedBeatTick) / bpm) * 60,
             ease: "none",
             onStart: () => {
               if (startEvent.type === "bpm") {
                 changeActiveBpm(startEvent.value, this.globalParams);
               }
-            },
+            }
           },
           `>${delay}`
         );
@@ -569,6 +614,68 @@ class GameEngine {
     AudioPlayer.setTimeline(this.tl);
 
     this.updateLoopOnce();
+  }
+
+  // test assist tick code
+
+  scheduler() {
+    // console.log("scheduler");
+    // console.log(AudioPlayer.isAudioStable);
+    const { assist, allArrows } = this.globalParams;
+    const {
+      audioContext,
+      audioStartContextTime,
+      audioStartProgressTime,
+      nextNotePtr
+    } = assist;
+
+    const scheduleAheadTime = 0.2;
+    // while (assist.nextNoteTime < audioContext.currentTime)
+
+    // amount (in seconds) to add to a timestamp to get its equivalent audioContext time
+    const audioContextDiff = audioStartContextTime - audioStartProgressTime;
+
+    let nextNote = allArrows[nextNotePtr];
+
+    // short-circuit if no future note is detected
+    if (!nextNote) return;
+
+    let nextNoteTime = allArrows[nextNotePtr].timestamp;
+    let nextNoteContextTime = nextNoteTime + audioContextDiff;
+
+    // console.log("nextNoteContextTime", nextNoteContextTime);
+    // console.log(
+    //   "audioContext.currentTime + scheduleAheadTime",
+    //   audioContext.currentTime + scheduleAheadTime
+    // );
+
+    // while there are notes that will need to play before the next interval,
+    // schedule them and advance the pointer.
+    while (nextNoteContextTime < audioContext.currentTime + scheduleAheadTime) {
+      this.scheduleNote(nextNote);
+
+      AudioPlayer.playAssistTick(nextNoteContextTime);
+
+      // look for the next assist tick note to schedule, and short-circuit if end is reached
+      assist.nextNotePtr++;
+      nextNote = allArrows[assist.nextNotePtr];
+      if (!nextNote) return;
+
+      while (!nextNote.note.includes("1") && !nextNote.note.includes("2")) {
+        assist.nextNotePtr++;
+        nextNote = allArrows[assist.nextNotePtr];
+        if (!nextNote) return;
+      }
+
+      nextNoteTime = allArrows[assist.nextNotePtr].timestamp;
+      nextNoteContextTime = nextNoteTime + audioContextDiff;
+    }
+
+    // console.log(audioContext.currentTime);
+  }
+
+  scheduleNote(note) {
+    // console.log("scheduled note combo", note.combo);
   }
 
   mainLoop(loop = true) {
@@ -593,6 +700,11 @@ class GameEngine {
     const { songSelect, mods } = store.getState();
     const { mode } = songSelect;
 
+    // schedule assist tick sounds in advance
+    if (mods.assistTick) {
+      this.scheduler();
+    }
+
     if (mods.cmod < 100 || mods.cmod > 1000) {
       mods.cmod = DEFAULT_CMOD;
     }
@@ -606,7 +718,7 @@ class GameEngine {
         { beatTick },
         {
           mode,
-          mods,
+          mods
         }
       );
       t1 = performance.now();
@@ -623,7 +735,7 @@ class GameEngine {
     if (mods.comboDisplay === "behind") {
       this.comboDisplay.render(this.canvas, this.globalParams.combo, {
         mode,
-        mods,
+        mods
       });
     }
 
@@ -651,17 +763,30 @@ class GameEngine {
     }
 
     if (mods.bpmStopDisplay) {
-      if (windowStartPtr.bpm <= windowEndPtr.bpm || windowStartPtr.stop <= windowEndPtr.stop) {
+      if (
+        windowStartPtr.bpm <= windowEndPtr.bpm ||
+        windowStartPtr.stop <= windowEndPtr.stop
+      ) {
         this.clearBpmAndStopDisplay();
       }
 
       for (let i = windowStartPtr.bpm; i <= windowEndPtr.bpm; i++) {
         const bpm = this.globalParams.bpmQueue[i];
-        this.bpmAndStopDisplay.renderBpm(this.bpmReel, bpm, { beatTick, timeTick }, { mods });
+        this.bpmAndStopDisplay.renderBpm(
+          this.bpmReel,
+          bpm,
+          { beatTick, timeTick },
+          { mods }
+        );
       }
       for (let i = windowStartPtr.stop; i <= windowEndPtr.stop; i++) {
         const stop = this.globalParams.stopQueue[i];
-        this.bpmAndStopDisplay.renderStop(this.stopReel, stop, { beatTick, timeTick }, { mods });
+        this.bpmAndStopDisplay.renderStop(
+          this.stopReel,
+          stop,
+          { beatTick, timeTick },
+          { mods }
+        );
       }
       // window.bpmAndStopDisplay = this.bpmAndStopDisplay;
     }
@@ -676,27 +801,42 @@ class GameEngine {
     // ]);
     for (let i = windowEndPtr.shock; i >= windowStartPtr.shock; i--) {
       const shockArrow = this.globalParams.shocks[i];
-      shockArrow.render(this.canvas, this.globalParams.frame, { beatTick, timeTick }, { mods });
+      shockArrow.render(
+        this.canvas,
+        this.globalParams.frame,
+        { beatTick, timeTick },
+        { mods }
+      );
     }
 
     for (let i = windowEndPtr.freeze; i >= windowStartPtr.freeze; i--) {
       const freeze = this.globalParams.freezes[i];
-      notUpArrows.forEach((directionIdx) => {
-        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick }, directionIdx, { mods });
+      notUpArrows.forEach(directionIdx => {
+        freeze.renderFreezeBody(
+          this.canvas,
+          { beatTick, timeTick },
+          directionIdx,
+          { mods }
+        );
       });
     }
     for (let i = windowStartPtr.freeze; i <= windowEndPtr.freeze; i++) {
       const freeze = this.globalParams.freezes[i];
-      upArrows.forEach((directionIdx) => {
-        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick }, directionIdx, { mods });
+      upArrows.forEach(directionIdx => {
+        freeze.renderFreezeBody(
+          this.canvas,
+          { beatTick, timeTick },
+          directionIdx,
+          { mods }
+        );
       });
     }
 
     for (let i = windowEndPtr.arrow; i >= windowStartPtr.arrow; i--) {
       const arrow = this.globalParams.arrows[i];
-      notUpArrows.forEach((directionIdx) => {
+      notUpArrows.forEach(directionIdx => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
-          mods,
+          mods
         });
       });
     }
@@ -704,9 +844,9 @@ class GameEngine {
     // t0 = performance.now();
     for (let i = windowStartPtr.arrow; i <= windowEndPtr.arrow; i++) {
       const arrow = this.globalParams.arrows[i];
-      upArrows.forEach((directionIdx) => {
+      upArrows.forEach(directionIdx => {
         arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
-          mods,
+          mods
         });
       });
     }
@@ -720,12 +860,15 @@ class GameEngine {
     if (mods.comboDisplay === "inFront") {
       this.comboDisplay.render(this.canvas, this.globalParams.combo, {
         mode,
-        mods,
+        mods
       });
     }
 
     /* Hidden+ and/or Sudden+ lane cover */
-    if (["hidden", "sudden", "hiddensudden"].includes(mods.appearance) && mods.laneCoverVisible) {
+    if (
+      ["hidden", "sudden", "hiddensudden"].includes(mods.appearance) &&
+      mods.laneCoverVisible
+    ) {
       this.laneCover.render(this.canvas, { mode, mods });
     }
 
@@ -767,7 +910,9 @@ class GameEngine {
     this.globalParams.frame++;
 
     if (loop) {
-      this.mainLoopRequestRef = window.requestAnimationFrame(this.mainLoop.bind(this));
+      this.mainLoopRequestRef = window.requestAnimationFrame(
+        this.mainLoop.bind(this)
+      );
     }
   }
 

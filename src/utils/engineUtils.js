@@ -1,4 +1,5 @@
 import { DEFAULT_OFFSET, ARROW_HEIGHT } from "../constants";
+import store from "../store";
 import { debugLog } from "./debugUtils";
 
 export const applyTurnMods = (chart, mods, mode) => {
@@ -17,24 +18,24 @@ export const applyTurnMods = (chart, mods, mode) => {
     shuffle5: "DLUR",
     shuffle6: "DULR",
     shuffle7: "RLUD",
-    shuffle8: "RULD",
+    shuffle8: "RULD"
   };
 
   let turnMod = turn;
   if (turn === "shuffle") turnMod += shuffle;
 
   if (mode === "single") {
-    return chart.map((row) => {
+    return chart.map(row => {
       const note = row.note;
       const turnedNote = turnMap[turnMod]
         .split("") //
-        .map((direction) => note[turnMap.off.indexOf(direction)]);
+        .map(direction => note[turnMap.off.indexOf(direction)]);
 
       return { ...row, note: turnedNote };
     });
   }
   if (mode === "double") {
-    return chart.map((row) => {
+    return chart.map(row => {
       let turnedNote = row.note.split("");
       if (turn === "mirror") turnedNote = turnedNote.reverse();
       return { ...row, note: turnedNote };
@@ -48,7 +49,7 @@ export const applyTurnMods = (chart, mods, mode) => {
   to that bpm value. This should be invoked every time the audio is resynced
   (which will happen whenever progress is skipped)
 */
-export const getCurrentBpm = (params) => {
+export const getCurrentBpm = params => {
   const { beatTick, bpmQueue } = params;
   let lastBpmValue = 0;
   for (let i = 0; i < bpmQueue.length; i++) {
@@ -59,6 +60,13 @@ export const getCurrentBpm = (params) => {
     lastBpmValue = bpmEvent.value;
   }
   return lastBpmValue;
+};
+
+/*
+  Get the global offset value
+*/
+export const getGlobalOffset = () => {
+  return store.getState().mods.globalOffset;
 };
 
 /*
@@ -74,7 +82,12 @@ export const changeActiveBpm = (bpmValue, globalParams) => {
   // Several charts start with an "offset" bpm on the first measure and are corrected
   // to the "real" bpm on the second measure. If the chart follows this pattern,
   // don't show the offset bpm as it can be very different and misleading
-  if (beatTick < 4 && bpmQueue.length >= 2 && bpmQueue[0].beat === 0 && bpmQueue[1].beat === 4) {
+  if (
+    beatTick < 4 &&
+    bpmQueue.length >= 2 &&
+    bpmQueue[0].beat === 0 &&
+    bpmQueue[1].beat === 4
+  ) {
     currentBpmEl.textContent = "";
   } else {
     currentBpmEl.textContent = Math.round(bpmValue);
@@ -88,7 +101,7 @@ export const changeActiveBpm = (bpmValue, globalParams) => {
   every time the audio is resynced.
 */
 
-export const getCurrentCombo = (song) => {
+export const getCurrentPosition = song => {
   const { audio, globalParams } = song;
   const { allArrows } = globalParams;
   if (!allArrows.length) return 0;
@@ -100,20 +113,37 @@ export const getCurrentCombo = (song) => {
   // Return 0 instead in this case; seeing no combo is better than seeing
   // an incorrect full combo number
 
-  // if (typeof currentTime !== "number") {
-  //   return 0;
-  // }
+  if (typeof currentTime !== "number") {
+    return { currentCombo: 0 };
+  }
 
-  let currentCombo;
+  const positionObj = {};
+  let currentCombo, nextNotePtr;
 
   // Go through the chart until the arrow following the current timestamp is reached,
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < allArrows.length; i++) {
     const arrow = allArrows[i];
-    if (arrow.combo && arrow.timestamp > currentTime + DEFAULT_OFFSET) {
-      currentCombo = arrow.combo - 1;
-      // console.log(currentCombo);
-      return currentCombo;
+
+    if (arrow.timestamp > currentTime + DEFAULT_OFFSET) {
+      if (arrow.combo) {
+        currentCombo = arrow.combo - 1;
+        positionObj.currentCombo = currentCombo;
+        // return positionObj;
+      }
+
+      // only regular arrows and freeze heads count as "notes" for the purpose of assist tick
+      if (arrow.note.includes("1") || arrow.note.includes("2")) {
+        nextNotePtr = i;
+        positionObj.nextNotePtr = nextNotePtr;
+      }
+
+      if (
+        typeof positionObj.currentCombo !== "undefined" &&
+        typeof positionObj.nextNotePtr !== "undefined"
+      ) {
+        return positionObj;
+      }
     }
   }
 
@@ -124,14 +154,14 @@ export const getCurrentCombo = (song) => {
     const arrow = allArrows[i];
     if (arrow.combo) {
       currentCombo = arrow.combo;
-      return currentCombo;
+      return { currentCombo, nextNotePtr: null };
     }
   }
 
-  return -1; // should never reach this. return -1 to make debugging easier
+  return { currentCombo: -1 }; // should never reach this. return -1 to make debugging easier
 };
 
-export const getFullCombo = (song) => {
+export const getFullCombo = song => {
   const { globalParams } = song;
   const { allArrows } = globalParams;
   if (!allArrows.length) return 0;
@@ -143,6 +173,11 @@ export const getFullCombo = (song) => {
   }
   return 0;
 };
+
+/*
+  Find the pointer to the next given the song timestamp. This should be invoked
+  every time the audio is resynced.
+*/
 
 /*
   Method for finding the coordinate of a sprite on Reverse scroll
@@ -170,7 +205,7 @@ export const clearBpmAndStopDisplay = () => {
   Based on the current beat tick, calculates the index of the first
   arrow to fall within the visible beat window
 */
-export const initializeBeatWindow = (globalParams) => {
+export const initializeBeatWindow = globalParams => {
   const { arrows, freezes, shocks, chartAreaHeight, mods } = globalParams;
 
   let timestamp = mods.speed === "cmod" ? "timestamp" : "beatstamp";
@@ -214,7 +249,10 @@ export const initializeBeatWindow = (globalParams) => {
       const currentArrow = arrows[i];
 
       // return the index of the first arrow that lies on or after the current beat tick
-      if (previousArrow[timestamp] < windowStart && currentArrow[timestamp] >= windowStart) {
+      if (
+        previousArrow[timestamp] < windowStart &&
+        currentArrow[timestamp] >= windowStart
+      ) {
         windowStartPtr.arrow = i;
         break;
       }
@@ -228,7 +266,10 @@ export const initializeBeatWindow = (globalParams) => {
     windowStartPtr.shock = shocks.length;
   } else {
     for (let i = 1; i < shocks.length; i++) {
-      if (shocks[i - 1][timestamp] < windowStart && shocks[i][timestamp] >= windowStart) {
+      if (
+        shocks[i - 1][timestamp] < windowStart &&
+        shocks[i][timestamp] >= windowStart
+      ) {
         windowStartPtr.shock = i;
         break;
       }
@@ -236,7 +277,7 @@ export const initializeBeatWindow = (globalParams) => {
   }
 
   // start pointer for bpm/stop values
-  ["bpm", "stop"].forEach((event) => {
+  ["bpm", "stop"].forEach(event => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
     if (!events.length || events[0][ts] > windowStart) {
@@ -260,7 +301,10 @@ export const initializeBeatWindow = (globalParams) => {
     windowStartPtr.freeze = freezes.length;
   } else {
     for (let i = 1; i < freezes.length; i++) {
-      if (freezes[i - 1][timestamp] < windowStart && freezes[i][timestamp] >= windowStart) {
+      if (
+        freezes[i - 1][timestamp] < windowStart &&
+        freezes[i][timestamp] >= windowStart
+      ) {
         windowStartPtr.freeze = i;
         break;
       }
@@ -277,7 +321,10 @@ export const initializeBeatWindow = (globalParams) => {
   let nextTopArrow = arrows[windowStartPtr.arrow];
 
   // short-circuit if chart is over or if no arrows are on screen
-  if (windowStartPtr.arrow >= arrows.length || nextTopArrow[timestamp] > windowEnd) {
+  if (
+    windowStartPtr.arrow >= arrows.length ||
+    nextTopArrow[timestamp] > windowEnd
+  ) {
     windowEndPtr.arrow = windowStartPtr.arrow - 1;
   }
 
@@ -291,7 +338,10 @@ export const initializeBeatWindow = (globalParams) => {
       if (!nextArrow) {
         windowEndPtr.arrow = j;
         break;
-      } else if (currentArrow[timestamp] <= windowEnd && nextArrow[timestamp] > windowEnd) {
+      } else if (
+        currentArrow[timestamp] <= windowEnd &&
+        nextArrow[timestamp] > windowEnd
+      ) {
         windowEndPtr.arrow = j;
         break;
       }
@@ -300,13 +350,20 @@ export const initializeBeatWindow = (globalParams) => {
 
   // end pointer for shock arrows
   let nextTopShock = shocks[windowStartPtr.shock];
-  if (windowStartPtr.shock >= shocks.length || nextTopShock[timestamp] > windowEnd) {
+  if (
+    windowStartPtr.shock >= shocks.length ||
+    nextTopShock[timestamp] > windowEnd
+  ) {
     windowEndPtr.shock = windowStartPtr.shock - 1;
   } else {
     for (let i = windowStartPtr.shock; i < shocks.length; i++) {
       const currentShock = shocks[i];
       const nextShock = shocks[i + 1];
-      if (!nextShock || (currentShock[timestamp] <= windowEnd && nextShock[timestamp] > windowEnd)) {
+      if (
+        !nextShock ||
+        (currentShock[timestamp] <= windowEnd &&
+          nextShock[timestamp] > windowEnd)
+      ) {
         windowEndPtr.shock = i;
         break;
       }
@@ -314,17 +371,23 @@ export const initializeBeatWindow = (globalParams) => {
   }
 
   // end pointer for bpm/stop values
-  ["bpm", "stop"].forEach((event) => {
+  ["bpm", "stop"].forEach(event => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
     let nextTopEvent = events[windowStartPtr[event]];
-    if (windowStartPtr[event] >= events.length || nextTopEvent[ts] > windowEnd) {
+    if (
+      windowStartPtr[event] >= events.length ||
+      nextTopEvent[ts] > windowEnd
+    ) {
       windowEndPtr[event] = windowStartPtr[event] - 1;
     } else {
       for (let i = windowStartPtr[event]; i < events.length; i++) {
         const currentEvent = events[i];
         const nextEvent = events[i + 1];
-        if (!nextEvent || (currentEvent[ts] <= windowEnd && nextEvent[ts] > windowEnd)) {
+        if (
+          !nextEvent ||
+          (currentEvent[ts] <= windowEnd && nextEvent[ts] > windowEnd)
+        ) {
           windowEndPtr[event] = i;
           break;
         }
@@ -348,9 +411,10 @@ export const initializeBeatWindow = (globalParams) => {
     // increment the end pointer until it matches the latest hold end (which could either
     // be part of itself or part of an adjacent freeze arrow)
     if (nextTopFreeze[holdEnds]) {
-      const latestHoldEnd = Math.max(...nextTopFreeze[holdEnds].filter((a) => a));
+      const latestHoldEnd = Math.max(...nextTopFreeze[holdEnds].filter(a => a));
       windowEndPtr.freeze = windowStartPtr.freeze;
-      while (freezes[windowEndPtr.freeze][timestamp] < latestHoldEnd) windowEndPtr.freeze++;
+      while (freezes[windowEndPtr.freeze][timestamp] < latestHoldEnd)
+        windowEndPtr.freeze++;
     }
   }
   // if at least one arrow is on screen
@@ -366,9 +430,14 @@ export const initializeBeatWindow = (globalParams) => {
       // if the last visible arrow is in the middle of (or part of) a freeze,
       // increment the end pointer until it matches the latest holdEndBeat (which could either
       // be part of itself or part of an adjacent freeze arrow)
-      else if (currentFreeze[timestamp] <= windowEnd && nextFreeze[timestamp] > windowEnd) {
+      else if (
+        currentFreeze[timestamp] <= windowEnd &&
+        nextFreeze[timestamp] > windowEnd
+      ) {
         if (currentFreeze[holdEnds]) {
-          const latestHoldEnd = Math.max(...currentFreeze[holdEnds].filter((a) => a));
+          const latestHoldEnd = Math.max(
+            ...currentFreeze[holdEnds].filter(a => a)
+          );
 
           while (freezes[i][timestamp] < latestHoldEnd) i++;
         }
@@ -398,7 +467,7 @@ export const initializeBeatWindow = (globalParams) => {
   frame to incrementally update the window values and determine if the pointer needs
   to be shifted
 */
-export const updateBeatWindow = (globalParams) => {
+export const updateBeatWindow = globalParams => {
   const { arrows, freezes, shocks, chartAreaHeight, mods } = globalParams;
 
   let windowStartPtr, windowEndPtr, timestamp;
@@ -453,15 +522,23 @@ export const updateBeatWindow = (globalParams) => {
   }
 
   // watch for first shock if applicable
-  if (shocks.length && windowEndPtr.shock === -1 && shocks[0][timestamp] <= windowEnd) {
+  if (
+    shocks.length &&
+    windowEndPtr.shock === -1 &&
+    shocks[0][timestamp] <= windowEnd
+  ) {
     windowEndPtr.shock = 0;
   }
 
   // watch for first bpm change/stop
-  ["bpm", "stop"].forEach((event) => {
+  ["bpm", "stop"].forEach(event => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
-    if (events.length && windowEndPtr[event] === -1 && events[0][ts] <= windowEnd) {
+    if (
+      events.length &&
+      windowEndPtr[event] === -1 &&
+      events[0][ts] <= windowEnd
+    ) {
       windowEndPtr[event] = 0;
     }
   });
@@ -492,7 +569,7 @@ export const updateBeatWindow = (globalParams) => {
   }
 
   // watch for first bpm change/stop
-  ["bpm", "stop"].forEach((event) => {
+  ["bpm", "stop"].forEach(event => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
     let nextTopEvent = events[windowStartPtr[event]];
@@ -533,7 +610,7 @@ export const updateBeatWindow = (globalParams) => {
   }
 
   // watch for first bpm change/stop
-  ["bpm", "stop"].forEach((event) => {
+  ["bpm", "stop"].forEach(event => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
     let nextBottomEvent = events[windowEndPtr[event]];
@@ -557,7 +634,9 @@ export const updateBeatWindow = (globalParams) => {
   // extend the freeze window to reach the latest hold end
   if (nextBottomFreeze) {
     const holdEnds = mods.speed === "cmod" ? "holdEndTimes" : "holdEndBeats";
-    const latestHoldEnd = Math.max(...nextBottomFreeze[holdEnds].filter((a) => a));
+    const latestHoldEnd = Math.max(
+      ...nextBottomFreeze[holdEnds].filter(a => a)
+    );
     while (freezes[windowEndPtr.freeze][timestamp] < latestHoldEnd) {
       windowEndPtr.freeze++;
     }
