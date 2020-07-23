@@ -103,6 +103,9 @@ class AudioPlayer {
       bufferSource.connect(audioContext.destination);
 
       bufferSource.start(time - getGlobalOffset());
+      // bufferSource.start(
+      //   time - getGlobalOffset() - currentSong.globalParams.offset
+      // );
       // bufferSource.start(100);
       // console.log(audioContext.currentTime);
     }

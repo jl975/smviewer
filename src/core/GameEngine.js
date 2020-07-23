@@ -630,10 +630,13 @@ class GameEngine {
     } = assist;
 
     const scheduleAheadTime = 0.2;
-    // while (assist.nextNoteTime < audioContext.currentTime)
+    // const scheduleAheadTime = 1;
+
+    const songOffset = this.globalParams.offset;
 
     // amount (in seconds) to add to a timestamp to get its equivalent audioContext time
-    const audioContextDiff = audioStartContextTime - audioStartProgressTime;
+    const audioContextDiff =
+      audioStartContextTime - audioStartProgressTime - songOffset;
 
     let nextNote = allArrows[nextNotePtr];
 
