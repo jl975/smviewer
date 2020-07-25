@@ -6,8 +6,7 @@
 #MUSIC:DeStRuCtIvE FoRcE.ogg;
 #SAMPLESTART:89.492;
 #SAMPLELENGTH:15;
-#DISPLAYBPM:89:177;
-#BPMS:0=88.485,68=176.97,132=88.485,164=176.97;
+#BPMS:0=88.5,68=177,132=88.5,164=177;
 
 //---------------dance-single - ----------------
 #NOTES:

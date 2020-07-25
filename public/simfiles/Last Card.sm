@@ -4,10 +4,9 @@
 #BACKGROUND:Last Card-bg.png;
 #CDTITLE:./CDTitles/DDR A20 PLUS.png;
 #MUSIC:Last Card.ogg;
-#OFFSET:2.615;
-#SAMPLESTART:90.564;
+#SAMPLESTART:93.179;
 #SAMPLELENGTH:15;
-#BPMS:0=84.99,12=169.98,152=84.99,184=169.98;
+#BPMS:0=85,12=170,152=85,184=170;
 #STOPS:87.875=1.412,211.875=1.412;
 
 //---------------dance-single - ----------------
