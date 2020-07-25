@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/smviewer/precache-manifest.29993288d74f70b89f624920fc8d6cb5.js"
+  "/smviewer/precache-manifest.3a1107a3c6eba63b29c260fd7e638ba0.js"
 );
 
 self.addEventListener('message', (event) => {
