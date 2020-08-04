@@ -13,6 +13,8 @@ export default async (req, res) => {
     res.statusCode = 200;
     res.json(data);
   } catch (err) {
+    console.log(err);
+    res.statusCode = 500;
     res.send(err);
   }
 };

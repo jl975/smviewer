@@ -159,7 +159,9 @@ export const updateSimfiles = payload => {
     }
   }
 
-  saveSimfile(payload);
+  if (payload.smUrl) {
+    saveSimfile(payload);
+  }
 
   const output = writeSimfileToTsv(songList);
 

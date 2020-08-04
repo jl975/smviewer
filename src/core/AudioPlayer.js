@@ -12,7 +12,7 @@ import {
   changeActiveBpm,
   getCurrentCombo,
   getFullCombo,
-  initializeBeatWindow,
+  initializeBeatWindow
 } from "../utils/engineUtils";
 import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "../utils/debugUtils";
@@ -26,14 +26,14 @@ class AudioPlayer {
     */
     this.sources = {
       song: {},
-      preview: {},
-      assistTick: {
-        audio: new Howl({
-          src: getAssetPath("sounds/assist_tick.wav"),
-          // format: ["wav"],
-          // html5: true,
-        }),
-      },
+      preview: {}
+      // assistTick: {
+      //   audio: new Howl({
+      //     src: getAssetPath("sounds/assist_tick.wav"),
+      //     // format: ["wav"],
+      //     // html5: true,
+      //   }),
+      // },
     }; // map of song hash to associated Howl object
 
     this.currentSong = null; // hash of current song
@@ -107,7 +107,7 @@ class AudioPlayer {
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
         },
-        onend: (spriteId) => {
+        onend: spriteId => {
           if (thisSong.tl) {
             thisSong.tl.pause();
           }
@@ -115,7 +115,7 @@ class AudioPlayer {
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
-        },
+        }
       });
 
       // const thisPreview = (this.sources.preview[song.hash] = {
@@ -168,7 +168,7 @@ class AudioPlayer {
 
   storePreviewSource(song, simfile) {
     const thisPreview = (this.sources.preview[song.hash] = {
-      title: song.title,
+      title: song.title
     });
     thisPreview.audio = new Howl({
       src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
@@ -177,8 +177,8 @@ class AudioPlayer {
       sprite: {
         sample: [
           parseFloat((simfile.sampleStart - DEFAULT_OFFSET) * 1000),
-          parseFloat((simfile.sampleLength - DEFAULT_OFFSET) * 1000),
-        ],
+          parseFloat((simfile.sampleLength - DEFAULT_OFFSET) * 1000)
+        ]
       },
       onload: () => {
         // thisPreview.audio.volume(0);
@@ -208,7 +208,7 @@ class AudioPlayer {
         // thisPreview.audio.volume(0);
         this.currentPreviewId = null;
         store.dispatch(actions.stopPreviewAudio());
-      },
+      }
     });
   }
 
@@ -327,11 +327,19 @@ class AudioPlayer {
     if (deltaTime > 60) {
       // console.log(deltaTime);
       const currentTime = this.getCurrentTime();
-      console.log("frame skip", "deltaTime:", deltaTime, "currentTime:", currentTime);
+      console.log(
+        "frame skip",
+        "deltaTime:",
+        deltaTime,
+        "currentTime:",
+        currentTime
+      );
       if (typeof currentTime === "number") {
         const globalOffset = store.getState().mods.globalOffset;
 
-        currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.offset);
+        currentSong.tl.seek(
+          currentTime + globalOffset + currentSong.globalParams.offset
+        );
       } else {
         console.log("audio unstable after frame skip, resyncing");
         this.resync();
@@ -434,10 +442,16 @@ class AudioPlayer {
   }
 
   isPlaying() {
-    return this.getCurrentSong() && this.getCurrentSong().audio.playing(this.currentSongId);
+    return (
+      this.getCurrentSong() &&
+      this.getCurrentSong().audio.playing(this.currentSongId)
+    );
   }
   isPaused() {
-    return this.getCurrentSong() && !this.getCurrentSong().audio.playing(this.currentSongId);
+    return (
+      this.getCurrentSong() &&
+      !this.getCurrentSong().audio.playing(this.currentSongId)
+    );
   }
 
   playAssistTick() {
@@ -471,7 +485,10 @@ class AudioPlayer {
   }
 
   isPreviewPlaying() {
-    return this.getCurrentPreview() && this.getCurrentPreview().audio.playing(this.currentPreviewId);
+    return (
+      this.getCurrentPreview() &&
+      this.getCurrentPreview().audio.playing(this.currentPreviewId)
+    );
   }
 
   getChartAudioStatus() {

@@ -113,7 +113,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 111	ibdIdIO60b880i8oPOdQD9qIqldOdDl8	ハルイチバン	Haru ichiban	ときめきアイドル project	15	4,6,7,11,,5,7,11,	180	は	6cuahzde0dxmk5j/Haru%20ichiban.mp3			
 112	D16P668Q8loqIoDo1IdoIlIloiIoIDll	*ハロー、プラネット。	Hello, planet	sasakure.UK	15	3,7,9,13,,7,9,13,	150	は	ethbnlm7koklraq/Hello%2C%20planet.mp3			
 113	160Oo1q8DolI6068lQi66OQbQ9Q8ODQI	バンブーソード・ガール	Bamboo Sword Girl	cosMo＠暴走P	14	2,7,11,15,,7,12,15,	208	は	u8nfmseqysgwen6/Bamboo%20Sword%20Girl.mp3			
-114	QD9Ib18D9lIO10O19d16PbPb68q1190d	び	Bi	立秋 feat.ちょこ	16	5,9,12,17,,9,12,17,	169	は	ala7fwv2duazvry/Bi.mp3			
+114	QD9Ib18D9lIO10O19d16PbPb68q1190d	び	Bi	立秋 feat.ちょこ	16	5,9,12,17,18,9,12,17,18	169	は	ala7fwv2duazvry/Bi.mp3			
 115	1Q809666i9oblO8qO688OiD6OIbiP0Oq	ヒカリユリイカ	Hikari eureka	ここなつ	16	2,5,8,11,,5,8,11,	140	は	6dv6t8z42twmf8k/Hikari%20eureka.mp3			
 116	1qdb8P8il9li6DOdPolq9d0d9Q6898oi	ビビットストリーム	BeBeatStream	DJ TOTTO	14	4,6,10,13,,6,10,13,	184	は	3it588sfz1r1ne6/BeBeatStream.mp3			
 117	Ibd8d0bllqOo61lqlQPd8lP01D0Qb9o6	ヒマワリ	Himawari	RIYU from BeForU	8	3,4,7,11,,4,7,13,	185	は	f75nsdy9mgdxldm/Himawari.mp3			
@@ -457,7 +457,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 455	Di8lP6PobQ6l8do0llO9IIqQ6iqqiqDo	Hyper Bomb	Hyper Bomb	Yunosuke	17	3,7,11,15,,6,11,15,	160	H	m3atiwsb34mjct2/Hyper%20Bomb.mp3			
 456	ID00liOPPd6PiDb09608dQbOIDlQ68qo	HYPERDRIVE	HYPERDRIVE	Moe Shop	17	3,6,9,12,,6,9,12,	150	H	uu4ugv7t5fe4dgc/HYPERDRIVE.mp3			
 457	I08olqilqQi9Dd0qOq0o09PPqI0l11QI	HYPER EUROBEAT	HYPER EUROBEAT	NAOKI feat. DDR ALL STARS	7	3,4,6,10,,6,9,11,	152	H	8fw2m4jo4n8fz8g/HYPER%20EUROBEAT.mp3			
-458	0bq9qI9PoPIlQl89bDO60o9q8I1iIP66	HyperTwist	HyperTwist	TANUKI	17	5,8,12,15,,8,12,15,	190	H	fhlqqu81h3ugqs0/HyperTwist.mp3			
+458	0bq9qI9PoPIlQl89bDO60o9q8I1iIP66	HyperTwist	HyperTwist	TANUKI	17	5,8,12,15,18,8,12,15,18	190	H	fhlqqu81h3ugqs0/HyperTwist.mp3			
 459	8l808Do60DP0qDbD066QQqP1qOQdob90	HYSTERIA	HYSTERIA	NAOKI 190	3	5,6,8,11,,4,8,10,	190	H	i7p9mxbcb40irf2/HYSTERIA.mp3			
 460	lPloI86odlIbIo96P169b9I0Ob8lD189	HYSTERIA 2001	HYSTERIA 2001	NM	6	,,,,10,,,,11	190	H	6psa6n8g092re9w/HYSTERIA%202001.mp3			
 461	1I9ODbQ81qi1006QoQI6d6dbd9iiPD9O	Idola	Idola	iconoclasm feat.GUMI	14	3,8,12,16,17,8,12,16,17	201	I	jltdsl3ocrf8hj6/Idola.mp3			
@@ -503,7 +503,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 501	iOqb60DOOolIioDIOPi09P91i8PDiOqq	Kiss me all night long	Kiss me all night long	NAOKI J-STYLE feat.MIU	7	3,3,6,10,,3,6,11,	155	K	a20q6kxf5pfzirt/Kiss%20me%20all%20night%20long.mp3			
 502	9IOdDPPO1IIPD9oDbOPo0Qo99Ii6Q8oi	LA BAMBA	LA BAMBA (EXTREME)	メキシコ民謡	7	3,4,8,11,,4,8,10,	179	L	cpjel3b48r4ws5p/LA%20BAMBA.mp3			
 503	qbQ9I1bI6q91Q18DlDlI1Qdi8q6Qlo91	La Bamba	La Bamba (SN1)	LH MUSIC CREATION	8	3,5,8,11,,6,8,12,	156	L	2is9fmuo52izbq8/La%20Bamba%20%28SN1%29.mp3			
-504	bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l	Lachryma《Re:Queen’M》	Lachryma (Re-Queen'M)	かねこちはる	16	5,9,14,18,,9,14,18,	236	L	y3809zinwyxtzf6/Lachryma%20%28Re-Queen%27M%29.mp3			
+504	bIlqP91O9ld1lqlq6qoq9OiPdqIDPP0l	Lachryma《Re:Queen’M》	Lachryma (Re-Queen'M)	かねこちはる	16	5,9,14,18,19,9,14,18,19	236	L	y3809zinwyxtzf6/Lachryma%20%28Re-Queen%27M%29.mp3			
 505	b6l6qPPdiOqqPqqII0IPqI981bolOqIb	La libertad	La libertad	Cheryl Horrocks	11	3,5,9,12,14,6,9,12,14	170	L	ipqw2yg6nbws41d/La%20libertad.mp3			
 506	ddib8P601q0Oqdb0Pl8oqobq9DD608P1	L'amour et la liberté(Darwin & DJ Silver remix)	L'amour et la liberte(Darwin & DJ Silver remix)	NAOKI in the MERCURE	9	3,4,7,11,,4,7,12,	70-140	L	rneijlhn9tpefm9/L%27amour%20et%20la%20liberte%28Darwin%20%26%20DJ%20Silver%20remix%29.mp3			
 507	8IIoIQQqlooiI6QD9ldIO6qidP98QP68	L'amour et la liberté(DDR Ver.)	L'amour et la liberte(DDR Ver.)	NAOKI underground	7	3,6,9,12,,6,9,12,	145	L	hlms91aoz87llv3/L%27amour%20et%20la%20liberte%28DDR%20Ver.%29.mp3			
@@ -607,7 +607,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 605	QD8D6IQ1QoOPIPIIbI10QDOdd96OPIQi	#OurMemories	OurMemories	DDR ALL FANS	15	3,6,9,12,11,6,9,12,11	140	O	5zslkk88t92nth0/OurMemories.mp3			
 606	QI06q9lPIoo80DlI18Ooi6dbPl89bqi0	Our Soul	Our Soul	CaZ	16	3,6,8,11,15,6,9,11,15	150	O	bfwthsk3gnokkky/Our%20Soul.mp3			
 607	I6qdO8Di181P6Q9Ooq0d8d0DOdq1dOOQ	out of focus	out of focus	Qrispy Joybox	15	3,6,12,15,16,6,12,15,16	84-167	O	dk86e8zdiskjs8b/out%20of%20focus.mp3			
-608	P1boP1O60bdI16i6lqqd1Q8ioiPbolqd	ΩVERSOUL	OVERSOUL	BlackY	16	3,6,12,15,,6,12,15,	155	O	qd6ptkx7dysgvyf/OVERSOUL.mp3			
+608	P1boP1O60bdI16i6lqqd1Q8ioiPbolqd	ΩVERSOUL	OVERSOUL	BlackY	16	3,6,12,15,17,6,12,15,17	155	O	qd6ptkx7dysgvyf/OVERSOUL.mp3			
 609	6bid6d9qPQ80DOqiidQQ891o6Od8801l	Over The “Period”	Over The Period	TAG underground overlay	14	8,12,15,18,19,12,15,18,19	23-840	O	ixxqxb7qnfkm7tf/Over%20The%20Period.mp3			
 610	06loOQ0DQb0DqbOibl6qO81qlIdoP9DI	PARANOiA	PARANOiA	180	0	4,8,9,11,,8,13,11,	180	P	q2zxprxkp7brp45/PARANOiA.mp3			
 611	I8bQ8ilD9l1Qi9Q9iI0q6qqqiolo01QP	PARANOiA(X-Special)	PARANOiA(X-Special)	180	10	,,,,13,,,,14	180	P	0as3o6ejdhlq798/PARANOiA%28X-Special%29.mp3			
@@ -755,179 +755,180 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 753	o1QoI9dQ1i89bPl1oDl6999861obD0qI	SOUL CRASH	SOUL CRASH	nc ft HARDCORE NATION	9	3,6,9,13,,6,9,12,	142	S	dygnovcce0xpfit/SOUL%20CRASH.mp3			
 754	i86bPlP6ioldqb1OqPqidboqqQ8dQqdl	south	south	Wall5	13	2,5,8,10,10,5,8,10,11	140	S	bbo4sjc7baduv7m/south.mp3			
 755	bo6PqbbPQ6D096OIP6dDPbPPiDi88609	Spanish Snowy Dance	Spanish Snowy Dance	Mutsuhiko Izumi	13	3,7,11,15,17,7,11,16,18	180	S	6tlspvvmv4u2lbw/Spanish%20Snowy%20Dance.mp3			
-756	D9odQ60DDolq9QI9DDl98DIobdPPIil9	Special One	Special One	kors k feat. Suzuyo Miyamoto	15	2,5,8,11,,5,8,11,	128	S	t8o26lssjeb5nkc/Special%20One.mp3			
-757	9DI8iOP0660lb968I6Oiiid6DQ68IbOO	SPECIAL SUMMER CAMPAIGN!	SPECIAL SUMMER CAMPAIGN!	Lucky Vacuum	14	2,7,11,15,,7,12,15,	168	S	cqyofv528kpcte2/SPECIAL%20SUMMER%20CAMPAIGN%21.mp3			
-758	b1do8OI6qDDlQO0PI16868ql6bdbI886	Splash Gold	Splash Gold	BEMANI Sound Team "TAG underground"	16	6,10,13,16,,11,13,16,	75-300	S	o1zuklo2elw1624/Splash%20Gold.mp3			
-759	1P9qQdiiodODqQPl0OO88iiiqdoDIPO6	SP-TRIP MACHINE～JUNGLE MIX～	SP-TRIP MACHINE~JUNGLE MIX~	DE-SIRE	1	4,8,9,10,,8,9,10,	160	S	slhvu26l5uce268/SP-TRIP%20MACHINE~JUNGLE%20MIX~.mp3			
-760	dDO8ili1081QQIb86POQ8qd0P111011o	SP-TRIP MACHINE～JUNGLE MIX～(X-Special)	SP-TRIP MACHINE~JUNGLE MIX~(X-Special)	DE-SIRE	10	,,,,11,,,,12	160	S	8now3ra21wbqdpe/SP-TRIP%20MACHINE~JUNGLE%20MIX~%28X-Special%29.mp3			
-761	D9I8d1PDOQ8QqP1o1IIi0o8d6660ddOQ	Squeeze	Squeeze	VENUS feat. Mutsuhiko Izumi	14	4,6,9,15,,6,10,15,	87-173	S	oy1atkihqhzjbxe/Squeeze.mp3			
-762	QD0q90q9PIl9PdqqO9D9DO09DbiODOI6	Star Gate Heaven	Star Gate Heaven	SySF. feat. Donna Burke	8	3,3,7,10,,3,7,11,	145	S	urz8nwyp0qa9oti/Star%20Gate%20Heaven.mp3			
-763	6I0d1d8d690dl8boOb60O1Iq1Ddi6P8d	Star Gate Heaven (FUTURE LOVE Mix)	Star Gate Heaven (FUTURE LOVE Mix)	SySF. feat. Donna Burke	9	4,5,9,12,,6,8,13,	147	S	oe1tllbt2wae8bi/Star%20Gate%20Heaven%20%28FUTURE%20LOVE%20Mix%29.mp3			
-764	bb9lOdO0Pbb1qOIb1oQq8lPlI9i6IP8q	Starlight Fantasia	Starlight Fantasia	TAG	14	3,7,11,14,,7,11,14,	148	S	3l5os68gfghu1u3/Starlight%20Fantasia.mp3			
-765	1QqObIQPDOq6bI6iOqDiiI66oDQQidlb	Starlight Fantasia (Endorphins Mix)	Starlight Fantasia (Endorphins Mix)	U1 overground feat.TAG	14	3,8,12,15,,8,12,15,	78-155	S	qmztz76maggps2q/Starlight%20Fantasia%20%28Endorphins%20Mix%29.mp3			
-766	bbiPqbo0lQq9P19i06q690blI91dbbq6	Starlight in the Snow	Starlight in the Snow	BEMANI Sound Team "劇団レコード" ft.Lisa – paint with stars	16	4,7,11,14,,6,11,14,	150	S	x13iuzfkuagmpbx/Starlight%20in%20the%20Snow.mp3			
-767	l666Dd0bIO9O69boPd898b19bPDo1IdO	starmine	starmine	Ryu☆	14	3,7,11,15,,7,11,14,	182	S	o5knk9p5f1dcb0a/starmine.mp3			
-768	oQPdiPPdQO1Ob6DqDi0l0q0PDP06QlO0	Starry HEAVEN	Starry HEAVEN	Royz	13	2,5,8,10,13,5,8,11,12	190	S	siq4oddw6qboyxs/Starry%20HEAVEN.mp3			
-769	80OqPo1D6lD616lIDI1IPq0oPllld6b1	Starry Sky	Starry Sky	DJ Genki feat. Mayumi Morinaga	16	2,6,9,12,,6,9,12,	150	S	2guotrrx0pbbxti/Starry%20Sky.mp3			
-770	bq1O60D90Qbb6iPoi90Ii9olQOIO0Ib1	STARS☆☆☆（Re-tuned by HΛL） - DDR EDITION -	STARS (Re-tuned by HAL) - DDR EDITION -	TЁЯRA	9	3,5,10,9,,6,9,10,	145	S	jhx1jq14dxnvvb8/STARS%20%28Re-tuned%20by%20HAL%29%20-%20DDR%20EDITION%20-.mp3			
-771	6qQb9I0QbD89IID9b9iOPdO6dbqPDolQ	STARS☆☆☆(2nd NAOKI's style)	STARS (2nd NAOKI's style)	TЁЯRA	8	3,6,8,9,,6,8,11,	140	S	kgcis1h4c3dpdvf/STARS%20%282nd%20NAOKI%27s%20style%29.mp3			
-772	l08bl1dddob81IP1IbQqbDbiPo9l069l	Start a New Day	Start a New Day	Sota F.	15	3,6,11,15,16,7,11,15,16	168	S	nbnbu1ooy0bx5hq/Start%20a%20New%20Day.mp3			
-773	I1DiOI16Id0qdlqbQ6ObPlilDP1oiI98	Star Trail	Star Trail	Nhato	15	2,5,9,13,,6,9,13,	74-148	S	mx85ts86z098zxt/Star%20Trail.mp3			
-774	6lqoOddiPQ6D6160bOdP116bQdIliII8	STAY (Organic house Version)	STAY (Organic house Version)	emi	7	3,4,7,9,,5,7,9,	125	S	uvtq3s4smzmmdjq/STAY%20%28Organic%20house%20Version%29.mp3			
-775	olDoq69qD008Q9bb8d9OOlPO160Qd0dq	Stay 4 Ever	Stay 4 Ever	CHEAP CREAM	16	2,5,9,11,,5,9,11,	140	S	w64chjd77hb9gjb/Stay%204%20Ever.mp3			
-776	b0DP0oqbid0iIQ6D88dDIiiDiq9oi19Q	stealth	stealth	DAISUKE ASAKURA	9	3,5,8,11,,5,8,11,	160	S	0sdg6o6yhf5r5ex/stealth.mp3			
-777	OPQQo1idQoqOq88lIPOQo6DooiP8QO9d	Stella Sinistra	Stella Sinistra	Akhuta Philharmonic Orchestra	14	4,8,12,15,,7,12,14,	110-180	S	cpvudytmijjnm51/Stella%20Sinistra.mp3			
-778	d6OoI6oOd1l99DIoodI9lIDI0bidDP00	STEP MACHINE	STEP MACHINE	Paisley Parks	17	3,7,11,14,,7,12,14,	160	S	al3ulvzk4j5sfah/STEP%20MACHINE.mp3			
-779	ooo6qID66I6191bQib1QQdlPoio6Iodl	STERLING SILVER	STERLING SILVER	TAG	15	4,6,10,13,,6,10,13,	175	S	1ok54nx4zk1deew/STERLING%20SILVER.mp3			
-780	oqPii6QDdPOI6lDDQ96DOI8ill61bobd	STERLING SILVER (U1 overground mix)	STERLING SILVER (U1 overground mix)	TAG	15	4,7,11,14,,7,11,14,	185	S	jglqabjsakuqrbs/STERLING%20SILVER%20%28U1%20overground%20mix%29.mp3			
-781	Qb90bo6I0Pd9181iIoOPoqPOOOQq6dQ1	STILL IN MY HEART	STILL IN MY HEART	NAOKI	4	3,6,8,10,,6,7,9,	150	S	bownjxlyjo5378p/STILL%20IN%20MY%20HEART.mp3			
-782	DOOb99dlP8PdIbDOQIqoqll60Iob9189	STILL IN MY HEART(MOMO MIX)	STILL IN MY HEART (MOMO MIX)	NAOKI	6	,,,,11,,,,12	85-170	S	e9s33ot2dmq46s3/STILL%20IN%20MY%20HEART%20%28MOMO%20MIX%29.mp3			
-783	OoIPPqIDbQ6qIb69q8dil0iq0l6q6DQD	stoic (EXTREME version)	stoic (EXTREME version)	TaQ	7	3,5,9,13,,4,10,12,	155	S	1g8nwc04sg3ijbj/stoic%20%28EXTREME%20version%29.mp3			
-784	oDD1DQ161816dd9Dl8IioOoi9OQdO01O	Straight Oath	Straight Oath	矢鴇つかさ feat. 三澤秋	13	3,8,11,13,15,8,11,14,16	182	S	pbig0sw9z8gghhj/Straight%20Oath.mp3			
-785	0i68q1iQblI1Pb8QqoQ90i6ddPiqdq8b	Strawberry Chu♡Chu♡	Strawberry Chu Chu	ときめきアイドル project クッキーパラダイス	15	2,7,11,13,,7,11,13,	137	S	p9p5q1sea6lo7hn/Strawberry%20Chu%20Chu.mp3			
-786	li6dD9b8dboOd9bbqli886lDl08IPQ00	StrayedCatz	StrayedCatz	削除	15	4,7,11,13,,7,12,13,	114-152	S	z0gr1ewgbj2751g/StrayedCatz.mp3			
-787	1idIoi66ll806D8ddldOQi8bdiDO0Oil	Struggle	Struggle	Masayoshi Minoshima(ALR)	14	4,6,10,13,,5,10,12,	180	S	iv2ajbepkxvxyyz/Struggle.mp3			
-788	oo6iiQQbqQ98D9oP6OQPibIqIPd66Qb0	STULTI	STULTI	MAX MAXIMIZER VS DJ TOTTO	13	4,9,12,15,,9,12,16,	90-182	S	jhzyjv3nv04e2fj/STULTI.mp3			
-789	P8od0Q9DO8i9dl881oPQQIOIIq1Q9Oi9	Sucka Luva	Sucka Luva	Harmony Machine	13	1,4,7,11,,5,8,11,	118	S	k8pcz2pqj8r8li5/Sucka%20Luva.mp3			
-790	i90o9Q0D91bb0Q6qIQ1OiDqqiPPP98oI	Summer Fairytale	Summer Fairytale	Design-MAD crew	13	2,5,7,9,14,5,7,9,14	141	S	yf5ng4w6rfbm9pa/Summer%20Fairytale.mp3			
-791	loD6oi96869O8ilii1QPOPDoP91l1PQQ	Summer fantasy (Darwin remix)	Summer fantasy (Darwin remix)	Lazy U1 ft. Fraz & Chalk E	14	2,7,10,13,11,7,10,13,13	178	S	fckhmq8d0ikmig3/Summer%20fantasy%20%28Darwin%20remix%29.mp3			
-792	61IoqIoODb6dlQlQqd99b90idO9QP9iI	SUNKiSS♥DROP	SUNKiSS DROP~Alison Side~	jun with Alison	9	3,5,8,12,12,4,7,11,12	185	S	pmh4gpjwu6b3ahe/SUNKiSS%20DROP~Alison%20Side~.mp3			
-793	D1I09111OiQPiDi9doqP9b1PlO1PqII8	SUN² SUMMER STEP!	SUN2 SUMMER STEP!	ときめきアイドル project	15	1,3,8,11,,3,8,11,	170	S	qyz6v5aofbep3cn/SUN2%20SUMMER%20STEP%21.mp3			
-794	d1PbOD8o6b6o1OqOQ98ilDQbid6dddQd	SUPER HERO	SUPER HERO	DJ YOSHITAKA feat.Michaela Thurlow	14	4,6,9,12,,7,10,13,	180	S	626wyh0ionu1bv1/SUPER%20HERO.mp3			
-795	PDODO6Qdb9iqd6q0QoI0PiI0lb8l9I6d	SUPER SAMURAI	SUPER SAMURAI	jun	10	4,8,12,15,,8,12,16,	170	S	75bfi2zypu6dqsi/SUPER%20SAMURAI.mp3			
-796	88do8dl8O6Ql1Qlb981lOi8D86oiq91P	SUPER STAR	SUPER STAR	D.J.RICH feat. TAILBROS.	3	3,7,8,12,,5,9,11,	128	S	3i8pwbgmvaeqyn1/SUPER%20STAR.mp3			
-797	0qQ1odlooiQO99DDP6bD9bOq89669PQb	SUPER STAR(FROM NONSTOP MEGAMIX)	SUPER STAR(FROM NONSTOP MEGAMIX)	D.J.RICH feat. TAILBROS.	6	,,,,10,,,,11	128	S	gkatu8mhpgj2jp9/SUPER%20STAR%28FROM%20NONSTOP%20MEGAMIX%29.mp3			
-798	Id8IPlqQodD01dPiq8oPPQoPQq6booi0	SUPER SUMMER SALE	SUPER SUMMER SALE	BEMANI Sound Team "U1 overground"	15	2,8,12,15,,8,12,15,	155	S	e2uz9nkahea4nb8/SUPER%20SUMMER%20SALE.mp3			
-799	obd0PDIDq8qqd9q9qdbDdqD98bd61I8D	SWEET HOME PARTY	SWEET HOME PARTY	劇団レコード	16	5,8,12,16,,8,12,16,	134-180	S	jawme8kjo4dw78a/SWEET%20HOME%20PARTY.mp3			
-800	DbibObDP860iqI11POiqQDD0i8PPOibd	Sweet Rain	Sweet Rain	Y&Co. feat. Karin	13	3,6,9,12,,6,9,12,	155	S	ygd7sevmqnmurs6/Sweet%20Rain.mp3			
-801	8809ol0qbbd6919bbl0b8id1669PqQ08	Sweet Sweet ♥ Magic	Sweet Sweet Love Magic	jun	6	4,5,9,13,,5,8,11,	180	S	q7dg9y9kzdgo0fc/Sweet%20Sweet%20Love%20Magic.mp3			
-802	9bo00PqOIDoDbO6P1116b9obolOiqPo1	switch	switch	DAISUKE ASAKURA ex.TЁЯRA	9	3,4,7,10,,5,7,10,	152	S	60738dgcsopelli/switch.mp3			
-803	8lo1IDqPDD88DObIPodOd8oQ0Q6qQ1Dd	sync (EXTREME version)	sync (EXTREME version)	OutPhase	7	3,5,8,9,12,6,9,10,11	167	S	fwrpr6wsrwxxx7e/sync%20%28EXTREME%20version%29.mp3			
-804	b9IoO68b1Qd9I6O8qqoo6q1o8DQ8l9lo	Synergy For Angels	Synergy For Angels	TAG×U1-ASAMi	13	3,7,10,14,,7,10,14,	160	S	awi5cbkbcctb6ao/Synergy%20For%20Angels.mp3			
-805	ob86bIdI1IbIl9DoQ1bboq9Q8O6PPPoq	Taj He Spitz	Taj He Spitz	DKC Crew	10	2,4,7,10,,5,7,11,	107	T	q5xyb612bnvlvfg/Taj%20He%20Spitz.mp3			
-806	b0lI9Ili8loOb1DD6Dd8lqII60b90101	Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)	Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)	DKC Crew	10	3,5,8,12,,6,7,12,	120	T	detwt5rtdz9vme6/Taj%20He%20Spitz%20%28Tommie%20Sunshine%27s%20Brooklyn%20Fire%20Re-Touch%29.mp3			
-807	8i1ii188q9OlD0qQ9lQ0D1OdDbldqQbI	Take A Chance	Take A Chance	neuras feat. GATZ	10	2,3,6,9,,3,6,9,	88	T	ni8bpyczoh5zouj/Take%20A%20Chance.mp3			
-808	ibiD8868D116OIqbQ1DQ1IOb8OD1qQ98	Take A Step Forward	Take A Step Forward	TAG feat. Sydney Powers	12	2,7,9,11,,6,10,12,	145	T	nr5wwuouv4julsn/Take%20A%20Step%20Forward.mp3			
-809	0088dOQPiD0Qb0Dl8ol09D98IOllI1id	take me higher	take me higher	KOTONOHOUSE	17	3,5,10,13,,5,10,13,	140	T	ptl0yq1ihxn2yao/take%20me%20higher.mp3			
-810	i1Q080DDQD81l8o0109Q6blq0oo8o69q	Taking It To The Sky	Taking It To The Sky	U1 feat. Tammy S. Hansen	11	1,3,5,8,,4,6,8,	130	T	mzp6srmutjenw89/Taking%20It%20To%20The%20Sky.mp3			
-811	1Q1Q8oO600lodPbio8b8d66b8do1PIlQ	TEARS	TEARS	NAOKI underground feat.EK	7	3,6,8,12,,6,8,12,	143	T	ii3ttp8pr3rnyp8/TEARS.mp3			
-812	qdbDo1oP6D9ioODd1dQO0QObObidilbP	TECH-NOID	TECH-NOID	Sota F.	15	2,5,9,12,,6,9,13,	146	T	1tykcsefkykbd3v/TECH-NOID.mp3			
-813	6loP1dbiOq0Q8i9QQOI6o0iOO6bdIQOO	Tell me what to do	Tell me what to do	atomsoak ft. cerol	13	2,5,9,12,14,5,9,11,14	145	T	wtmjqudw57mjbcb/Tell%20me%20what%20to%20do.mp3			
-814	IPDid8ii1iQb19lb6iqOi91O0il018Ql	Thank You Merry Christmas	Thank You Merry Christmas	VENUS	14	3,5,9,12,,5,9,13,	220	T	iphulv5s3tf8xh3/Thank%20You%20Merry%20Christmas.mp3			
-815	boi66iD1809o6q199bbolO0bqQ1lqI8b	The flower in your smile	The flower in your smile	TACOS NAOMI feat.小久保裕之	10	3,6,7,10,,5,7,10,	186	T	h5x2wgad1a8bdcb/The%20flower%20in%20your%20smile.mp3			
-816	0q8b6O0qOlDql0oP80OI8i8i1088qbIb	The Heavens Above	The Heavens Above	U1 /F Anneliese	12	3,7,9,11,,6,10,12,	140	T	d8wkag7d1o2dy43/The%20Heavens%20Above.mp3			
-817	Q8bIDb60oPo890oi0l0O9PQd9lOb8o1Q	The History of the Future	The History of the Future	BEMANI Sound Team"U1×TAG"	16	5,9,14,17,,9,14,17,	100-200	T	tvilz7r8pt2pl8x/The%20History%20of%20the%20Future.mp3			
-818	8Pl1i1o0O6oIio0b681qOoDOQdPPOObb	The Island Song	The Island Song	TAG feat. Eric Anthony	13	1,3,7,9,13,4,7,9,13	85	T	lc4hzjmessudm1s/The%20Island%20Song.mp3			
-819	lO68Q0iPIOiOIDDd8dOPoiql9OI81DQ0	The Least 100sec	The Least 100sec	Hirofumi Sasaki	7	5,7,11,12,,7,10,14,	200-263	T	ic8ghd65y5qc9pg/The%20Least%20100sec.mp3			
-820	li608di8PolqqIP808iddOqi11qDDq0Q	The legend of MAX	The legend of MAX	ZZ	7	7,8,13,15,,8,12,16,	83-333	T	kikdugz6ow8ak0k/The%20legend%20of%20MAX.mp3			
-821	1o6dQqq9P8IQ6PbQO88OI1b91P9DoqQ8	The legend of MAX(X-Special)	The legend of MAX(X-Special)	ZZ	10	,,,,17,,,,17	83-333	T	yd8sk54uudhouog/The%20legend%20of%20MAX%28X-Special%29.mp3			
-822	q6661PIbbb1O80OQQ11iD6bP1l6bio0Q	The Light	The Light	W&W ft. Kizuna AI	16	2,5,9,13,,5,9,13,	160	T	leh8c0rtkz3o1kx/The%20Light.mp3			
-823	90D66ObIiqP09oqoDoq6b908b699oqqi	The Lonely Streets	The Lonely Streets	DJ Yoshitaka feat.Robert "RAaB" Stevenson	14	2,4,7,10,12,5,7,10,12	115	T	44p8efu9h3s1ltn/The%20Lonely%20Streets.mp3			
-824	0Ob1601118Dii9Qdii9lPbioPP6qoi1I	The Night Away (MK Remix)	The Night Away (MK Remix)	Starving Trancer feat. Mayumi Morinaga	15	3,5,9,12,,5,10,12,	160	T	9fyn030orn2lrsy/The%20Night%20Away%20%28MK%20Remix%29.mp3			
-825	Oq9QIlI8l11ddqbbDoQ1ql61OqlIi9lo	Theory of Eternity	Theory of Eternity	TAG	11	3,6,9,12,10,6,9,12,11	160	T	tisb7x9e3xngbu9/Theory%20of%20Eternity.mp3			
-826	1iIoi89doDiQoo8o0ddl9PQdQP0Ili8O	THE REASON	THE REASON	Black Rose Garden	13	1,4,7,12,15,4,7,12,15	85-98	T	i8u98s4rl6m1bop/THE%20REASON.mp3			
-827	ODQOP1dblD6q8d160Ioi0dIoQloI6oQO	THE SHINING POLARIS	THE SHINING POLARIS	L.E.D. feat. Sana	8	4,4,6,9,,5,6,9,	147	T	l9f5u7zzgx6s2qf/THE%20SHINING%20POLARIS.mp3			
-828	Dbdi9P91PQl660llPQO0l86oDqi1O9Ob	The Wind of Gold	The Wind of Gold	kors k	13	3,6,10,14,,6,10,14,	171	T	vlku9f0qz7jo19w/The%20Wind%20of%20Gold.mp3			
-829	b80qOO6l8060990qQPod1bOd8Q9d69qo	The World Ends Now	The World Ends Now	Akira Complex	16	4,9,12,16,,9,13,16,	200	T	xbt0yk8nzv9bj36/The%20World%20Ends%20Now.mp3			
-830	9lob1d1QPd9qiPlQOQ6l0dbodOoDPq1d	think ya better D	think ya better D	sAmi	2	3,5,6,9,,6,7,10,	136	T	7azaf81nvt1n6yy/think%20ya%20better%20D.mp3			
-831	PdPdbdQ1lDI18O90Q0li8QI0bo99bidd	This Beat Is.....	This Beat Is	Shoichiro Hirata	16	1,4,7,11,,4,7,10,	128	T	ri9y9wrvx8tbk4p/This%20Beat%20Is.mp3			
-832	qQl6O8IdiI6991IiqDqidO96bll1qPDl	THIS NIGHT	THIS NIGHT	jun feat. Sonnet	11	2,5,8,11,,6,8,11,	160	T	tn5fqa9d664rtdm/THIS%20NIGHT.mp3			
-833	ld8b6iqPIiqqbb9q69l8obO66ibI96od	Ticket to Bombay	Ticket To Bombay	Jena Rose	10	3,5,7,10,,5,7,9,	145	T	iawvwm5vz1zbx5g/Ticket%20To%20Bombay.mp3			
-834	idDdoI9bD186blQ9Q8610bIQqb86dilo	TIERRA BUENA	TIERRA BUENA	WILMA DE OLIVEIRA	8	3,4,8,10,,4,7,11,	115	T	6qv9n08ltzlnovw/TIERRA%20BUENA.mp3			
-835	99oQO1b8d9qQdPq6O1I6bd1bo1D16DP0	Till the lonely's gone	Till the lonely's gone	Z-licious	10	3,4,8,9,,5,8,9,	130	T	nib15h0fnnyfcmv/Till%20the%20lonely%27s%20gone.mp3			
-836	oDIliqQl90bQo6Qil9bOiD1iO19qI1dd	TIME	TIME	NM feat.Aleisha G	12	1,5,7,9,,5,7,10,	115	T	iitoacnpxsromli/TIME.mp3			
-837	O110IdDiDlDQ66bb1o9lbqiqQq6lOid1	TimeHollow	TimeHollow	Masanori Akita	10	2,4,7,9,,5,6,8,	94	T	yhf793pd2sj34bc/TimeHollow.mp3			
-838	1i8d1DodloQiQ8doOlloDIOO9PI6OIoO	Time Of Our Lives	Time Of Our Lives	Pitbull	15	2,5,9,11,,5,9,11,	124	T	7yscae9ncfb8wiv/Time%20Of%20Our%20Lives.mp3			
-839	POdll6oPi1dd68q19q8ID6iQ6d08bl99	Together Going My Way	Together Going My Way	DiGiTAL WiNG with 空音	17	2,5,9,13,,,,13,	155	T	5rw7otgssp31dm7/Together%20Going%20My%20Way.mp3			
-840	OddDoQ6dqi0QdQDDOO6qlO08d8bPbli1	Tohoku EVOLVED	Tohoku EVOLVED (TYPE1)	2.1MB underground	12	6,10,14,17,18,10,14,17,18	340	T	3nu4ij0h9jr8gjz/Tohoku%20EVOLVED%20%28TYPE1%29.mp3			
-841	DIDd9l0dbi1QdQ89I6Do9bolDqdb1dPO	tokyoEVOLVED (TYPE1)	tokyoEVOLVED (TYPE1)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	e7pf1ooqc0l132h/tokyoEVOLVED%20%28TYPE1%29.mp3			
-842	i0b0118q8D1QlQbIbli0P0IQ0QP08QdO	tokyoEVOLVED (TYPE2)	tokyoEVOLVED (TYPE2)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	sx4ai1dvlz0uwf4/tokyoEVOLVED%20%28TYPE2%29.mp3			
-843	6OOd69q0oP8iblIIb08OQO9dq9oIq8i6	tokyoEVOLVED (TYPE3)	tokyoEVOLVED (TYPE3)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	7000pg1e81ohz25/tokyoEVOLVED%20%28TYPE3%29.mp3			
-844	lQbiI10Qo9DdD8liqPIiob61qDO9d861	TOMORROW	TOMORROW	nc ft. Dreamscanner	8	3,4,8,10,,5,7,11,	140	T	dosvd51euj5rz0z/TOMORROW.mp3			
-845	D1D88PPI0PDQqOq00OI6QI1o6dPolqlI	Tomorrow Perfume	Tomorrow Perfume	dj TAKA	8	3,4,8,10,,4,7,9,	144	T	e8g24dhw77lsfby/Tomorrow%20Perfume.mp3			
-846	l9i996ld6PbbiO1911OoOI8lIPQ06ID8	Top The Charts	Top The Charts	J-Mi & Midi-D feat. Hanna Stockzell	13	3,5,8,12,14,5,8,12,14	160	T	rt15qm0laxfxsqc/Top%20The%20Charts.mp3			
-847	l66Io69ob00OoOiDOI9lIqlidbDoDq89	Towards the TOWER	Towards The TOWER	SHAMDEL	15	2,5,9,12,,5,9,12,	132	T	hjedjezta9gvrbl/Towards%20The%20TOWER.mp3			
-848	d9QO9odlI18i96I6DQPld1iiol8ODl0o	toy boxer	toy boxer	BEMANI Sound Team "S-C-U & SYUNN"	16	4,9,12,16,,8,12,16,	190	T	w70zygit5syl2cy/toy%20boxer.mp3			
-849	ddIiQ90DblbOQQIQPIbQOdb9DdPoOQ9Q	Toy Box Factory	Toy Box Factory	まろん(IOSYS)	16	3,7,11,15,,7,11,15,	148	T	q2iv405fqzg6alg/Toy%20Box%20Factory.mp3			
-850	iO61Dq9iiIQO0Qbbdo1O8bdqO8dqoiio	Tracers (4Beat Remix)	Tracers (4Beat Remix)	Ruffage & Size	10	3,5,7,10,,6,9,11,	140	T	6pozkyfflsry4ue/Tracers%20%284Beat%20Remix%29.mp3			
-851	PlIiPiPoI9DIbPdIPoqQlIq61Pd8QIDo	Tribe	Tribe	猫叉Master	12	2,5,7,10,13,4,7,10,14	139	T	5ovf4vdq8g9fr31/Tribe.mp3			
-852	OPOIPIi1OioQ98qbO100q6QiDP8dIDq6	Trigger	Trigger	sonic-coll.	10	5,9,12,16,18,7,12,16,18	100-400	T	jmq8jc46g0fa26c/Trigger.mp3			
-853	0lIIil06b8q819P9lDil09o6qlqo9I1i	Trill auf G	Trill auf G	BEMANI Sound Team "dj TAKA"	16	4,8,12,16,,8,11,16,	188	T	r0lcyicpu7l1aky/Trill%20auf%20G.mp3			
-854	POQQQqI8q69qP6Id8Ol01QI60OIoiil8	Trim	Trim	kobo	9	5,6,10,16,,6,10,15,	85-340	T	u11qgavbtt53hag/Trim.mp3			
-855	d810q0I8q6d0l1POlIO6d66bOPb96dql	Triple Counter	Triple Counter	DJ YOSHITAKA meets dj TAKA	15	7,11,14,17,,9,14,17,	216	T	xkwlkwt8cm5aob3/Triple%20Counter.mp3			
-856	lDOPd60Q9obl6D0q8qqdQi9lioblD1db	Triple Journey -TAG EDITION-	Triple Journey -TAG EDITION-	Triumvirate	13	4,8,12,16,18,8,12,17,18	96-192	T	1q64ovomzxlm8q5/Triple%20Journey%20-TAG%20EDITION-.mp3			
-857	Pb9II0oiI9ODQ8OP8IqIPQP9P68biqIi	TRIP MACHINE	TRIP MACHINE	DE-SIRE	0	3,8,9,10,,9,10,10,	160	T	1pwnabdy2mabnxo/TRIP%20MACHINE.mp3			
-858	bql00PQ1PiboIqDQoD909Il8o1PIDiD1	TRIP MACHINE(X-Special)	TRIP MACHINE(X-Special)	DE-SIRE	10	,,,,11,,,,12	160	T	j16v2d8dy51dh38/TRIP%20MACHINE%28X-Special%29.mp3			
-859	D81D8689llDiOqPq0IP19bbQQiioPl8d	TRIP MACHINE CLIMAX	TRIP MACHINE CLIMAX	DE-SIRE	3	5,7,9,12,,7,9,12,	180	T	p8ynoue3ng8q6cf/TRIP%20MACHINE%20CLIMAX.mp3			
-860	boQPliilD01OD1bIdOOIOOi0Q9P16OlO	TRIP MACHINE CLIMAX(X-Special)	TRIP MACHINE CLIMAX(X-Special)	DE-SIRE	10	,,,,14,,,,14	180	T	t4tfql17f5truar/TRIP%20MACHINE%20CLIMAX%28X-Special%29.mp3			
-861	8O6b1D9PDO0ll1IO9d1ODDPPo0QPQbob	TRIP MACHINE EVOLUTION	TRIP MACHINE EVOLUTION	DE-JAVU	12	4,9,12,16,18,9,12,17,18	95-382	T	mmdcgqpxazb5cyv/TRIP%20MACHINE%20EVOLUTION.mp3			
-862	qQ9Oo611P0dObD8q6O0Q968bbl8I91OO	TRIP MACHINE～luv mix～	TRIP MACHINE~luv mix~	2MB	2	3,9,10,12,,9,10,11,	160	T	qs0q59rk8ofs9ia/TRIP%20MACHINE~luv%20mix~.mp3			
-863	b0QQ6OPD1dDqQ6D6IDQqlDd180Db609I	TRIP MACHINE PhoeniX	TRIP MACHINE PhoeniX	DE-SIRE改	9	3,8,12,15,15,8,12,16,16	160	T	mgm8flmf76j8p2x/TRIP%20MACHINE%20PhoeniX.mp3			
-864	POO9PlPq66OqIQO6Oq1i90D6Ill100il	TRIP MACHINE survivor	TRIP MACHINE survivor	DE-SIRE	7	4,5,11,13,,6,11,12,	170	T	n9lzeih9y30gwmx/TRIP%20MACHINE%20survivor.mp3			
-865	l9OQPi0do19dQPO8ilq0QDbll8P8Ib6O	TRIP MACHINE (xac nanoglide mix)	TRIP MACHINE (xac nanoglide mix)	DE-SIRE	12	4,8,12,16,,8,12,16,	170	T	bp5xkkcts6i1kzs/TRIP%20MACHINE%20%28xac%20nanoglide%20mix%29.mp3			
-866	bilO9D91P1lo81oIDP6qOoqdDdQdoDlP	Truare!	Truare!	Akhuta	14	3,8,11,16,,8,11,16,	183	T	l2xh7dnqwep9qy9/Truare%21.mp3			
-867	D9lq0DioIl9D6ll0d61990DP9qPPb1dP	True Blue	True Blue	dj TAKA feat.AiMEE	14	3,7,11,16,,6,11,16,	164	T	rv12o7o3uqmpydm/True%20Blue.mp3			
-868	oD6l698q0bQqoIOi0Dd66bqObII8QqDl	TRUE♥LOVE	TRUE LOVE	jun feat. Schanita	8	4,4,8,10,,4,7,10,	188	T	pi4sfuomky3ri9w/TRUE%20LOVE.mp3			
-869	ddD8OPQoIiQi0IbDOIIdQ6dDDbPQ9bIO	Trust -DanceDanceRevolution mix-	Trust -DanceDanceRevolution mix-	Tatsh feat.ヨーコ	9	3,5,8,10,,4,8,11,	164	T	4cly8wduic0lou7/Trust%20-DanceDanceRevolution%20mix-.mp3			
-870	doqDbod0d81qP6PoPiP8b0P00PD8oboD	Try 2 Luv. U	Try 2 Luv. U	S.F.M.P.	8	3,4,6,8,,4,6,8,	115	T	lms03gj2tz05oin/Try%202%20Luv.%20U.mp3			
-871	o9Ib8bob6b9qIDq1d09bq8q1I06Odi90	TSUBASA	TSUBASA	柊木りお featured by TAG	14	2,6,10,13,,6,9,13,	151	T	3nuwzjtl6omz5ng/TSUBASA.mp3			
-872	io688qld6Pqq6bI01q86illP18biq0bd	TSUGARU	TSUGARU	RevenG vs DE-SIRE	6	3,5,9,12,,6,9,13,	165	T	gahs2jpy5drqucy/TSUGARU.mp3			
-873	1qDD1DdPlId69010IQ18I6q8Q00IoI6D	TSUGARU (APPLE MIX)	TSUGARU(APPLE MIX)	RevenG vs DE-SIRE	6	,,,,11,,,,11	165	T	v0e5muo37em5dfd/TSUGARU%28APPLE%20MIX%29.mp3			
-874	0l181DPDqbQPb0qQl0i0dlQd0oQPlQ6i	Twin Bee -Generation X-	Twin Bee -Generation X-	FinalOffset	7	3,5,8,11,,4,7,11,	169	T	baapfc41jtp77v3/Twin%20Bee%20-Generation%20X-.mp3			
-875	lo6bOoq86d9od6qQ9PiPibOioOQb96lP	TWINKLE♡HEART	TWINKLE HEART	jun	12	1,4,8,11,10,4,8,11,11	185	T	bmreqafxfki8mx6/TWINKLE%20HEART.mp3			
-876	Po1D6bo0dQbdl91bPOl86lo8DbP9biiO	Twin memories W	Twin memories W	ときめきアイドル project	15	2,6,9,11,,6,9,11,	160	T	xnii4nw2rqmtwxc/Twin%20memories%20W.mp3			
-877	1oIo1DliQqPol00Q1l1bPODbdOilodod	Übertreffen	Ubertreffen	TAKA respect for J.S.B.	10	3,6,8,13,,5,8,14,	174	U	e3z7wzr6r2p1ehi/Ubertreffen.mp3			
-878	I6dI99IOolDD6l6Q1ooPIiDO8Odq0QIP	UNBELIEVABLE (Sparky remix)	UNBELIEVABLE (Sparky remix)	jun feat. Sarah-Jane	12	4,7,11,15,,8,12,16,	88-176	U	iae75o9dm5x1n3l/UNBELIEVABLE%20%28Sparky%20remix%29.mp3			
-879	oiQliqIliq91Dl169ldqbb18OPblOb1i	Under the Sky	Under the Sky	南さやか (BeForU) with platoniX	8	2,2,5,11,,3,6,8,	170	U	asazfvy6ggm9tma/Under%20the%20Sky.mp3			
-880	99P8bDO1PqlddQqo81QOIPO60lPQqlO8	un deux trois	un deux trois	SDMS	8	3,4,8,10,,4,6,9,	70-140	U	jdk4zwbqew9m54e/un%20deux%20trois.mp3			
-881	8q68D8iP6lIdiP8bo9PoOib8lb9loIob	Une mage blanche	Une mage blanche	Dormir	16	4,7,10,13,,7,10,13,	193	U	m65eifiitms0at7/Une%20mage%20blanche.mp3			
-882	olQl6Qoi0IbobI980q9Q0QIo9qlbq1PO	Unreal	Unreal	Black Rose Garden	9	4,8,12,15,,8,12,14,	90-180	U	kutba6fg95a7y8m/Unreal.mp3			
-883	89O8qIII0QPO0Q0l10P6dl19PlQ9d0oO	Until the End	Until the End	Philip Webb	12	3,4,9,12,,8,10,13,	172	U	exnuefiisw04bxh/Until%20the%20End.mp3			
-884	0b1660ibo0liI01ibOO6lD8olIb88qDi	Uranus	Uranus	Tatsh SN 2 Style	9	3,6,9,11,13,6,9,11,13	81-162	U	b0vet0lz3vrrkhy/Uranus.mp3			
-885	Ilo6IboPOq8Q10qDOdDDoO6P989bPPi6	V ～for EXTREME～	V ~for EXTREME~	TAKA	7	3,5,8,12,13,5,7,11,13	150	V	ggbqb7jy9v112zu/V%20~for%20EXTREME~.mp3			
-886	186dd6DQq891Ib9Ilq8Qbo8lIqb0Qoll	Valkyrie dimension	Valkyrie dimension	Spriggan	11	9,13,15,18,19,13,14,18,19	47-744	V	66ugdnjwz2ik2jm/Valkyrie%20dimension.mp3			
-887	6d6bqoOlqi8ooqOdlqdPblqol88b68QP	VANESSA	VANESSA	朱雀	11	4,7,11,16,,7,12,16,	185	V	vnis1scdl2vax9w/VANESSA.mp3			
-888	DDqDDqDQ1Db60IiIDbIl6Pd8DPOq0q06	VANITY ANGEL	VANITY ANGEL	FIX X	7	3,4,9,12,,5,9,12,	140	V	hjwr6bw408bru8b/VANITY%20ANGEL.mp3			
-889	891b0OdIdO8b9obi69b6PQlPIqDI01dO	Vanquish The Ghost	Vanquish The Ghost	BEMANI Sound Team "TAG"	15	3,8,12,16,,8,12,15,	78-155	V	ke0cmhp4401rz35/Vanquish%20The%20Ghost.mp3			
-890	d1dPPII1o69IlI0d0DlPi1i1idbdPD6O	VEGA	VEGA	REDALiCE	14	3,7,11,14,,7,11,14,	191	V	gmojdklx4azk5o5/VEGA.mp3			
-891	o6I06bPq8dqIlllbQDPP8boqdq6iQ8Qb	Vem brincar	Vem brincar	Caldeira feat.Téka Penteriche	9	2,5,7,11,,5,7,11,	135	V	cfuhrjbzfhn4qbg/Vem%20brincar.mp3			
-892	6bIODbPoIDlOdO66b1id0q68qdQilDd6	Venus	Venus	Tatsh+RayZY	9	3,4,7,11,13,4,6,10,13	195	V	bc8l8zyqv3kja29/Venus.mp3			
-893	8idID0Pq0O68Qb0Q69P6IDldqI91qi1O	volcano	volcano	Yasuhiro Abe	9	4,5,8,13,,5,8,13,	240	V	mtqdvuawq8m7jdr/volcano.mp3			
-894	6DQ9D9oi66I8ODi8o0dPdOD1ibbIqIdI	voltississimo	voltississimo	BEMANI Sound Team "PHQUASE"	16	5,9,13,17,,9,13,17,	113-225	V	vv81u9jj1ix0e3z/voltississimo.mp3			
-895	PqPPDibPdD8qd88D0d01dqo6918b0POD	Votum stellarum -forest #25 DDR RMX-	Votum stellarum -forest #25 DDR RMX-	iconoclasm	9	1,4,9,12,,4,7,12,	140	V	asjfkp8v85dr7hw/Votum%20stellarum%20-forest%20%2325%20DDR%20RMX-.mp3			
-896	PPQb966D6Ql6Q8iPo68810PdDiI6D0bl	Waiting	Waiting	nc ft.NRG Factory	16	3,6,10,13,,7,10,13,	180	W	7brq34ckf12hqda/Waiting.mp3			
-897	96Q0Piqo9PPQoQdi9001DO6P9Piqi0dq	Waiting 4 u	Waiting 4 u	DDT	10	4,6,8,11,11,6,8,12,12	175	W	38pqenc4zvu6b8w/Waiting%204%20u.mp3			
-898	io9b89PD18ibIO8PIqb1QODliqDdqiIO	Wake Me Up	Wake Me Up	Avicii	15	3,5,9,12,,5,9,13,	124	W	wz60yrfelh8ccc9/Wake%20Me%20Up.mp3			
-899	olloQOobddiIIPObP91l0qPl6oo8P9Dl	What Will Come of Me	What Will Come of Me	Black Rose Garden	11	2,4,6,13,,5,7,13,	140	W	s6kic2wma03tqdw/What%20Will%20Come%20of%20Me.mp3			
-900	dbq9dPPOQ60ibOol0I6b9iQol9lD669D	Why not	Why not	Darwin	9	4,6,9,11,,6,7,11,	175	W	w1as7stgouyoj85/Why%20not.mp3			
-901	QQbiq1qQd8d1blOldi889OdQd9P1106Q	WH1TE RO5E	WH1TE RO5E	Y&Co.	11	3,5,9,13,,5,9,13,	85-170	W	q1dla7gb7anq0si/WH1TE%20RO5E.mp3			
-902	qI06bbQ1dloi0IIIO1IQ1q8bdPdl6l69	Wicked Plastik	Wicked Plastik	nc ft. Electric Touch	12	3,4,8,13,,5,11,13,	145	W	670sa7molitop8y/Wicked%20Plastik.mp3			
-903	01808Q1Q6lQQ1lP0qd80I0b0qqDd1OOP	WILD RUSH	WILD RUSH	FACTOR-X	3	5,6,7,10,,5,9,11,	80-180	W	w63i0wbvfjzhinb/WILD%20RUSH.mp3			
-904	ibOQ0QOdIPdIbIo0oPoDDI1DqPId00li	WILD RUSH(FROM NONSTOP MEGAMIX)	WILD RUSH(FROM NONSTOP MEGAMIX)	FACTOR-X	6	,,,,9,,,,10	125	W	43c7iwsuzobu8mm/WILD%20RUSH%28FROM%20NONSTOP%20MEGAMIX%29.mp3			
-905	I81iP0Io9o1l9li0Iq99P1091O8DoDOd	WILD SIDE	WILD SIDE	Tatsh	13	3,6,9,11,13,6,9,11,13	165	W	p7nm7b4rdyd5unh/WILD%20SIDE.mp3			
-906	d6iI8ii9qi0Pi80dDQQlPq6qQo69860P	will	will	NAOKI	10	1,4,7,11,,5,7,11,	145	W	1loakchdzre4jkr/will.mp3			
-907	8bI68oIq08d99P880bDPQ9D80O099Q10	Windy Fairy	Windy Fairy	DJ TOTTO	13	2,7,11,15,,7,11,15,	180	W	c0ge6nne0cu5raz/Windy%20Fairy.mp3			
-908	blI8D10Q1IDQ8Q19bi0IDlD80oD0bloi	Wings of an Angel (Fly With Me)	Wings of an Angel (Fly With Me)	J-Mi & Midi-D	12	2,4,8,12,,5,8,11,	175	W	zc3m7tm6qdjjh7b/Wings%20of%20an%20Angel%20%28Fly%20With%20Me%29.mp3			
-909	Qo1qdD0Q9d11d9Id6o09P9id8lPbOQ6o	Wow Wow VENUS	Wow Wow VENUS	VENUS	13	2,4,8,11,,5,8,12,	157	W	l8mmb2ytc6zygab/Wow%20Wow%20VENUS.mp3			
-910	bDDd08iP8dlIlOo6iqd91dPiI1lQdOQq	xenon	xenon	Mr.T	7	3,5,10,13,,5,9,13,	158	X	4ka681omg8w97sa/xenon.mp3			
-911	PQQd6lQlDqilqliI0IobolqIDlo0Iboq	Xepher	Xepher	Tatsh	8	4,7,10,13,15,7,10,13,15	170	X	ciitpred6tznbxi/Xepher.mp3			
-912	8OPDQ1oQIOPdqqD18oo0lQ8OQOIbbDoP	Yeah! Yeah!	Yeah! Yeah!	CLUB SPICE	15	2,6,9,12,,6,9,12,	150	Y	d8okh7q9pw2s000/Yeah%21%20Yeah%21.mp3			
-913	D0qloQo0bQliQqooQ609IP8i09old99D	You	You	NM feat. Anjanette Mickelsen	13	1,3,6,10,,3,6,10,	72	Y	rl7x6ek2nqno4sy/You.mp3			
-914	0qOPDqq0qld66bll9ob9iIqiiQPiQIDQ	You are a Star	You are a Star	NAOKI feat. Anna Kaelin	11	2,4,8,12,13,6,8,12,13	155	Y	magjqy07nzw2ysu/You%20are%20a%20Star.mp3			
-915	D8I68Ibib9ldQDIPIQdO6lqI61PQlPO9	You gotta move it (feat. Julie Rugaard)	You gotta move it (feat. Julie Rugaard)	古代祐三	8	4,5,8,10,,5,7,10,	134	Y	ug4u8xl5iv7kjuh/You%20gotta%20move%20it%20%28feat.%20Julie%20Rugaard%29.mp3			
-916	oiIob81i6d6P6qbddOP6Q0d0obQ0PID9	Your Angel	Your Angel	DM Ashura feat. kors k	11	2,4,7,10,,4,7,11,	175	Y	cxask9pl3qh3baz/Your%20Angel.mp3			
-917	I61ioI01IOPDPbP1OO0l98PD0iDbid0D	ZEPHYRANTHES	ZEPHYRANTHES	TAG	15	3,7,11,15,,7,11,15,	180	Z	sqnkvadwywel29y/ZEPHYRANTHES.mp3			
-918	96QPqq0q6Id0Ii0QbD1bQqPbiDqb0lPo	ZETA～素数の世界と超越者～	ZETA ~The World of Prime Numbers and the Transcendental Being~	Zektbach	11	3,6,11,15,17,6,9,14,17	90-180	Z	49jf7qe66txe19r/ZETA%20~The%20World%20of%20Prime%20Numbers%20and%20the%20Transcendental%20Being~.mp3			
-919	IQ0dIiDql9Q68d9ddQIiQbq1OPq8Db69	.59	59	dj TAKA	3	3,5,8,11,,5,8,10,	110-135	NUM	tnltzoancgxas54/59.mp3			
-920	ddOOOibQ6qIi9DI1bl8b108I1Ib6QDl9	1998	1998	NAOKI	7	3,4,6,9,,5,6,9,	150	NUM	5iiw9v6wixb35xx/1998.mp3			
-921	i9Pidb18b9O8bdqQ91QQP0oPdIdIODq1	30 Lives (Up-Up-Down-Dance Mix)	30 Lives (Up-Up-Down-Dance Mix)	The Motion Sick	10	2,4,7,8,,3,6,8,	144	NUM	a6j185c1wsu195r/30%20Lives%20%28Up-Up-Down-Dance%20Mix%29.mp3			
-922	Q96bO9D61lib19IiIi0i69P80bo6q69Q	321STARS	321STARS	DJ SIMON	7	4,5,9,11,,5,8,11,	192	NUM	gyp25d4joa03e1r/321STARS.mp3			
-923	80Q1idDo6O6Db0106b0q6qbOP1P8QQb0	39	39	sasakure.UK×DECO*27	15	4,6,8,12,,6,9,13,	175	NUM	cv53vcdhzg480lv/39.mp3			
-924	l1ODQ1bO9POQ6d8O0Iobbio11qb6O6bd	50th Memorial Songs -二人の時 ～under the cherry blossoms～-	50th Memorial Songs -futari no toki ~under the cherry blossoms~-	BEMANI Sound Team	16	3,7,9,12,,7,9,11,	160	NUM	wl9wr487fj55qob/50th%20Memorial%20Songs%20-futari%20no%20toki%20~under%20the%20cherry%20blossoms~-.mp3			
-925	bP10qq9dPDDqIl16lPIDDd8b00dIIP08	50th Memorial Songs -Beginning Story-	50th Memorial Songs -Beginning Story-	BEMANI Sound Team	16	2,5,10,14,,5,10,14,	135	NUM	izlyqj0ygl7vnod/50th%20Memorial%20Songs%20-Beginning%20Story-.mp3			
-926	0IIO08bII0QQDOdobqbl8Ib8Q8O8q1li	50th Memorial Songs -Flagship medley-	50th Memorial Songs -Flagship medley-	BEMANI Sound Team	16	3,7,9,12,,8,10,13,	135-175	NUM	q62zaefj3ajva35/50th%20Memorial%20Songs%20-Flagship%20medley-.mp3			
-927	D0iDbio81PIbI8dD6QOIP9IidDOP0PDP	50th Memorial Songs -The BEMANI History-	50th Memorial Songs -The BEMANI History-	BEMANI Sound Team	16	2,5,9,13,,5,9,13,	136	NUM	sn5gfla0gljemaz/50th%20Memorial%20Songs%20-The%20BEMANI%20History-.mp3			
-928	Dd98lDdo8Ob698d9qbO9iD0PqO19oQbI	8000000	8000000	kors k	14	4,7,10,14,,7,11,14,	100-200	NUM	bongpmr6mgn83mu/8000000.mp3			
-929	id9oObq9P6Q6Pq6lQPqI88OP1DD8D0O1	888	888	DJ TECHNORCH	11	3,6,13,14,18,7,12,15,18	111-888	NUM	jka2d1w0uoi328t/888.mp3			
-930	00obPO6oPIPOoD9qb0dIl6q6D8P6o9bI	IX	IX	dj TAKA VS DJ TOTTO feat.藍	14	5,11,14,17,18,10,14,17,18	99-396	NUM	2etsna481mo15t8/IX.mp3			
-	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined		
+756	8i61Oi09bOIP0lOldI668b8IPbIq8l0Q	Sparkle Smilin'	Sparkle Smilin'	BEMANI Sound Team "Qrispy Joybox" feat.いちか	17	3,7,11,14,,7,11,14,	180	S	3pedw47itoyi16f/Sparkle%20Smilin%27.mp3			
+757	D9odQ60DDolq9QI9DDl98DIobdPPIil9	Special One	Special One	kors k feat. Suzuyo Miyamoto	15	2,5,8,11,,5,8,11,	128	S	t8o26lssjeb5nkc/Special%20One.mp3			
+758	9DI8iOP0660lb968I6Oiiid6DQ68IbOO	SPECIAL SUMMER CAMPAIGN!	SPECIAL SUMMER CAMPAIGN!	Lucky Vacuum	14	2,7,11,15,,7,12,15,	168	S	cqyofv528kpcte2/SPECIAL%20SUMMER%20CAMPAIGN%21.mp3			
+759	b1do8OI6qDDlQO0PI16868ql6bdbI886	Splash Gold	Splash Gold	BEMANI Sound Team "TAG underground"	16	6,10,13,16,,11,13,16,	75-300	S	o1zuklo2elw1624/Splash%20Gold.mp3			
+760	1P9qQdiiodODqQPl0OO88iiiqdoDIPO6	SP-TRIP MACHINE～JUNGLE MIX～	SP-TRIP MACHINE~JUNGLE MIX~	DE-SIRE	1	4,8,9,10,,8,9,10,	160	S	slhvu26l5uce268/SP-TRIP%20MACHINE~JUNGLE%20MIX~.mp3			
+761	dDO8ili1081QQIb86POQ8qd0P111011o	SP-TRIP MACHINE～JUNGLE MIX～(X-Special)	SP-TRIP MACHINE~JUNGLE MIX~(X-Special)	DE-SIRE	10	,,,,11,,,,12	160	S	8now3ra21wbqdpe/SP-TRIP%20MACHINE~JUNGLE%20MIX~%28X-Special%29.mp3			
+762	D9I8d1PDOQ8QqP1o1IIi0o8d6660ddOQ	Squeeze	Squeeze	VENUS feat. Mutsuhiko Izumi	14	4,6,9,15,,6,10,15,	87-173	S	oy1atkihqhzjbxe/Squeeze.mp3			
+763	QD0q90q9PIl9PdqqO9D9DO09DbiODOI6	Star Gate Heaven	Star Gate Heaven	SySF. feat. Donna Burke	8	3,3,7,10,,3,7,11,	145	S	urz8nwyp0qa9oti/Star%20Gate%20Heaven.mp3			
+764	6I0d1d8d690dl8boOb60O1Iq1Ddi6P8d	Star Gate Heaven (FUTURE LOVE Mix)	Star Gate Heaven (FUTURE LOVE Mix)	SySF. feat. Donna Burke	9	4,5,9,12,,6,8,13,	147	S	oe1tllbt2wae8bi/Star%20Gate%20Heaven%20%28FUTURE%20LOVE%20Mix%29.mp3			
+765	bb9lOdO0Pbb1qOIb1oQq8lPlI9i6IP8q	Starlight Fantasia	Starlight Fantasia	TAG	14	3,7,11,14,,7,11,14,	148	S	3l5os68gfghu1u3/Starlight%20Fantasia.mp3			
+766	1QqObIQPDOq6bI6iOqDiiI66oDQQidlb	Starlight Fantasia (Endorphins Mix)	Starlight Fantasia (Endorphins Mix)	U1 overground feat.TAG	14	3,8,12,15,,8,12,15,	78-155	S	qmztz76maggps2q/Starlight%20Fantasia%20%28Endorphins%20Mix%29.mp3			
+767	bbiPqbo0lQq9P19i06q690blI91dbbq6	Starlight in the Snow	Starlight in the Snow	BEMANI Sound Team "劇団レコード" ft.Lisa – paint with stars	16	4,7,11,14,,6,11,14,	150	S	x13iuzfkuagmpbx/Starlight%20in%20the%20Snow.mp3			
+768	l666Dd0bIO9O69boPd898b19bPDo1IdO	starmine	starmine	Ryu☆	14	3,7,11,15,,7,11,14,	182	S	o5knk9p5f1dcb0a/starmine.mp3			
+769	oQPdiPPdQO1Ob6DqDi0l0q0PDP06QlO0	Starry HEAVEN	Starry HEAVEN	Royz	13	2,5,8,10,13,5,8,11,12	190	S	siq4oddw6qboyxs/Starry%20HEAVEN.mp3			
+770	80OqPo1D6lD616lIDI1IPq0oPllld6b1	Starry Sky	Starry Sky	DJ Genki feat. Mayumi Morinaga	16	2,6,9,12,,6,9,12,	150	S	2guotrrx0pbbxti/Starry%20Sky.mp3			
+771	bq1O60D90Qbb6iPoi90Ii9olQOIO0Ib1	STARS☆☆☆（Re-tuned by HΛL） - DDR EDITION -	STARS (Re-tuned by HAL) - DDR EDITION -	TЁЯRA	9	3,5,10,9,,6,9,10,	145	S	jhx1jq14dxnvvb8/STARS%20%28Re-tuned%20by%20HAL%29%20-%20DDR%20EDITION%20-.mp3			
+772	6qQb9I0QbD89IID9b9iOPdO6dbqPDolQ	STARS☆☆☆(2nd NAOKI's style)	STARS (2nd NAOKI's style)	TЁЯRA	8	3,6,8,9,,6,8,11,	140	S	kgcis1h4c3dpdvf/STARS%20%282nd%20NAOKI%27s%20style%29.mp3			
+773	l08bl1dddob81IP1IbQqbDbiPo9l069l	Start a New Day	Start a New Day	Sota F.	15	3,6,11,15,16,7,11,15,16	168	S	nbnbu1ooy0bx5hq/Start%20a%20New%20Day.mp3			
+774	I1DiOI16Id0qdlqbQ6ObPlilDP1oiI98	Star Trail	Star Trail	Nhato	15	2,5,9,13,,6,9,13,	74-148	S	mx85ts86z098zxt/Star%20Trail.mp3			
+775	6lqoOddiPQ6D6160bOdP116bQdIliII8	STAY (Organic house Version)	STAY (Organic house Version)	emi	7	3,4,7,9,,5,7,9,	125	S	uvtq3s4smzmmdjq/STAY%20%28Organic%20house%20Version%29.mp3			
+776	olDoq69qD008Q9bb8d9OOlPO160Qd0dq	Stay 4 Ever	Stay 4 Ever	CHEAP CREAM	16	2,5,9,11,,5,9,11,	140	S	w64chjd77hb9gjb/Stay%204%20Ever.mp3			
+777	b0DP0oqbid0iIQ6D88dDIiiDiq9oi19Q	stealth	stealth	DAISUKE ASAKURA	9	3,5,8,11,,5,8,11,	160	S	0sdg6o6yhf5r5ex/stealth.mp3			
+778	OPQQo1idQoqOq88lIPOQo6DooiP8QO9d	Stella Sinistra	Stella Sinistra	Akhuta Philharmonic Orchestra	14	4,8,12,15,,7,12,14,	110-180	S	cpvudytmijjnm51/Stella%20Sinistra.mp3			
+779	d6OoI6oOd1l99DIoodI9lIDI0bidDP00	STEP MACHINE	STEP MACHINE	Paisley Parks	17	3,7,11,14,,7,12,14,	160	S	al3ulvzk4j5sfah/STEP%20MACHINE.mp3			
+780	ooo6qID66I6191bQib1QQdlPoio6Iodl	STERLING SILVER	STERLING SILVER	TAG	15	4,6,10,13,,6,10,13,	175	S	1ok54nx4zk1deew/STERLING%20SILVER.mp3			
+781	oqPii6QDdPOI6lDDQ96DOI8ill61bobd	STERLING SILVER (U1 overground mix)	STERLING SILVER (U1 overground mix)	TAG	15	4,7,11,14,,7,11,14,	185	S	jglqabjsakuqrbs/STERLING%20SILVER%20%28U1%20overground%20mix%29.mp3			
+782	Qb90bo6I0Pd9181iIoOPoqPOOOQq6dQ1	STILL IN MY HEART	STILL IN MY HEART	NAOKI	4	3,6,8,10,,6,7,9,	150	S	bownjxlyjo5378p/STILL%20IN%20MY%20HEART.mp3			
+783	DOOb99dlP8PdIbDOQIqoqll60Iob9189	STILL IN MY HEART(MOMO MIX)	STILL IN MY HEART (MOMO MIX)	NAOKI	6	,,,,11,,,,12	85-170	S	e9s33ot2dmq46s3/STILL%20IN%20MY%20HEART%20%28MOMO%20MIX%29.mp3			
+784	OoIPPqIDbQ6qIb69q8dil0iq0l6q6DQD	stoic (EXTREME version)	stoic (EXTREME version)	TaQ	7	3,5,9,13,,4,10,12,	155	S	1g8nwc04sg3ijbj/stoic%20%28EXTREME%20version%29.mp3			
+785	oDD1DQ161816dd9Dl8IioOoi9OQdO01O	Straight Oath	Straight Oath	矢鴇つかさ feat. 三澤秋	13	3,8,11,13,15,8,11,14,16	182	S	pbig0sw9z8gghhj/Straight%20Oath.mp3			
+786	0i68q1iQblI1Pb8QqoQ90i6ddPiqdq8b	Strawberry Chu♡Chu♡	Strawberry Chu Chu	ときめきアイドル project クッキーパラダイス	15	2,7,11,13,,7,11,13,	137	S	p9p5q1sea6lo7hn/Strawberry%20Chu%20Chu.mp3			
+787	li6dD9b8dboOd9bbqli886lDl08IPQ00	StrayedCatz	StrayedCatz	削除	15	4,7,11,13,,7,12,13,	114-152	S	z0gr1ewgbj2751g/StrayedCatz.mp3			
+788	1idIoi66ll806D8ddldOQi8bdiDO0Oil	Struggle	Struggle	Masayoshi Minoshima(ALR)	14	4,6,10,13,,5,10,12,	180	S	iv2ajbepkxvxyyz/Struggle.mp3			
+789	oo6iiQQbqQ98D9oP6OQPibIqIPd66Qb0	STULTI	STULTI	MAX MAXIMIZER VS DJ TOTTO	13	4,9,12,15,,9,12,16,	90-182	S	jhzyjv3nv04e2fj/STULTI.mp3			
+790	P8od0Q9DO8i9dl881oPQQIOIIq1Q9Oi9	Sucka Luva	Sucka Luva	Harmony Machine	13	1,4,7,11,,5,8,11,	118	S	k8pcz2pqj8r8li5/Sucka%20Luva.mp3			
+791	i90o9Q0D91bb0Q6qIQ1OiDqqiPPP98oI	Summer Fairytale	Summer Fairytale	Design-MAD crew	13	2,5,7,9,14,5,7,9,14	141	S	yf5ng4w6rfbm9pa/Summer%20Fairytale.mp3			
+792	loD6oi96869O8ilii1QPOPDoP91l1PQQ	Summer fantasy (Darwin remix)	Summer fantasy (Darwin remix)	Lazy U1 ft. Fraz & Chalk E	14	2,7,10,13,11,7,10,13,13	178	S	fckhmq8d0ikmig3/Summer%20fantasy%20%28Darwin%20remix%29.mp3			
+793	61IoqIoODb6dlQlQqd99b90idO9QP9iI	SUNKiSS♥DROP	SUNKiSS DROP~Alison Side~	jun with Alison	9	3,5,8,12,12,4,7,11,12	185	S	pmh4gpjwu6b3ahe/SUNKiSS%20DROP~Alison%20Side~.mp3			
+794	D1I09111OiQPiDi9doqP9b1PlO1PqII8	SUN² SUMMER STEP!	SUN2 SUMMER STEP!	ときめきアイドル project	15	1,3,8,11,,3,8,11,	170	S	qyz6v5aofbep3cn/SUN2%20SUMMER%20STEP%21.mp3			
+795	d1PbOD8o6b6o1OqOQ98ilDQbid6dddQd	SUPER HERO	SUPER HERO	DJ YOSHITAKA feat.Michaela Thurlow	14	4,6,9,12,,7,10,13,	180	S	626wyh0ionu1bv1/SUPER%20HERO.mp3			
+796	PDODO6Qdb9iqd6q0QoI0PiI0lb8l9I6d	SUPER SAMURAI	SUPER SAMURAI	jun	10	4,8,12,15,,8,12,16,	170	S	75bfi2zypu6dqsi/SUPER%20SAMURAI.mp3			
+797	88do8dl8O6Ql1Qlb981lOi8D86oiq91P	SUPER STAR	SUPER STAR	D.J.RICH feat. TAILBROS.	3	3,7,8,12,,5,9,11,	128	S	3i8pwbgmvaeqyn1/SUPER%20STAR.mp3			
+798	0qQ1odlooiQO99DDP6bD9bOq89669PQb	SUPER STAR(FROM NONSTOP MEGAMIX)	SUPER STAR(FROM NONSTOP MEGAMIX)	D.J.RICH feat. TAILBROS.	6	,,,,10,,,,11	128	S	gkatu8mhpgj2jp9/SUPER%20STAR%28FROM%20NONSTOP%20MEGAMIX%29.mp3			
+799	Id8IPlqQodD01dPiq8oPPQoPQq6booi0	SUPER SUMMER SALE	SUPER SUMMER SALE	BEMANI Sound Team "U1 overground"	15	2,8,12,15,,8,12,15,	155	S	e2uz9nkahea4nb8/SUPER%20SUMMER%20SALE.mp3			
+800	obd0PDIDq8qqd9q9qdbDdqD98bd61I8D	SWEET HOME PARTY	SWEET HOME PARTY	劇団レコード	16	5,8,12,16,,8,12,16,	134-180	S	jawme8kjo4dw78a/SWEET%20HOME%20PARTY.mp3			
+801	DbibObDP860iqI11POiqQDD0i8PPOibd	Sweet Rain	Sweet Rain	Y&Co. feat. Karin	13	3,6,9,12,,6,9,12,	155	S	ygd7sevmqnmurs6/Sweet%20Rain.mp3			
+802	8809ol0qbbd6919bbl0b8id1669PqQ08	Sweet Sweet ♥ Magic	Sweet Sweet Love Magic	jun	6	4,5,9,13,,5,8,11,	180	S	q7dg9y9kzdgo0fc/Sweet%20Sweet%20Love%20Magic.mp3			
+803	9bo00PqOIDoDbO6P1116b9obolOiqPo1	switch	switch	DAISUKE ASAKURA ex.TЁЯRA	9	3,4,7,10,,5,7,10,	152	S	60738dgcsopelli/switch.mp3			
+804	8lo1IDqPDD88DObIPodOd8oQ0Q6qQ1Dd	sync (EXTREME version)	sync (EXTREME version)	OutPhase	7	3,5,8,9,12,6,9,10,11	167	S	fwrpr6wsrwxxx7e/sync%20%28EXTREME%20version%29.mp3			
+805	b9IoO68b1Qd9I6O8qqoo6q1o8DQ8l9lo	Synergy For Angels	Synergy For Angels	TAG×U1-ASAMi	13	3,7,10,14,,7,10,14,	160	S	awi5cbkbcctb6ao/Synergy%20For%20Angels.mp3			
+806	ob86bIdI1IbIl9DoQ1bboq9Q8O6PPPoq	Taj He Spitz	Taj He Spitz	DKC Crew	10	2,4,7,10,,5,7,11,	107	T	q5xyb612bnvlvfg/Taj%20He%20Spitz.mp3			
+807	b0lI9Ili8loOb1DD6Dd8lqII60b90101	Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)	Taj He Spitz (Tommie Sunshine's Brooklyn Fire Re-Touch)	DKC Crew	10	3,5,8,12,,6,7,12,	120	T	detwt5rtdz9vme6/Taj%20He%20Spitz%20%28Tommie%20Sunshine%27s%20Brooklyn%20Fire%20Re-Touch%29.mp3			
+808	8i1ii188q9OlD0qQ9lQ0D1OdDbldqQbI	Take A Chance	Take A Chance	neuras feat. GATZ	10	2,3,6,9,,3,6,9,	88	T	ni8bpyczoh5zouj/Take%20A%20Chance.mp3			
+809	ibiD8868D116OIqbQ1DQ1IOb8OD1qQ98	Take A Step Forward	Take A Step Forward	TAG feat. Sydney Powers	12	2,7,9,11,,6,10,12,	145	T	nr5wwuouv4julsn/Take%20A%20Step%20Forward.mp3			
+810	0088dOQPiD0Qb0Dl8ol09D98IOllI1id	take me higher	take me higher	KOTONOHOUSE	17	3,5,10,13,,5,10,13,	140	T	ptl0yq1ihxn2yao/take%20me%20higher.mp3			
+811	i1Q080DDQD81l8o0109Q6blq0oo8o69q	Taking It To The Sky	Taking It To The Sky	U1 feat. Tammy S. Hansen	11	1,3,5,8,,4,6,8,	130	T	mzp6srmutjenw89/Taking%20It%20To%20The%20Sky.mp3			
+812	1Q1Q8oO600lodPbio8b8d66b8do1PIlQ	TEARS	TEARS	NAOKI underground feat.EK	7	3,6,8,12,,6,8,12,	143	T	ii3ttp8pr3rnyp8/TEARS.mp3			
+813	qdbDo1oP6D9ioODd1dQO0QObObidilbP	TECH-NOID	TECH-NOID	Sota F.	15	2,5,9,12,,6,9,13,	146	T	1tykcsefkykbd3v/TECH-NOID.mp3			
+814	6loP1dbiOq0Q8i9QQOI6o0iOO6bdIQOO	Tell me what to do	Tell me what to do	atomsoak ft. cerol	13	2,5,9,12,14,5,9,11,14	145	T	wtmjqudw57mjbcb/Tell%20me%20what%20to%20do.mp3			
+815	IPDid8ii1iQb19lb6iqOi91O0il018Ql	Thank You Merry Christmas	Thank You Merry Christmas	VENUS	14	3,5,9,12,,5,9,13,	220	T	iphulv5s3tf8xh3/Thank%20You%20Merry%20Christmas.mp3			
+816	boi66iD1809o6q199bbolO0bqQ1lqI8b	The flower in your smile	The flower in your smile	TACOS NAOMI feat.小久保裕之	10	3,6,7,10,,5,7,10,	186	T	h5x2wgad1a8bdcb/The%20flower%20in%20your%20smile.mp3			
+817	0q8b6O0qOlDql0oP80OI8i8i1088qbIb	The Heavens Above	The Heavens Above	U1 /F Anneliese	12	3,7,9,11,,6,10,12,	140	T	d8wkag7d1o2dy43/The%20Heavens%20Above.mp3			
+818	Q8bIDb60oPo890oi0l0O9PQd9lOb8o1Q	The History of the Future	The History of the Future	BEMANI Sound Team"U1×TAG"	16	5,9,14,17,,9,14,17,	100-200	T	tvilz7r8pt2pl8x/The%20History%20of%20the%20Future.mp3			
+819	8Pl1i1o0O6oIio0b681qOoDOQdPPOObb	The Island Song	The Island Song	TAG feat. Eric Anthony	13	1,3,7,9,13,4,7,9,13	85	T	lc4hzjmessudm1s/The%20Island%20Song.mp3			
+820	lO68Q0iPIOiOIDDd8dOPoiql9OI81DQ0	The Least 100sec	The Least 100sec	Hirofumi Sasaki	7	5,7,11,12,,7,10,14,	200-263	T	ic8ghd65y5qc9pg/The%20Least%20100sec.mp3			
+821	li608di8PolqqIP808iddOqi11qDDq0Q	The legend of MAX	The legend of MAX	ZZ	7	7,8,13,15,,8,12,16,	83-333	T	kikdugz6ow8ak0k/The%20legend%20of%20MAX.mp3			
+822	1o6dQqq9P8IQ6PbQO88OI1b91P9DoqQ8	The legend of MAX(X-Special)	The legend of MAX(X-Special)	ZZ	10	,,,,17,,,,17	83-333	T	yd8sk54uudhouog/The%20legend%20of%20MAX%28X-Special%29.mp3			
+823	q6661PIbbb1O80OQQ11iD6bP1l6bio0Q	The Light	The Light	W&W ft. Kizuna AI	16	2,5,9,13,,5,9,13,	160	T	leh8c0rtkz3o1kx/The%20Light.mp3			
+824	90D66ObIiqP09oqoDoq6b908b699oqqi	The Lonely Streets	The Lonely Streets	DJ Yoshitaka feat.Robert "RAaB" Stevenson	14	2,4,7,10,12,5,7,10,12	115	T	44p8efu9h3s1ltn/The%20Lonely%20Streets.mp3			
+825	0Ob1601118Dii9Qdii9lPbioPP6qoi1I	The Night Away (MK Remix)	The Night Away (MK Remix)	Starving Trancer feat. Mayumi Morinaga	15	3,5,9,12,,5,10,12,	160	T	9fyn030orn2lrsy/The%20Night%20Away%20%28MK%20Remix%29.mp3			
+826	Oq9QIlI8l11ddqbbDoQ1ql61OqlIi9lo	Theory of Eternity	Theory of Eternity	TAG	11	3,6,9,12,10,6,9,12,11	160	T	tisb7x9e3xngbu9/Theory%20of%20Eternity.mp3			
+827	1iIoi89doDiQoo8o0ddl9PQdQP0Ili8O	THE REASON	THE REASON	Black Rose Garden	13	1,4,7,12,15,4,7,12,15	85-98	T	i8u98s4rl6m1bop/THE%20REASON.mp3			
+828	ODQOP1dblD6q8d160Ioi0dIoQloI6oQO	THE SHINING POLARIS	THE SHINING POLARIS	L.E.D. feat. Sana	8	4,4,6,9,,5,6,9,	147	T	l9f5u7zzgx6s2qf/THE%20SHINING%20POLARIS.mp3			
+829	Dbdi9P91PQl660llPQO0l86oDqi1O9Ob	The Wind of Gold	The Wind of Gold	kors k	13	3,6,10,14,,6,10,14,	171	T	vlku9f0qz7jo19w/The%20Wind%20of%20Gold.mp3			
+830	b80qOO6l8060990qQPod1bOd8Q9d69qo	The World Ends Now	The World Ends Now	Akira Complex	16	4,9,12,16,,9,13,16,	200	T	xbt0yk8nzv9bj36/The%20World%20Ends%20Now.mp3			
+831	9lob1d1QPd9qiPlQOQ6l0dbodOoDPq1d	think ya better D	think ya better D	sAmi	2	3,5,6,9,,6,7,10,	136	T	7azaf81nvt1n6yy/think%20ya%20better%20D.mp3			
+832	PdPdbdQ1lDI18O90Q0li8QI0bo99bidd	This Beat Is.....	This Beat Is	Shoichiro Hirata	16	1,4,7,11,,4,7,10,	128	T	ri9y9wrvx8tbk4p/This%20Beat%20Is.mp3			
+833	qQl6O8IdiI6991IiqDqidO96bll1qPDl	THIS NIGHT	THIS NIGHT	jun feat. Sonnet	11	2,5,8,11,,6,8,11,	160	T	tn5fqa9d664rtdm/THIS%20NIGHT.mp3			
+834	ld8b6iqPIiqqbb9q69l8obO66ibI96od	Ticket to Bombay	Ticket To Bombay	Jena Rose	10	3,5,7,10,,5,7,9,	145	T	iawvwm5vz1zbx5g/Ticket%20To%20Bombay.mp3			
+835	idDdoI9bD186blQ9Q8610bIQqb86dilo	TIERRA BUENA	TIERRA BUENA	WILMA DE OLIVEIRA	8	3,4,8,10,,4,7,11,	115	T	6qv9n08ltzlnovw/TIERRA%20BUENA.mp3			
+836	99oQO1b8d9qQdPq6O1I6bd1bo1D16DP0	Till the lonely's gone	Till the lonely's gone	Z-licious	10	3,4,8,9,,5,8,9,	130	T	nib15h0fnnyfcmv/Till%20the%20lonely%27s%20gone.mp3			
+837	oDIliqQl90bQo6Qil9bOiD1iO19qI1dd	TIME	TIME	NM feat.Aleisha G	12	1,5,7,9,,5,7,10,	115	T	iitoacnpxsromli/TIME.mp3			
+838	O110IdDiDlDQ66bb1o9lbqiqQq6lOid1	TimeHollow	TimeHollow	Masanori Akita	10	2,4,7,9,,5,6,8,	94	T	yhf793pd2sj34bc/TimeHollow.mp3			
+839	1i8d1DodloQiQ8doOlloDIOO9PI6OIoO	Time Of Our Lives	Time Of Our Lives	Pitbull	15	2,5,9,11,,5,9,11,	124	T	7yscae9ncfb8wiv/Time%20Of%20Our%20Lives.mp3			
+840	POdll6oPi1dd68q19q8ID6iQ6d08bl99	Together Going My Way	Together Going My Way	DiGiTAL WiNG with 空音	17	2,5,9,13,,,,13,	155	T	5rw7otgssp31dm7/Together%20Going%20My%20Way.mp3			
+841	OddDoQ6dqi0QdQDDOO6qlO08d8bPbli1	Tohoku EVOLVED	Tohoku EVOLVED (TYPE1)	2.1MB underground	12	6,10,14,17,18,10,14,17,18	340	T	3nu4ij0h9jr8gjz/Tohoku%20EVOLVED%20%28TYPE1%29.mp3			
+842	DIDd9l0dbi1QdQ89I6Do9bolDqdb1dPO	tokyoEVOLVED (TYPE1)	tokyoEVOLVED (TYPE1)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	e7pf1ooqc0l132h/tokyoEVOLVED%20%28TYPE1%29.mp3			
+843	i0b0118q8D1QlQbIbli0P0IQ0QP08QdO	tokyoEVOLVED (TYPE2)	tokyoEVOLVED (TYPE2)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	sx4ai1dvlz0uwf4/tokyoEVOLVED%20%28TYPE2%29.mp3			
+844	6OOd69q0oP8iblIIb08OQO9dq9oIq8i6	tokyoEVOLVED (TYPE3)	tokyoEVOLVED (TYPE3)	NAOKI underground	12	6,9,13,16,,9,13,16,	70-280	T	7000pg1e81ohz25/tokyoEVOLVED%20%28TYPE3%29.mp3			
+845	lQbiI10Qo9DdD8liqPIiob61qDO9d861	TOMORROW	TOMORROW	nc ft. Dreamscanner	8	3,4,8,10,,5,7,11,	140	T	dosvd51euj5rz0z/TOMORROW.mp3			
+846	D1D88PPI0PDQqOq00OI6QI1o6dPolqlI	Tomorrow Perfume	Tomorrow Perfume	dj TAKA	8	3,4,8,10,,4,7,9,	144	T	e8g24dhw77lsfby/Tomorrow%20Perfume.mp3			
+847	l9i996ld6PbbiO1911OoOI8lIPQ06ID8	Top The Charts	Top The Charts	J-Mi & Midi-D feat. Hanna Stockzell	13	3,5,8,12,14,5,8,12,14	160	T	rt15qm0laxfxsqc/Top%20The%20Charts.mp3			
+848	l66Io69ob00OoOiDOI9lIqlidbDoDq89	Towards the TOWER	Towards The TOWER	SHAMDEL	15	2,5,9,12,,5,9,12,	132	T	hjedjezta9gvrbl/Towards%20The%20TOWER.mp3			
+849	d9QO9odlI18i96I6DQPld1iiol8ODl0o	toy boxer	toy boxer	BEMANI Sound Team "S-C-U & SYUNN"	16	4,9,12,16,,8,12,16,	190	T	w70zygit5syl2cy/toy%20boxer.mp3			
+850	ddIiQ90DblbOQQIQPIbQOdb9DdPoOQ9Q	Toy Box Factory	Toy Box Factory	まろん(IOSYS)	16	3,7,11,15,,7,11,15,	148	T	q2iv405fqzg6alg/Toy%20Box%20Factory.mp3			
+851	iO61Dq9iiIQO0Qbbdo1O8bdqO8dqoiio	Tracers (4Beat Remix)	Tracers (4Beat Remix)	Ruffage & Size	10	3,5,7,10,,6,9,11,	140	T	6pozkyfflsry4ue/Tracers%20%284Beat%20Remix%29.mp3			
+852	PlIiPiPoI9DIbPdIPoqQlIq61Pd8QIDo	Tribe	Tribe	猫叉Master	12	2,5,7,10,13,4,7,10,14	139	T	5ovf4vdq8g9fr31/Tribe.mp3			
+853	OPOIPIi1OioQ98qbO100q6QiDP8dIDq6	Trigger	Trigger	sonic-coll.	10	5,9,12,16,18,7,12,16,18	100-400	T	jmq8jc46g0fa26c/Trigger.mp3			
+854	0lIIil06b8q819P9lDil09o6qlqo9I1i	Trill auf G	Trill auf G	BEMANI Sound Team "dj TAKA"	16	4,8,12,16,,8,11,16,	188	T	r0lcyicpu7l1aky/Trill%20auf%20G.mp3			
+855	POQQQqI8q69qP6Id8Ol01QI60OIoiil8	Trim	Trim	kobo	9	5,6,10,16,,6,10,15,	85-340	T	u11qgavbtt53hag/Trim.mp3			
+856	d810q0I8q6d0l1POlIO6d66bOPb96dql	Triple Counter	Triple Counter	DJ YOSHITAKA meets dj TAKA	15	7,11,14,17,,9,14,17,	216	T	xkwlkwt8cm5aob3/Triple%20Counter.mp3			
+857	lDOPd60Q9obl6D0q8qqdQi9lioblD1db	Triple Journey -TAG EDITION-	Triple Journey -TAG EDITION-	Triumvirate	13	4,8,12,16,18,8,12,17,18	96-192	T	1q64ovomzxlm8q5/Triple%20Journey%20-TAG%20EDITION-.mp3			
+858	Pb9II0oiI9ODQ8OP8IqIPQP9P68biqIi	TRIP MACHINE	TRIP MACHINE	DE-SIRE	0	3,8,9,10,,9,10,10,	160	T	1pwnabdy2mabnxo/TRIP%20MACHINE.mp3			
+859	bql00PQ1PiboIqDQoD909Il8o1PIDiD1	TRIP MACHINE(X-Special)	TRIP MACHINE(X-Special)	DE-SIRE	10	,,,,11,,,,12	160	T	j16v2d8dy51dh38/TRIP%20MACHINE%28X-Special%29.mp3			
+860	D81D8689llDiOqPq0IP19bbQQiioPl8d	TRIP MACHINE CLIMAX	TRIP MACHINE CLIMAX	DE-SIRE	3	5,7,9,12,,7,9,12,	180	T	p8ynoue3ng8q6cf/TRIP%20MACHINE%20CLIMAX.mp3			
+861	boQPliilD01OD1bIdOOIOOi0Q9P16OlO	TRIP MACHINE CLIMAX(X-Special)	TRIP MACHINE CLIMAX(X-Special)	DE-SIRE	10	,,,,14,,,,14	180	T	t4tfql17f5truar/TRIP%20MACHINE%20CLIMAX%28X-Special%29.mp3			
+862	8O6b1D9PDO0ll1IO9d1ODDPPo0QPQbob	TRIP MACHINE EVOLUTION	TRIP MACHINE EVOLUTION	DE-JAVU	12	4,9,12,16,18,9,12,17,18	95-382	T	mmdcgqpxazb5cyv/TRIP%20MACHINE%20EVOLUTION.mp3			
+863	qQ9Oo611P0dObD8q6O0Q968bbl8I91OO	TRIP MACHINE～luv mix～	TRIP MACHINE~luv mix~	2MB	2	3,9,10,12,,9,10,11,	160	T	qs0q59rk8ofs9ia/TRIP%20MACHINE~luv%20mix~.mp3			
+864	b0QQ6OPD1dDqQ6D6IDQqlDd180Db609I	TRIP MACHINE PhoeniX	TRIP MACHINE PhoeniX	DE-SIRE改	9	3,8,12,15,15,8,12,16,16	160	T	mgm8flmf76j8p2x/TRIP%20MACHINE%20PhoeniX.mp3			
+865	POO9PlPq66OqIQO6Oq1i90D6Ill100il	TRIP MACHINE survivor	TRIP MACHINE survivor	DE-SIRE	7	4,5,11,13,,6,11,12,	170	T	n9lzeih9y30gwmx/TRIP%20MACHINE%20survivor.mp3			
+866	l9OQPi0do19dQPO8ilq0QDbll8P8Ib6O	TRIP MACHINE (xac nanoglide mix)	TRIP MACHINE (xac nanoglide mix)	DE-SIRE	12	4,8,12,16,,8,12,16,	170	T	bp5xkkcts6i1kzs/TRIP%20MACHINE%20%28xac%20nanoglide%20mix%29.mp3			
+867	bilO9D91P1lo81oIDP6qOoqdDdQdoDlP	Truare!	Truare!	Akhuta	14	3,8,11,16,,8,11,16,	183	T	l2xh7dnqwep9qy9/Truare%21.mp3			
+868	D9lq0DioIl9D6ll0d61990DP9qPPb1dP	True Blue	True Blue	dj TAKA feat.AiMEE	14	3,7,11,16,,6,11,16,	164	T	rv12o7o3uqmpydm/True%20Blue.mp3			
+869	oD6l698q0bQqoIOi0Dd66bqObII8QqDl	TRUE♥LOVE	TRUE LOVE	jun feat. Schanita	8	4,4,8,10,,4,7,10,	188	T	pi4sfuomky3ri9w/TRUE%20LOVE.mp3			
+870	ddD8OPQoIiQi0IbDOIIdQ6dDDbPQ9bIO	Trust -DanceDanceRevolution mix-	Trust -DanceDanceRevolution mix-	Tatsh feat.ヨーコ	9	3,5,8,10,,4,8,11,	164	T	4cly8wduic0lou7/Trust%20-DanceDanceRevolution%20mix-.mp3			
+871	doqDbod0d81qP6PoPiP8b0P00PD8oboD	Try 2 Luv. U	Try 2 Luv. U	S.F.M.P.	8	3,4,6,8,,4,6,8,	115	T	lms03gj2tz05oin/Try%202%20Luv.%20U.mp3			
+872	o9Ib8bob6b9qIDq1d09bq8q1I06Odi90	TSUBASA	TSUBASA	柊木りお featured by TAG	14	2,6,10,13,,6,9,13,	151	T	3nuwzjtl6omz5ng/TSUBASA.mp3			
+873	io688qld6Pqq6bI01q86illP18biq0bd	TSUGARU	TSUGARU	RevenG vs DE-SIRE	6	3,5,9,12,,6,9,13,	165	T	gahs2jpy5drqucy/TSUGARU.mp3			
+874	1qDD1DdPlId69010IQ18I6q8Q00IoI6D	TSUGARU (APPLE MIX)	TSUGARU(APPLE MIX)	RevenG vs DE-SIRE	6	,,,,11,,,,11	165	T	v0e5muo37em5dfd/TSUGARU%28APPLE%20MIX%29.mp3			
+875	0l181DPDqbQPb0qQl0i0dlQd0oQPlQ6i	Twin Bee -Generation X-	Twin Bee -Generation X-	FinalOffset	7	3,5,8,11,,4,7,11,	169	T	baapfc41jtp77v3/Twin%20Bee%20-Generation%20X-.mp3			
+876	lo6bOoq86d9od6qQ9PiPibOioOQb96lP	TWINKLE♡HEART	TWINKLE HEART	jun	12	1,4,8,11,10,4,8,11,11	185	T	bmreqafxfki8mx6/TWINKLE%20HEART.mp3			
+877	Po1D6bo0dQbdl91bPOl86lo8DbP9biiO	Twin memories W	Twin memories W	ときめきアイドル project	15	2,6,9,11,,6,9,11,	160	T	xnii4nw2rqmtwxc/Twin%20memories%20W.mp3			
+878	1oIo1DliQqPol00Q1l1bPODbdOilodod	Übertreffen	Ubertreffen	TAKA respect for J.S.B.	10	3,6,8,13,,5,8,14,	174	U	e3z7wzr6r2p1ehi/Ubertreffen.mp3			
+879	I6dI99IOolDD6l6Q1ooPIiDO8Odq0QIP	UNBELIEVABLE (Sparky remix)	UNBELIEVABLE (Sparky remix)	jun feat. Sarah-Jane	12	4,7,11,15,,8,12,16,	88-176	U	iae75o9dm5x1n3l/UNBELIEVABLE%20%28Sparky%20remix%29.mp3			
+880	oiQliqIliq91Dl169ldqbb18OPblOb1i	Under the Sky	Under the Sky	南さやか (BeForU) with platoniX	8	2,2,5,11,,3,6,8,	170	U	asazfvy6ggm9tma/Under%20the%20Sky.mp3			
+881	99P8bDO1PqlddQqo81QOIPO60lPQqlO8	un deux trois	un deux trois	SDMS	8	3,4,8,10,,4,6,9,	70-140	U	jdk4zwbqew9m54e/un%20deux%20trois.mp3			
+882	8q68D8iP6lIdiP8bo9PoOib8lb9loIob	Une mage blanche	Une mage blanche	Dormir	16	4,7,10,13,,7,10,13,	193	U	m65eifiitms0at7/Une%20mage%20blanche.mp3			
+883	olQl6Qoi0IbobI980q9Q0QIo9qlbq1PO	Unreal	Unreal	Black Rose Garden	9	4,8,12,15,,8,12,14,	90-180	U	kutba6fg95a7y8m/Unreal.mp3			
+884	89O8qIII0QPO0Q0l10P6dl19PlQ9d0oO	Until the End	Until the End	Philip Webb	12	3,4,9,12,,8,10,13,	172	U	exnuefiisw04bxh/Until%20the%20End.mp3			
+885	0b1660ibo0liI01ibOO6lD8olIb88qDi	Uranus	Uranus	Tatsh SN 2 Style	9	3,6,9,11,13,6,9,11,13	81-162	U	b0vet0lz3vrrkhy/Uranus.mp3			
+886	Ilo6IboPOq8Q10qDOdDDoO6P989bPPi6	V ～for EXTREME～	V ~for EXTREME~	TAKA	7	3,5,8,12,13,5,7,11,13	150	V	ggbqb7jy9v112zu/V%20~for%20EXTREME~.mp3			
+887	186dd6DQq891Ib9Ilq8Qbo8lIqb0Qoll	Valkyrie dimension	Valkyrie dimension	Spriggan	11	9,13,15,18,19,13,14,18,19	47-744	V	66ugdnjwz2ik2jm/Valkyrie%20dimension.mp3			
+888	6d6bqoOlqi8ooqOdlqdPblqol88b68QP	VANESSA	VANESSA	朱雀	11	4,7,11,16,,7,12,16,	185	V	vnis1scdl2vax9w/VANESSA.mp3			
+889	DDqDDqDQ1Db60IiIDbIl6Pd8DPOq0q06	VANITY ANGEL	VANITY ANGEL	FIX X	7	3,4,9,12,,5,9,12,	140	V	hjwr6bw408bru8b/VANITY%20ANGEL.mp3			
+890	891b0OdIdO8b9obi69b6PQlPIqDI01dO	Vanquish The Ghost	Vanquish The Ghost	BEMANI Sound Team "TAG"	15	3,8,12,16,,8,12,15,	78-155	V	ke0cmhp4401rz35/Vanquish%20The%20Ghost.mp3			
+891	d1dPPII1o69IlI0d0DlPi1i1idbdPD6O	VEGA	VEGA	REDALiCE	14	3,7,11,14,,7,11,14,	191	V	gmojdklx4azk5o5/VEGA.mp3			
+892	o6I06bPq8dqIlllbQDPP8boqdq6iQ8Qb	Vem brincar	Vem brincar	Caldeira feat.Téka Penteriche	9	2,5,7,11,,5,7,11,	135	V	cfuhrjbzfhn4qbg/Vem%20brincar.mp3			
+893	6bIODbPoIDlOdO66b1id0q68qdQilDd6	Venus	Venus	Tatsh+RayZY	9	3,4,7,11,13,4,6,10,13	195	V	bc8l8zyqv3kja29/Venus.mp3			
+894	8idID0Pq0O68Qb0Q69P6IDldqI91qi1O	volcano	volcano	Yasuhiro Abe	9	4,5,8,13,,5,8,13,	240	V	mtqdvuawq8m7jdr/volcano.mp3			
+895	6DQ9D9oi66I8ODi8o0dPdOD1ibbIqIdI	voltississimo	voltississimo	BEMANI Sound Team "PHQUASE"	16	5,9,13,17,,9,13,17,	113-225	V	vv81u9jj1ix0e3z/voltississimo.mp3			
+896	PqPPDibPdD8qd88D0d01dqo6918b0POD	Votum stellarum -forest #25 DDR RMX-	Votum stellarum -forest #25 DDR RMX-	iconoclasm	9	1,4,9,12,,4,7,12,	140	V	asjfkp8v85dr7hw/Votum%20stellarum%20-forest%20%2325%20DDR%20RMX-.mp3			
+897	PPQb966D6Ql6Q8iPo68810PdDiI6D0bl	Waiting	Waiting	nc ft.NRG Factory	16	3,6,10,13,,7,10,13,	180	W	7brq34ckf12hqda/Waiting.mp3			
+898	96Q0Piqo9PPQoQdi9001DO6P9Piqi0dq	Waiting 4 u	Waiting 4 u	DDT	10	4,6,8,11,11,6,8,12,12	175	W	38pqenc4zvu6b8w/Waiting%204%20u.mp3			
+899	io9b89PD18ibIO8PIqb1QODliqDdqiIO	Wake Me Up	Wake Me Up	Avicii	15	3,5,9,12,,5,9,13,	124	W	wz60yrfelh8ccc9/Wake%20Me%20Up.mp3			
+900	olloQOobddiIIPObP91l0qPl6oo8P9Dl	What Will Come of Me	What Will Come of Me	Black Rose Garden	11	2,4,6,13,,5,7,13,	140	W	s6kic2wma03tqdw/What%20Will%20Come%20of%20Me.mp3			
+901	dbq9dPPOQ60ibOol0I6b9iQol9lD669D	Why not	Why not	Darwin	9	4,6,9,11,,6,7,11,	175	W	w1as7stgouyoj85/Why%20not.mp3			
+902	QQbiq1qQd8d1blOldi889OdQd9P1106Q	WH1TE RO5E	WH1TE RO5E	Y&Co.	11	3,5,9,13,,5,9,13,	85-170	W	q1dla7gb7anq0si/WH1TE%20RO5E.mp3			
+903	qI06bbQ1dloi0IIIO1IQ1q8bdPdl6l69	Wicked Plastik	Wicked Plastik	nc ft. Electric Touch	12	3,4,8,13,,5,11,13,	145	W	670sa7molitop8y/Wicked%20Plastik.mp3			
+904	01808Q1Q6lQQ1lP0qd80I0b0qqDd1OOP	WILD RUSH	WILD RUSH	FACTOR-X	3	5,6,7,10,,5,9,11,	80-180	W	w63i0wbvfjzhinb/WILD%20RUSH.mp3			
+905	ibOQ0QOdIPdIbIo0oPoDDI1DqPId00li	WILD RUSH(FROM NONSTOP MEGAMIX)	WILD RUSH(FROM NONSTOP MEGAMIX)	FACTOR-X	6	,,,,9,,,,10	125	W	43c7iwsuzobu8mm/WILD%20RUSH%28FROM%20NONSTOP%20MEGAMIX%29.mp3			
+906	I81iP0Io9o1l9li0Iq99P1091O8DoDOd	WILD SIDE	WILD SIDE	Tatsh	13	3,6,9,11,13,6,9,11,13	165	W	p7nm7b4rdyd5unh/WILD%20SIDE.mp3			
+907	d6iI8ii9qi0Pi80dDQQlPq6qQo69860P	will	will	NAOKI	10	1,4,7,11,,5,7,11,	145	W	1loakchdzre4jkr/will.mp3			
+908	8bI68oIq08d99P880bDPQ9D80O099Q10	Windy Fairy	Windy Fairy	DJ TOTTO	13	2,7,11,15,,7,11,15,	180	W	c0ge6nne0cu5raz/Windy%20Fairy.mp3			
+909	blI8D10Q1IDQ8Q19bi0IDlD80oD0bloi	Wings of an Angel (Fly With Me)	Wings of an Angel (Fly With Me)	J-Mi & Midi-D	12	2,4,8,12,,5,8,11,	175	W	zc3m7tm6qdjjh7b/Wings%20of%20an%20Angel%20%28Fly%20With%20Me%29.mp3			
+910	Qo1qdD0Q9d11d9Id6o09P9id8lPbOQ6o	Wow Wow VENUS	Wow Wow VENUS	VENUS	13	2,4,8,11,,5,8,12,	157	W	l8mmb2ytc6zygab/Wow%20Wow%20VENUS.mp3			
+911	bDDd08iP8dlIlOo6iqd91dPiI1lQdOQq	xenon	xenon	Mr.T	7	3,5,10,13,,5,9,13,	158	X	4ka681omg8w97sa/xenon.mp3			
+912	PQQd6lQlDqilqliI0IobolqIDlo0Iboq	Xepher	Xepher	Tatsh	8	4,7,10,13,15,7,10,13,15	170	X	ciitpred6tznbxi/Xepher.mp3			
+913	8OPDQ1oQIOPdqqD18oo0lQ8OQOIbbDoP	Yeah! Yeah!	Yeah! Yeah!	CLUB SPICE	15	2,6,9,12,,6,9,12,	150	Y	d8okh7q9pw2s000/Yeah%21%20Yeah%21.mp3			
+914	D0qloQo0bQliQqooQ609IP8i09old99D	You	You	NM feat. Anjanette Mickelsen	13	1,3,6,10,,3,6,10,	72	Y	rl7x6ek2nqno4sy/You.mp3			
+915	0qOPDqq0qld66bll9ob9iIqiiQPiQIDQ	You are a Star	You are a Star	NAOKI feat. Anna Kaelin	11	2,4,8,12,13,6,8,12,13	155	Y	magjqy07nzw2ysu/You%20are%20a%20Star.mp3			
+916	D8I68Ibib9ldQDIPIQdO6lqI61PQlPO9	You gotta move it (feat. Julie Rugaard)	You gotta move it (feat. Julie Rugaard)	古代祐三	8	4,5,8,10,,5,7,10,	134	Y	ug4u8xl5iv7kjuh/You%20gotta%20move%20it%20%28feat.%20Julie%20Rugaard%29.mp3			
+917	oiIob81i6d6P6qbddOP6Q0d0obQ0PID9	Your Angel	Your Angel	DM Ashura feat. kors k	11	2,4,7,10,,4,7,11,	175	Y	cxask9pl3qh3baz/Your%20Angel.mp3			
+918	I61ioI01IOPDPbP1OO0l98PD0iDbid0D	ZEPHYRANTHES	ZEPHYRANTHES	TAG	15	3,7,11,15,,7,11,15,	180	Z	sqnkvadwywel29y/ZEPHYRANTHES.mp3			
+919	96QPqq0q6Id0Ii0QbD1bQqPbiDqb0lPo	ZETA～素数の世界と超越者～	ZETA ~The World of Prime Numbers and the Transcendental Being~	Zektbach	11	3,6,11,15,17,6,9,14,17	90-180	Z	49jf7qe66txe19r/ZETA%20~The%20World%20of%20Prime%20Numbers%20and%20the%20Transcendental%20Being~.mp3			
+920	IQ0dIiDql9Q68d9ddQIiQbq1OPq8Db69	.59	59	dj TAKA	3	3,5,8,11,,5,8,10,	110-135	NUM	tnltzoancgxas54/59.mp3			
+921	ddOOOibQ6qIi9DI1bl8b108I1Ib6QDl9	1998	1998	NAOKI	7	3,4,6,9,,5,6,9,	150	NUM	5iiw9v6wixb35xx/1998.mp3			
+922	i9Pidb18b9O8bdqQ91QQP0oPdIdIODq1	30 Lives (Up-Up-Down-Dance Mix)	30 Lives (Up-Up-Down-Dance Mix)	The Motion Sick	10	2,4,7,8,,3,6,8,	144	NUM	a6j185c1wsu195r/30%20Lives%20%28Up-Up-Down-Dance%20Mix%29.mp3			
+923	Q96bO9D61lib19IiIi0i69P80bo6q69Q	321STARS	321STARS	DJ SIMON	7	4,5,9,11,,5,8,11,	192	NUM	gyp25d4joa03e1r/321STARS.mp3			
+924	80Q1idDo6O6Db0106b0q6qbOP1P8QQb0	39	39	sasakure.UK×DECO*27	15	4,6,8,12,,6,9,13,	175	NUM	cv53vcdhzg480lv/39.mp3			
+925	l1ODQ1bO9POQ6d8O0Iobbio11qb6O6bd	50th Memorial Songs -二人の時 ～under the cherry blossoms～-	50th Memorial Songs -futari no toki ~under the cherry blossoms~-	BEMANI Sound Team	16	3,7,9,12,,7,9,11,	160	NUM	wl9wr487fj55qob/50th%20Memorial%20Songs%20-futari%20no%20toki%20~under%20the%20cherry%20blossoms~-.mp3			
+926	bP10qq9dPDDqIl16lPIDDd8b00dIIP08	50th Memorial Songs -Beginning Story-	50th Memorial Songs -Beginning Story-	BEMANI Sound Team	16	2,5,10,14,,5,10,14,	135	NUM	izlyqj0ygl7vnod/50th%20Memorial%20Songs%20-Beginning%20Story-.mp3			
+927	0IIO08bII0QQDOdobqbl8Ib8Q8O8q1li	50th Memorial Songs -Flagship medley-	50th Memorial Songs -Flagship medley-	BEMANI Sound Team	16	3,7,9,12,,8,10,13,	135-175	NUM	q62zaefj3ajva35/50th%20Memorial%20Songs%20-Flagship%20medley-.mp3			
+928	D0iDbio81PIbI8dD6QOIP9IidDOP0PDP	50th Memorial Songs -The BEMANI History-	50th Memorial Songs -The BEMANI History-	BEMANI Sound Team	16	2,5,9,13,,5,9,13,	136	NUM	sn5gfla0gljemaz/50th%20Memorial%20Songs%20-The%20BEMANI%20History-.mp3			
+929	Dd98lDdo8Ob698d9qbO9iD0PqO19oQbI	8000000	8000000	kors k	14	4,7,10,14,,7,11,14,	100-200	NUM	bongpmr6mgn83mu/8000000.mp3			
+930	id9oObq9P6Q6Pq6lQPqI88OP1DD8D0O1	888	888	DJ TECHNORCH	11	3,6,13,14,18,7,12,15,18	111-888	NUM	jka2d1w0uoi328t/888.mp3			
+931	00obPO6oPIPOoD9qb0dIl6q6D8P6o9bI	IX	IX	dj TAKA VS DJ TOTTO feat.藍	14	5,11,14,17,18,10,14,17,18	99-396	NUM	2etsna481mo15t8/IX.mp3			
+932	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined	undefined		
