@@ -8,32 +8,43 @@ import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
 import { getClosestDifficulty } from "../../utils/songUtils";
 import { clearBpmAndStopDisplay } from "../../utils/engineUtils";
-import { getUserSettings, updateUserSettings, getSavedSongProgress } from "../../utils/userSettings";
+import {
+  getUserSettings,
+  updateUserSettings,
+  getSavedSongProgress
+} from "../../utils/userSettings";
 import loadStore from "../../utils/loadStore";
 import ToggleSwitch from "../ui/ToggleSwitch";
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
-import { titleSortOptions, versionSortOptions, levelSortOptions, difficultySortOptions } from "./songFormOptions";
+import {
+  titleSortOptions,
+  versionSortOptions,
+  levelSortOptions,
+  difficultySortOptions
+} from "./songFormOptions";
 import { generateInitialValues } from "./options";
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
 
 const userSettings = getUserSettings();
 
-const SongForm = (props) => {
+const SongForm = props => {
   const { simfileList, selectedDifficulty, selectedMode, previewAudio } = props;
   const songGridContainer = useRef();
 
-  const simfileOptions = simfileList.map((song) => {
+  const simfileOptions = simfileList.map(song => {
     return {
       key: song.hash,
       value: song.hash,
       text: song.title,
-      description: song.smName,
+      description: song.smName
     };
   });
 
   const [selectedSongOption, setSelectedSongOption] = useState("");
-  const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(selectedDifficulty);
+  const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(
+    selectedDifficulty
+  );
   const [loadingFirstSong, setLoadingFirstSong] = useState(true);
 
   const [selectedFilters, setSelectedFilters] = useState(
@@ -41,11 +52,11 @@ const SongForm = (props) => {
       title: "all",
       version: 16,
       level: "all",
-      difficulty: "all",
+      difficulty: "all"
     }
   );
 
-  const updateSelectedFilters = (newFilters) => {
+  const updateSelectedFilters = newFilters => {
     const filters = { ...selectedFilters, ...newFilters };
     updateUserSettings({ filters });
     setSelectedFilters(filters);
@@ -58,7 +69,7 @@ const SongForm = (props) => {
     const { title, version, level, difficulty } = selectedFilters;
 
     const songs = simfileList
-      .filter((song) => {
+      .filter(song => {
         const singleDiffs = song.levels.slice(0, 5);
         const doubleDiffs = song.levels.slice(5, 9);
         return (
@@ -68,13 +79,19 @@ const SongForm = (props) => {
           (version === "all" || version === parseInt(song.version)) &&
           // if a level filter is selected, song matches level filter
           // if level is not being filtered, song has at least one chart on the chosen mode
-          ((level === "all" && selectedMode === "single" && singleDiffs.some((level) => !!level)) ||
-            (level === "all" && selectedMode === "double" && doubleDiffs.some((level) => !!level)) ||
-            (selectedMode === "single" && song.levels.slice(0, 5).includes(level)) ||
-            (selectedMode === "double" && song.levels.slice(5, 9).includes(level)))
+          ((level === "all" &&
+            selectedMode === "single" &&
+            singleDiffs.some(level => !!level)) ||
+            (level === "all" &&
+              selectedMode === "double" &&
+              doubleDiffs.some(level => !!level)) ||
+            (selectedMode === "single" &&
+              song.levels.slice(0, 5).includes(level)) ||
+            (selectedMode === "double" &&
+              song.levels.slice(5, 9).includes(level)))
         );
       })
-      .filter((song) => {
+      .filter(song => {
         // if a difficulty is specified:
         if (difficulty !== "all") {
           // if level is not specified, simply check if that difficulty exists
@@ -82,7 +99,9 @@ const SongForm = (props) => {
             if (selectedMode === "single") {
               return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] !== null;
             } else if (selectedMode === "double") {
-              return song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] !== null;
+              return (
+                song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] !== null
+              );
             }
           }
           // if level is specified, only show if the difficulty is that level
@@ -90,7 +109,9 @@ const SongForm = (props) => {
             if (selectedMode === "single") {
               return song.levels[SP_DIFFICULTIES.indexOf(difficulty)] === level;
             } else if (selectedMode === "double") {
-              return song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] === level;
+              return (
+                song.levels[DP_DIFFICULTIES.indexOf(difficulty) + 5] === level
+              );
             }
           }
         }
@@ -147,7 +168,7 @@ const SongForm = (props) => {
 
   useEffect(() => {
     if (selectedSongOption) {
-      const song = simfileList.find((song) => song.hash === selectedSongOption);
+      const song = simfileList.find(song => song.hash === selectedSongOption);
       setSelectedSong(song);
       AudioPlayer.storeAudioSource(song);
     }
@@ -162,7 +183,7 @@ const SongForm = (props) => {
 
     setSelectedSongOption(songId);
 
-    const song = simfileList.find((song) => song.hash === songId);
+    const song = simfileList.find(song => song.hash === songId);
 
     let initialProgress = 0;
 
@@ -187,12 +208,18 @@ const SongForm = (props) => {
     }
 
     const selectClosestDifficulty = () => {
-      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(selectedDifficultyOption);
+      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
+        selectedDifficultyOption
+      );
       let difficultyToSelect;
       if (song.levels[selectedDiffOptionIndex]) {
         difficultyToSelect = selectedDifficultyOption;
       } else {
-        difficultyToSelect = getClosestDifficulty(song, selectedDifficultyOption, selectedMode);
+        difficultyToSelect = getClosestDifficulty(
+          song,
+          selectedDifficultyOption,
+          selectedMode
+        );
       }
       props.onDifficultySelect(difficultyToSelect);
     };
@@ -201,22 +228,32 @@ const SongForm = (props) => {
     // 4 possible cases
 
     // Neither level nor difficulty filter applied
-    if (selectedFilters.level === "all" && selectedFilters.difficulty === "all") {
+    if (
+      selectedFilters.level === "all" &&
+      selectedFilters.difficulty === "all"
+    ) {
       // select the chart corresponding to the selected difficulty option.
       // if the song does not have a chart for that difficulty, choose the closest difficulty.
       selectClosestDifficulty();
     }
 
     // Level filter applied but not difficulty
-    else if (selectedFilters.level !== "all" && selectedFilters.difficulty === "all") {
-      const levels = selectedMode === "double" ? song.levels.slice(5, 9) : song.levels.slice(0, 5);
+    else if (
+      selectedFilters.level !== "all" &&
+      selectedFilters.difficulty === "all"
+    ) {
+      const levels =
+        selectedMode === "double"
+          ? song.levels.slice(5, 9)
+          : song.levels.slice(0, 5);
 
       // if the song has a chart that matches the level filter, choose that chart
       if (levels.includes(selectedFilters.level)) {
         for (let i = 0; i < levels.length; i++) {
           const level = levels[i];
           if (level === selectedFilters.level) {
-            const difficulties = selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
+            const difficulties =
+              selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
             props.onDifficultySelect(difficulties[i]);
             break;
           }
@@ -230,7 +267,10 @@ const SongForm = (props) => {
     }
 
     // Difficulty filter applied but not level
-    else if (selectedFilters.difficulty !== "all" && selectedFilters.level === "all") {
+    else if (
+      selectedFilters.difficulty !== "all" &&
+      selectedFilters.level === "all"
+    ) {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
       if (selectedMode === "double") difficultyIdx += 4;
 
@@ -247,7 +287,10 @@ const SongForm = (props) => {
 
     // Both level and difficulty filters applied
     // equivalent to a regular else block but condition listed explicitly for clarity
-    else if (selectedFilters.difficulty !== "all" && selectedFilters.level !== "all") {
+    else if (
+      selectedFilters.difficulty !== "all" &&
+      selectedFilters.level !== "all"
+    ) {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
       if (selectedMode === "double") difficultyIdx += 4;
 
@@ -266,12 +309,12 @@ const SongForm = (props) => {
     }
   };
 
-  const handleDifficultySelect = (difficulty) => {
+  const handleDifficultySelect = difficulty => {
     setSelectedDifficultyOption(difficulty);
     props.onDifficultySelect(difficulty);
   };
 
-  const handleModeSelect = (mode) => {
+  const handleModeSelect = mode => {
     props.onModeSelect(mode);
   };
 
@@ -280,14 +323,18 @@ const SongForm = (props) => {
 
     let levels;
     if (selectedMode === "single") levels = selectedSong.levels.slice(0, 5);
-    else if (selectedMode === "double") levels = selectedSong.levels.slice(5, 9);
+    else if (selectedMode === "double")
+      levels = selectedSong.levels.slice(5, 9);
 
     return levels.map((level, idx) => {
       if (!level) return null;
-      const difficulty = selectedMode === "double" ? DP_DIFFICULTIES[idx] : SP_DIFFICULTIES[idx];
+      const difficulty =
+        selectedMode === "double" ? DP_DIFFICULTIES[idx] : SP_DIFFICULTIES[idx];
       return (
         <div
-          className={`song-difficulty ${difficulty} ${selectedDifficulty === difficulty ? "selected" : ""}`}
+          className={`song-difficulty ${difficulty} ${
+            selectedDifficulty === difficulty ? "selected" : ""
+          }`}
           key={`${selectedMode}-difficulty_${difficulty}`}
           onClick={() => handleDifficultySelect(difficulty)}
         >
@@ -313,9 +360,9 @@ const SongForm = (props) => {
     if (!selectedSong || !selectedMode) return true;
     if (selectedDifficulty === "Beginner") return true;
     if (selectedMode === "single") {
-      return !selectedSong.levels.slice(5, 9).filter((a) => a).length;
+      return !selectedSong.levels.slice(5, 9).filter(a => a).length;
     } else if (selectedMode === "double") {
-      return !selectedSong.levels.slice(0, 5).filter((a) => a).length;
+      return !selectedSong.levels.slice(0, 5).filter(a => a).length;
     }
     return true;
   };
@@ -342,12 +389,20 @@ const SongForm = (props) => {
   };
 
   return (
-    <div className={`view-section songView ${props.activeView === "song" ? "active" : ""}`}>
+    <div
+      className={`view-section songView ${
+        props.activeView === "song" ? "active" : ""
+      }`}
+    >
       <div className="view-wrapper">
         <form className="songForm">
           <div className="form-inner-wrapper">
             <div className="selectedSong">
-              <div className={`selectedSong-jacket-wrapper ${previewAudio.status === "playing" ? "playing" : ""}`}>
+              <div
+                className={`selectedSong-jacket-wrapper ${
+                  previewAudio.status === "playing" ? "playing" : ""
+                }`}
+              >
                 <div className="selectedSong-jacket-overlay">
                   <AudioWave />
                 </div>
@@ -364,7 +419,9 @@ const SongForm = (props) => {
                   onSongSelect={onSongSelect}
                   simfileOptions={simfileOptions}
                 />
-                <div className="song-artist">{selectedSong && selectedSong.artist}</div>
+                <div className="song-artist">
+                  {selectedSong && selectedSong.artist}
+                </div>
 
                 <div className="song-difficulties">{renderDifficulties()}</div>
 
@@ -394,7 +451,7 @@ const SongForm = (props) => {
                     value={selectedFilters.title}
                     onChange={(e, data) =>
                       updateSelectedFilters({
-                        title: data.value,
+                        title: data.value
                       })
                     }
                     options={titleSortOptions}
@@ -408,7 +465,7 @@ const SongForm = (props) => {
                     value={selectedFilters.version}
                     onChange={(e, data) =>
                       updateSelectedFilters({
-                        version: data.value,
+                        version: data.value
                       })
                     }
                     options={versionSortOptions}
@@ -422,7 +479,7 @@ const SongForm = (props) => {
                     value={selectedFilters.level}
                     onChange={(e, data) =>
                       updateSelectedFilters({
-                        level: data.value,
+                        level: data.value
                       })
                     }
                     options={levelSortOptions}
@@ -434,7 +491,7 @@ const SongForm = (props) => {
                     value={selectedFilters.difficulty}
                     onChange={(e, data) =>
                       updateSelectedFilters({
-                        difficulty: data.value,
+                        difficulty: data.value
                       })
                     }
                     options={difficultySortOptions}
@@ -460,22 +517,27 @@ const SongForm = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { audio, songSelect, screen } = state;
+const mapStateToProps = state => {
+  const { audio, songSelect, screen, simfiles } = state;
   const { previewAudio } = audio;
+  const { simfileList } = simfiles;
   return {
     previewAudio,
+    simfileList,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
     previousSong: songSelect.song,
-    activeView: screen.activeView,
+    activeView: screen.activeView
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    selectSong: (song) => dispatch(actions.selectSong(song)),
+    selectSong: song => dispatch(actions.selectSong(song))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SongForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SongForm);

@@ -8,15 +8,19 @@ import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
 import AudioPlayer from "../../core/AudioPlayer";
 import { getOriginPath, fetchDocument } from "../../utils";
-import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
+import {
+  selectSong,
+  selectDifficulty,
+  selectMode
+} from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
+import { getSimfileList } from "../../actions/SimfileActions";
 import loadStore from "../../utils/loadStore";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
 
-const MainContainer = (props) => {
+const MainContainer = props => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
-  const [simfileList, setSimfileList] = useState([]);
   const [selectedSM, setSelectedSM] = useState(null);
 
   const [gameEngine, setGameEngine] = useState(null);
@@ -37,13 +41,7 @@ const MainContainer = (props) => {
 
   const fetchSimfiles = async () => {
     try {
-      const parsedTsv = await tsv(getOriginPath() + "data/simfiles.tsv");
-      parsedTsv.forEach((row) => {
-        row.levels = row.levels.split(",").map((level) => (level ? parseInt(level) : null));
-      });
-
-      // console.log("simfiles", parsedTsv);
-      setSimfileList(parsedTsv);
+      await props.getSimfileList();
     } catch (error) {
       console.error(error);
       return null;
@@ -59,6 +57,8 @@ const MainContainer = (props) => {
 
     document.title = `${song.title} - SMViewer`;
 
+    console.log(song.hash);
+
     // retrieve audio file and simfile from song.simfilePath
 
     let smName = song.smName;
@@ -73,7 +73,9 @@ const MainContainer = (props) => {
       // Any pending requests that finish before the last song is loaded will be ignored
       loadStore.lastRequestedSong = song.title;
       const sm = await fetchDocument(
-        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${song.useSsc ? "ssc" : "sm"}`
+        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${
+          song.useSsc ? "ssc" : "sm"
+        }`
       );
 
       // User might try to select a new song before the simfile is fetched.
@@ -86,11 +88,11 @@ const MainContainer = (props) => {
     }
   };
 
-  const onDifficultySelect = (difficulty) => {
+  const onDifficultySelect = difficulty => {
     // setSelectedDifficulty(difficulty);
     props.selectDifficulty(difficulty);
   };
-  const onModeSelect = (mode) => {
+  const onModeSelect = mode => {
     props.selectMode(mode);
   };
 
@@ -108,7 +110,6 @@ const MainContainer = (props) => {
             />
             <ModsForm />
             <SongForm
-              simfileList={simfileList}
               onSongSelect={onSongSelect}
               onDifficultySelect={onDifficultySelect}
               onModeSelect={onModeSelect}
@@ -131,17 +132,21 @@ const MainContainer = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    selectSong: (song) => dispatch(selectSong(song)),
-    selectDifficulty: (song) => dispatch(selectDifficulty(song)),
-    selectMode: (song) => dispatch(selectMode(song)),
-    resizeScreen: (e) => dispatch(resizeScreen(e)),
+    selectSong: song => dispatch(selectSong(song)),
+    selectDifficulty: song => dispatch(selectDifficulty(song)),
+    selectMode: song => dispatch(selectMode(song)),
+    resizeScreen: e => dispatch(resizeScreen(e)),
+    getSimfileList: () => dispatch(getSimfileList())
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainContainer);
