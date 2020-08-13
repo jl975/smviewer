@@ -8,8 +8,20 @@ function App() {
   return (
     <div className="app-container">
       <Switch>
-        <Route exact path="/" component={MainContainer} />
-        <Route exact path="/static" component={StaticViewContainer} />
+        <Route
+          exact
+          path="/"
+          // component={MainContainer}
+          render={routeProps => <MainContainer {...routeProps} />}
+        />
+        <Route
+          exact
+          path="/static"
+          // component={StaticViewContainer}
+          render={routeProps => {
+            return <StaticViewContainer {...routeProps} />;
+          }}
+        />
       </Switch>
     </div>
   );

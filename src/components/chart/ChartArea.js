@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { Button } from "semantic-ui-react";
 import "inobounce";
 
 import { presetParams, getJacketPath } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
-import AudioPlayer from "../../core/AudioPlayer";
 import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
+import StaticModal from "./StaticModal";
 
 import CabButtons from "./CabButtons";
 import BpmDisplay from "./BpmDisplay";
@@ -34,6 +35,8 @@ const ChartArea = props => {
   const chartArea = useRef();
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
+
+  const [staticModalOpen, setStaticModalOpen] = useState(false);
 
   const prevState = usePrevious({
     canvas,
@@ -261,27 +264,45 @@ const ChartArea = props => {
             setShareModalOpen={setShareModalOpen}
           />
         </div>
-        <div className="row">
+        <div className="row song-info-area">
           <SongInfo />
+          {selectedSong && (
+            <div>
+              <Button
+                className="view-static-btn"
+                onClick={() => setStaticModalOpen(true)}
+              >
+                View static chart
+              </Button>
+            </div>
+          )}
         </div>
         <ShareModal
           modalOpen={shareModalOpen}
           setModalOpen={setShareModalOpen}
           data={shareParams}
         />
+        {gameEngine && (
+          <StaticModal
+            modalOpen={staticModalOpen}
+            setModalOpen={setStaticModalOpen}
+            gameEngine={gameEngine}
+          />
+        )}
       </div>
     </div>
   );
 };
 
 const mapStateToProps = state => {
-  const { mods, songSelect, screen } = state;
+  const { mods, songSelect, screen, simfiles } = state;
   return {
     mods,
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
-    screen
+    screen,
+    sm: simfiles.sm
   };
 };
 

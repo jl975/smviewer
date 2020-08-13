@@ -2,13 +2,13 @@ import {
   DIRECTIONS,
   ARROW_WIDTH,
   ARROW_HEIGHT,
-  FREEZE_BODY_HEIGHT,
+  FREEZE_BODY_HEIGHT
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
 const arrowImages = {};
-DIRECTIONS.forEach((direction) => {
+DIRECTIONS.forEach(direction => {
   arrowImages[`rainbow_${direction}`] = new Image();
   arrowImages[`rainbow_${direction}`].src = getAssetPath(
     `rainbow_${direction}.png`
@@ -29,9 +29,9 @@ const freezeImages = [
   "freeze_tail_active",
   "freeze_tail_inactive",
   "freeze_body_active",
-  "freeze_body_inactive",
+  "freeze_body_inactive"
 ];
-freezeImages.forEach((imageName) => {
+freezeImages.forEach(imageName => {
   arrowImages[imageName] = new Image();
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`);
 });
@@ -271,12 +271,15 @@ class Arrow {
   renderArrow(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
-    const { mods } = attrs;
+    const { mods, staticAttrs } = attrs;
     const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods;
 
-    const topBoundary = 0; // used to simulate the arrows being hit and disappearing
+    let topBoundary = 0; // used to simulate the arrows being hit and disappearing
+    if (staticAttrs) topBoundary = -1; // if rendering on static chart, arrow on the first measure should be visible
+
     const bottomBoundary = canvas.height; // can be adjusted with SUDDEN+
 
+    // console.log(bottomBoundary);
     // nothing
     if (this.note[directionIdx] === "0") return;
 
@@ -343,7 +346,7 @@ class Arrow {
               9 / 16,
               11 / 16,
               13 / 16,
-              15 / 16,
+              15 / 16
             ].includes(measureFraction)
           ) {
             frameY = 3;
@@ -379,13 +382,28 @@ class Arrow {
       }
 
       destX = directionIdx * ARROW_WIDTH;
+      if (staticAttrs) {
+        destX +=
+          staticAttrs.columnIdx * (ARROW_WIDTH * 4 * 2) + ARROW_WIDTH * 2;
+      }
+
       if (speed === "cmod") {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
       } else {
+        console.log("beatTick", beatTick);
         destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+
+        if (staticAttrs) {
+          destY = destY % staticAttrs.columnHeight;
+        }
       }
+
       destY = (destY + 0.5) | 0;
 
+      // if (this.key === 15) {
+      //   console.log("15 destY", destY);
+      //   console.log("staticAttrs.columnHeight", staticAttrs.columnHeight);
+      // }
       if (destY > topBoundary && destY < bottomBoundary) {
         c.drawImage(
           arrowImg,

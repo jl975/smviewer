@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { tsv } from "d3-fetch";
 
 import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
 import AudioPlayer from "../../core/AudioPlayer";
-import { getOriginPath, fetchDocument } from "../../utils";
 import {
   selectSong,
   selectDifficulty,
   selectMode
 } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
-import { getSimfileList } from "../../actions/SimfileActions";
-import loadStore from "../../utils/loadStore";
+import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
 
@@ -57,35 +54,9 @@ const MainContainer = props => {
 
     document.title = `${song.title} - SMViewer`;
 
-    console.log(song.hash);
-
     // retrieve audio file and simfile from song.simfilePath
 
-    let smName = song.smName;
-
-    // special case for tohoku evolved: pick one of its types at random
-    if (song.hash === "OddDoQ6dqi0QdQDDOO6qlO08d8bPbli1") {
-      smName = smName.replace("1", Math.floor(Math.random() * 4) + 1);
-    }
-
-    try {
-      // Immediately update the value of "last requested song"
-      // Any pending requests that finish before the last song is loaded will be ignored
-      loadStore.lastRequestedSong = song.title;
-      const sm = await fetchDocument(
-        `${getOriginPath()}simfiles/${encodeURIComponent(smName)}.${
-          song.useSsc ? "ssc" : "sm"
-        }`
-      );
-
-      // User might try to select a new song before the simfile is fetched.
-      // Only process simfile if this is the last song that was selected
-      if (loadStore.lastRequestedSong === song.title) {
-        setSelectedSM(sm);
-      }
-    } catch (err) {
-      alert(`Song ${song.title} failed to load`, err);
-    }
+    props.loadSimfile(song);
   };
 
   const onDifficultySelect = difficulty => {
@@ -116,6 +87,7 @@ const MainContainer = props => {
               loadingAudio={loadingAudio}
               location={props.location}
             />
+
             {DEBUG_MODE && <LogView />}
           </div>
         </>
@@ -142,7 +114,8 @@ const mapDispatchToProps = dispatch => {
     selectDifficulty: song => dispatch(selectDifficulty(song)),
     selectMode: song => dispatch(selectMode(song)),
     resizeScreen: e => dispatch(resizeScreen(e)),
-    getSimfileList: () => dispatch(getSimfileList())
+    getSimfileList: () => dispatch(getSimfileList()),
+    loadSimfile: song => dispatch(loadSimfile(song))
   };
 };
 

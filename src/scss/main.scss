@@ -229,6 +229,15 @@
   }
 }
 
+.song-info-area {
+  display: flex;
+  flex-direction: column;
+
+  .view-static-btn {
+
+  }
+}
+
 .song-info-row {
   display: flex;
   margin: 0 auto;
