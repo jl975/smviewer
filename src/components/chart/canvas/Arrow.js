@@ -2,13 +2,13 @@ import {
   DIRECTIONS,
   ARROW_WIDTH,
   ARROW_HEIGHT,
-  FREEZE_BODY_HEIGHT
+  FREEZE_BODY_HEIGHT,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
 const arrowImages = {};
-DIRECTIONS.forEach(direction => {
+DIRECTIONS.forEach((direction) => {
   arrowImages[`rainbow_${direction}`] = new Image();
   arrowImages[`rainbow_${direction}`].src = getAssetPath(
     `rainbow_${direction}.png`
@@ -29,9 +29,9 @@ const freezeImages = [
   "freeze_tail_active",
   "freeze_tail_inactive",
   "freeze_body_active",
-  "freeze_body_inactive"
+  "freeze_body_inactive",
 ];
-freezeImages.forEach(imageName => {
+freezeImages.forEach((imageName) => {
   arrowImages[imageName] = new Image();
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`);
 });
@@ -346,7 +346,7 @@ class Arrow {
               9 / 16,
               11 / 16,
               13 / 16,
-              15 / 16
+              15 / 16,
             ].includes(measureFraction)
           ) {
             frameY = 3;
@@ -390,7 +390,6 @@ class Arrow {
       if (speed === "cmod") {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
       } else {
-        console.log("beatTick", beatTick);
         destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
 
         if (staticAttrs) {
