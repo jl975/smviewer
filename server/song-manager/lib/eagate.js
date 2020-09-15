@@ -99,7 +99,11 @@ const getSongPosition = async ({ title, id }) => {
   orderedSongs = [];
 
   while (currentPage < totalPages && !songFound && !followingSongFound) {
-    console.log(`traversing page ${currentPage} of ${totalPages === 69 ? "?" : totalPages}`);
+    console.log(
+      `traversing page ${currentPage} of ${
+        totalPages === 69 ? "?" : totalPages
+      }`
+    );
     await traversePage(currentPage, { title, id });
     currentPage++;
   }
@@ -107,15 +111,21 @@ const getSongPosition = async ({ title, id }) => {
   if (songFound) {
     console.log("\nSong position:");
     console.log(orderedSongs[orderedSongs.length - 3].title);
-    console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
+    console.log(
+      orderedSongs[orderedSongs.length - 2].title,
+      "***<-- the new song"
+    );
     console.log(orderedSongs[orderedSongs.length - 1].title);
-    console.log("\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n");
+    console.log(
+      "\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n"
+    );
 
     const previousSong = orderedSongs[orderedSongs.length - 3];
     const actualSong = orderedSongs[orderedSongs.length - 2];
     const nextSong = orderedSongs[orderedSongs.length - 1];
 
-    const abcSort = parsedTsv.find((song) => song.hash === previousSong.id).abcSort;
+    const abcSort = parsedTsv.find((song) => song.hash === previousSong.id)
+      .abcSort;
 
     const json = {
       previousSongId: previousSong.id,
@@ -181,7 +191,9 @@ const traversePage = async (pageIndex = 0, { title, id }) => {
     // if this is the song we're looking for, go through one more iteration
     if (
       (id && id === songId) ||
-      (title && title.toLowerCase().replace(/\s*/g, "") === songTitle.toLowerCase().replace(/\s*/g, ""))
+      (title &&
+        title.toLowerCase().replace(/\s*/g, "") ===
+          songTitle.toLowerCase().replace(/\s*/g, ""))
     ) {
       songFound = true;
     }
