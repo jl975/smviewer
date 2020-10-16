@@ -28,6 +28,7 @@ export default function AddSong(props) {
     displayBpm: "",
     abcSort: "",
     dAudioUrl: "",
+    missingDifficulties: "",
   };
 
   return (

@@ -9,14 +9,14 @@ import AudioPlayer from "../../core/AudioPlayer";
 import {
   selectSong,
   selectDifficulty,
-  selectMode
+  selectMode,
 } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
 
-const MainContainer = props => {
+const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
   const [selectedSM, setSelectedSM] = useState(null);
 
@@ -59,11 +59,11 @@ const MainContainer = props => {
     props.loadSimfile(song);
   };
 
-  const onDifficultySelect = difficulty => {
+  const onDifficultySelect = (difficulty) => {
     // setSelectedDifficulty(difficulty);
     props.selectDifficulty(difficulty);
   };
-  const onModeSelect = mode => {
+  const onModeSelect = (mode) => {
     props.selectMode(mode);
   };
 
@@ -86,6 +86,7 @@ const MainContainer = props => {
               onModeSelect={onModeSelect}
               loadingAudio={loadingAudio}
               location={props.location}
+              gameEngine={gameEngine}
             />
 
             {DEBUG_MODE && <LogView />}
@@ -104,22 +105,19 @@ const MainContainer = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    selectSong: song => dispatch(selectSong(song)),
-    selectDifficulty: song => dispatch(selectDifficulty(song)),
-    selectMode: song => dispatch(selectMode(song)),
-    resizeScreen: e => dispatch(resizeScreen(e)),
+    selectSong: (song) => dispatch(selectSong(song)),
+    selectDifficulty: (song) => dispatch(selectDifficulty(song)),
+    selectMode: (song) => dispatch(selectMode(song)),
+    resizeScreen: (e) => dispatch(resizeScreen(e)),
     getSimfileList: () => dispatch(getSimfileList()),
-    loadSimfile: song => dispatch(loadSimfile(song))
+    loadSimfile: (song) => dispatch(loadSimfile(song)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MainContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

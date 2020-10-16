@@ -2,7 +2,7 @@ import * as actions from "../actions/SimfileActions";
 
 const initialState = {
   simfileList: [],
-  sm: null
+  sm: null,
 };
 
 export const simfiles = (state = initialState, action) => {
@@ -15,6 +15,7 @@ export const simfiles = (state = initialState, action) => {
       const sm = action.payload;
       return { ...state, sm };
     }
+
     default:
       return state;
   }

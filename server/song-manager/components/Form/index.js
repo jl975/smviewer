@@ -6,6 +6,7 @@ import styles from "./form.module.scss";
 import { DDR_VERSIONS, TITLE_CATEGORIES } from "../../data/constants";
 import {
   getDisplayBpmFromSm,
+  getMissingDifficultiesFromSm,
   getEagateData,
   getSmFromUrl,
   getFileName,
@@ -14,7 +15,17 @@ import {
   updateSimfiles,
 } from "../../clientUtils";
 
-const difficultyMap = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
+const difficultyMap = [
+  "bSP",
+  "BSP",
+  "DSP",
+  "ESP",
+  "CSP",
+  "BDP",
+  "DDP",
+  "EDP",
+  "CDP",
+];
 
 export default function Form(props) {
   const { song, jacket, isNew } = props;
@@ -30,7 +41,9 @@ export default function Form(props) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(",");
+    const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(
+      ","
+    );
 
     const initForm = { ...form, bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP };
 
@@ -88,6 +101,9 @@ export default function Form(props) {
     if (smData) {
       const displayBpm = getDisplayBpmFromSm(smData);
       fieldsToUpdate.displayBpm = displayBpm;
+
+      const missingDifficulties = getMissingDifficultiesFromSm(smData);
+      fieldsToUpdate.missingDifficulties = missingDifficulties;
     }
 
     if (smNameData) {
@@ -108,7 +124,9 @@ export default function Form(props) {
     }
 
     if (form.dAudioUrl) {
-      const dAudioUrl = form.dAudioUrl.replace(`https://www.dropbox.com/s/`, "").replace("?dl=0", "");
+      const dAudioUrl = form.dAudioUrl
+        .replace(`https://www.dropbox.com/s/`, "")
+        .replace("?dl=0", "");
       fieldsToUpdate.dAudioUrl = dAudioUrl;
     }
 
@@ -126,14 +144,19 @@ export default function Form(props) {
     let fieldsToUpdate = {};
 
     const payload = { ...form };
-    payload.levels = difficultyMap.map((difficulty) => payload[difficulty]).join(",");
+    payload.levels = difficultyMap
+      .map((difficulty) => payload[difficulty])
+      .join(",");
     fieldsToUpdate.levels = payload.levels;
 
     if (isNew) {
       if (form.previousSongId && form.nextSongId) {
         console.log("song position has already been determined");
       } else {
-        const { previousSongId, nextSongId } = await getSongPosition({ title: form.titleForSearch, id: form.hash });
+        const { previousSongId, nextSongId } = await getSongPosition({
+          title: form.titleForSearch,
+          id: form.hash,
+        });
         fieldsToUpdate = { ...fieldsToUpdate, previousSongId, nextSongId };
         payload.previousSongId = previousSongId;
         payload.nextSongId = nextSongId;
@@ -164,7 +187,11 @@ export default function Form(props) {
                   }}
                   placeholder='e.g. "8bQQ0lP96186D8Ibo8IoOd6o16qioiIo"'
                 />
-                <button type="button" className="link-btn" onClick={() => setSongInputType("title")}>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => setSongInputType("title")}
+                >
                   Use song title
                 </button>
               </>
@@ -179,7 +206,11 @@ export default function Form(props) {
                   }}
                   placeholder="All characters must match exactly with the official in-game title!"
                 />
-                <button type="button" className="link-btn" onClick={() => setSongInputType("id")}>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => setSongInputType("id")}
+                >
                   Use song ID
                 </button>
               </>
@@ -200,7 +231,11 @@ export default function Form(props) {
                       : "Leave this blank unless changes have been made to the .sm file."
                   }
                 />
-                <button type="button" className="link-btn" onClick={() => setSmInputType("file")}>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => setSmInputType("file")}
+                >
                   Upload file
                 </button>
               </>
@@ -209,7 +244,11 @@ export default function Form(props) {
               <>
                 <label>SM File: </label>
                 <input type="file" onChange={handleFileUpload} />
-                <button type="button" className="link-btn" onClick={() => setSmInputType("url")}>
+                <button
+                  type="button"
+                  className="link-btn"
+                  onClick={() => setSmInputType("url")}
+                >
                   Use direct URL
                 </button>
               </>
@@ -225,7 +264,10 @@ export default function Form(props) {
           </div>
           <div className={styles.formField}>
             <label>Version: </label>
-            <select value={form.version} onChange={(e) => updateFields({ version: e.target.value })}>
+            <select
+              value={form.version}
+              onChange={(e) => updateFields({ version: e.target.value })}
+            >
               <option value="" disabled>
                 Choose version
               </option>
@@ -240,7 +282,10 @@ export default function Form(props) {
           </div>
 
           {retrievingData ? (
-            <p>Retrieving data, please wait... (check terminal logs for progress information)</p>
+            <p>
+              Retrieving data, please wait... (check terminal logs for progress
+              information)
+            </p>
           ) : null}
           <button type="button" onClick={fillAutomaticFields}>
             {isNew ? "Fill" : "Update"} automatic fields
@@ -267,7 +312,11 @@ export default function Form(props) {
           {!isNew && jacket && (
             <div className={styles.formField}>
               <label>Jacket preview:</label>
-              <img src={`data:image/png;base64,${jacket}`} alt={form.title} className={styles.jacketPreview} />
+              <img
+                src={`data:image/png;base64,${jacket}`}
+                alt={form.title}
+                className={styles.jacketPreview}
+              />
             </div>
           )}
           {isNew && form.hash && form.hash.length === 32 && (
@@ -310,7 +359,10 @@ export default function Form(props) {
           </div>
           <div className={styles.formField}>
             <label>Title sort: </label>
-            <select value={form.abcSort} onChange={(e) => updateFields({ abcSort: e.target.value })}>
+            <select
+              value={form.abcSort}
+              onChange={(e) => updateFields({ abcSort: e.target.value })}
+            >
               <option value="" disabled>
                 Choose title sort
               </option>
