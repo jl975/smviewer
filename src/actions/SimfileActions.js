@@ -6,26 +6,33 @@ import loadStore from "../utils/loadStore";
 export const GET_SIMFILE_LIST = "GET_SIMFILE_LIST";
 export const LOAD_SIMFILE = "LOAD_SIMFILE";
 
-export const getSimfileList = () => async dispatch => {
+export const getSimfileList = () => async (dispatch) => {
   try {
     const parsedTsv = await tsv(getOriginPath() + "data/simfiles.tsv");
 
-    parsedTsv.forEach(row => {
+    parsedTsv.forEach((row) => {
       row.levels = row.levels
         .split(",")
-        .map(level => (level ? parseInt(level) : null));
+        .map((level) => (level ? parseInt(level) : null));
+      if (row.missingDifficulties) {
+        row.missingDifficulties = row.missingDifficulties
+          .split(",")
+          .map((level) => parseInt(level));
+      } else {
+        row.missingDifficulties = [];
+      }
     });
 
     dispatch({
       type: GET_SIMFILE_LIST,
-      payload: parsedTsv
+      payload: parsedTsv,
     });
   } catch (error) {
     throw error;
   }
 };
 
-export const loadSimfile = song => async dispatch => {
+export const loadSimfile = (song) => async (dispatch) => {
   let smName = song.smName;
 
   // special case for tohoku evolved: pick one of its types at random
@@ -48,7 +55,7 @@ export const loadSimfile = song => async dispatch => {
     if (loadStore.lastRequestedSong === song.title) {
       dispatch({
         type: LOAD_SIMFILE,
-        payload: sm
+        payload: sm,
       });
     }
   } catch (error) {

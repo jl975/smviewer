@@ -175,6 +175,27 @@ const SongForm = (props) => {
     }
   }, [selectedSongOption]);
 
+  const selectClosestDifficulty = (song, mode = selectedMode) => {
+    let selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
+      selectedDifficultyOption
+    );
+    if (mode === "double") selectedDiffOptionIndex += 4;
+    let difficultyToSelect;
+    if (
+      song.levels[selectedDiffOptionIndex] &&
+      !song.missingDifficulties.includes(selectedDiffOptionIndex)
+    ) {
+      difficultyToSelect = selectedDifficultyOption;
+    } else {
+      difficultyToSelect = getClosestDifficulty(
+        song,
+        selectedDifficultyOption,
+        mode
+      );
+    }
+    props.onDifficultySelect(difficultyToSelect);
+  };
+
   const onSongSelect = async (songId, params = {}) => {
     AudioPlayer.stopSongPreview();
     if (selectedSong) {
@@ -208,23 +229,6 @@ const SongForm = (props) => {
       return;
     }
 
-    const selectClosestDifficulty = () => {
-      const selectedDiffOptionIndex = SP_DIFFICULTIES.indexOf(
-        selectedDifficultyOption
-      );
-      let difficultyToSelect;
-      if (song.levels[selectedDiffOptionIndex]) {
-        difficultyToSelect = selectedDifficultyOption;
-      } else {
-        difficultyToSelect = getClosestDifficulty(
-          song,
-          selectedDifficultyOption,
-          selectedMode
-        );
-      }
-      props.onDifficultySelect(difficultyToSelect);
-    };
-
     // Auto-select the selected song's chart based on the applied level/difficulty filters.
     // 4 possible cases
 
@@ -235,7 +239,7 @@ const SongForm = (props) => {
     ) {
       // select the chart corresponding to the selected difficulty option.
       // if the song does not have a chart for that difficulty, choose the closest difficulty.
-      selectClosestDifficulty();
+      selectClosestDifficulty(song);
     }
 
     // Level filter applied but not difficulty
@@ -263,7 +267,7 @@ const SongForm = (props) => {
 
       // if the song does not have a chart that matches the level filter, go with the closest difficulty
       else {
-        selectClosestDifficulty();
+        selectClosestDifficulty(song);
       }
     }
 
@@ -282,7 +286,7 @@ const SongForm = (props) => {
 
       // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
       else {
-        selectClosestDifficulty();
+        selectClosestDifficulty(song);
       }
     }
 
@@ -298,7 +302,7 @@ const SongForm = (props) => {
       if (song.levels[difficultyIdx] === selectedFilters.level) {
         props.onDifficultySelect(selectedFilters.difficulty);
       } else {
-        selectClosestDifficulty();
+        selectClosestDifficulty(song);
       }
     }
 
@@ -316,6 +320,9 @@ const SongForm = (props) => {
   };
 
   const handleModeSelect = (mode) => {
+    if (!isChartAvailable(selectedSong, mode)) {
+      selectClosestDifficulty(selectedSong, mode);
+    }
     props.onModeSelect(mode);
   };
 
@@ -381,6 +388,12 @@ const SongForm = (props) => {
       return !selectedSong.levels.slice(0, 5).filter((a) => a).length;
     }
     return true;
+  };
+
+  const isChartAvailable = (song, mode = selectedMode) => {
+    let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedDifficultyOption);
+    if (mode === "double") difficultyIdx += 4;
+    return !song.missingDifficulties.includes(difficultyIdx);
   };
 
   const toggleSongPreview = () => {
@@ -526,6 +539,7 @@ const SongForm = (props) => {
             selectedMode={selectedMode}
             selectedDifficultyOption={selectedDifficultyOption}
             selectedFilters={selectedFilters}
+            isChartAvailable={isChartAvailable}
             gameEngine={props.gameEngine}
           />
         </div>

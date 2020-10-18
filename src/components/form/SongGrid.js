@@ -12,9 +12,8 @@ const SongGrid = (props) => {
     selectedMode,
     selectedDifficultyOption,
     selectedFilters,
+    isChartAvailable,
   } = props;
-
-  console.log("selectedDifficultyOption", selectedDifficultyOption);
 
   let songs = displayedSongs;
 
@@ -67,50 +66,10 @@ const SongGrid = (props) => {
         }
       });
     }
-    console.log("levels", levels);
     return levels;
   };
 
   const renderSongLevel = (song) => {
-    // let levels = [];
-    // if (selectedMode === "single") levels = song.levels.slice(0, 5);
-    // else if (selectedMode === "double")
-    //   levels = [null, ...song.levels.slice(5, 9)];
-
-    // const levelFilter = selectedFilters.level;
-    // const difficultyFilter = selectedFilters.difficulty;
-
-    // // If neither level nor difficulty are being filtered, show the chosen difficulty option or whatever is closest
-    // if (difficultyFilter === "all" && levelFilter === "all") {
-    //   const displayedLevels = [null, null, null, null, null];
-    //   const difficultyIdx = SP_DIFFICULTIES.indexOf(selectedDifficultyOption);
-    //   if (levels[difficultyIdx]) {
-    //     displayedLevels[difficultyIdx] = levels[difficultyIdx];
-    //   } else {
-    //     const closestDiff = getClosestDifficulty(
-    //       song,
-    //       selectedDifficultyOption,
-    //       selectedMode
-    //     );
-    //     const closestDiffIdx = SP_DIFFICULTIES.indexOf(closestDiff);
-    //     displayedLevels[closestDiffIdx] = levels[closestDiffIdx];
-    //   }
-    //   levels = displayedLevels;
-    // } else {
-    //   levels.forEach((level, i) => {
-    //     if (!level) return;
-    //     const difficulty = SP_DIFFICULTIES[i];
-    //     // If level is chosen but difficulty is not, show all difficulties that match the level
-    //     if (difficultyFilter === "all") {
-    //       if (level !== levelFilter) levels[i] = null;
-    //     }
-    //     // If level is not chosen but difficulty is, show the filtered difficulty only
-    //     // If both level and difficulty are chosen, show the filtered difficulty only
-    //     else {
-    //       if (difficulty !== difficultyFilter) levels[i] = null;
-    //     }
-    //   });
-    // }
     const levels = getDisplayedSongData(song);
 
     return levels.map((level, i) => {
@@ -127,37 +86,12 @@ const SongGrid = (props) => {
     });
   };
 
-  // const isChartAvailable = (song) => {
-  //   const levels = getDisplayedSongData(song);
-  //   const filteredLevels = levels.filter((a) => a);
-
-  //   // one matching level (99% of cases)
-  //   if (filteredLevels.length === 1) {
-  //     const level = filteredLevels[0];
-  //     const difficultyIdx = levels.indexOf(level);
-  //     const difficulty = SP_DIFFICULTIES[difficultyIdx];
-
-  //     const isAvailable = availableSimfiles.hasOwnProperty(
-  //       `${selectedMode}_${difficulty}`
-  //     );
-  //     console.log(
-  //       `is ${song.title} ${selectedMode}_${difficulty} available`,
-  //       isAvailable
-  //     );
-  //     return isAvailable;
-  //   }
-  //   // if multiple matching levels, go with the specified difficulty
-  //   else {
-  //     const isAvailable = availableSimfiles.hasOwnProperty(
-  //       `${selectedMode}_${selectedDifficultyOption}`
-  //     );
-  //   }
-  // };
-
   const renderSong = (song) => {
     return (
       <div
-        className="songTile-wrapper"
+        className={`songTile-wrapper ${
+          isChartAvailable(song) ? "" : "unavailable"
+        }`}
         key={`songtile_${song.hash}`}
         onClick={() => selectSong(song)}
       >

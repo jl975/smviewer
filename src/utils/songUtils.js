@@ -16,13 +16,19 @@ export const getClosestDifficulty = (song, difficulty, mode) => {
 
   if (["Difficult", "Expert", "Challenge"].includes(difficulty)) {
     for (let i = difficulties.length - 1; i >= 0; i--) {
-      if (levels[i]) {
+      if (
+        levels[i] &&
+        !song.missingDifficulties.includes(mode === "double" ? i + 5 : i)
+      ) {
         return difficulties[i];
       }
     }
   } else if (["Beginner", "Basic"].includes(difficulty)) {
     for (let i = 0; i <= difficulties.length - 1; i++) {
-      if (levels[i]) {
+      if (
+        levels[i] &&
+        !song.missingDifficulties.includes(mode === "double" ? i + 5 : i)
+      ) {
         return difficulties[i];
       }
     }
