@@ -6,7 +6,7 @@ import * as actions from "../../actions/SongSelectActions";
 import SongSearch from "./SongSearch";
 import SongGrid from "./SongGrid";
 import { getJacketPath, presetParams, parseUrlParams } from "../../utils";
-import { getClosestDifficulty } from "../../utils/songUtils";
+import { getClosestDifficulty, isInBpmRange } from "../../utils/songUtils";
 import { clearBpmAndStopDisplay } from "../../utils/engineUtils";
 import {
   getUserSettings,
@@ -21,6 +21,7 @@ import {
   versionSortOptions,
   levelSortOptions,
   difficultySortOptions,
+  bpmRangeOptions,
 } from "./songFormOptions";
 import { generateInitialValues } from "./options";
 import AudioPlayer from "../../core/AudioPlayer";
@@ -54,6 +55,7 @@ const SongForm = (props) => {
       version: 16,
       level: "all",
       difficulty: "all",
+      bpm: "all",
     }
   );
 
@@ -67,7 +69,7 @@ const SongForm = (props) => {
 
   // on filter or mode change
   useEffect(() => {
-    const { title, version, level, difficulty } = selectedFilters;
+    const { title, version, level, difficulty, bpm } = selectedFilters;
 
     const songs = simfileList
       .filter((song) => {
@@ -78,6 +80,8 @@ const SongForm = (props) => {
           (title === "all" || title === song.abcSort) &&
           // song matches version filter
           (version === "all" || version === parseInt(song.version)) &&
+          // song matches bpm range filter
+          (bpm === "all" || isInBpmRange(song, bpm, difficulty)) &&
           // if a level filter is selected, song matches level filter
           // if level is not being filtered, song has at least one chart on the chosen mode
           ((level === "all" &&
@@ -117,9 +121,25 @@ const SongForm = (props) => {
           }
         }
         return song;
+      })
+      .sort((songA, songB) => {
+        // only do bpm sort for now. default is title game order
+        if (bpm !== "all") {
+          const aBpms = songA.displayBpm.split("-");
+          const aMaxBpm = parseInt(aBpms[aBpms.length - 1]);
+          const bBpms = songB.displayBpm.split("-");
+          const bMaxBpm = parseInt(bBpms[bBpms.length - 1]);
+          if (aMaxBpm > bMaxBpm) return 1;
+          if (aMaxBpm < bMaxBpm) return -1;
+          return 0;
+        }
+
+        // assume stable sort keeps the default order
+        return 0;
       });
 
     setDisplayedSongs(songs);
+    // console.log(songs);
     songGridContainer.current.scrollTop = 0;
   }, [selectedFilters, selectedMode]);
 
@@ -484,6 +504,20 @@ const SongForm = (props) => {
                       })
                     }
                     options={titleSortOptions}
+                    upward={false}
+                  />
+                  <label>By BPM Range</label>
+                  <Dropdown
+                    className="bpm-filter-dropdown"
+                    selection
+                    value={selectedFilters.bpm}
+                    onChange={(_, data) => {
+                      updateSelectedFilters({
+                        bpm: data.value,
+                      });
+                    }}
+                    options={bpmRangeOptions}
+                    upward={false}
                   />
                 </div>
                 <div className="form-field">
@@ -498,7 +532,9 @@ const SongForm = (props) => {
                       })
                     }
                     options={versionSortOptions}
+                    upward={false}
                   />
+                  {/* <label>By Genre</label> */}
                 </div>
                 <div className="form-field">
                   <label>By Level</label>
@@ -512,6 +548,7 @@ const SongForm = (props) => {
                       })
                     }
                     options={levelSortOptions}
+                    upward={false}
                   />
                   <label>By Difficulty</label>
                   <Dropdown
@@ -524,6 +561,7 @@ const SongForm = (props) => {
                       })
                     }
                     options={difficultySortOptions}
+                    upward={false}
                   />
                 </div>
               </div>

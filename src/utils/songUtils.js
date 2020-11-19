@@ -1,4 +1,4 @@
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../constants";
+import { SP_DIFFICULTIES, DP_DIFFICULTIES, BPM_RANGES } from "../constants";
 
 /*
   If the song does not have a chart corresponding to the chosen difficulty option,
@@ -32,5 +32,27 @@ export const getClosestDifficulty = (song, difficulty, mode) => {
         return difficulties[i];
       }
     }
+  }
+};
+
+export const isInBpmRange = (song, bpmRangeValue, difficulty) => {
+  const bpm = song.displayBpm;
+
+  // split bpm (this is the only case where difficulty matters)
+  if (bpm.includes(",")) {
+    return false;
+  } else {
+    const bpms = song.displayBpm.split("-");
+    const maxBpm = parseInt(bpms[bpms.length - 1]);
+
+    const bpmIndex = BPM_RANGES.indexOf(bpmRangeValue);
+
+    let nextHighestBpm;
+    if (bpmIndex + 1 >= BPM_RANGES.length) {
+      nextHighestBpm = Infinity;
+    } else {
+      nextHighestBpm = BPM_RANGES[bpmIndex + 1];
+    }
+    return bpmRangeValue <= maxBpm && maxBpm < nextHighestBpm;
   }
 };

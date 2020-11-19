@@ -3,6 +3,8 @@ import {
   TITLE_CATEGORIES,
   LEVELS,
   DDR_VERSIONS,
+  BPM_RANGES,
+  GENRES,
 } from "../../constants";
 
 export const titleSortOptions = [
@@ -37,6 +39,18 @@ export const difficultySortOptions = [
       key: `difficulty_${difficulty}`,
       value: difficulty,
       text: difficulty,
+    };
+  })
+);
+
+export const bpmRangeOptions = [
+  { key: "bpm_all", value: "all", text: "ALL" },
+].concat(
+  BPM_RANGES.map((minBpm) => {
+    return {
+      key: `bpm_${minBpm}`,
+      value: minBpm,
+      text: minBpm === 1 ? "~ 100" : `${minBpm} ~`,
     };
   })
 );

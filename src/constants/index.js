@@ -57,6 +57,45 @@ export const SP_DIFFICULTIES = [
 ];
 export const DP_DIFFICULTIES = ["Basic", "Difficult", "Expert", "Challenge"];
 
+/* Each number represents the lower bound of a range of bpm values, where the upper bound is
+the next number (non-inclusive).
+For example, 1 represents the range of bpms from 1 to 99 (i.e. BPM SORT ~100 in-game),
+100 represents the range of bpms from 100 to 109 (BPM SORT 100~ in-game), etc.
+300 represents all bpms 300 and up.
+Bpm in this context refers to the MAX value of the song's DISPLAYED bpm. */
+export const BPM_RANGES = [
+  1,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200,
+  300,
+];
+
+/* Indices are chosen to match the genre filters' corresponding IDs on eagate. */
+export const GENRES = [
+  null,
+  "Japanese Pops",
+  "Anime & Game",
+  "Variety",
+  null,
+  null,
+  null,
+  "HinaBitter",
+  "Touhou Arrange",
+  "Popular Songs",
+  null,
+  "Tokimeki Idol",
+  "BandMeshi",
+];
+
 export const TITLE_CATEGORIES = [
   "あ",
   "か",
