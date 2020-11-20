@@ -3,6 +3,9 @@ export const DEBUG_MODE = false;
 export const ARROW_WIDTH = 64;
 export const ARROW_HEIGHT = 64;
 
+export const STATIC_ARROW_WIDTH = 32;
+export const STATIC_ARROW_HEIGHT = 32;
+
 /* Height of one repetition of the freeze body pattern */
 export const FREEZE_BODY_HEIGHT = 128;
 

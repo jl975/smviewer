@@ -4,14 +4,21 @@ import { Modal, Button } from "semantic-ui-react";
 
 import Guidelines from "./canvas/Guidelines";
 import { scaleCanvas } from "../../utils/canvasUtils";
-import { ARROW_HEIGHT, ARROW_WIDTH } from "../../constants";
+import {
+  STATIC_ARROW_HEIGHT,
+  STATIC_ARROW_WIDTH,
+  ARROW_HEIGHT,
+  ARROW_WIDTH,
+} from "../../constants";
+import StaticArrow from "./staticCanvas/StaticArrow";
+import StaticGuidelines from "./staticCanvas/StaticGuidelines";
 
 const tempCanvas = document.createElement("canvas");
 const tctx = tempCanvas.getContext("2d");
 
 const canvasScaleFactor = 0.5;
 
-const StaticModal = props => {
+const StaticModal = (props) => {
   const { modalOpen, setModalOpen, gameEngine, sm } = props;
 
   const canvasRef = useRef(null);
@@ -32,9 +39,26 @@ const StaticModal = props => {
     // c.fillStyle = "black";
     // c.fillRect(0, 0, 256, canvas.height);
 
-    const { arrows, freezes, shocks, mods, frame } = gameEngine.globalParams;
+    const { freezes, shocks, frame } = gameEngine.globalParams;
+
+    // const arrows = gameEngine.globalParams.arrows;
+    const arrows = gameEngine.globalParams.arrows.map((arrow) => {
+      return new StaticArrow(arrow);
+    });
+
+    console.log("arrows", arrows);
+
+    let mods = gameEngine.globalParams.mods;
+    mods = JSON.parse(JSON.stringify(mods));
+
     const tick = { beatTick: 0, timeTick: 0 };
     console.log("mods", mods);
+
+    mods.speed = 1;
+
+    const speedMod = mods.speed;
+    console.log("speedMod", speedMod);
+    // const speedMod = 1;
 
     /*
       Use a temporarily hardcoded number of measures per column to figure out the
@@ -52,10 +76,11 @@ const StaticModal = props => {
     // temp hardcode
     const measuresPerColumn = 8;
 
-    const columnWidth = ARROW_WIDTH * 4 * 2;
+    const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
-    let calcCanvasHeight = ARROW_HEIGHT * 4 * mods.speed * measuresPerColumn;
-    calcCanvasHeight += ARROW_HEIGHT; // one arrow height worth of padding on bottom
+    let calcCanvasHeight =
+      STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn;
+    calcCanvasHeight += STATIC_ARROW_HEIGHT; // one arrow height worth of padding on bottom
     setCanvasHeight(calcCanvasHeight);
     console.log("canvasHeight", calcCanvasHeight);
 
@@ -65,19 +90,25 @@ const StaticModal = props => {
     setCanvasWidth(calcCanvasWidth);
     console.log("canvasWidth", calcCanvasWidth);
 
+    // black background
+    c.fillStyle = "black";
+    c.fillRect(0, 0, calcCanvasWidth, calcCanvasHeight);
+
     // draw each column
     for (let i = 0; i < numColumns; i++) {
+      const columnStart = i * columnWidth + STATIC_ARROW_WIDTH * 2;
       c.fillStyle = "black";
-      c.fillRect(
-        i * columnWidth + ARROW_WIDTH * 2,
-        0,
-        ARROW_WIDTH * 4,
-        calcCanvasHeight
+      c.fillRect(columnStart, 0, STATIC_ARROW_WIDTH * 4, calcCanvasHeight);
+      const guidelines = new StaticGuidelines(
+        gameEngine.globalParams.finalBeat
       );
+      guidelines.render(canvas, tick, {
+        mods,
+        columnIdx: i,
+        columnWidth,
+        measuresPerColumn,
+      });
     }
-
-    const guidelines = new Guidelines(gameEngine.globalParams.finalBeat);
-    guidelines.render(canvas, tick, { mods });
 
     for (let i = 0; i < shocks.length; i++) {
       const shock = shocks[i];
@@ -85,33 +116,36 @@ const StaticModal = props => {
         mods,
         staticAttrs: {
           columnIdx: Math.floor(shock.measureIdx / measuresPerColumn),
-          columnHeight: ARROW_HEIGHT * 4 * mods.speed * measuresPerColumn
-        }
+          columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+        },
       });
     }
 
     for (let i = 0; i < freezes.length; i++) {
       const freeze = freezes[i];
-      [0, 1, 2, 3].forEach(directionIdx => {
+      [0, 1, 2, 3].forEach((directionIdx) => {
         freeze.renderFreezeBody(canvas, tick, directionIdx, {
           mods,
           staticAttrs: {
             columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
-            columnHeight: ARROW_HEIGHT * 4 * mods.speed * measuresPerColumn
-          }
+            columnHeight:
+              STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          },
         });
       });
     }
 
     for (let i = 0; i < arrows.length; i++) {
       const arrow = arrows[i];
-      [0, 1, 2, 3].forEach(directionIdx => {
+      [0, 1, 2, 3].forEach((directionIdx) => {
         arrow.renderArrow(canvas, tick, directionIdx, {
           mods,
-          staticAttrs: {
-            columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
-            columnHeight: ARROW_HEIGHT * 4 * mods.speed * measuresPerColumn
-          }
+          columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
+          columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          // staticAttrs: {
+          //   columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
+          //   columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          // },
           // static: {
           //   row: arrow.measureIdx % measuresPerColumn,
           //   column: Math.floor(arrow.measureIdx / measuresPerColumn)
@@ -146,7 +180,7 @@ const StaticModal = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { mods, songSelect, screen, simfiles } = state;
   const { song, difficulty, mode } = songSelect;
   return {
@@ -155,15 +189,12 @@ const mapStateToProps = state => {
     song,
     difficulty,
     mode,
-    screen
+    screen,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StaticModal);
+export default connect(mapStateToProps, mapDispatchToProps)(StaticModal);
