@@ -73,6 +73,7 @@ class Arrow {
 
     const arrowWidth = staticAttrs ? STATIC_ARROW_WIDTH : ARROW_WIDTH;
     const arrowHeight = staticAttrs ? STATIC_ARROW_HEIGHT : ARROW_HEIGHT;
+    const freezeBodyHeight = FREEZE_BODY_HEIGHT;
 
     // freeze body and tail
     if (this.note[directionIdx] === "3") {
@@ -112,8 +113,8 @@ class Arrow {
             speed -
           arrowHeight / 2;
       }
-      const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
-      let partialHeight = totalBodyHeight % FREEZE_BODY_HEIGHT;
+      const repetitions = Math.floor(totalBodyHeight / freezeBodyHeight);
+      let partialHeight = totalBodyHeight % freezeBodyHeight;
       const originalPartialHeight = partialHeight;
 
       let partialDestY = destY - (totalBodyHeight + arrowHeight / 2);
@@ -141,7 +142,7 @@ class Arrow {
         c.drawImage(
           arrowBodyImg,
           frameX,
-          scroll === "reverse" ? 0 : FREEZE_BODY_HEIGHT - partialHeight,
+          scroll === "reverse" ? 0 : freezeBodyHeight - partialHeight,
           arrowWidth,
           partialHeight,
           destX,
@@ -159,15 +160,15 @@ class Arrow {
 
       // draw repetitions of freeze body
       for (let i = 1; i <= repetitions; i++) {
-        let bodyHeight = FREEZE_BODY_HEIGHT;
+        let bodyHeight = freezeBodyHeight;
         let bodyFrameY = 0;
         let bodyDestY =
           destY -
           (totalBodyHeight +
             arrowHeight / 2 -
             originalPartialHeight -
-            FREEZE_BODY_HEIGHT * (i - 1));
-        if (bodyDestY < 0 && bodyDestY > -FREEZE_BODY_HEIGHT) {
+            freezeBodyHeight * (i - 1));
+        if (bodyDestY < 0 && bodyDestY > -freezeBodyHeight) {
           bodyHeight += bodyDestY;
           bodyFrameY -= bodyDestY;
           bodyDestY = 0;
@@ -271,8 +272,6 @@ class Arrow {
 
   renderArrow(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
-    console.log("canvas", canvas);
-    console.log("c", c);
 
     const { mods, staticAttrs } = attrs;
     const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods;
@@ -282,7 +281,6 @@ class Arrow {
 
     const bottomBoundary = canvas.height; // can be adjusted with SUDDEN+
 
-    // console.log(bottomBoundary);
     // nothing
     if (this.note[directionIdx] === "0") return;
 
@@ -301,7 +299,6 @@ class Arrow {
       this.note[directionIdx] === "1" ||
       (this.note[directionIdx] === "2" && colorFreezes)
     ) {
-      // console.log("arrow", directionIdx);
       arrowImg = arrowImages[`${noteskin}_${direction}`];
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
@@ -404,10 +401,6 @@ class Arrow {
 
       destY = (destY + 0.5) | 0;
 
-      // if (this.key === 15) {
-      //   console.log("15 destY", destY);
-      //   console.log("staticAttrs.columnHeight", staticAttrs.columnHeight);
-      // }
       if (destY > topBoundary && destY < bottomBoundary) {
         c.drawImage(
           arrowImg,
@@ -422,7 +415,6 @@ class Arrow {
           arrowWidth,
           arrowHeight
         );
-        // console.log(destY);
       }
     }
 
@@ -455,7 +447,6 @@ class Arrow {
           arrowWidth,
           arrowHeight
         );
-        // console.log(destY);
       }
     }
   }

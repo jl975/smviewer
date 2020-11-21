@@ -39,14 +39,19 @@ const StaticModal = (props) => {
     // c.fillStyle = "black";
     // c.fillRect(0, 0, 256, canvas.height);
 
-    const { freezes, shocks, frame } = gameEngine.globalParams;
+    const { shocks, frame } = gameEngine.globalParams;
 
     // const arrows = gameEngine.globalParams.arrows;
     const arrows = gameEngine.globalParams.arrows.map((arrow) => {
+      console.log(arrow);
       return new StaticArrow(arrow);
     });
 
     console.log("arrows", arrows);
+
+    const freezes = gameEngine.globalParams.freezes.map((freeze) => {
+      return new StaticArrow(freeze);
+    });
 
     let mods = gameEngine.globalParams.mods;
     mods = JSON.parse(JSON.stringify(mods));
@@ -126,11 +131,13 @@ const StaticModal = (props) => {
       [0, 1, 2, 3].forEach((directionIdx) => {
         freeze.renderFreezeBody(canvas, tick, directionIdx, {
           mods,
-          staticAttrs: {
-            columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
-            columnHeight:
-              STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-          },
+          columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
+          columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          // staticAttrs: {
+          //   columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
+          //   columnHeight:
+          //     STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          // },
         });
       });
     }
