@@ -2,24 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Modal, Button } from "semantic-ui-react";
 
-import Guidelines from "./canvas/Guidelines";
 import { scaleCanvas } from "../../utils/canvasUtils";
-import {
-  STATIC_ARROW_HEIGHT,
-  STATIC_ARROW_WIDTH,
-  ARROW_HEIGHT,
-  ARROW_WIDTH,
-} from "../../constants";
+import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
 import StaticArrow from "./staticCanvas/StaticArrow";
 import StaticGuidelines from "./staticCanvas/StaticGuidelines";
-
-const tempCanvas = document.createElement("canvas");
-const tctx = tempCanvas.getContext("2d");
+import AudioPlayer from "../../core/AudioPlayer";
 
 const canvasScaleFactor = 0.5;
 
+// temp hardcode
+const measuresPerColumn = 8;
+
+const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
+
 const StaticModal = (props) => {
-  const { modalOpen, setModalOpen, gameEngine, sm } = props;
+  const { modalOpen, setModalOpen, gameEngine } = props;
 
   const canvasRef = useRef(null);
 
@@ -34,20 +31,11 @@ const StaticModal = (props) => {
 
     console.log(gameEngine.globalParams);
 
-    const { allArrows } = gameEngine;
-
-    // c.fillStyle = "black";
-    // c.fillRect(0, 0, 256, canvas.height);
-
     const { shocks, frame } = gameEngine.globalParams;
 
-    // const arrows = gameEngine.globalParams.arrows;
     const arrows = gameEngine.globalParams.arrows.map((arrow) => {
-      console.log(arrow);
       return new StaticArrow(arrow);
     });
-
-    console.log("arrows", arrows);
 
     const freezes = gameEngine.globalParams.freezes.map((freeze) => {
       return new StaticArrow(freeze);
@@ -57,13 +45,10 @@ const StaticModal = (props) => {
     mods = JSON.parse(JSON.stringify(mods));
 
     const tick = { beatTick: 0, timeTick: 0 };
-    console.log("mods", mods);
 
     mods.speed = 1;
 
     const speedMod = mods.speed;
-    console.log("speedMod", speedMod);
-    // const speedMod = 1;
 
     /*
       Use a temporarily hardcoded number of measures per column to figure out the
@@ -76,24 +61,16 @@ const StaticModal = (props) => {
 
     const finalBeat = gameEngine.globalParams.finalBeat;
     const numMeasures = finalBeat / 4;
-    console.log("numMeasures", numMeasures);
-
-    // temp hardcode
-    const measuresPerColumn = 8;
-
-    const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
     let calcCanvasHeight =
       STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn;
     calcCanvasHeight += STATIC_ARROW_HEIGHT; // one arrow height worth of padding on bottom
     setCanvasHeight(calcCanvasHeight);
-    console.log("canvasHeight", calcCanvasHeight);
 
     const numColumns = Math.ceil(numMeasures / measuresPerColumn);
 
     const calcCanvasWidth = columnWidth * numColumns;
     setCanvasWidth(calcCanvasWidth);
-    console.log("canvasWidth", calcCanvasWidth);
 
     // black background
     c.fillStyle = "black";
@@ -133,11 +110,6 @@ const StaticModal = (props) => {
           mods,
           columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-          // staticAttrs: {
-          //   columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
-          //   columnHeight:
-          //     STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-          // },
         });
       });
     }
@@ -149,29 +121,76 @@ const StaticModal = (props) => {
           mods,
           columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-          // staticAttrs: {
-          //   columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
-          //   columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-          // },
-          // static: {
-          //   row: arrow.measureIdx % measuresPerColumn,
-          //   column: Math.floor(arrow.measureIdx / measuresPerColumn)
-          // }
         });
       });
     }
 
     scaleCanvas(canvas, canvasScaleFactor);
-
-    console.log("canvas height:", canvas.height);
-    console.log("canvas width", canvas.width);
   }, [modalOpen, canvasHeight, canvasWidth]);
 
+  const onCanvasClick = (e) => {
+    const canvasRect = canvasRef.current.getBoundingClientRect();
+
+    const leftEdge = STATIC_ARROW_WIDTH * 2 * canvasScaleFactor + canvasRect.x;
+
+    if (e.clientX < leftEdge) return;
+
+    const scaledColumnWidth = columnWidth * canvasScaleFactor;
+
+    const cx = (e.clientX - leftEdge) % scaledColumnWidth;
+    if (cx > scaledColumnWidth / 2) return;
+
+    const columnIdx = Math.floor((e.clientX - leftEdge) / scaledColumnWidth);
+
+    const topEdge =
+      (STATIC_ARROW_HEIGHT / 2) * canvasScaleFactor + canvasRect.y;
+    if (e.clientY < topEdge) return;
+
+    const cy = e.clientY - topEdge;
+
+    const beatIdx = Math.floor(cy / (STATIC_ARROW_HEIGHT * canvasScaleFactor));
+
+    if (beatIdx >= measuresPerColumn * 4) return;
+
+    const beatNum = columnIdx * measuresPerColumn * 4 + beatIdx;
+
+    // Figure out how to use the beat number to skip to the corresponding chart progress.
+    const progressTs = seekProgress(beatNum);
+    AudioPlayer.seekTime(progressTs);
+
+    handleClose();
+  };
+
+  // Given a beat index, iterate through the arrows until the last arrow with a beatstamp earlier or
+  // equal to the beat number is found. Then use that arrow's timestamp to skip to some chart
+  // progress based on that timestamp.
+  const seekProgress = (beatNum) => {
+    const arrows = gameEngine.globalParams.allArrows;
+    for (let i = 0; i < arrows.length; i++) {
+      const arrow = arrows[i];
+      if (arrow.beatstamp > beatNum) {
+        if (i - 1 >= 0) {
+          return arrows[i - 1].timestamp;
+        } else {
+          return arrow.timestamp;
+        }
+      }
+    }
+    return arrows[arrows.length - 1].timestamp;
+  };
+
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
+  };
   return (
     <Modal
       className="staticModal"
       open={modalOpen}
-      onClose={() => setModalOpen(false)}
+      onOpen={handleOpen}
+      onClose={handleClose}
     >
       <div className="staticChart-container">
         <canvas
@@ -179,8 +198,7 @@ const StaticModal = (props) => {
           ref={canvasRef}
           height={canvasHeight}
           width={canvasWidth}
-          // height={50000}
-          // width={64 * 4}
+          onClick={onCanvasClick}
         ></canvas>
       </div>
     </Modal>
