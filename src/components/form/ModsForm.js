@@ -10,13 +10,20 @@ import { updateMods } from "../../actions/ModsActions";
 const ModsForm = (props) => {
   const { mods, updateMods, mode, song, difficulty } = props;
 
-  // when switching between single and double, any mod set to a value incompatible
-  // with the new mode will be reset to its default value
+  // // when switching between single and double, any mod set to a value incompatible
+  // // with the new mode will be reset to its default value
+  // useEffect(() => {
+  //   if (mode === "double" && !["off", "mirror"].includes(mods.turn)) {
+  //     updateMods({ turn: "off" });
+  //   }
+  // }, [mode]);
+
+  // temp UX improvement (?)
+  // revert any applied turn mods to normal turn when the chart is changed
   useEffect(() => {
-    if (mode === "double" && !["off", "mirror"].includes(mods.turn)) {
-      updateMods({ turn: "off" });
-    }
-  }, [mode]);
+    // console.log("mode, song, or difficulty changed");
+    updateMods({ turn: "off" });
+  }, [mode, song, difficulty]);
 
   const getEffectiveScrollSpeed = () => {
     if (!song) return null;
