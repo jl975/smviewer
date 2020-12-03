@@ -16,6 +16,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const song = getSongData(params.index);
+  console.log("song", song);
   const jacket = getJacketPath(song.hash);
   return {
     props: {

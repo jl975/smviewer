@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { Button } from "semantic-ui-react";
 import "inobounce";
 
 import { presetParams, getJacketPath } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
-import AudioPlayer from "../../core/AudioPlayer";
 import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
+import StaticModal from "./StaticModal";
 
 import CabButtons from "./CabButtons";
 import BpmDisplay from "./BpmDisplay";
 import StopDisplay from "./StopDisplay";
 
-const ChartArea = props => {
+const ChartArea = (props) => {
   const {
     selectedDifficulty,
     selectedMode,
@@ -26,7 +27,7 @@ const ChartArea = props => {
     screen,
     loadingAudio,
     gameEngine,
-    setGameEngine
+    setGameEngine,
   } = props;
 
   const [canvas, setCanvas] = useState(null);
@@ -35,12 +36,14 @@ const ChartArea = props => {
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
 
+  const [staticModalOpen, setStaticModalOpen] = useState(false);
+
   const prevState = usePrevious({
     canvas,
     sm,
     selectedDifficulty,
     selectedMode,
-    mods
+    mods,
   });
 
   // define canvas and resize listener on mount
@@ -109,10 +112,10 @@ const ChartArea = props => {
     const chartParams = {
       mode: selectedMode,
       difficulty: selectedDifficulty,
-      mods
+      mods,
     };
 
-    Object.keys(currentState).forEach(thing => {
+    Object.keys(currentState).forEach((thing) => {
       if (prevState[thing] !== currentState[thing]) {
         // initial setup of game engine when canvas is mounted
         if (thing === "canvas") {
@@ -136,7 +139,7 @@ const ChartArea = props => {
           const simfileType = selectedSong.useSsc ? "ssc" : "sm";
 
           // console.log(selectedSong);
-          const numSongLevels = selectedSong.levels.filter(a => a).length;
+          const numSongLevels = selectedSong.levels.filter((a) => a).length;
 
           // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType);
@@ -148,7 +151,7 @@ const ChartArea = props => {
           ge.pauseTl();
           setGameEngine(ge);
         } else if (thing === "mods") {
-          Object.keys(prevState.mods).forEach(mod => {
+          Object.keys(prevState.mods).forEach((mod) => {
             const prev = JSON.stringify(prevState.mods[mod]);
             const curr = JSON.stringify(currentState.mods[mod]);
             const modChanged = prev !== curr;
@@ -195,7 +198,7 @@ const ChartArea = props => {
     song: selectedSong,
     difficulty: selectedDifficulty,
     mode: selectedMode,
-    mods
+    mods,
   };
 
   return (
@@ -261,35 +264,50 @@ const ChartArea = props => {
             setShareModalOpen={setShareModalOpen}
           />
         </div>
-        <div className="row">
+        <div className="row song-info-area">
           <SongInfo />
+          {selectedSong && (
+            <div>
+              <Button
+                className="view-static-btn"
+                onClick={() => setStaticModalOpen(true)}
+              >
+                View static chart
+              </Button>
+            </div>
+          )}
         </div>
         <ShareModal
           modalOpen={shareModalOpen}
           setModalOpen={setShareModalOpen}
           data={shareParams}
         />
+        {gameEngine && (
+          <StaticModal
+            modalOpen={staticModalOpen}
+            setModalOpen={setStaticModalOpen}
+            gameEngine={gameEngine}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-const mapStateToProps = state => {
-  const { mods, songSelect, screen } = state;
+const mapStateToProps = (state) => {
+  const { mods, songSelect, screen, simfiles } = state;
   return {
     mods,
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
-    screen
+    screen,
+    sm: simfiles.sm,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChartArea);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);

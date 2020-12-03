@@ -12,7 +12,7 @@ import {
   changeActiveBpm,
   getCurrentCombo,
   getFullCombo,
-  initializeBeatWindow,
+  initializeBeatWindow
 } from "../utils/engineUtils";
 import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "../utils/debugUtils";
@@ -26,21 +26,15 @@ class AudioPlayer {
     */
     this.sources = {
       song: {},
-      preview: {},
-      assistTick: {
-        // audio: new Howl({
-        //   src: getAssetPath("sounds/assist_tick.wav"),
-        //   volume: 1,
-        //   // format: ["wav"],
-        //   html5: true,
-        // }),
-        context: new (window.AudioContext || window.webkitAudioContext)(),
-        buffer: null,
-        unlocked: false,
-      },
+      preview: {}
+      // assistTick: {
+      //   audio: new Howl({
+      //     src: getAssetPath("sounds/assist_tick.wav"),
+      //     // format: ["wav"],
+      //     // html5: true,
+      //   }),
+      // },
     }; // map of song hash to associated Howl object
-
-    this.initializeAssistTick();
 
     this.currentSong = null; // hash of current song
     this.currentPreview = null; // hash of current preview
@@ -55,42 +49,6 @@ class AudioPlayer {
     this.updateTimeline = this.updateTimeline.bind(this);
     this.updateProgress = this.updateProgress.bind(this);
     this.audioResyncFrames = 0;
-  }
-
-  initializeAssistTick() {
-    const assistTick = this.sources.assistTick;
-    const audioContext = assistTick.context;
-    const request = new XMLHttpRequest();
-    request.open("GET", getAssetPath("sounds/assist_tick.wav"), true);
-    request.responseType = "arraybuffer";
-
-    // function onDecoded(buffer) {
-    //   assistTick.buffer = buffer;
-    // }
-    request.onload = function () {
-      audioContext.decodeAudioData(request.response, (buffer) => {
-        assistTick.buffer = buffer;
-        console.log("assistTick", assistTick);
-      });
-    };
-    request.send();
-  }
-
-  playAssistTick() {
-    const currentSong = this.getCurrentSong();
-    if (!currentSong.globalParams.mods.assistTick) return;
-
-    const assistTick = this.sources.assistTick;
-    const audioContext = assistTick.context;
-
-    if (assistTick.buffer) {
-      const bufferSource = audioContext.createBufferSource();
-      bufferSource.buffer = assistTick.buffer;
-      bufferSource.connect(audioContext.destination);
-      // bufferSource.start(audioContext.currentTime);
-      bufferSource.start(0);
-      // console.log(audioContext.currentTime);
-    }
   }
 
   getCurrentSong() {
@@ -117,7 +75,6 @@ class AudioPlayer {
         src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
         format: ["mp3"],
         html5: true,
-        volume: 0.5,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false);
@@ -150,7 +107,7 @@ class AudioPlayer {
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
         },
-        onend: (spriteId) => {
+        onend: spriteId => {
           if (thisSong.tl) {
             thisSong.tl.pause();
           }
@@ -158,14 +115,60 @@ class AudioPlayer {
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
-        },
+        }
       });
+
+      // const thisPreview = (this.sources.preview[song.hash] = {
+      //   title: song.title,
+      // });
+      // thisPreview.audio = new Howl({
+      //   src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
+      //   format: ["mp3"],
+      //   html5: true,
+      //   sprite: {
+      //     sample: [
+      //       parseFloat((song.sampleStart - DEFAULT_OFFSET) * 1000),
+      //       parseFloat((song.sampleLength - DEFAULT_OFFSET) * 1000),
+      //     ],
+      //   },
+      //   onload: () => {
+      //     // thisPreview.audio.volume(0);
+      //   },
+      //   onplay: () => {
+      //     // const preview = this.getCurrentPreview().audio;
+      //     thisPreview.audio.volume(1);
+
+      //     const fadeinTime = 0;
+      //     const fadeoutTime = 2000;
+      //     // thisPreview.audio.fade(0, 1, fadeinTime);
+
+      //     this.previewFadeTimeout = setTimeout(() => {
+      //       thisPreview.audio.fade(1, 0, fadeoutTime);
+      //     }, song.sampleLength * 1000 - fadeoutTime);
+
+      //     store.dispatch(actions.playPreviewAudio());
+      //   },
+      //   onstop: () => {
+      //     clearTimeout(this.previewFadeTimeout);
+      //     // thisPreview.audio.volume(0);
+      //     this.currentPreviewId = null;
+      //     store.dispatch(actions.stopPreviewAudio());
+      //   },
+      //   onend: () => {
+      //     clearTimeout(this.previewFadeTimeout);
+      //     // thisPreview.audio.volume(0);
+      //     this.currentPreviewId = null;
+      //     store.dispatch(actions.stopPreviewAudio());
+      //   },
+      // });
+
+      // console.log(`Added ${song.title} to AudioPlayer.sources`, this.sources);
     }
   }
 
   storePreviewSource(song, simfile) {
     const thisPreview = (this.sources.preview[song.hash] = {
-      title: song.title,
+      title: song.title
     });
     thisPreview.audio = new Howl({
       src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
@@ -174,8 +177,8 @@ class AudioPlayer {
       sprite: {
         sample: [
           parseFloat((simfile.sampleStart - DEFAULT_OFFSET) * 1000),
-          parseFloat((simfile.sampleLength - DEFAULT_OFFSET) * 1000),
-        ],
+          parseFloat((simfile.sampleLength - DEFAULT_OFFSET) * 1000)
+        ]
       },
       onload: () => {
         // thisPreview.audio.volume(0);
@@ -205,7 +208,7 @@ class AudioPlayer {
         // thisPreview.audio.volume(0);
         this.currentPreviewId = null;
         store.dispatch(actions.stopPreviewAudio());
-      },
+      }
     });
   }
 
@@ -324,11 +327,19 @@ class AudioPlayer {
     if (deltaTime > 60) {
       // console.log(deltaTime);
       const currentTime = this.getCurrentTime();
-      console.log("frame skip", "deltaTime:", deltaTime, "currentTime:", currentTime);
+      console.log(
+        "frame skip",
+        "deltaTime:",
+        deltaTime,
+        "currentTime:",
+        currentTime
+      );
       if (typeof currentTime === "number") {
         const globalOffset = store.getState().mods.globalOffset;
 
-        currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.offset);
+        currentSong.tl.seek(
+          currentTime + globalOffset + currentSong.globalParams.offset
+        );
       } else {
         console.log("audio unstable after frame skip, resyncing");
         this.resync();
@@ -431,15 +442,21 @@ class AudioPlayer {
   }
 
   isPlaying() {
-    return this.getCurrentSong() && this.getCurrentSong().audio.playing(this.currentSongId);
+    return (
+      this.getCurrentSong() &&
+      this.getCurrentSong().audio.playing(this.currentSongId)
+    );
   }
   isPaused() {
-    return this.getCurrentSong() && !this.getCurrentSong().audio.playing(this.currentSongId);
+    return (
+      this.getCurrentSong() &&
+      !this.getCurrentSong().audio.playing(this.currentSongId)
+    );
   }
 
-  // playAssistTick() {
-  //   this.sources.assistTick.audio.play();
-  // }
+  playAssistTick() {
+    this.sources.assistTick.audio.play();
+  }
 
   playSongPreview(song) {
     if (this.getPreviewAudioStatus() === "pending") {
@@ -468,7 +485,10 @@ class AudioPlayer {
   }
 
   isPreviewPlaying() {
-    return this.getCurrentPreview() && this.getCurrentPreview().audio.playing(this.currentPreviewId);
+    return (
+      this.getCurrentPreview() &&
+      this.getCurrentPreview().audio.playing(this.currentPreviewId)
+    );
   }
 
   getChartAudioStatus() {

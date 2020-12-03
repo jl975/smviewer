@@ -2,6 +2,8 @@ import {
   DIRECTIONS,
   ARROW_WIDTH,
   ARROW_HEIGHT,
+  STATIC_ARROW_WIDTH,
+  STATIC_ARROW_HEIGHT,
   FREEZE_BODY_HEIGHT,
 } from "../../../constants";
 import { getAssetPath } from "../../../utils";
@@ -59,7 +61,7 @@ class Arrow {
   renderFreezeBody(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
-    const { mods } = attrs;
+    const { mods, staticAttrs } = attrs;
     const { speed, cmod, scroll, appearance } = mods;
 
     const topBoundary = 0;
@@ -69,20 +71,24 @@ class Arrow {
     let frameX, frameY, destX, destY;
     const direction = DIRECTIONS[directionIdx % 4];
 
+    const arrowWidth = staticAttrs ? STATIC_ARROW_WIDTH : ARROW_WIDTH;
+    const arrowHeight = staticAttrs ? STATIC_ARROW_HEIGHT : ARROW_HEIGHT;
+    const freezeBodyHeight = FREEZE_BODY_HEIGHT;
+
     // freeze body and tail
     if (this.note[directionIdx] === "3") {
       arrowImg = arrowImages[`freeze_tail_inactive`];
 
       frameX =
-        ((directionIdx % 4) + (scroll === "reverse" ? 4 : 0)) * ARROW_WIDTH;
+        ((directionIdx % 4) + (scroll === "reverse" ? 4 : 0)) * arrowWidth;
       frameY = 0;
 
-      destX = directionIdx * ARROW_WIDTH;
+      destX = directionIdx * arrowWidth;
 
       if (speed === "cmod") {
-        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+        destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60);
       } else {
-        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
       }
 
       // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
@@ -96,22 +102,22 @@ class Arrow {
         totalBodyHeight =
           (this.holdEndTimes[directionIdx] -
             this.holdStartTimes[directionIdx]) *
-            ARROW_HEIGHT *
+            arrowHeight *
             (cmod / 60) -
-          ARROW_HEIGHT / 2;
+          arrowHeight / 2;
       } else {
         totalBodyHeight =
           (this.holdEndBeats[directionIdx] -
             this.holdStartBeats[directionIdx]) *
-            ARROW_HEIGHT *
+            arrowHeight *
             speed -
-          ARROW_HEIGHT / 2;
+          arrowHeight / 2;
       }
-      const repetitions = Math.floor(totalBodyHeight / FREEZE_BODY_HEIGHT);
-      let partialHeight = totalBodyHeight % FREEZE_BODY_HEIGHT;
+      const repetitions = Math.floor(totalBodyHeight / freezeBodyHeight);
+      let partialHeight = totalBodyHeight % freezeBodyHeight;
       const originalPartialHeight = partialHeight;
 
-      let partialDestY = destY - (totalBodyHeight + ARROW_HEIGHT / 2);
+      let partialDestY = destY - (totalBodyHeight + arrowHeight / 2);
       let freezeBeingHeld = false;
 
       // shrink in size once it reaches the target
@@ -136,33 +142,33 @@ class Arrow {
         c.drawImage(
           arrowBodyImg,
           frameX,
-          scroll === "reverse" ? 0 : FREEZE_BODY_HEIGHT - partialHeight,
-          ARROW_WIDTH,
+          scroll === "reverse" ? 0 : freezeBodyHeight - partialHeight,
+          arrowWidth,
           partialHeight,
           destX,
           scroll === "reverse"
             ? getReverseCoord(
-                partialDestY + ARROW_HEIGHT / 2,
+                partialDestY + arrowHeight / 2,
                 partialHeight,
                 canvas
               )
-            : partialDestY + ARROW_HEIGHT / 2,
-          ARROW_WIDTH,
+            : partialDestY + arrowHeight / 2,
+          arrowWidth,
           partialHeight
         );
       }
 
       // draw repetitions of freeze body
       for (let i = 1; i <= repetitions; i++) {
-        let bodyHeight = FREEZE_BODY_HEIGHT;
+        let bodyHeight = freezeBodyHeight;
         let bodyFrameY = 0;
         let bodyDestY =
           destY -
           (totalBodyHeight +
-            ARROW_HEIGHT / 2 -
+            arrowHeight / 2 -
             originalPartialHeight -
-            FREEZE_BODY_HEIGHT * (i - 1));
-        if (bodyDestY < 0 && bodyDestY > -FREEZE_BODY_HEIGHT) {
+            freezeBodyHeight * (i - 1));
+        if (bodyDestY < 0 && bodyDestY > -freezeBodyHeight) {
           bodyHeight += bodyDestY;
           bodyFrameY -= bodyDestY;
           bodyDestY = 0;
@@ -176,23 +182,19 @@ class Arrow {
             arrowBodyImg,
             frameX,
             scroll === "reverse" ? 0 : bodyFrameY,
-            ARROW_WIDTH,
+            arrowWidth,
             bodyHeight,
             destX,
             scroll === "reverse"
-              ? getReverseCoord(
-                  bodyDestY + ARROW_HEIGHT / 2,
-                  bodyHeight,
-                  canvas
-                )
-              : bodyDestY + ARROW_HEIGHT / 2,
-            ARROW_WIDTH,
+              ? getReverseCoord(bodyDestY + arrowHeight / 2, bodyHeight, canvas)
+              : bodyDestY + arrowHeight / 2,
+            arrowWidth,
             bodyHeight
           );
         }
       }
 
-      let tailHeight = ARROW_HEIGHT;
+      let tailHeight = arrowHeight;
 
       // if the freeze is shorter than the height of the tail sprite,
       // cut off the top of the sprite such that it starts at the midpoint of the freeze head
@@ -207,27 +209,27 @@ class Arrow {
         bodyDistance =
           (this.holdEndTimes[directionIdx] -
             this.holdStartTimes[directionIdx]) *
-          ARROW_HEIGHT *
+          arrowHeight *
           (cmod / 60);
       } else {
         bodyDistance =
           (this.holdEndBeats[directionIdx] -
             this.holdStartBeats[directionIdx]) *
-          ARROW_HEIGHT *
+          arrowHeight *
           speed;
       }
 
-      if (bodyDistance < ARROW_HEIGHT / 2) {
+      if (bodyDistance < arrowHeight / 2) {
         const tailPartialHeight = bodyDistance; // distance between head note and tail note, less than half arrow height
-        frameY += ARROW_HEIGHT / 2 - tailPartialHeight;
-        destY += ARROW_HEIGHT / 2 - tailPartialHeight;
-        tailHeight = tailPartialHeight + ARROW_HEIGHT / 2;
+        frameY += arrowHeight / 2 - tailPartialHeight;
+        destY += arrowHeight / 2 - tailPartialHeight;
+        tailHeight = tailPartialHeight + arrowHeight / 2;
       }
 
       // shrink in size once it reaches the target
-      if (destY < ARROW_HEIGHT / 2 && destY > topBoundary) {
-        frameY += ARROW_HEIGHT / 2 - destY;
-        destY = ARROW_HEIGHT / 2;
+      if (destY < arrowHeight / 2 && destY > topBoundary) {
+        frameY += arrowHeight / 2 - destY;
+        destY = arrowHeight / 2;
       }
 
       if (
@@ -239,14 +241,14 @@ class Arrow {
           arrowImg,
           frameX,
           scroll === "reverse" ? 0 : frameY,
-          ARROW_WIDTH,
-          scroll === "reverse" ? ARROW_HEIGHT - frameY : tailHeight,
+          arrowWidth,
+          scroll === "reverse" ? arrowHeight - frameY : tailHeight,
           destX,
           scroll === "reverse"
-            ? getReverseCoord(actualDestY, ARROW_HEIGHT, canvas)
+            ? getReverseCoord(actualDestY, arrowHeight, canvas)
             : destY,
-          ARROW_WIDTH,
-          scroll === "reverse" ? ARROW_HEIGHT - frameY : tailHeight
+          arrowWidth,
+          scroll === "reverse" ? arrowHeight - frameY : tailHeight
         );
       }
 
@@ -255,14 +257,14 @@ class Arrow {
         const arrowHeadImg = arrowImages.freeze_head;
         c.drawImage(
           arrowHeadImg,
-          DIRECTIONS.indexOf(direction) * ARROW_WIDTH,
-          ARROW_HEIGHT * 2,
-          ARROW_WIDTH,
-          ARROW_HEIGHT,
-          directionIdx * ARROW_WIDTH,
-          scroll === "reverse" ? getReverseCoord(0, ARROW_HEIGHT, canvas) : 0,
-          ARROW_WIDTH,
-          ARROW_HEIGHT
+          DIRECTIONS.indexOf(direction) * arrowWidth,
+          arrowHeight * 2,
+          arrowWidth,
+          arrowHeight,
+          directionIdx * arrowWidth,
+          scroll === "reverse" ? getReverseCoord(0, arrowHeight, canvas) : 0,
+          arrowWidth,
+          arrowHeight
         );
       }
     }
@@ -271,10 +273,12 @@ class Arrow {
   renderArrow(canvas, { beatTick, timeTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
-    const { mods } = attrs;
+    const { mods, staticAttrs } = attrs;
     const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods;
 
-    const topBoundary = 0; // used to simulate the arrows being hit and disappearing
+    let topBoundary = 0; // used to simulate the arrows being hit and disappearing
+    if (staticAttrs) topBoundary = -1; // if rendering on static chart, arrow on the first measure should be visible
+
     const bottomBoundary = canvas.height; // can be adjusted with SUDDEN+
 
     // nothing
@@ -287,22 +291,24 @@ class Arrow {
     let frameX, frameY, destX, destY;
     const direction = DIRECTIONS[directionIdx % 4];
 
+    const arrowWidth = staticAttrs ? STATIC_ARROW_WIDTH : ARROW_WIDTH;
+    const arrowHeight = staticAttrs ? STATIC_ARROW_HEIGHT : ARROW_HEIGHT;
+
     // regular note
     if (
       this.note[directionIdx] === "1" ||
       (this.note[directionIdx] === "2" && colorFreezes)
     ) {
-      // console.log("arrow", directionIdx);
       arrowImg = arrowImages[`${noteskin}_${direction}`];
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
       if (this.note.includes("2") && !colorFreezes) {
         arrowImg = arrowImages.freeze_head;
-        frameX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+        frameX = DIRECTIONS.indexOf(direction) * arrowWidth;
         frameY = 0;
       } else {
         if (noteskin === "rainbow") {
-          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * ARROW_WIDTH;
+          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth;
 
           const beatD = this.measureD / 4;
           const beatN = this.measureN % beatD;
@@ -317,9 +323,9 @@ class Arrow {
           } else if ((3 * beatD) / 4 < beatN && beatN < beatD) {
             frameY = 0;
           }
-          frameY *= ARROW_HEIGHT;
+          frameY *= arrowHeight;
         } else if (noteskin === "note") {
-          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * ARROW_WIDTH;
+          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth;
 
           /* 
               NOTE: In the future, if we want to support color codes for 12ths, 24ths, etc.
@@ -350,9 +356,9 @@ class Arrow {
           } else {
             frameY = 2;
           }
-          frameY *= ARROW_HEIGHT;
+          frameY *= arrowHeight;
         } else if (noteskin === "vivid") {
-          frameX = (Math.floor(beatTick * 4) % 4) * ARROW_WIDTH;
+          frameX = (Math.floor(beatTick * 4) % 4) * arrowWidth;
 
           const beatD = this.measureD / 4;
           const beatN = this.measureN % beatD;
@@ -369,21 +375,30 @@ class Arrow {
           } else if ((3 * beatD) / 4 < beatN && beatN < beatD) {
             frameY = 0;
           }
-          frameY = ((frameY + noteOffset) % 4) * ARROW_HEIGHT;
+          frameY = ((frameY + noteOffset) % 4) * arrowHeight;
         } else if (noteskin === "flat") {
           arrowImg = arrowImages[`vivid_${direction}`];
 
-          frameX = (Math.floor(beatTick * 4) % 4) * ARROW_WIDTH;
-          frameY = (Math.floor(beatTick) % 4) * ARROW_HEIGHT;
+          frameX = (Math.floor(beatTick * 4) % 4) * arrowWidth;
+          frameY = (Math.floor(beatTick) % 4) * arrowHeight;
         }
       }
 
-      destX = directionIdx * ARROW_WIDTH;
-      if (speed === "cmod") {
-        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
-      } else {
-        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+      destX = directionIdx * arrowWidth;
+      if (staticAttrs) {
+        destX += staticAttrs.columnIdx * (arrowWidth * 4 * 2) + arrowWidth * 2;
       }
+
+      if (speed === "cmod") {
+        destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60);
+      } else {
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
+
+        if (staticAttrs) {
+          destY = destY % staticAttrs.columnHeight;
+        }
+      }
+
       destY = (destY + 0.5) | 0;
 
       if (destY > topBoundary && destY < bottomBoundary) {
@@ -391,30 +406,29 @@ class Arrow {
           arrowImg,
           frameX,
           frameY,
-          ARROW_WIDTH,
-          ARROW_HEIGHT,
+          arrowWidth,
+          arrowHeight,
           destX,
           scroll === "reverse"
-            ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
+            ? getReverseCoord(destY, arrowHeight, canvas)
             : destY,
-          ARROW_WIDTH,
-          ARROW_HEIGHT
+          arrowWidth,
+          arrowHeight
         );
-        // console.log(destY);
       }
     }
 
     // freeze note
     else if (this.note[directionIdx] === "2") {
       arrowImg = arrowImages.freeze_head;
-      frameX = DIRECTIONS.indexOf(direction) * ARROW_WIDTH;
+      frameX = DIRECTIONS.indexOf(direction) * arrowWidth;
       frameY = 0;
 
-      destX = directionIdx * ARROW_WIDTH;
+      destX = directionIdx * arrowWidth;
       if (speed === "cmod") {
-        destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60);
+        destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60);
       } else {
-        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed;
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
       }
       destY = (destY + 0.5) | 0;
 
@@ -424,16 +438,15 @@ class Arrow {
           arrowImg,
           frameX,
           frameY,
-          ARROW_WIDTH,
-          ARROW_HEIGHT,
+          arrowWidth,
+          arrowHeight,
           destX,
           scroll === "reverse"
-            ? getReverseCoord(destY, ARROW_HEIGHT, canvas)
+            ? getReverseCoord(destY, arrowHeight, canvas)
             : destY,
-          ARROW_WIDTH,
-          ARROW_HEIGHT
+          arrowWidth,
+          arrowHeight
         );
-        // console.log(destY);
       }
     }
   }

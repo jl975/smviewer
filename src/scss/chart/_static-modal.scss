@@ -1,0 +1,20 @@
+.staticModal {
+  // min-height: 100%;
+  width: 100% !important;
+  padding: 10px;
+
+}
+
+.staticChart-container {
+  // width: 100%;
+  height: 100vh;
+  overflow: scroll;
+  
+  #staticChart {
+    // background: black;
+    border: 1px solid rgb(0, 255, 0);
+    // width: 200%;
+    // height: 50000px;
+    // transform: scale(0.25)
+  }
+}

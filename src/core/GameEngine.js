@@ -454,7 +454,7 @@ class GameEngine {
               this.globalParams.combo = arrow.combo;
 
               if (arrow instanceof Arrow) {
-                AudioPlayer.playAssistTick();
+                // AudioPlayer.playAssistTick();
                 // console.log(arrow);
                 this.globalParams.targetFlashes[arrow.beatstamp] = new TargetFlash(arrow);
               }

@@ -12,15 +12,21 @@ const SongGrid = (props) => {
     selectedMode,
     selectedDifficultyOption,
     selectedFilters,
+    isChartAvailable,
   } = props;
 
   let songs = displayedSongs;
+
+  let availableSimfiles = {};
+  if (props.gameEngine && props.gameEngine.simfiles) {
+    availableSimfiles = props.gameEngine.simfiles;
+  }
 
   const selectSong = (song) => {
     onSongSelect(song.hash);
   };
 
-  const renderSongLevel = (song) => {
+  const getDisplayedSongData = (song) => {
     let levels = [];
     if (selectedMode === "single") levels = song.levels.slice(0, 5);
     else if (selectedMode === "double")
@@ -60,6 +66,11 @@ const SongGrid = (props) => {
         }
       });
     }
+    return levels;
+  };
+
+  const renderSongLevel = (song) => {
+    const levels = getDisplayedSongData(song);
 
     return levels.map((level, i) => {
       if (!level) return null;
@@ -78,14 +89,16 @@ const SongGrid = (props) => {
   const renderSong = (song) => {
     return (
       <div
-        className="songTile-wrapper"
+        className={`songTile-wrapper ${
+          isChartAvailable(song) ? "" : "unavailable"
+        }`}
         key={`songtile_${song.hash}`}
         onClick={() => selectSong(song)}
       >
         <div
           className={`songTile ${
             selectedSongOption === song.hash ? "selected" : ""
-          }`}
+          } `}
         >
           <div className="song-jacket-wrapper">
             <img

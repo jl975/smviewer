@@ -1,4 +1,4 @@
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../constants";
+import { SP_DIFFICULTIES, DP_DIFFICULTIES, BPM_RANGES } from "../constants";
 
 /*
   If the song does not have a chart corresponding to the chosen difficulty option,
@@ -16,15 +16,43 @@ export const getClosestDifficulty = (song, difficulty, mode) => {
 
   if (["Difficult", "Expert", "Challenge"].includes(difficulty)) {
     for (let i = difficulties.length - 1; i >= 0; i--) {
-      if (levels[i]) {
+      if (
+        levels[i] &&
+        !song.missingDifficulties.includes(mode === "double" ? i + 5 : i)
+      ) {
         return difficulties[i];
       }
     }
   } else if (["Beginner", "Basic"].includes(difficulty)) {
     for (let i = 0; i <= difficulties.length - 1; i++) {
-      if (levels[i]) {
+      if (
+        levels[i] &&
+        !song.missingDifficulties.includes(mode === "double" ? i + 5 : i)
+      ) {
         return difficulties[i];
       }
     }
+  }
+};
+
+export const isInBpmRange = (song, bpmRangeValue, difficulty) => {
+  const bpm = song.displayBpm;
+
+  // split bpm (this is the only case where difficulty matters)
+  if (bpm.includes(",")) {
+    return false;
+  } else {
+    const bpms = song.displayBpm.split("-");
+    const maxBpm = parseInt(bpms[bpms.length - 1]);
+
+    const bpmIndex = BPM_RANGES.indexOf(bpmRangeValue);
+
+    let nextHighestBpm;
+    if (bpmIndex + 1 >= BPM_RANGES.length) {
+      nextHighestBpm = Infinity;
+    } else {
+      nextHighestBpm = BPM_RANGES[bpmIndex + 1];
+    }
+    return bpmRangeValue <= maxBpm && maxBpm < nextHighestBpm;
   }
 };

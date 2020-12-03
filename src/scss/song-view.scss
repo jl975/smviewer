@@ -219,6 +219,11 @@
       }
     }
 
+    &.unavailable {
+      filter: grayscale(1);
+      pointer-events: none;
+    }
+
     .difficulty {
       font-size: 10px;
       line-height: 12px;

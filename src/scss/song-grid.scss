@@ -16,6 +16,11 @@
     width: 33.3333%;
     height: 106px;
     padding: 3px;
+
+    &.unavailable {
+      filter: grayscale(1);
+      pointer-events: none;
+    }
   }
   .songTile {
     position: relative;
