@@ -6,11 +6,7 @@ import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
 import AudioPlayer from "../../core/AudioPlayer";
-import {
-  selectSong,
-  selectDifficulty,
-  selectMode,
-} from "../../actions/SongSelectActions";
+import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
@@ -18,7 +14,6 @@ import LogView from "../../components/debug/LogView";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
-  const [selectedSM, setSelectedSM] = useState(null);
 
   const [gameEngine, setGameEngine] = useState(null);
 
@@ -73,12 +68,7 @@ const MainContainer = (props) => {
         <>
           <Navbar />
           <div className="view-container">
-            <ChartArea
-              loadingAudio={loadingAudio}
-              sm={selectedSM}
-              gameEngine={gameEngine}
-              setGameEngine={setGameEngine}
-            />
+            <ChartArea loadingAudio={loadingAudio} gameEngine={gameEngine} setGameEngine={setGameEngine} />
             <ModsForm />
             <SongForm
               onSongSelect={onSongSelect}
@@ -105,7 +95,7 @@ const MainContainer = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = () => {
   return {};
 };
 

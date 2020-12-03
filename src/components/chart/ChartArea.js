@@ -117,9 +117,7 @@ const ChartArea = (props) => {
 
     Object.keys(currentState).forEach((thing) => {
       if (prevState[thing] !== currentState[thing]) {
-        // initial setup of game engine when canvas is mounted
-        if (thing === "canvas") {
-        } else if (thing === "sm") {
+        if (thing === "sm") {
           // console.log(
           //   `${thing} changed from ${
           //     prevState[thing]
@@ -139,11 +137,11 @@ const ChartArea = (props) => {
           const simfileType = selectedSong.useSsc ? "ssc" : "sm";
 
           // console.log(selectedSong);
-          const numSongLevels = selectedSong.levels.filter((a) => a).length;
 
           // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType);
 
+          // const numSongLevels = selectedSong.levels.filter((a) => a).length;
           // console.log("available song levels:", numSongLevels);
           // console.log("num loaded charts", simfiles.numLoadedCharts);
 
@@ -158,12 +156,8 @@ const ChartArea = (props) => {
 
             if (gameEngine && modChanged) {
               if (mod === "bpmStopDisplay") {
-                gameEngine.bpmReel = currentState.mods[mod]
-                  ? document.getElementById("bpmReel")
-                  : null;
-                gameEngine.stopReel = currentState.mods[mod]
-                  ? document.getElementById("stopReel")
-                  : null;
+                gameEngine.bpmReel = currentState.mods[mod] ? document.getElementById("bpmReel") : null;
+                gameEngine.stopReel = currentState.mods[mod] ? document.getElementById("stopReel") : null;
               }
 
               if (["turn", "shuffle"].includes(mod)) {
@@ -202,44 +196,30 @@ const ChartArea = (props) => {
   };
 
   return (
-    <div
-      className={`view-section chartView ${
-        screen.activeView === "chart" ? "active" : ""
-      }`}
-    >
+    <div className={`view-section chartView ${screen.activeView === "chart" ? "active" : ""}`}>
       <div className="view-wrapper chartArea-container">
-        <div
-          className={`canvas-container ${selectedMode} ${mods.scroll}`}
-          ref={canvasContainer}
-        >
+        <div className={`canvas-container ${selectedMode} ${mods.scroll}`} ref={canvasContainer}>
           <div className="chartArea-wrapper">
-            {gameEngine && (
-              <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />
-            )}
-            {gameEngine && (
-              <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />
-            )}
+            {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
+            {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
             <div className="canvas-wrapper">
               <canvas id="chartArea" width="256" height="448" />
               <div
-                className={`chart-loading-screen ${selectedMode} ${
-                  loadingAudio ? "loading" : ""
-                } `}
+                className={`chart-loading-screen ${selectedMode} ${loadingAudio ? "loading" : ""} `}
                 ref={chartLoadingScreen}
               >
                 {selectedSong && (
                   <img
                     className="chart-loading-jacket"
                     src={getJacketPath(`${selectedSong.hash}.png`)}
+                    alt="chart loading jacket"
                   />
                 )}
                 <div className="chart-loading-message">Loading chart...</div>
               </div>
-              {selectedSong &&
-                !loadingAudio &&
-                ["hidden", "sudden", "hiddensudden"].includes(
-                  mods.appearance
-                ) && <CabButtons mods={mods} canvas={canvas} />}
+              {selectedSong && !loadingAudio && ["hidden", "sudden", "hiddensudden"].includes(mods.appearance) && (
+                <CabButtons mods={mods} canvas={canvas} />
+              )}
             </div>
           </div>
         </div>
@@ -257,37 +237,22 @@ const ChartArea = (props) => {
             ) : null}
           </div>
         </div>
-        {/* <canvas id="chartArea" width="256" height="18000" /> */}
         <div className="row">
-          <PlayControls
-            controlsDisabled={!gameEngine || loadingAudio}
-            setShareModalOpen={setShareModalOpen}
-          />
+          <PlayControls controlsDisabled={!gameEngine || loadingAudio} setShareModalOpen={setShareModalOpen} />
         </div>
         <div className="row song-info-area">
           <SongInfo />
           {selectedSong && (
             <div>
-              <Button
-                className="view-static-btn"
-                onClick={() => setStaticModalOpen(true)}
-              >
+              <Button className="view-static-btn" onClick={() => setStaticModalOpen(true)}>
                 View static chart
               </Button>
             </div>
           )}
         </div>
-        <ShareModal
-          modalOpen={shareModalOpen}
-          setModalOpen={setShareModalOpen}
-          data={shareParams}
-        />
+        <ShareModal modalOpen={shareModalOpen} setModalOpen={setShareModalOpen} data={shareParams} />
         {gameEngine && (
-          <StaticModal
-            modalOpen={staticModalOpen}
-            setModalOpen={setStaticModalOpen}
-            gameEngine={gameEngine}
-          />
+          <StaticModal modalOpen={staticModalOpen} setModalOpen={setStaticModalOpen} gameEngine={gameEngine} />
         )}
       </div>
     </div>
@@ -306,7 +271,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
   return {};
 };
 

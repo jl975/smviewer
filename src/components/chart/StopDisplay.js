@@ -1,12 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-const StopDisplay = (props) => {
-  const { mods, songSelect } = props;
-
+const StopDisplay = () => {
   return (
     <div className={`stop-display`}>
-      {/* {mods.bpmStopDisplay && <div id="stopReel"></div>} */}
       <canvas id="stopReel" />
     </div>
   );

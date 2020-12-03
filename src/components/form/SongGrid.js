@@ -17,11 +17,6 @@ const SongGrid = (props) => {
 
   let songs = displayedSongs;
 
-  let availableSimfiles = {};
-  if (props.gameEngine && props.gameEngine.simfiles) {
-    availableSimfiles = props.gameEngine.simfiles;
-  }
-
   const selectSong = (song) => {
     onSongSelect(song.hash);
   };
@@ -29,8 +24,7 @@ const SongGrid = (props) => {
   const getDisplayedSongData = (song) => {
     let levels = [];
     if (selectedMode === "single") levels = song.levels.slice(0, 5);
-    else if (selectedMode === "double")
-      levels = [null, ...song.levels.slice(5, 9)];
+    else if (selectedMode === "double") levels = [null, ...song.levels.slice(5, 9)];
 
     const levelFilter = selectedFilters.level;
     const difficultyFilter = selectedFilters.difficulty;
@@ -42,11 +36,7 @@ const SongGrid = (props) => {
       if (levels[difficultyIdx]) {
         displayedLevels[difficultyIdx] = levels[difficultyIdx];
       } else {
-        const closestDiff = getClosestDifficulty(
-          song,
-          selectedDifficultyOption,
-          selectedMode
-        );
+        const closestDiff = getClosestDifficulty(song, selectedDifficultyOption, selectedMode);
         const closestDiffIdx = SP_DIFFICULTIES.indexOf(closestDiff);
         displayedLevels[closestDiffIdx] = levels[closestDiffIdx];
       }
@@ -76,10 +66,7 @@ const SongGrid = (props) => {
       if (!level) return null;
       const difficulty = SP_DIFFICULTIES[i];
       return (
-        <div
-          key={`${song.hash}_${difficulty}`}
-          className={`song-level ${difficulty}`}
-        >
+        <div key={`${song.hash}_${difficulty}`} className={`song-level ${difficulty}`}>
           {level}
         </div>
       );
@@ -89,24 +76,13 @@ const SongGrid = (props) => {
   const renderSong = (song) => {
     return (
       <div
-        className={`songTile-wrapper ${
-          isChartAvailable(song) ? "" : "unavailable"
-        }`}
+        className={`songTile-wrapper ${isChartAvailable(song) ? "" : "unavailable"}`}
         key={`songtile_${song.hash}`}
         onClick={() => selectSong(song)}
       >
-        <div
-          className={`songTile ${
-            selectedSongOption === song.hash ? "selected" : ""
-          } `}
-        >
+        <div className={`songTile ${selectedSongOption === song.hash ? "selected" : ""} `}>
           <div className="song-jacket-wrapper">
-            <img
-              className="song-jacket"
-              src={getJacketPath(`${song.hash}.png`)}
-              title={song.title}
-              alt={song.title}
-            />
+            <img className="song-jacket" src={getJacketPath(`${song.hash}.png`)} title={song.title} alt={song.title} />
           </div>
           <div className="song-level-wrapper">{renderSongLevel(song)}</div>
           <div className="song-title-bar">{song.title}</div>

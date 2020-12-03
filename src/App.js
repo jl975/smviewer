@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 
 import MainContainer from "./containers/main/MainContainer";
-import StaticViewContainer from "./containers/static";
 
 function App() {
   return (
@@ -12,15 +11,7 @@ function App() {
           exact
           path="/"
           // component={MainContainer}
-          render={routeProps => <MainContainer {...routeProps} />}
-        />
-        <Route
-          exact
-          path="/static"
-          // component={StaticViewContainer}
-          render={routeProps => {
-            return <StaticViewContainer {...routeProps} />;
-          }}
+          render={(routeProps) => <MainContainer {...routeProps} />}
         />
       </Switch>
     </div>

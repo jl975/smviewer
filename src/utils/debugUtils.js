@@ -30,7 +30,7 @@ export const debugSimfileChart = (simfile) => {
       const numTicks = row[0].measureD;
 
       for (let i = 0; i < numTicks; i++) {
-        const tick = row.find((t) => t.measureN == i);
+        const tick = row.find((t) => +t.measureN === i);
         if (i > 0) str += " ";
         if (!tick) {
           // str += "    ";

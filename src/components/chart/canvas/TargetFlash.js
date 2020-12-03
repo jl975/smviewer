@@ -1,9 +1,4 @@
-import {
-  DIRECTIONS,
-  ARROW_WIDTH,
-  ARROW_HEIGHT,
-  MARVELOUS_FLASH_FRAMES,
-} from "../../../constants";
+import { ARROW_WIDTH, ARROW_HEIGHT, MARVELOUS_FLASH_FRAMES } from "../../../constants";
 import { getAssetPath } from "../../../utils";
 import { getReverseCoord } from "../../../utils/engineUtils";
 
@@ -41,9 +36,7 @@ class TargetFlash {
         ARROW_WIDTH,
         ARROW_HEIGHT,
         destX - this.frame,
-        scroll === "reverse"
-          ? getReverseCoord(0 + this.frame, ARROW_HEIGHT, canvas)
-          : 0 - this.frame,
+        scroll === "reverse" ? getReverseCoord(0 + this.frame, ARROW_HEIGHT, canvas) : 0 - this.frame,
         ARROW_WIDTH + this.frame * 2,
         ARROW_HEIGHT + this.frame * 2
       );

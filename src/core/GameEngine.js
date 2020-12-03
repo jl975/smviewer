@@ -12,7 +12,7 @@ import { applyTurnMods, initializeBeatWindow, updateBeatWindow, changeActiveBpm 
 import { END_EXTRA_BEATS, MARVELOUS_FLASH_FRAMES, DEFAULT_CMOD } from "../constants";
 import AudioPlayer from "./AudioPlayer";
 import store from "../store";
-import { debugLogView, debugSimfileChart } from "../utils/debugUtils";
+import { debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
   constructor(canvas, simfiles, chartParams) {
@@ -256,7 +256,7 @@ class GameEngine {
     chart = applyTurnMods(chart, mods, mode);
 
     // calculate beat positions for each arrow
-    chart.forEach((note, key) => {
+    chart.forEach((note) => {
       // calculate starting position currentBeatPosition
       const { measureIdx, measureN, measureD } = note;
       note.beatstamp = (measureIdx + measureN / measureD) * 4;
@@ -331,7 +331,7 @@ class GameEngine {
       pendingStop = null,
       currentStopOffset = 0,
       currentCombo = 0;
-    this.allArrows.forEach((arrow, idx) => {
+    this.allArrows.forEach((arrow) => {
       // Find the latest bpm section that starts before this note
       while (currentBpmPtr < bpmQueue.length - 1 && bpmQueue[currentBpmPtr + 1].beat < arrow.beatstamp) {
         // if this block was entered, a new bpm section was entered
@@ -389,9 +389,6 @@ class GameEngine {
 
         this.comboArrows.push(arrow);
       }
-      // freeze ends that are not simultaneous with combo arrows
-      else if (arrow.note.includes("3")) {
-      }
     });
 
     this.allArrows.forEach((arrow) => {
@@ -441,7 +438,7 @@ class GameEngine {
   }
 
   // Calculate the gsap tweens before playing the chart
-  initTimeline(mods) {
+  initTimeline() {
     /* Timestamp-based arrow events timeline */
 
     this.allArrows.forEach((arrow) => {
@@ -581,6 +578,8 @@ class GameEngine {
 
     // console.log("mainLoop running");
     // console.log("\n\n\n");
+
+    // eslint-disable-next-line no-unused-vars
     let t0, t1;
 
     // console.log(this.globalParams.timeTick);

@@ -15,9 +15,7 @@ class Progress {
 
   initCanvas() {
     this.canvas = document.querySelector("#progress");
-    this.presetMarker = document.querySelector(
-      "#progress + .preset-marker-wrapper"
-    );
+    this.presetMarker = document.querySelector("#progress + .preset-marker-wrapper");
 
     this.drawBackground();
 
@@ -49,7 +47,7 @@ class Progress {
     });
 
     this.setPresetMarker();
-    window.addEventListener("resize", (e) => {
+    window.addEventListener("resize", () => {
       this.setPresetMarker();
     });
   }

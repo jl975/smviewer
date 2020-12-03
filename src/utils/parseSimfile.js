@@ -77,7 +77,7 @@ const parseSimfile = (sm, simfileType = "sm") => {
 
   let numLoadedCharts = 0;
 
-  chartStrs.forEach((chartStr, i) => {
+  chartStrs.forEach((chartStr) => {
     const mode = modeRegex.exec(chartStr)[1]; // single or double
     if (mode !== "single" && mode !== "double") return;
 

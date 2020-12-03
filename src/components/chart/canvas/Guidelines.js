@@ -6,9 +6,9 @@ class Guidelines {
     this.finalBeat = finalBeat;
   }
 
-  render(canvas, { beatTick, timeTick }, attrs) {
+  render(canvas, { beatTick }, attrs) {
     const { mods } = attrs;
-    const { speed, scroll, cmod } = mods;
+    const { speed, scroll } = mods;
 
     const showGuidelines = mods.guidelines;
     if (!showGuidelines) return;

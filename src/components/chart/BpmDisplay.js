@@ -1,12 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-const BpmDisplay = (props) => {
-  const { mods, songSelect } = props;
-
+const BpmDisplay = () => {
   return (
     <div className={`bpm-display`}>
-      {/* {mods.bpmStopDisplay && <div id="bpmReel"></div>} */}
       <canvas id="bpmReel"></canvas>
       <div className={`current-bpm-container `}>
         <div className="current-bpm-wrapper">

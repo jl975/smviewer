@@ -52,8 +52,6 @@ comboImages["A"].coords = {
 const doubleXOffset = 128;
 
 class ComboDisplay {
-  constructor(attrs) {}
-
   render(canvas, comboNum = 0, attrs) {
     const c = canvas.getContext("2d");
     if (comboNum < 4) return;
@@ -65,30 +63,17 @@ class ComboDisplay {
 
     comboNum = comboNum.toString();
     const numDigits = comboNum.length;
-    // console.log("comboNum", comboNum, "numDigits", numDigits);
 
     const comboImg = comboImages[type].combo;
     const numImg = comboImages[type].num;
 
-    const comboDestX =
-      comboImages[type].coords[numDigits].combo.destX +
-      (mode === "double" ? doubleXOffset : 0);
+    const comboDestX = comboImages[type].coords[numDigits].combo.destX + (mode === "double" ? doubleXOffset : 0);
     const comboDestY = comboImages[type].coords[numDigits].combo.destY;
     const comboWidth = comboImages[type].coords[numDigits].combo.width;
     const comboHeight = comboImages[type].coords[numDigits].combo.height;
 
     // draw combo word
-    c.drawImage(
-      comboImg,
-      0,
-      0,
-      comboImg.width,
-      comboImg.height,
-      comboDestX,
-      comboDestY,
-      comboWidth,
-      comboHeight
-    );
+    c.drawImage(comboImg, 0, 0, comboImg.width, comboImg.height, comboDestX, comboDestY, comboWidth, comboHeight);
 
     // draw combo number
     for (let i = 0; i < numDigits; i++) {
@@ -101,28 +86,12 @@ class ComboDisplay {
       const imageX = imageCol * digitWidth;
       const imageY = imageRow * digitHeight;
 
-      const numDestX =
-        comboImages[type].coords[numDigits].num.destX[i] +
-        (mode === "double" ? doubleXOffset : 0);
+      const numDestX = comboImages[type].coords[numDigits].num.destX[i] + (mode === "double" ? doubleXOffset : 0);
       const numDestY = comboImages[type].coords[numDigits].num.destY;
       const numWidth = comboImages[type].coords[numDigits].num.width;
       const numHeight = comboImages[type].coords[numDigits].num.height;
 
-      // console.log(
-      //   `digit ${digit}, i ${i}, imageX ${imageX}, imageY ${imageY}, numDestX ${numDestX}, numDestY ${numDestY}, numWidth ${numWidth}, numHeight ${numHeight}`
-      // );
-
-      c.drawImage(
-        numImg,
-        imageX,
-        imageY,
-        digitWidth,
-        digitHeight,
-        numDestX,
-        numDestY,
-        numWidth,
-        numHeight
-      );
+      c.drawImage(numImg, imageX, imageY, digitWidth, digitHeight, numDestX, numDestY, numWidth, numHeight);
     }
   }
 }

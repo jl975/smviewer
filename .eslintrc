@@ -1,0 +1,40 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["react-hooks"],
+  "env": {
+    "browser": true,
+    "jest": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    "getter-return": [
+      "error",
+      {
+        "allowImplicit": true
+      }
+    ],
+    "no-template-curly-in-string": "error",
+    "react/prop-types": "off",
+    "no-unused-vars": "error",
+    "no-debugger": "error",
+    "react-hooks/exhaustive-deps": "off",
+    "no-prototype-builtins": "off"
+  },
+  "globals": {
+    "expect": true
+  }
+}

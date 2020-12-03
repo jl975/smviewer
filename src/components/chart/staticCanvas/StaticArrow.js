@@ -1,9 +1,4 @@
-import {
-  DIRECTIONS,
-  STATIC_ARROW_WIDTH,
-  STATIC_ARROW_HEIGHT,
-  STATIC_FREEZE_BODY_HEIGHT,
-} from "../../../constants";
+import { DIRECTIONS, STATIC_ARROW_WIDTH, STATIC_ARROW_HEIGHT, STATIC_FREEZE_BODY_HEIGHT } from "../../../constants";
 
 import { getAssetPath } from "../../../utils";
 
@@ -39,12 +34,10 @@ class StaticArrow {
     const { speed } = mods;
 
     const topBoundary = -1;
-    const bottomBoundary = canvas.height;
 
     if (this.note[directionIdx] !== "3") return;
 
     let frameX, frameY, destX, destY;
-    const direction = DIRECTIONS[directionIdx % 4];
 
     const arrowWidth = STATIC_ARROW_WIDTH;
     const arrowHeight = STATIC_ARROW_HEIGHT;
@@ -60,10 +53,7 @@ class StaticArrow {
     destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
 
     const totalBodyHeight =
-      (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) *
-        arrowHeight *
-        speed -
-      arrowHeight / 2;
+      (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed - arrowHeight / 2;
 
     const repetitions = Math.floor(totalBodyHeight / freezeBodyHeight);
     let partialHeight = totalBodyHeight % freezeBodyHeight;
@@ -100,12 +90,7 @@ class StaticArrow {
     for (let i = 1; i <= repetitions; i++) {
       let bodyHeight = freezeBodyHeight;
       let bodyFrameY = 0;
-      let bodyDestY =
-        destY -
-        (totalBodyHeight +
-          arrowHeight / 2 -
-          originalPartialHeight -
-          freezeBodyHeight * (i - 1));
+      let bodyDestY = destY - (totalBodyHeight + arrowHeight / 2 - originalPartialHeight - freezeBodyHeight * (i - 1));
       if (bodyDestY < 0 && bodyDestY > -freezeBodyHeight) {
         bodyHeight += bodyDestY;
         bodyFrameY -= bodyDestY;
@@ -129,18 +114,7 @@ class StaticArrow {
 
     let tailHeight = arrowHeight;
 
-    // if the freeze is shorter than the height of the tail sprite,
-    // cut off the top of the sprite such that it starts at the midpoint of the freeze head
-
-    // Because we need to overwrite destY for proper sprite placement in the event that the
-    // top of the sprite needs to be cut off, store the actual Y position of the arrow
-    // in a separate variable
-    let actualDestY = destY;
-
-    const bodyDistance =
-      (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) *
-      arrowHeight *
-      speed;
+    const bodyDistance = (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed;
 
     if (bodyDistance < arrowHeight / 2) {
       const tailPartialHeight = bodyDistance; // distance between head note and tail note, less than half arrow height
@@ -155,7 +129,6 @@ class StaticArrow {
       destY = arrowHeight / 2;
     }
 
-    // if (actualDestY > topBoundary && actualDestY < bottomBoundary) {
     c.drawImage(
       freezeTailImg,
       frameX,
@@ -163,12 +136,10 @@ class StaticArrow {
       arrowWidth,
       tailHeight,
       destX,
-      // destY,
       destY % columnHeight,
       arrowWidth,
       tailHeight
     );
-    // }
   }
 
   renderArrow(canvas, { beatTick }, directionIdx, attrs) {
@@ -177,11 +148,7 @@ class StaticArrow {
     const { mods, columnIdx, columnHeight } = attrs;
     const { speed } = mods;
 
-    const topBoundary = -1;
-    const bottomBoundary = canvas.height;
-
-    if (this.note[directionIdx] !== "1" && this.note[directionIdx] !== "2")
-      return;
+    if (this.note[directionIdx] !== "1" && this.note[directionIdx] !== "2") return;
 
     let frameX, frameY, destX, destY;
     const direction = DIRECTIONS[directionIdx % 4];
@@ -196,18 +163,7 @@ class StaticArrow {
       frameY = 0;
     } else if ([1 / 8, 3 / 8, 5 / 8, 7 / 8].includes(measureFraction)) {
       frameY = 1;
-    } else if (
-      [
-        1 / 16,
-        3 / 16,
-        5 / 16,
-        7 / 16,
-        9 / 16,
-        11 / 16,
-        13 / 16,
-        15 / 16,
-      ].includes(measureFraction)
-    ) {
+    } else if ([1 / 16, 3 / 16, 5 / 16, 7 / 16, 9 / 16, 11 / 16, 13 / 16, 15 / 16].includes(measureFraction)) {
       frameY = 3;
     } else {
       frameY = 2;
@@ -223,17 +179,7 @@ class StaticArrow {
     destY = destY % columnHeight;
 
     // if (destY > topBoundary && destY < bottomBoundary) {
-    c.drawImage(
-      arrowImg,
-      frameX,
-      frameY,
-      arrowWidth,
-      arrowHeight,
-      destX,
-      destY,
-      arrowWidth,
-      arrowHeight
-    );
+    c.drawImage(arrowImg, frameX, frameY, arrowWidth, arrowHeight, destX, destY, arrowWidth, arrowHeight);
     // }
   }
 }

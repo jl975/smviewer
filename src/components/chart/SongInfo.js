@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
 
 // displays song information on the chart view
-const SongInfo = props => {
+const SongInfo = (props) => {
   const { selectedSong, selectedDifficulty, selectedMode } = props;
   return (
     <>
@@ -39,16 +38,13 @@ const SongInfo = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { songSelect } = state;
   return {
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
-    selectedMode: songSelect.mode
+    selectedMode: songSelect.mode,
   };
 };
 
-export default connect(
-  mapStateToProps,
-  null
-)(SongInfo);
+export default connect(mapStateToProps, null)(SongInfo);

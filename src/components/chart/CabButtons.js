@@ -98,7 +98,7 @@ const CabButtons = (props) => {
           adjustLaneCoverHeight(e);
         }}
       >
-        <img src={getAssetPath(`directional_button.png`)} />
+        <img src={getAssetPath(`directional_button.png`)} alt="up directional cab button" />
       </HoldButton>
       <Button
         className="center-button"
@@ -106,7 +106,7 @@ const CabButtons = (props) => {
           toggleLaneCover(e);
         }}
       >
-        <img src={getAssetPath(`center_button.png`)} />
+        <img src={getAssetPath(`center_button.png`)} alt="center cab button" />
       </Button>
       <HoldButton
         className="directional-button"
@@ -115,7 +115,7 @@ const CabButtons = (props) => {
           adjustLaneCoverHeight(e);
         }}
       >
-        <img src={getAssetPath(`directional_button.png`)} />
+        <img src={getAssetPath(`directional_button.png`)} alt="down directional cab button" />
       </HoldButton>
     </div>
   );

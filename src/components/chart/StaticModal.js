@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
 
 import { scaleCanvas } from "../../utils/canvasUtils";
 import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
@@ -62,8 +62,7 @@ const StaticModal = (props) => {
     const finalBeat = gameEngine.globalParams.finalBeat;
     const numMeasures = finalBeat / 4;
 
-    let calcCanvasHeight =
-      STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn;
+    let calcCanvasHeight = STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn;
     calcCanvasHeight += STATIC_ARROW_HEIGHT; // one arrow height worth of padding on bottom
     setCanvasHeight(calcCanvasHeight);
 
@@ -81,9 +80,7 @@ const StaticModal = (props) => {
       const columnStart = i * columnWidth + STATIC_ARROW_WIDTH * 2;
       c.fillStyle = "black";
       c.fillRect(columnStart, 0, STATIC_ARROW_WIDTH * 4, calcCanvasHeight);
-      const guidelines = new StaticGuidelines(
-        gameEngine.globalParams.finalBeat
-      );
+      const guidelines = new StaticGuidelines(gameEngine.globalParams.finalBeat);
       guidelines.render(canvas, tick, {
         mods,
         columnIdx: i,
@@ -142,8 +139,7 @@ const StaticModal = (props) => {
 
     const columnIdx = Math.floor((e.clientX - leftEdge) / scaledColumnWidth);
 
-    const topEdge =
-      (STATIC_ARROW_HEIGHT / 2) * canvasScaleFactor + canvasRect.y;
+    const topEdge = (STATIC_ARROW_HEIGHT / 2) * canvasScaleFactor + canvasRect.y;
     if (e.clientY < topEdge) return;
 
     const cy = e.clientY - topEdge;
@@ -186,12 +182,7 @@ const StaticModal = (props) => {
     setModalOpen(false);
   };
   return (
-    <Modal
-      className="staticModal"
-      open={modalOpen}
-      onOpen={handleOpen}
-      onClose={handleClose}
-    >
+    <Modal className="staticModal" open={modalOpen} onOpen={handleOpen} onClose={handleClose}>
       <div className="staticChart-container">
         <canvas
           id="staticChart"
@@ -218,7 +209,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = () => {
   return {};
 };
 

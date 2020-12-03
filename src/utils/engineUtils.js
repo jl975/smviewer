@@ -1,5 +1,4 @@
 import { DEFAULT_OFFSET, ARROW_HEIGHT } from "../constants";
-import { debugLog } from "./debugUtils";
 
 export const applyTurnMods = (chart, mods, mode) => {
   const { turn, shuffle } = mods;
@@ -26,9 +25,7 @@ export const applyTurnMods = (chart, mods, mode) => {
   if (mode === "single") {
     return chart.map((row) => {
       const note = row.note;
-      const turnedNote = turnMap[turnMod]
-        .split("") //
-        .map((direction) => note[turnMap.off.indexOf(direction)]);
+      const turnedNote = turnMap[turnMod].split("").map((direction) => note[turnMap.off.indexOf(direction)]);
 
       return { ...row, note: turnedNote };
     });
@@ -513,22 +510,18 @@ export const updateBeatWindow = (globalParams) => {
   //
   // if there are arrows on the screen, and the arrow AFTER the bottommost arrow from the previous
   // frame is now behind the updated windowEnd
-  let nextBottomArrow = arrows[windowEndPtr.arrow];
   let nextBottomArrowAdj = arrows[windowEndPtr.arrow + 1];
 
   // bottommost arrow is no longer bottommost arrow when the next arrow is behind windowEnd
   while (nextBottomArrowAdj && nextBottomArrowAdj[timestamp] <= windowEnd) {
     windowEndPtr.arrow++;
-    nextBottomArrow = arrows[windowEndPtr.arrow];
     nextBottomArrowAdj = arrows[windowEndPtr.arrow + 1];
   }
 
   // watching bottom shock arrow
-  let nextBottomShock = shocks[windowEndPtr.shock];
   let nextBottomShockAdj = shocks[windowEndPtr.shock + 1];
   while (nextBottomShockAdj && nextBottomShockAdj[timestamp] <= windowEnd) {
     windowEndPtr.shock++;
-    nextBottomShock = shocks[windowEndPtr.shock];
     nextBottomShockAdj = shocks[windowEndPtr.shock + 1];
   }
 
@@ -536,11 +529,9 @@ export const updateBeatWindow = (globalParams) => {
   ["bpm", "stop"].forEach((event) => {
     const events = globalParams[`${event}Queue`];
     const ts = mods.speed === "cmod" ? "timestamp" : "beat";
-    let nextBottomEvent = events[windowEndPtr[event]];
     let nextBottomEventAdj = events[windowEndPtr[event] + 1];
     while (nextBottomEventAdj && nextBottomEventAdj[ts] <= windowEnd) {
       windowEndPtr[event]++;
-      nextBottomEvent = events[windowEndPtr[event]];
       nextBottomEventAdj = events[windowEndPtr[event] + 1];
     }
   });

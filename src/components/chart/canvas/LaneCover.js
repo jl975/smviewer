@@ -12,15 +12,12 @@ images.lower.src = getAssetPath("lower_lanecover.png");
 const appearanceIdx = ["hidden", "sudden", "hiddensudden"];
 
 class LaneCover {
-  constructor(attrs) {}
-
   render(canvas, attrs) {
     const c = canvas.getContext("2d");
 
     const { mods, mode } = attrs;
     const { appearance, scroll } = mods;
-    const laneCoverHeight =
-      mods.laneCoverHeight[appearanceIdx.indexOf(appearance)];
+    const laneCoverHeight = mods.laneCoverHeight[appearanceIdx.indexOf(appearance)];
 
     if (
       (appearance.includes("hidden") && scroll === "normal") ||
