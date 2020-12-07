@@ -22,13 +22,15 @@ const Navbar = (props) => {
   ];
 
   const changeActiveView = (view) => {
-    if (chartAudio.status === "playing") return;
+    if (chartAudio.status === "playing") {
+      AudioPlayer.pause();
+    }
     AudioPlayer.stopSongPreview();
     props.setActiveView(view);
   };
 
-  const isDisabled = (view) => {
-    if (view !== "chart" && chartAudio.status === "playing") return true;
+  const isDisabled = () => {
+    // if (view !== "chart" && chartAudio.status === "playing") return true;
     return false;
   };
 
@@ -37,21 +39,14 @@ const Navbar = (props) => {
       {navItems.map((navItem, i) => {
         const { view, icon, text } = navItem;
         const SVGIcon = navItem.svgIcon;
-        if (!view)
-          return <div key={`navbarItem_${i}`} className="navbar_item" />;
+        if (!view) return <div key={`navbarItem_${i}`} className="navbar_item" />;
         return (
           <div
             key={`navbarItem_${i}`}
-            className={`navbar_item ${activeView === view ? "active" : ""} ${
-              isDisabled(view) ? "disabled" : ""
-            }`}
+            className={`navbar_item ${activeView === view ? "active" : ""} ${isDisabled(view) ? "disabled" : ""}`}
             onClick={() => changeActiveView(view)}
           >
-            {SVGIcon ? (
-              <SVGIcon className={`svg-icon ${view}`} />
-            ) : (
-              <Icon name={icon} />
-            )}
+            {SVGIcon ? <SVGIcon className={`svg-icon ${view}`} /> : <Icon name={icon} />}
             <span className="description">{text}</span>
           </div>
         );

@@ -394,7 +394,7 @@ const SongForm = (props) => {
   return (
     <div className={`view-section songView ${props.activeView === "song" ? "active" : ""}`}>
       <div className="view-wrapper">
-        <form className="songForm">
+        <form className="songForm" onSubmit={(e) => e.preventDefault()}>
           <div className="form-inner-wrapper">
             <div className="selectedSong">
               <div className={`selectedSong-jacket-wrapper ${previewAudio.status === "playing" ? "playing" : ""}`}>
