@@ -103,7 +103,7 @@ const ModsForm = (props) => {
                 onBlur={resetCmodIfInvalid}
               />
             </div>
-            <small>(Valid range: 100-1000; default: {DEFAULT_CMOD})</small>
+            <small>(Valid range: 100-1000)</small>
           </div>
 
           <div className="form-field">

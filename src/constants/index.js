@@ -30,7 +30,7 @@ export const MARVELOUS_FLASH_FRAMES = 12;
 export const END_EXTRA_BEATS = 8;
 
 /* Default cmod value; also serves as fallback speed if cmod form field value is invalid */
-export const DEFAULT_CMOD = 550;
+export const DEFAULT_CMOD = 500;
 
 export const DDR_VERSIONS = [
   "DDR 1st",
@@ -53,13 +53,7 @@ export const DDR_VERSIONS = [
   "DDR A20 PLUS",
 ];
 
-export const SP_DIFFICULTIES = [
-  "Beginner",
-  "Basic",
-  "Difficult",
-  "Expert",
-  "Challenge",
-];
+export const SP_DIFFICULTIES = ["Beginner", "Basic", "Difficult", "Expert", "Challenge"];
 export const DP_DIFFICULTIES = ["Basic", "Difficult", "Expert", "Challenge"];
 
 /* Each number represents the lower bound of a range of bpm values, where the upper bound is
@@ -68,21 +62,7 @@ For example, 1 represents the range of bpms from 1 to 99 (i.e. BPM SORT ~100 in-
 100 represents the range of bpms from 100 to 109 (BPM SORT 100~ in-game), etc.
 300 represents all bpms 300 and up.
 Bpm in this context refers to the MAX value of the song's DISPLAYED bpm. */
-export const BPM_RANGES = [
-  1,
-  100,
-  110,
-  120,
-  130,
-  140,
-  150,
-  160,
-  170,
-  180,
-  190,
-  200,
-  300,
-];
+export const BPM_RANGES = [1, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 300];
 
 /* Indices are chosen to match the genre filters' corresponding IDs on eagate. */
 export const GENRES = [
@@ -141,24 +121,4 @@ export const TITLE_CATEGORIES = [
   "NUM",
 ];
 
-export const LEVELS = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-];
+export const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
