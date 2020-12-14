@@ -1,0 +1,30 @@
+.offsetModal {
+  padding: 10px;
+
+  .offsetChart-container {
+    display: flex;
+    justify-content: center;
+  }
+  #offsetChart {
+    background: #000;
+  }
+
+  .slider-container {
+    // display: flex;
+  }
+  .slider-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .offset-value {
+    text-align: center;
+  }
+
+  .modal-actions {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+}

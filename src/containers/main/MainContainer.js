@@ -5,6 +5,7 @@ import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
+import OffsetModal from "../../components/chart/OffsetModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen } from "../../actions/ScreenActions";
@@ -78,11 +79,13 @@ const MainContainer = (props) => {
               location={props.location}
               gameEngine={gameEngine}
             />
+            <OffsetModal />
 
             {DEBUG_MODE && <LogView />}
           </div>
         </>
       )}
+
       {DEBUG_MODE && (
         <div id="debugLog">
           <div className="debug-text1" />
