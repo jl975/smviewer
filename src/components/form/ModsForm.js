@@ -6,6 +6,7 @@ import { options } from "./options";
 import { SP_DIFFICULTIES, DEFAULT_CMOD } from "../../constants";
 import { capitalize } from "../../utils";
 import { updateMods } from "../../actions/ModsActions";
+import { setOffsetModalOpen } from "../../actions/ScreenActions";
 
 const ModsForm = (props) => {
   const { mods, updateMods, mode, song, difficulty } = props;
@@ -272,7 +273,7 @@ const ModsForm = (props) => {
             />
           </div>
           <div className="form-field">
-            <h4 className="form-label">Global offset</h4>
+            {/* <h4 className="form-label">Global offset</h4>
             <Input
               type="range"
               name="globalOffset"
@@ -282,7 +283,10 @@ const ModsForm = (props) => {
               value={mods.globalOffset}
               onChange={(_, data) => updateMods({ globalOffset: parseFloat(data.value) })}
             />
-            <span>{mods.globalOffset}</span>
+            <span>{mods.globalOffset}</span> */}
+            <button type="button" className="link-button" onClick={() => props.setOffsetModalOpen(true)}>
+              Set global offset
+            </button>
           </div>
         </form>
       </div>
@@ -304,6 +308,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
+    setOffsetModalOpen: (isOpen) => dispatch(setOffsetModalOpen(isOpen)),
   };
 };
 

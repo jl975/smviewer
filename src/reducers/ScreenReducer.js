@@ -6,6 +6,9 @@ const initialState = {
   innerWidth: window.innerWidth,
   innerHeight: window.innerHeight,
   activeView: userSettings.activeView || "song",
+  offsetModal: {
+    open: false,
+  },
 };
 
 export const screen = (state = initialState, action) => {
@@ -22,6 +25,12 @@ export const screen = (state = initialState, action) => {
       const activeView = action.payload;
       updateUserSettings({ activeView });
       return { ...state, activeView };
+    }
+    case actions.SET_OFFSET_MODAL_OPEN: {
+      const isOpen = action.payload;
+      const newState = { ...state };
+      newState.offsetModal.open = isOpen;
+      return newState;
     }
     default:
       return state;

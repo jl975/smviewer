@@ -8,7 +8,7 @@ import Navbar from "../../components/navigation/Navbar";
 import OffsetModal from "../../components/chart/OffsetModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
-import { resizeScreen } from "../../actions/ScreenActions";
+import { resizeScreen, setOffsetModalOpen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
@@ -30,6 +30,12 @@ const MainContainer = (props) => {
     AudioPlayer.setLoadingAudio = setLoadingAudio;
 
     window.addEventListener("resize", props.resizeScreen);
+
+    // prompt user to adjust global offset on first visit
+    const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
+    if (!adjustedGlobalOffset) {
+      props.setOffsetModalOpen(true);
+    }
   }, []);
 
   const fetchSimfiles = async () => {
@@ -79,7 +85,7 @@ const MainContainer = (props) => {
               location={props.location}
               gameEngine={gameEngine}
             />
-            <OffsetModal />
+            <OffsetModal modalOpen={props.screen.offsetModal.open} />
 
             {DEBUG_MODE && <LogView />}
           </div>
@@ -98,8 +104,11 @@ const MainContainer = (props) => {
   );
 };
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  const { screen } = state;
+  return {
+    screen,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -110,6 +119,7 @@ const mapDispatchToProps = (dispatch) => {
     resizeScreen: (e) => dispatch(resizeScreen(e)),
     getSimfileList: () => dispatch(getSimfileList()),
     loadSimfile: (song) => dispatch(loadSimfile(song)),
+    setOffsetModalOpen: (isOpen) => dispatch(setOffsetModalOpen(isOpen)),
   };
 };
 
