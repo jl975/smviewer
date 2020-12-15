@@ -17,7 +17,7 @@
     border-radius: 2px;
   }
 
-  input {
+  input[type="text"] {
     padding: 0 10px;
     width: 425px;
   }
@@ -29,6 +29,7 @@
   input[type="file"] {
     border: none;
     padding: 0;
+    width: 425px;
   }
 
   label {
@@ -37,6 +38,30 @@
     margin-right: 20px;
     width: 130px;
     text-align: right;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 6px;
+  }
+  label[for="isLineout"] {
+    width: auto;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+    font-weight: normal;
+  }
+}
+
+.audioUrlLabel {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  
+  small {
+    margin-right: 20px;
+    margin-top: -2px;
+    height: 0;
   }
 }
 

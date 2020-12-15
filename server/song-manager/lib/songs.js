@@ -3,10 +3,7 @@ import path from "path";
 import { title } from "process";
 import request from "request-promise";
 
-const simfileTsvPath = path.join(
-  process.cwd(),
-  "../../public/data/simfiles.tsv"
-);
+const simfileTsvPath = path.join(process.cwd(), "../../public/data/simfiles.tsv");
 
 const jacketPath = path.join(process.cwd(), "../../public/jackets");
 const simfilePath = path.join(process.cwd(), "../../public/simfiles");
@@ -57,28 +54,14 @@ export const getAllSongIndices = () => {
 };
 
 export const getJacketPath = (id) => {
-  const image = fs.readFileSync(
-    path.join(process.cwd() + `/../../public/jackets/${id}.png`)
-  );
+  const image = fs.readFileSync(path.join(process.cwd() + `/../../public/jackets/${id}.png`));
   return new Buffer(image).toString("base64");
 };
 
 const formatMissingDifficulties = (payload) => {
-  const indexToDifficulty = [
-    "bSP",
-    "BSP",
-    "DSP",
-    "ESP",
-    "CSP",
-    "BDP",
-    "DDP",
-    "EDP",
-    "CDP",
-  ];
+  const indexToDifficulty = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
   if (!Array.isArray(payload.missingDifficulties)) {
-    payload.missingDifficulties = (payload.missingDifficulties || "").split(
-      ","
-    );
+    payload.missingDifficulties = (payload.missingDifficulties || "").split(",");
   }
   payload.missingDifficulties.forEach((val, i) => {
     // if a difficulty was marked as "missing" but the song actually does not have a chart
@@ -90,9 +73,7 @@ const formatMissingDifficulties = (payload) => {
 
   // once nonexistent difficulties have been nulled, filter out the nulls
   // then turn the remaining list into a comma-delimited string
-  payload.missingDifficulties = payload.missingDifficulties
-    .filter((i) => i !== null)
-    .join(",");
+  payload.missingDifficulties = payload.missingDifficulties.filter((i) => i !== null).join(",");
 };
 
 export const addSimfile = (payload) => {
@@ -130,6 +111,7 @@ export const addSimfile = (payload) => {
         dAudioUrl: payload.dAudioUrl,
         missingDifficulties: payload.missingDifficulties,
         useSsc: null,
+        isLineout: payload.isLineout,
       };
       console.log(newSongObj);
       songList.splice(index + 1, 0, newSongObj);
@@ -173,6 +155,7 @@ export const updateSimfiles = (payload) => {
     abcSort,
     dAudioUrl,
     useSsc,
+    isLineout,
     missingDifficulties,
   } = payload;
 
@@ -189,6 +172,7 @@ export const updateSimfiles = (payload) => {
     abcSort,
     dAudioUrl,
     useSsc,
+    isLineout,
     missingDifficulties: missingDifficulties || "",
   };
 
@@ -248,13 +232,15 @@ const writeSimfileToTsv = (json) => {
   // console.log(json);
   const headers = Object.keys(json[0]);
 
+  console.log("headers", headers);
+
   output += headers.join("\t");
 
   json.forEach((song) => {
     let row = "\n";
     headers.forEach((header) => {
       let value = song[header];
-      if (value === null || typeof value === "undefined") value = "";
+      if (value === null || typeof value === "undefined" || value === false) value = "";
       row += value + "\t";
     });
     output += row;

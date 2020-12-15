@@ -15,17 +15,7 @@ import {
   updateSimfiles,
 } from "../../clientUtils";
 
-const difficultyMap = [
-  "bSP",
-  "BSP",
-  "DSP",
-  "ESP",
-  "CSP",
-  "BDP",
-  "DDP",
-  "EDP",
-  "CDP",
-];
+const difficultyMap = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
 
 export default function Form(props) {
   const { song, jacket, isNew } = props;
@@ -41,11 +31,19 @@ export default function Form(props) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(
-      ","
-    );
+    const [bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP] = song.levels.split(",");
 
     const initForm = { ...form, bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP };
+
+    // stringified booleans
+    for (let key in initForm) {
+      const value = initForm[key];
+      if (typeof value === "string" && value.toLowerCase() === "true") {
+        initForm[key] = true;
+      } else if (typeof value == "string" && value.toLowerCase() === "false") {
+        initForm[key] = false;
+      }
+    }
 
     setForm(initForm);
   }, []);
@@ -124,9 +122,7 @@ export default function Form(props) {
     }
 
     if (form.dAudioUrl) {
-      const dAudioUrl = form.dAudioUrl
-        .replace(`https://www.dropbox.com/s/`, "")
-        .replace("?dl=0", "");
+      const dAudioUrl = form.dAudioUrl.replace(`https://www.dropbox.com/s/`, "").replace("?dl=0", "");
       fieldsToUpdate.dAudioUrl = dAudioUrl;
     }
 
@@ -144,9 +140,7 @@ export default function Form(props) {
     let fieldsToUpdate = {};
 
     const payload = { ...form };
-    payload.levels = difficultyMap
-      .map((difficulty) => payload[difficulty])
-      .join(",");
+    payload.levels = difficultyMap.map((difficulty) => payload[difficulty]).join(",");
     fieldsToUpdate.levels = payload.levels;
 
     if (isNew) {
@@ -181,17 +175,14 @@ export default function Form(props) {
               <>
                 <label>ID: </label>
                 <input
+                  type="text"
                   value={form.hash}
                   onChange={(e) => {
                     updateFields({ hash: e.target.value });
                   }}
                   placeholder='e.g. "8bQQ0lP96186D8Ibo8IoOd6o16qioiIo"'
                 />
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => setSongInputType("title")}
-                >
+                <button type="button" className="link-btn" onClick={() => setSongInputType("title")}>
                   Use song title
                 </button>
               </>
@@ -200,17 +191,14 @@ export default function Form(props) {
               <>
                 <label>Title: </label>
                 <input
+                  type="text"
                   value={form.titleForSearch}
                   onChange={(e) => {
                     updateFields({ titleForSearch: e.target.value });
                   }}
                   placeholder="All characters must match exactly with the official in-game title!"
                 />
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => setSongInputType("id")}
-                >
+                <button type="button" className="link-btn" onClick={() => setSongInputType("id")}>
                   Use song ID
                 </button>
               </>
@@ -221,6 +209,7 @@ export default function Form(props) {
               <>
                 <label>SM URL: </label>
                 <input
+                  type="text"
                   value={form.smUrl}
                   onChange={(e) => {
                     updateFields({ smUrl: e.target.value });
@@ -231,11 +220,7 @@ export default function Form(props) {
                       : "Leave this blank unless changes have been made to the .sm file."
                   }
                 />
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => setSmInputType("file")}
-                >
+                <button type="button" className="link-btn" onClick={() => setSmInputType("file")}>
                   Upload file
                 </button>
               </>
@@ -244,30 +229,40 @@ export default function Form(props) {
               <>
                 <label>SM File: </label>
                 <input type="file" onChange={handleFileUpload} />
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => setSmInputType("url")}
-                >
+                <button type="button" className="link-btn" onClick={() => setSmInputType("url")}>
                   Use direct URL
                 </button>
               </>
             )}
           </div>
           <div className={styles.formField}>
-            <label>Audio URL: </label>
+            <div className={styles.audioUrlLabel}>
+              <label>Audio URL: </label>
+              {form.dAudioUrl && (
+                <small>
+                  <a href={`https://dl.dropboxusercontent.com/s/${form.dAudioUrl}`} target="blank">
+                    (preview)
+                  </a>
+                </small>
+              )}
+            </div>
             <input
+              type="text"
               value={form.dAudioUrl}
               onChange={(e) => updateFields({ dAudioUrl: e.target.value })}
               placeholder="Copy Dropbox link"
             />
+            <input
+              type="checkbox"
+              id="isLineout"
+              checked={form.isLineout}
+              onChange={(e) => updateFields({ isLineout: e.target.checked })}
+            />
+            <label htmlFor="isLineout">Lineout</label>
           </div>
           <div className={styles.formField}>
             <label>Version: </label>
-            <select
-              value={form.version}
-              onChange={(e) => updateFields({ version: e.target.value })}
-            >
+            <select value={form.version} onChange={(e) => updateFields({ version: e.target.value })}>
               <option value="" disabled>
                 Choose version
               </option>
@@ -282,10 +277,7 @@ export default function Form(props) {
           </div>
 
           {retrievingData ? (
-            <p>
-              Retrieving data, please wait... (check terminal logs for progress
-              information)
-            </p>
+            <p>Retrieving data, please wait... (check terminal logs for progress information)</p>
           ) : null}
           <button type="button" onClick={fillAutomaticFields}>
             {isNew ? "Fill" : "Update"} automatic fields
@@ -303,6 +295,7 @@ export default function Form(props) {
           <div className={styles.formField}>
             <label>Title: </label>
             <input
+              type="text"
               value={form.title}
               onChange={(e) => {
                 updateFields({ title: e.target.value });
@@ -312,11 +305,7 @@ export default function Form(props) {
           {!isNew && jacket && (
             <div className={styles.formField}>
               <label>Jacket preview:</label>
-              <img
-                src={`data:image/png;base64,${jacket}`}
-                alt={form.title}
-                className={styles.jacketPreview}
-              />
+              <img src={`data:image/png;base64,${jacket}`} alt={form.title} className={styles.jacketPreview} />
             </div>
           )}
           {isNew && form.hash && form.hash.length === 32 && (
@@ -333,6 +322,7 @@ export default function Form(props) {
           <div className={styles.formField}>
             <label>smName: </label>
             <input
+              type="text"
               value={form.smName}
               onChange={(e) => {
                 updateFields({ smName: e.target.value });
@@ -342,6 +332,7 @@ export default function Form(props) {
           <div className={styles.formField}>
             <label>Artist: </label>
             <input
+              type="text"
               value={form.artist}
               onChange={(e) => {
                 updateFields({ artist: e.target.value });
@@ -351,6 +342,7 @@ export default function Form(props) {
           <div className={styles.formField}>
             <label>Display BPM: </label>
             <input
+              type="text"
               value={form.displayBpm}
               onChange={(e) => {
                 updateFields({ displayBpm: e.target.value });
@@ -359,10 +351,7 @@ export default function Form(props) {
           </div>
           <div className={styles.formField}>
             <label>Title sort: </label>
-            <select
-              value={form.abcSort}
-              onChange={(e) => updateFields({ abcSort: e.target.value })}
-            >
+            <select value={form.abcSort} onChange={(e) => updateFields({ abcSort: e.target.value })}>
               <option value="" disabled>
                 Choose title sort
               </option>
