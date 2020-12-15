@@ -240,7 +240,14 @@ export default function Form(props) {
               <label>Audio URL: </label>
               {form.dAudioUrl && (
                 <small>
-                  <a href={`https://dl.dropboxusercontent.com/s/${form.dAudioUrl}`} target="blank">
+                  <a
+                    href={
+                      form.dAudioUrl.indexOf("dropbox") > -1
+                        ? form.dAudioUrl
+                        : `https://dl.dropboxusercontent.com/s/${form.dAudioUrl}`
+                    }
+                    target="blank"
+                  >
                     (preview)
                   </a>
                 </small>

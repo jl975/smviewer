@@ -3,6 +3,8 @@ import { useState } from "react";
 
 import styles from "../pages/index.module.scss";
 
+const difficulties = ["bSP", "BSP", "DSP", "ESP", "CSP", "BDP", "DDP", "EDP", "CDP"];
+
 const Table = (props) => {
   const [sort, setSort] = useState("index");
   const [sortDir, setSortDir] = useState("asc");
@@ -22,6 +24,12 @@ const Table = (props) => {
           return a.index - b.index;
         }
         return a.version - b.version;
+      });
+    } else if (sort === "missingDifficulties") {
+      rows.sort((a, b) => {
+        if (!a.missingDifficulties) return 1;
+        if (!b.missingDifficulties) return -1;
+        return a.missingDifficulties.length - b.missingDifficulties.length;
       });
     } else if (sort === "isLineout") {
       rows.sort((a, b) => {
@@ -47,10 +55,19 @@ const Table = (props) => {
           <td>{song.smName}</td>
           <td>{song.artist}</td>
           <td>{song.version}</td>
+          <td>{renderMissingDifficulties(song)}</td>
           <td>{song.isLineout}</td>
         </tr>
       );
     });
+  };
+
+  const renderMissingDifficulties = (song) => {
+    if (!song.missingDifficulties) return "";
+    return song.missingDifficulties
+      .split(",")
+      .map((idx) => difficulties[idx])
+      .join(", ");
   };
 
   const toggleSort = (column) => {
@@ -79,6 +96,12 @@ const Table = (props) => {
           <th>Artist</th>
           <th className={sort === "version" ? styles.sortedColumn : ""} onClick={() => toggleSort("version")}>
             Version
+          </th>
+          <th
+            className={sort === "missingDifficulties" ? styles.sortedColumn : ""}
+            onClick={() => toggleSort("missingDifficulties")}
+          >
+            Missing difficulties
           </th>
           <th className={sort === "isLineout" ? styles.sortedColumn : ""} onClick={() => toggleSort("isLineout")}>
             Lineout?
