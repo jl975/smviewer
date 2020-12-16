@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import store from "../store";
 import * as actions from "../actions/AudioActions";
 import Progress from "../components/chart/canvas/Progress";
+import { getAssetPath } from "../utils";
 import { saveSongProgress } from "../utils/userSettings";
 import {
   getCurrentBpm,
@@ -70,7 +71,9 @@ class AudioPlayer {
       const thisSong = (this.sources.song[song.hash] = { title: song.title });
 
       thisSong.audio = new Howl({
-        src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
+        src: song.dAudioUrl
+          ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
+          : getAssetPath("audio/" + song.audioUrl),
         format: ["mp3"],
         html5: true,
         onload: () => {
@@ -484,3 +487,6 @@ class AudioPlayer {
 }
 
 export default new AudioPlayer();
+
+export const OffsetAdjustAudioPlayer = new AudioPlayer();
+window.oaap = OffsetAdjustAudioPlayer;

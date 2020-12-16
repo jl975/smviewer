@@ -7,6 +7,7 @@ import { presetParams, getJacketPath } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
 import GameEngine from "../../core/GameEngine";
+import AudioPlayer from "../../core/AudioPlayer";
 import ShareModal from "./ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
@@ -145,7 +146,10 @@ const ChartArea = (props) => {
           // console.log("available song levels:", numSongLevels);
           // console.log("num loaded charts", simfiles.numLoadedCharts);
 
-          let ge = new GameEngine(canvas, simfiles, chartParams);
+          let ge = new GameEngine(canvas, simfiles, chartParams, {
+            mainEngine: true,
+            AudioPlayer: AudioPlayer,
+          });
           ge.pauseTl();
           setGameEngine(ge);
         } else if (thing === "mods") {

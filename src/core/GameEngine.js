@@ -10,14 +10,20 @@ import BpmAndStopDisplay from "../components/chart/canvas/BpmAndStopDisplay";
 import LaneCover from "../components/chart/canvas/LaneCover";
 import { applyTurnMods, initializeBeatWindow, updateBeatWindow, changeActiveBpm } from "../utils/engineUtils";
 import { END_EXTRA_BEATS, MARVELOUS_FLASH_FRAMES, DEFAULT_CMOD } from "../constants";
-import AudioPlayer from "./AudioPlayer";
 import store from "../store";
 import { debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
-  constructor(canvas, simfiles, chartParams) {
+  constructor(canvas, simfiles, chartParams, { mainEngine = true, AudioPlayer }) {
+    console.log("chartParams", chartParams);
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
+    this.mainEngine = mainEngine;
+    this.AudioPlayer = AudioPlayer;
+
+    if (!mainEngine) {
+      console.log("this.AudioPlayer", this.AudioPlayer);
+    }
     // this.sm = sm;
     this.simfiles = simfiles;
 
@@ -78,9 +84,9 @@ class GameEngine {
       chartAreaHeight: canvas.height,
     };
 
-    AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
-    AudioPlayer.stopAnimationLoop = this.stopLoop.bind(this);
-    AudioPlayer.updateAnimationLoopOnce = this.updateLoopOnce.bind(this);
+    this.AudioPlayer.startAnimationLoop = this.startLoop.bind(this);
+    this.AudioPlayer.stopAnimationLoop = this.stopLoop.bind(this);
+    this.AudioPlayer.updateAnimationLoopOnce = this.updateLoopOnce.bind(this);
 
     // if (!this.sm) return;
 
@@ -126,14 +132,19 @@ class GameEngine {
 
     this.globalParams.targetFlashes = {};
     this.globalParams.mods = mods;
-    AudioPlayer.setGlobalParams(this.globalParams);
+    this.AudioPlayer.setGlobalParams(this.globalParams);
 
     // debugging
-    window.globalParams = this.globalParams;
+    // window.globalParams = this.globalParams;
 
     // recreate the chart with the new given parameters
     // then immediately seek to where the chart's progress was before it was recreated
     const simfile = this.simfiles[`${mode}_${difficulty}`];
+
+    if (!this.mainEngine) {
+      console.log("this.simfiles", this.simfiles, mode, difficulty);
+    }
+
     if (simfile) {
       debugSimfileChart(simfile);
 
@@ -147,9 +158,9 @@ class GameEngine {
       if (audio.chartAudio.status !== "playing") {
         this.pauseTl();
       }
-      AudioPlayer.storePreviewSource(songSelect.song, simfile);
+      this.AudioPlayer.storePreviewSource(songSelect.song, simfile);
 
-      AudioPlayer.resync();
+      this.AudioPlayer.resync();
     }
   }
 
@@ -451,7 +462,7 @@ class GameEngine {
               this.globalParams.combo = arrow.combo;
 
               if (arrow instanceof Arrow) {
-                // AudioPlayer.playAssistTick();
+                // this.AudioPlayer.playAssistTick();
                 // console.log(arrow);
                 this.globalParams.targetFlashes[arrow.beatstamp] = new TargetFlash(arrow);
               }
@@ -563,7 +574,7 @@ class GameEngine {
     this.guidelines = new Guidelines(this.globalParams.finalBeat);
     this.bpmAndStopDisplay = new BpmAndStopDisplay();
 
-    AudioPlayer.setTimeline(this.tl);
+    this.AudioPlayer.setTimeline(this.tl);
 
     this.updateLoopOnce();
   }
