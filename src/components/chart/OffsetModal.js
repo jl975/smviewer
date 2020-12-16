@@ -4,14 +4,14 @@ import { Modal, Input, Button } from "semantic-ui-react";
 
 import { OffsetAdjustAudioPlayer } from "../../core/AudioPlayer";
 import { updateMods } from "../../actions/ModsActions";
-import { setOffsetModalOpen } from "../../actions/ScreenActions";
+import { setModalOpen } from "../../actions/ScreenActions";
 import { getOriginPath, fetchDocument } from "../../utils";
 import { DEFAULT_OFFSET } from "../../constants";
 import parseSimfile from "../../utils/parseSimfile";
 import GameEngine from "../../core/GameEngine";
 
 const OffsetModal = (props) => {
-  const { modalOpen, setOffsetModalOpen, mods, updateMods } = props;
+  const { modalOpen, setModalOpen, mods, updateMods } = props;
   const [gameEngine, setGameEngine] = useState(null);
   const [loadingAudio, setLoadingAudio] = useState(false);
 
@@ -67,7 +67,7 @@ const OffsetModal = (props) => {
   };
 
   const handleClose = () => {
-    setOffsetModalOpen(false);
+    setModalOpen("offset", false);
     OffsetAdjustAudioPlayer.stop();
     if (gameEngine) {
       gameEngine.killed = true;
@@ -136,7 +136,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
-    setOffsetModalOpen: (isOpen) => dispatch(setOffsetModalOpen(isOpen)),
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
   };
 };
 

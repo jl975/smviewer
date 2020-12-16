@@ -1,6 +1,6 @@
 export const RESIZE_SCREEN = "RESIZE_SCREEN";
 export const SET_ACTIVE_VIEW = "SET_ACTIVE_VIEW";
-export const SET_OFFSET_MODAL_OPEN = "SET_OFFSET_MODAL_OPEN";
+export const SET_MODAL_OPEN = "SET_MODAL_OPEN";
 
 export const resizeScreen = (e) => (dispatch) => {
   dispatch({
@@ -16,9 +16,12 @@ export const setActiveView = (view) => (dispatch) => {
   });
 };
 
-export const setOffsetModalOpen = (isOpen) => (dispatch) => {
+export const setModalOpen = (modalName, isOpen) => (dispatch) => {
   dispatch({
-    type: SET_OFFSET_MODAL_OPEN,
-    payload: isOpen,
+    type: SET_MODAL_OPEN,
+    payload: {
+      modalName,
+      isOpen,
+    },
   });
 };

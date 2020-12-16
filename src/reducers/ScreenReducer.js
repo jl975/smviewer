@@ -6,8 +6,10 @@ const initialState = {
   innerWidth: window.innerWidth,
   innerHeight: window.innerHeight,
   activeView: userSettings.activeView || "song",
-  offsetModal: {
-    open: false,
+  modalOpen: {
+    welcome: false,
+    offset: false,
+    offsetConfirm: false,
   },
 };
 
@@ -26,10 +28,19 @@ export const screen = (state = initialState, action) => {
       updateUserSettings({ activeView });
       return { ...state, activeView };
     }
-    case actions.SET_OFFSET_MODAL_OPEN: {
-      const isOpen = action.payload;
+    case actions.SET_MODAL_OPEN: {
+      const { modalName, isOpen } = action.payload;
       const newState = { ...state };
-      newState.offsetModal.open = isOpen;
+
+      // only one modal open at a time
+      for (let key in newState.modalOpen) {
+        newState.modalOpen[key] = key === modalName;
+        if (key === modalName) {
+          newState.modalOpen[key] = isOpen;
+        } else {
+          newState.modalOpen[key] = false;
+        }
+      }
       return newState;
     }
     default:

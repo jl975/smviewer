@@ -5,10 +5,11 @@ import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
+import WelcomeModal from "../../components/welcome/WelcomeModal";
 import OffsetModal from "../../components/chart/OffsetModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
-import { resizeScreen, setOffsetModalOpen } from "../../actions/ScreenActions";
+import { resizeScreen, setModalOpen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
@@ -34,7 +35,8 @@ const MainContainer = (props) => {
     // prompt user to adjust global offset on first visit
     const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
     if (!adjustedGlobalOffset) {
-      props.setOffsetModalOpen(true);
+      // props.setModalOpen("offset", true);
+      props.setModalOpen("welcome", true);
     }
   }, []);
 
@@ -85,7 +87,8 @@ const MainContainer = (props) => {
               location={props.location}
               gameEngine={gameEngine}
             />
-            <OffsetModal modalOpen={props.screen.offsetModal.open} />
+            <WelcomeModal modalOpen={props.screen.modalOpen.welcome} />
+            <OffsetModal modalOpen={props.screen.modalOpen.offset} />
 
             {DEBUG_MODE && <LogView />}
           </div>
@@ -119,7 +122,7 @@ const mapDispatchToProps = (dispatch) => {
     resizeScreen: (e) => dispatch(resizeScreen(e)),
     getSimfileList: () => dispatch(getSimfileList()),
     loadSimfile: (song) => dispatch(loadSimfile(song)),
-    setOffsetModalOpen: (isOpen) => dispatch(setOffsetModalOpen(isOpen)),
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
   };
 };
 
