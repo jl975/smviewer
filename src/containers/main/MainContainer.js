@@ -7,6 +7,7 @@ import ModsForm from "../../components/form/ModsForm";
 import Navbar from "../../components/navigation/Navbar";
 import WelcomeModal from "../../components/welcome/WelcomeModal";
 import OffsetModal from "../../components/chart/OffsetModal";
+import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen, setModalOpen } from "../../actions/ScreenActions";
@@ -35,8 +36,8 @@ const MainContainer = (props) => {
     // prompt user to adjust global offset on first visit
     const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
     if (!adjustedGlobalOffset) {
-      // props.setModalOpen("offset", true);
-      props.setModalOpen("welcome", true);
+      // props.setModalOpen("offset");
+      props.setModalOpen("welcome");
     }
   }, []);
 
@@ -71,6 +72,8 @@ const MainContainer = (props) => {
     props.selectMode(mode);
   };
 
+  const modalOpen = props.screen.modalOpen;
+
   return (
     <div className="main-container">
       {!loadingSimfiles && (
@@ -87,8 +90,9 @@ const MainContainer = (props) => {
               location={props.location}
               gameEngine={gameEngine}
             />
-            <WelcomeModal modalOpen={props.screen.modalOpen.welcome} />
-            <OffsetModal modalOpen={props.screen.modalOpen.offset} />
+            <WelcomeModal modalOpen={modalOpen.welcome} />
+            <OffsetModal modalOpen={modalOpen.offset} />
+            <OffsetConfirmModal modalOpen={modalOpen.offsetConfirm} />
 
             {DEBUG_MODE && <LogView />}
           </div>

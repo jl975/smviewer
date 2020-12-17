@@ -15,11 +15,3 @@ export const updateLaneCoverHeight = (payload) => (dispatch) => {
     payload,
   });
 };
-
-// keep track of pre-confirm offset so it can be reset if it was adjusted without confirming
-export const trackPreconfirmOffset = (preconfirmOffset) => (dispatch) => {
-  dispatch({
-    type: TRACK_PRECONFIRM_OFFSET,
-    payload: preconfirmOffset,
-  });
-};

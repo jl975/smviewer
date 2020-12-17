@@ -31,16 +31,6 @@ export const mods = (state = initialState, action) => {
       updateUserSettings({ mods: updatedState });
       return updatedState;
     }
-    case actions.TRACK_PRECONFIRM_OFFSET: {
-      const preconfirmOffset = action.payload;
-      const newState = { ...state };
-      if (preconfirmOffset === null) {
-        delete newState.preconfirmOffset;
-      } else {
-        newState.preconfirmOffset = preconfirmOffset;
-      }
-      return newState;
-    }
     default:
       return state;
   }

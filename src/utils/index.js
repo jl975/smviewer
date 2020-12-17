@@ -4,10 +4,7 @@ import { DEBUG_MODE } from "../constants";
 
 export const getOriginPath = () => {
   if (window.location.search)
-    return window.location.href.slice(
-      0,
-      window.location.href.indexOf(window.location.search)
-    );
+    return window.location.href.slice(0, window.location.href.indexOf(window.location.search));
   return window.location.href;
 };
 
@@ -26,6 +23,17 @@ export const getJacketPath = (path) => {
 
 export const capitalize = (str) => {
   return str.slice(0, 1).toUpperCase() + str.slice(1);
+};
+
+export const renderWithSign = (num, decimalPlaces) => {
+  let sign = "";
+  if (num < 0) sign = "–";
+  else if (num > 0) sign = "+";
+  num = Math.abs(num);
+  if (typeof decimalPlaces === "number") {
+    num = num.toFixed(decimalPlaces);
+  }
+  return `${sign}${num}`;
 };
 
 export const parseUrlParams = () => {

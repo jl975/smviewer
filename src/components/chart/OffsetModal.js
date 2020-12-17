@@ -3,10 +3,9 @@ import { connect } from "react-redux";
 import { Modal, Input, Button, Icon } from "semantic-ui-react";
 
 import { OffsetAdjustAudioPlayer } from "../../core/AudioPlayer";
-import { updateMods, trackPreconfirmOffset } from "../../actions/ModsActions";
+import { updateMods } from "../../actions/ModsActions";
 import { setModalOpen } from "../../actions/ScreenActions";
-import { getOriginPath, fetchDocument } from "../../utils";
-// import { DEFAULT_OFFSET } from "../../constants";
+import { getOriginPath, fetchDocument, renderWithSign } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import GameEngine from "../../core/GameEngine";
 
@@ -71,8 +70,8 @@ const OffsetModal = (props) => {
     OffsetAdjustAudioPlayer.play();
   };
 
-  const handleClose = () => {
-    setModalOpen("offset", false);
+  const handleClose = async () => {
+    await setModalOpen("offset", false);
     OffsetAdjustAudioPlayer.stop();
     if (gameEngine) {
       gameEngine.killed = true;
@@ -84,7 +83,6 @@ const OffsetModal = (props) => {
       globalOffset: newOffset,
       preconfirmOffset: originalOffsetValue.current,
     });
-    // trackPreconfirmOffset(originalOffsetValue.current);
     OffsetAdjustAudioPlayer.resync();
   };
 
@@ -97,27 +95,23 @@ const OffsetModal = (props) => {
     handleOffsetChange(newOffset);
   };
 
-  const renderOffsetValue = (offsetValue) => {
-    let sign = "";
-    if (offsetValue < 0) sign = "–";
-    else if (offsetValue > 0) sign = "+";
-    return `${sign}${Math.abs(offsetValue)}`;
-  };
-
   const handleCancel = async () => {
     await updateMods({
       globalOffset: originalOffsetValue.current,
       preconfirmOffset: null,
     });
-    // trackPreconfirmOffset(null);
     handleClose();
   };
 
   const confirmOffset = async () => {
-    window.localStorage.setItem("adjustedGlobalOffset", true);
     originalOffsetValue.current = mods.globalOffset;
     await updateMods({ preconfirmOffset: null });
-    handleClose();
+
+    await handleClose();
+
+    if (!adjustedGlobalOffset) {
+      setModalOpen("offsetConfirm");
+    }
   };
 
   return (
@@ -147,8 +141,8 @@ const OffsetModal = (props) => {
             }}
           />
           <div className="offset-value">
-            <span>{renderOffsetValue(mods.globalOffset)}</span>
-            <span>&nbsp;(previous: {renderOffsetValue(originalOffsetValue.current)})</span>
+            <strong>{renderWithSign(mods.globalOffset, 2)}</strong>
+            {adjustedGlobalOffset && <span>&nbsp;(previous: {renderWithSign(originalOffsetValue.current, 2)})</span>}
           </div>
         </div>
         <Button className="offset-adjust-btn" onClick={incrementOffset}>
@@ -158,6 +152,10 @@ const OffsetModal = (props) => {
           <div className="adjust-label">Earlier</div>
         </Button>
       </div>
+      <p className="description-blurb">
+        The earlier the offset is (in seconds), the earlier the notes will line up with the step zone relative to the
+        music.
+      </p>
       <div className="modal-actions">
         {adjustedGlobalOffset && <Button onClick={handleCancel}>Cancel</Button>}
         <Button onClick={confirmOffset}>Confirm</Button>
@@ -178,7 +176,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-    trackPreconfirmOffset: (preconfirmOffset) => dispatch(trackPreconfirmOffset(preconfirmOffset)),
   };
 };
 
