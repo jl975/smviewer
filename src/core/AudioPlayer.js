@@ -107,6 +107,7 @@ class AudioPlayer {
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
+          thisSong.loop = false;
         },
         onend: () => {
           if (thisSong.tl) {
@@ -116,6 +117,9 @@ class AudioPlayer {
           gsap.ticker.remove(this.updateProgress);
           this.stopAnimationLoop();
           store.dispatch(actions.stopChartAudio());
+          if (thisSong.loop) {
+            this.play(thisSong.loop);
+          }
         },
       });
 
@@ -397,12 +401,14 @@ class AudioPlayer {
     this.getCurrentSong().globalParams = params;
   }
 
-  play() {
+  play(loop = false) {
+    console.log(loop);
     if (this.getChartAudioStatus() === "pending") {
       return;
     }
     const currentSong = this.getCurrentSong();
     this.currentSongId = currentSong.audio.play();
+    currentSong.loop = loop;
 
     debugLog(`last played: ${currentSong.title}`, 2);
     store.dispatch(actions.setChartAudioStatus("pending"));

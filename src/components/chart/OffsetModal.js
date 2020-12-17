@@ -67,7 +67,7 @@ const OffsetModal = (props) => {
     });
     setGameEngine(ge);
 
-    OffsetAdjustAudioPlayer.play();
+    OffsetAdjustAudioPlayer.play(true);
   };
 
   const handleClose = async () => {
