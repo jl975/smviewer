@@ -34,11 +34,11 @@ const MainContainer = (props) => {
     window.addEventListener("resize", props.resizeScreen);
 
     // prompt user to adjust global offset on first visit
-    // const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
-    // if (!adjustedGlobalOffset) {
-    // props.setModalOpen("offset");
-    props.setModalOpen("welcome");
-    // }
+    const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
+    if (!adjustedGlobalOffset) {
+      // props.setModalOpen("offset");
+      props.setModalOpen("welcome");
+    }
   }, []);
 
   const fetchSimfiles = async () => {
