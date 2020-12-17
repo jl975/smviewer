@@ -64,6 +64,7 @@ const optionDefaultValues = {
     colorFreezes: false,
     globalOffset: DEFAULT_OFFSET,
     bpmStopDisplay: false,
+    preconfirmOffset: null,
   },
 };
 

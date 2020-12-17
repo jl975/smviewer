@@ -16,7 +16,7 @@ export const setActiveView = (view) => (dispatch) => {
   });
 };
 
-export const setModalOpen = (modalName, isOpen) => (dispatch) => {
+export const setModalOpen = (modalName, isOpen = true) => (dispatch) => {
   dispatch({
     type: SET_MODAL_OPEN,
     payload: {

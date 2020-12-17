@@ -65,8 +65,12 @@
   text-decoration: underline;
 }
 
+.message-modal {
+  padding: 15px;
 
-.modal-actions {
-  margin-top: 20px;
-  text-align: center;
+  .modal-actions {
+    margin-top: 20px;
+    text-align: center;
+  }
 }
+

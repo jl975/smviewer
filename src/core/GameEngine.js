@@ -141,10 +141,6 @@ class GameEngine {
     // then immediately seek to where the chart's progress was before it was recreated
     const simfile = this.simfiles[`${mode}_${difficulty}`];
 
-    if (!this.mainEngine) {
-      console.log("this.simfiles", this.simfiles, mode, difficulty);
-    }
-
     if (simfile) {
       debugSimfileChart(simfile);
 

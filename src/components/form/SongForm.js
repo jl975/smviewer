@@ -173,7 +173,6 @@ const SongForm = (props) => {
   useEffect(() => {
     if (selectedSongOption) {
       const song = simfileList.find((song) => song.hash === selectedSongOption);
-      console.log("song", song);
       setSelectedSong(song);
       AudioPlayer.storeAudioSource(song);
     }
