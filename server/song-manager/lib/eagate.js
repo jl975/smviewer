@@ -3,7 +3,7 @@ const tough = require("tough-cookie");
 const cheerio = require("cheerio");
 const encoding = require("encoding-japanese");
 const token573 = require("../../../config/m573ssid");
-const dancerIds = require("../../../config/dancerIds");
+const dancerId = require("../../../config/dancerIds")[0];
 
 const { getSimfilesTsv } = require("./songs");
 
@@ -98,12 +98,9 @@ const getSongPosition = async ({ title, id }) => {
   followingSongFound = false;
   orderedSongs = [];
 
+  console.log(`scraping ${dancerId}`);
   while (currentPage < totalPages && !songFound && !followingSongFound) {
-    console.log(
-      `traversing page ${currentPage} of ${
-        totalPages === 69 ? "?" : totalPages
-      }`
-    );
+    console.log(`traversing page ${currentPage} of ${totalPages === 69 ? "?" : totalPages}`);
     await traversePage(currentPage, { title, id });
     currentPage++;
   }
@@ -111,21 +108,15 @@ const getSongPosition = async ({ title, id }) => {
   if (songFound) {
     console.log("\nSong position:");
     console.log(orderedSongs[orderedSongs.length - 3].title);
-    console.log(
-      orderedSongs[orderedSongs.length - 2].title,
-      "***<-- the new song"
-    );
+    console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
     console.log(orderedSongs[orderedSongs.length - 1].title);
-    console.log(
-      "\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n"
-    );
+    console.log("\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n");
 
     const previousSong = orderedSongs[orderedSongs.length - 3];
     const actualSong = orderedSongs[orderedSongs.length - 2];
     const nextSong = orderedSongs[orderedSongs.length - 1];
 
-    const abcSort = parsedTsv.find((song) => song.hash === previousSong.id)
-      .abcSort;
+    const abcSort = parsedTsv.find((song) => song.hash === previousSong.id).abcSort;
 
     const json = {
       previousSongId: previousSong.id,
@@ -143,8 +134,6 @@ const getSongPosition = async ({ title, id }) => {
   }
 };
 const traversePage = async (pageIndex = 0, { title, id }) => {
-  const dancerId = dancerIds[0];
-
   let body = await RequestPromise({
     jar: cookiejar,
     uri: `https://p.eagate.573.jp/game/ddr/ddra20/p/rival/rival_musicdata_single.html?offset=${pageIndex}&filter=0&filtertype=0&sorttype=0&rival_id=${dancerId}`,
@@ -191,9 +180,7 @@ const traversePage = async (pageIndex = 0, { title, id }) => {
     // if this is the song we're looking for, go through one more iteration
     if (
       (id && id === songId) ||
-      (title &&
-        title.toLowerCase().replace(/\s*/g, "") ===
-          songTitle.toLowerCase().replace(/\s*/g, ""))
+      (title && title.toLowerCase().replace(/\s*/g, "") === songTitle.toLowerCase().replace(/\s*/g, ""))
     ) {
       songFound = true;
     }
