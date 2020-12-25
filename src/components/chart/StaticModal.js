@@ -20,16 +20,13 @@ const StaticModal = (props) => {
 
   const canvasRef = useRef(null);
 
-  const [canvasHeight, setCanvasHeight] = useState(1);
-  const [canvasWidth, setCanvasWidth] = useState(1);
+  const [canvasHeight, setCanvasHeight] = useState(0);
+  const [canvasWidth, setCanvasWidth] = useState(0);
+  const [canvasReady, setCanvasReady] = useState(false);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const c = canvas.getContext("2d");
-
-    console.log(gameEngine.globalParams);
+    if (!modalOpen) return;
+    // console.log(gameEngine.globalParams);
 
     const { shocks, frame } = gameEngine.globalParams;
 
@@ -70,6 +67,14 @@ const StaticModal = (props) => {
 
     const calcCanvasWidth = columnWidth * numColumns;
     setCanvasWidth(calcCanvasWidth);
+
+    setCanvasReady(true);
+
+    // render the canvas
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const c = canvas.getContext("2d");
 
     // black background
     c.fillStyle = "black";
@@ -180,20 +185,27 @@ const StaticModal = (props) => {
   };
   const handleClose = () => {
     setModalOpen(false);
+    setCanvasReady(false);
+    setCanvasHeight(0);
   };
-  return (
-    <Modal className="staticModal" open={modalOpen} onOpen={handleOpen} onClose={handleClose}>
-      <div className="staticChart-container">
-        <canvas
-          id="staticChart"
-          ref={canvasRef}
-          height={canvasHeight}
-          width={canvasWidth}
-          onClick={onCanvasClick}
-        ></canvas>
-      </div>
-    </Modal>
-  );
+
+  if (canvasReady) {
+    return (
+      <Modal className="staticModal" open={modalOpen} onOpen={handleOpen} onClose={handleClose}>
+        <div className="staticChart-container">
+          <canvas
+            id="staticChart"
+            ref={canvasRef}
+            height={canvasHeight}
+            width={canvasWidth}
+            onClick={onCanvasClick}
+          ></canvas>
+        </div>
+      </Modal>
+    );
+  }
+
+  return null;
 };
 
 const mapStateToProps = (state) => {
