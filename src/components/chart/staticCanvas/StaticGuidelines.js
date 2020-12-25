@@ -20,13 +20,11 @@ class StaticGuidelines {
 
     const columnStart = columnIdx * columnWidth + STATIC_ARROW_WIDTH * 2;
 
-    for (let beat = 0; beat <= 4 * measuresPerColumn; beat++) {
+    for (let beat = 0; beat < 4 * measuresPerColumn; beat++) {
       const overallBeat = measuresPerColumn * 4 * columnIdx + beat;
       if (overallBeat >= this.finalBeat) return;
 
-      let destY =
-        (beat - beatTick) * STATIC_ARROW_HEIGHT * speed +
-        STATIC_ARROW_HEIGHT / 2;
+      let destY = (beat - beatTick) * STATIC_ARROW_HEIGHT * speed + STATIC_ARROW_HEIGHT / 2;
       destY = (destY + 0.5) | 0;
 
       // Render a thick line if the beat falls on the beginning of the measure.

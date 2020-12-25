@@ -15,7 +15,7 @@ import { debugSimfileChart } from "../utils/debugUtils";
 
 class GameEngine {
   constructor(canvas, simfiles, chartParams, { mainEngine = true, AudioPlayer }) {
-    console.log("chartParams", chartParams);
+    // console.log("chartParams", chartParams);
     this.canvas = canvas;
     this.c = canvas.getContext("2d");
     this.mainEngine = mainEngine;

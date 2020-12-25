@@ -21,7 +21,7 @@ const OffsetConfirmModal = (props) => {
   return (
     <Modal open={modalOpen} className="information-modal offsetConfirmModal">
       <p>
-        Global offset was successfully set to <strong>{renderWithSign(mods.globalOffset, 2)}</strong>.
+        Global offset was successfully set to <strong>{renderWithSign(mods.globalOffset, 2)}</strong> s.
       </p>
       <p>You can readjust this value at any time in the Settings menu.</p>
       <div className="modal-actions">
