@@ -1,6 +1,6 @@
 import { DIRECTIONS, STATIC_ARROW_WIDTH, STATIC_ARROW_HEIGHT, STATIC_FREEZE_BODY_HEIGHT } from "../../../constants";
 
-import { getAssetPath } from "../../../utils";
+import { getAssetPath, noop } from "../../../utils";
 
 const arrowImg = new Image();
 arrowImg.src = getAssetPath("static_arrows.png");
@@ -9,6 +9,11 @@ const freezeTailImg = new Image();
 freezeTailImg.src = getAssetPath("static_freeze_tails_1.png");
 const freezeBodyImg = new Image();
 freezeBodyImg.src = getAssetPath("static_freeze_body_1.png");
+
+const TOP_PADDING = STATIC_ARROW_HEIGHT / 2;
+const LEFT_PADDING = STATIC_ARROW_WIDTH * 2;
+const COLUMN_WIDTH = STATIC_ARROW_WIDTH * 4;
+const COLUMN_SPACING = STATIC_ARROW_WIDTH * 4;
 
 class StaticArrow {
   constructor(arrow) {
@@ -30,10 +35,13 @@ class StaticArrow {
   renderFreezeBody(canvas, { beatTick }, directionIdx, attrs) {
     const c = canvas.getContext("2d");
 
-    const { mods, columnIdx, columnHeight } = attrs;
+    const { mods, columnIdx, columnHeight, measuresPerColumn } = attrs;
     const { speed } = mods;
 
     const topBoundary = -1;
+
+    const beatsPerColumn = measuresPerColumn * 4;
+    // noop(beatsPerColumn);
 
     if (this.note[directionIdx] !== "3") return;
 
@@ -48,7 +56,7 @@ class StaticArrow {
 
     destX = directionIdx * arrowWidth;
     // calculate column offset
-    destX += columnIdx * (arrowWidth * 4 * 2) + arrowWidth * 2;
+    destX += columnIdx * (arrowWidth * 4 * 2) + LEFT_PADDING;
 
     destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
 
@@ -67,49 +75,130 @@ class StaticArrow {
       partialDestY = 0;
     }
 
-    // // calculate column offset
-    // destX += columnIdx * (arrowWidth * 4 * 2) + arrowWidth * 2;
-
     // draw partial
-    // if (partialDestY > -partialHeight && partialDestY < bottomBoundary) {
+    // make sure it is rendered in the same column as the corresponding freeze *head*
+    // (not necessarily the same column as the tail)
+    const holdStartBeat = this.holdStartBeats[directionIdx];
+    const partialColumnIdx = Math.floor(holdStartBeat / 4 / measuresPerColumn);
+    const partialDestX = directionIdx * arrowWidth + partialColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING;
+
+    noop(partialDestX);
+
     c.drawImage(
       freezeBodyImg,
       0,
       freezeBodyHeight - partialHeight,
       arrowWidth,
       partialHeight,
-      destX,
-      // partialDestY + arrowHeight / 2,
+      partialDestX,
       (partialDestY + arrowHeight / 2) % columnHeight,
       arrowWidth,
       partialHeight
     );
-    // }
+
+    // freeze body may span more than one column, so make sure each repetition
+    // is offset by the correct amount and rendered in the correct column
 
     // draw repetitions of freeze body
-    for (let i = 1; i <= repetitions; i++) {
+    for (let i = 0; i < repetitions; i++) {
       let bodyHeight = freezeBodyHeight;
       let bodyFrameY = 0;
-      let bodyDestY = destY - (totalBodyHeight + arrowHeight / 2 - originalPartialHeight - freezeBodyHeight * (i - 1));
+
+      // bodyDestY: topDestY of freeze body assuming no wraparound
+      let bodyDestY = destY - (totalBodyHeight + arrowHeight / 2 - originalPartialHeight - freezeBodyHeight * i);
       if (bodyDestY < 0 && bodyDestY > -freezeBodyHeight) {
         bodyHeight += bodyDestY;
         bodyFrameY -= bodyDestY;
         bodyDestY = 0;
       }
-      // if (bodyDestY > -bodyHeight && bodyDestY < bottomBoundary) {
+      const bodyColumnIdx = Math.floor(bodyDestY / columnHeight);
+      const bodyDestX = directionIdx * arrowWidth + bodyColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING;
+
+      // if the freeze head and tail are on different columns, the freeze body must wrap around
+      if (partialColumnIdx < columnIdx) {
+        const bodyTopDestY = bodyDestY;
+        const bodyBottomDestY = bodyDestY + freezeBodyHeight;
+        const bodyBottomColumnIdx = Math.floor(bodyBottomDestY / columnHeight);
+        const bodyTopDestX = bodyDestX;
+        const bodyBottomDestX =
+          directionIdx * arrowWidth + bodyBottomColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING;
+
+        // if freeze body does not wrap, draw as normal
+        if (bodyTopDestX === bodyBottomDestX) {
+          c.drawImage(
+            freezeBodyImg,
+            0,
+            0,
+            arrowWidth,
+            bodyHeight,
+            bodyTopDestX,
+            (bodyTopDestY % columnHeight) + arrowHeight / 2,
+            arrowWidth,
+            bodyHeight
+          );
+        }
+
+        // if freeze body wraps around a column
+        else if (bodyTopDestX < bodyBottomDestX) {
+          // draw one copy of wrapping freeze body at top edge of bottomIdx column
+          c.drawImage(
+            freezeBodyImg,
+            0,
+            0,
+            arrowWidth,
+            bodyHeight,
+            bodyBottomDestX,
+            (bodyBottomDestY % columnHeight) - freezeBodyHeight + arrowHeight / 2,
+            arrowWidth,
+            bodyHeight
+          );
+
+          // draw another copy of wrapping freeze body at bottom edge of topIdx column
+          c.drawImage(
+            freezeBodyImg,
+            0,
+            bodyFrameY,
+            arrowWidth,
+            bodyHeight,
+            bodyTopDestX,
+            (bodyTopDestY % columnHeight) + arrowHeight / 2,
+            arrowWidth,
+            bodyHeight
+          );
+        }
+      } else {
+        // normal freeze body that spans a single column
+        c.drawImage(
+          freezeBodyImg,
+          0,
+          0,
+          arrowWidth,
+          bodyHeight,
+          bodyDestX,
+          (bodyDestY % columnHeight) + arrowHeight / 2,
+          arrowWidth,
+          bodyHeight
+        );
+      }
+    }
+
+    // if the freeze is short enough that there are no repetitions of the freeze body,
+    // check the remaining edge case where the partial and the tail are on different columns
+    if (repetitions === 0 && partialColumnIdx < columnIdx) {
+      const bodyTopDestY = (holdStartBeat % beatsPerColumn) * arrowHeight * speed + TOP_PADDING;
+
+      // draw one copy of wrapping freeze body at the bottom edge of the partial column
       c.drawImage(
         freezeBodyImg,
         0,
-        bodyFrameY,
+        0,
         arrowWidth,
-        bodyHeight,
-        destX,
-        // bodyDestY + arrowHeight / 2,
-        (bodyDestY + arrowHeight / 2) % columnHeight,
+        freezeBodyHeight,
+        partialDestX,
+        bodyTopDestY + partialHeight,
         arrowWidth,
-        bodyHeight
+        freezeBodyHeight
       );
-      // }
     }
 
     let tailHeight = arrowHeight;
@@ -128,6 +217,8 @@ class StaticArrow {
       frameY += arrowHeight / 2 - destY;
       destY = arrowHeight / 2;
     }
+
+    noop(tailHeight, frameX, frameY, destX);
 
     c.drawImage(
       freezeTailImg,
@@ -172,15 +263,13 @@ class StaticArrow {
 
     destX = directionIdx * arrowWidth;
     // calculate column offset
-    destX += columnIdx * (arrowWidth * 4 * 2) + arrowWidth * 2;
+    destX += columnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING;
 
     destY = this.currentBeatPosition(beatTick) * arrowHeight * speed;
     // calculate row wraparound
     destY = destY % columnHeight;
 
-    // if (destY > topBoundary && destY < bottomBoundary) {
     c.drawImage(arrowImg, frameX, frameY, arrowWidth, arrowHeight, destX, destY, arrowWidth, arrowHeight);
-    // }
   }
 }
 

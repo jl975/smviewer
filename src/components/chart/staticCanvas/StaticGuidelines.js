@@ -9,14 +9,11 @@ class StaticGuidelines {
     const { mods, columnIdx, columnWidth, measuresPerColumn } = attrs;
     const { speed } = mods;
 
-    const showGuidelines = mods.guidelines;
-    if (!showGuidelines) return;
-
     const c = canvas.getContext("2d");
     c.strokeStyle = "#fff";
 
-    const topBoundary = 0;
-    const bottomBoundary = canvas.height;
+    // const topBoundary = 0;
+    // const bottomBoundary = canvas.height;
 
     const columnStart = columnIdx * columnWidth + STATIC_ARROW_WIDTH * 2;
 
@@ -31,13 +28,19 @@ class StaticGuidelines {
       // Render a thin line otherwise
       const lineWidth = beat % 4 === 0 ? 2 : 1;
 
-      if (destY > topBoundary && destY < bottomBoundary) {
-        c.beginPath();
-        c.moveTo(columnStart, destY);
-        c.lineTo(columnStart + columnWidth / 2, destY);
-        c.lineWidth = lineWidth;
-        c.stroke();
-      }
+      // if (destY > topBoundary && destY < bottomBoundary) {
+      c.beginPath();
+      c.moveTo(columnStart, destY);
+      c.lineTo(columnStart + columnWidth / 2, destY);
+      c.lineWidth = lineWidth;
+      c.stroke();
+      // }
+
+      c.font = "16px Arial";
+      c.fillStyle = "#fff";
+      c.textAlign = "right";
+      c.textBaseline = "middle";
+      c.fillText(overallBeat, columnStart - STATIC_ARROW_WIDTH + 15, destY);
     }
   }
 }

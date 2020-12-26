@@ -11,7 +11,7 @@ import AudioPlayer from "../../core/AudioPlayer";
 const canvasScaleFactor = 0.5;
 
 // temp hardcode
-const measuresPerColumn = 8;
+const measuresPerColumn = 11;
 
 const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
@@ -43,7 +43,7 @@ const StaticModal = (props) => {
 
     const tick = { beatTick: 0, timeTick: 0 };
 
-    mods.speed = 1;
+    mods.speed = 1.5;
 
     const speedMod = mods.speed;
 
@@ -112,6 +112,7 @@ const StaticModal = (props) => {
           mods,
           columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          measuresPerColumn,
         });
       });
     }
@@ -123,6 +124,7 @@ const StaticModal = (props) => {
           mods,
           columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+          measuresPerColumn,
         });
       });
     }

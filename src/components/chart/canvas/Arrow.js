@@ -12,15 +12,11 @@ import { getReverseCoord } from "../../../utils/engineUtils";
 const arrowImages = {};
 DIRECTIONS.forEach((direction) => {
   arrowImages[`rainbow_${direction}`] = new Image();
-  arrowImages[`rainbow_${direction}`].src = getAssetPath(
-    `rainbow_${direction}.png`
-  );
+  arrowImages[`rainbow_${direction}`].src = getAssetPath(`rainbow_${direction}.png`);
   arrowImages[`note_${direction}`] = new Image();
   arrowImages[`note_${direction}`].src = getAssetPath(`note_${direction}.png`);
   arrowImages[`vivid_${direction}`] = new Image();
-  arrowImages[`vivid_${direction}`].src = getAssetPath(
-    `vivid_${direction}.png`
-  );
+  arrowImages[`vivid_${direction}`].src = getAssetPath(`vivid_${direction}.png`);
   arrowImages[`flat_${direction}`] = new Image();
   arrowImages[`flat_${direction}`].src = getAssetPath(`vivid_${direction}.png`);
 });
@@ -79,8 +75,7 @@ class Arrow {
     if (this.note[directionIdx] === "3") {
       arrowImg = arrowImages[`freeze_tail_inactive`];
 
-      frameX =
-        ((directionIdx % 4) + (scroll === "reverse" ? 4 : 0)) * arrowWidth;
+      frameX = ((directionIdx % 4) + (scroll === "reverse" ? 4 : 0)) * arrowWidth;
       frameY = 0;
 
       destX = directionIdx * arrowWidth;
@@ -100,18 +95,11 @@ class Arrow {
       let totalBodyHeight;
       if (speed === "cmod") {
         totalBodyHeight =
-          (this.holdEndTimes[directionIdx] -
-            this.holdStartTimes[directionIdx]) *
-            arrowHeight *
-            (cmod / 60) -
+          (this.holdEndTimes[directionIdx] - this.holdStartTimes[directionIdx]) * arrowHeight * (cmod / 60) -
           arrowHeight / 2;
       } else {
         totalBodyHeight =
-          (this.holdEndBeats[directionIdx] -
-            this.holdStartBeats[directionIdx]) *
-            arrowHeight *
-            speed -
-          arrowHeight / 2;
+          (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed - arrowHeight / 2;
       }
       const repetitions = Math.floor(totalBodyHeight / freezeBodyHeight);
       let partialHeight = totalBodyHeight % freezeBodyHeight;
@@ -134,11 +122,7 @@ class Arrow {
       }
 
       // draw partial
-      if (
-        partialDestY > -partialHeight &&
-        partialDestY < bottomBoundary &&
-        appearance !== "stealth"
-      ) {
+      if (partialDestY > -partialHeight && partialDestY < bottomBoundary && appearance !== "stealth") {
         c.drawImage(
           arrowBodyImg,
           frameX,
@@ -147,11 +131,7 @@ class Arrow {
           partialHeight,
           destX,
           scroll === "reverse"
-            ? getReverseCoord(
-                partialDestY + arrowHeight / 2,
-                partialHeight,
-                canvas
-              )
+            ? getReverseCoord(partialDestY + arrowHeight / 2, partialHeight, canvas)
             : partialDestY + arrowHeight / 2,
           arrowWidth,
           partialHeight
@@ -163,21 +143,13 @@ class Arrow {
         let bodyHeight = freezeBodyHeight;
         let bodyFrameY = 0;
         let bodyDestY =
-          destY -
-          (totalBodyHeight +
-            arrowHeight / 2 -
-            originalPartialHeight -
-            freezeBodyHeight * (i - 1));
+          destY - (totalBodyHeight + arrowHeight / 2 - originalPartialHeight - freezeBodyHeight * (i - 1));
         if (bodyDestY < 0 && bodyDestY > -freezeBodyHeight) {
           bodyHeight += bodyDestY;
           bodyFrameY -= bodyDestY;
           bodyDestY = 0;
         }
-        if (
-          bodyDestY > -bodyHeight &&
-          bodyDestY < bottomBoundary &&
-          appearance !== "stealth"
-        ) {
+        if (bodyDestY > -bodyHeight && bodyDestY < bottomBoundary && appearance !== "stealth") {
           c.drawImage(
             arrowBodyImg,
             frameX,
@@ -207,16 +179,9 @@ class Arrow {
       let bodyDistance;
       if (speed === "cmod") {
         bodyDistance =
-          (this.holdEndTimes[directionIdx] -
-            this.holdStartTimes[directionIdx]) *
-          arrowHeight *
-          (cmod / 60);
+          (this.holdEndTimes[directionIdx] - this.holdStartTimes[directionIdx]) * arrowHeight * (cmod / 60);
       } else {
-        bodyDistance =
-          (this.holdEndBeats[directionIdx] -
-            this.holdStartBeats[directionIdx]) *
-          arrowHeight *
-          speed;
+        bodyDistance = (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed;
       }
 
       if (bodyDistance < arrowHeight / 2) {
@@ -232,11 +197,7 @@ class Arrow {
         destY = arrowHeight / 2;
       }
 
-      if (
-        actualDestY > topBoundary &&
-        actualDestY < bottomBoundary &&
-        appearance !== "stealth"
-      ) {
+      if (actualDestY > topBoundary && actualDestY < bottomBoundary && appearance !== "stealth") {
         c.drawImage(
           arrowImg,
           frameX,
@@ -244,9 +205,7 @@ class Arrow {
           arrowWidth,
           scroll === "reverse" ? arrowHeight - frameY : tailHeight,
           destX,
-          scroll === "reverse"
-            ? getReverseCoord(actualDestY, arrowHeight, canvas)
-            : destY,
+          scroll === "reverse" ? getReverseCoord(actualDestY, arrowHeight, canvas) : destY,
           arrowWidth,
           scroll === "reverse" ? arrowHeight - frameY : tailHeight
         );
@@ -295,10 +254,7 @@ class Arrow {
     const arrowHeight = staticAttrs ? STATIC_ARROW_HEIGHT : ARROW_HEIGHT;
 
     // regular note
-    if (
-      this.note[directionIdx] === "1" ||
-      (this.note[directionIdx] === "2" && colorFreezes)
-    ) {
+    if (this.note[directionIdx] === "1" || (this.note[directionIdx] === "2" && colorFreezes)) {
       arrowImg = arrowImages[`${noteskin}_${direction}`];
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
@@ -340,18 +296,7 @@ class Arrow {
             frameY = 0;
           } else if ([1 / 8, 3 / 8, 5 / 8, 7 / 8].includes(measureFraction)) {
             frameY = 1;
-          } else if (
-            [
-              1 / 16,
-              3 / 16,
-              5 / 16,
-              7 / 16,
-              9 / 16,
-              11 / 16,
-              13 / 16,
-              15 / 16,
-            ].includes(measureFraction)
-          ) {
+          } else if ([1 / 16, 3 / 16, 5 / 16, 7 / 16, 9 / 16, 11 / 16, 13 / 16, 15 / 16].includes(measureFraction)) {
             frameY = 3;
           } else {
             frameY = 2;
@@ -409,9 +354,7 @@ class Arrow {
           arrowWidth,
           arrowHeight,
           destX,
-          scroll === "reverse"
-            ? getReverseCoord(destY, arrowHeight, canvas)
-            : destY,
+          scroll === "reverse" ? getReverseCoord(destY, arrowHeight, canvas) : destY,
           arrowWidth,
           arrowHeight
         );
@@ -441,9 +384,7 @@ class Arrow {
           arrowWidth,
           arrowHeight,
           destX,
-          scroll === "reverse"
-            ? getReverseCoord(destY, arrowHeight, canvas)
-            : destY,
+          scroll === "reverse" ? getReverseCoord(destY, arrowHeight, canvas) : destY,
           arrowWidth,
           arrowHeight
         );
