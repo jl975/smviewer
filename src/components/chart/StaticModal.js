@@ -11,7 +11,7 @@ import AudioPlayer from "../../core/AudioPlayer";
 const canvasScaleFactor = 0.5;
 
 // temp hardcode
-const measuresPerColumn = 11;
+const measuresPerColumn = 8;
 
 const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
@@ -26,9 +26,9 @@ const StaticModal = (props) => {
 
   useEffect(() => {
     if (!modalOpen) return;
-    // console.log(gameEngine.globalParams);
+    console.log(gameEngine.globalParams);
 
-    const { shocks, frame } = gameEngine.globalParams;
+    const { shocks, frame, bpmQueue, stopQueue } = gameEngine.globalParams;
 
     const arrows = gameEngine.globalParams.arrows.map((arrow) => {
       return new StaticArrow(arrow);
@@ -43,7 +43,7 @@ const StaticModal = (props) => {
 
     const tick = { beatTick: 0, timeTick: 0 };
 
-    mods.speed = 1.5;
+    mods.speed = 1;
 
     const speedMod = mods.speed;
 
@@ -91,6 +91,8 @@ const StaticModal = (props) => {
         columnIdx: i,
         columnWidth,
         measuresPerColumn,
+        bpmQueue,
+        stopQueue,
       });
     }
 
