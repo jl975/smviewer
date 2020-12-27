@@ -68,8 +68,6 @@ class StaticGuidelines {
         c.font = "800 20px Arial";
         c.fillText(Math.round(bpm.value), columnStart - STATIC_ARROW_WIDTH + 15, destY);
 
-        console.log("  draw bpm", bpm.value, "at beat", bpm.beat);
-
         // // bpm beat line
         // c.beginPath();
         // c.moveTo(columnStart, destY);

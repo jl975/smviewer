@@ -5,6 +5,7 @@ import { Modal } from "semantic-ui-react";
 import { scaleCanvas } from "../../utils/canvasUtils";
 import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
 import StaticArrow from "./staticCanvas/StaticArrow";
+import StaticShockArrow from "./staticCanvas/staticShockArrow";
 import StaticGuidelines from "./staticCanvas/StaticGuidelines";
 import AudioPlayer from "../../core/AudioPlayer";
 
@@ -12,6 +13,7 @@ const canvasScaleFactor = 0.5;
 
 // temp hardcode
 const measuresPerColumn = 8;
+const beatsPerColumn = measuresPerColumn * 4;
 
 const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
@@ -28,7 +30,7 @@ const StaticModal = (props) => {
     if (!modalOpen) return;
     console.log(gameEngine.globalParams);
 
-    const { shocks, frame, bpmQueue, stopQueue } = gameEngine.globalParams;
+    const { bpmQueue, stopQueue } = gameEngine.globalParams;
 
     const arrows = gameEngine.globalParams.arrows.map((arrow) => {
       return new StaticArrow(arrow);
@@ -36,6 +38,10 @@ const StaticModal = (props) => {
 
     const freezes = gameEngine.globalParams.freezes.map((freeze) => {
       return new StaticArrow(freeze);
+    });
+
+    const shocks = gameEngine.globalParams.shocks.map((shock) => {
+      return new StaticShockArrow(shock);
     });
 
     let mods = gameEngine.globalParams.mods;
@@ -98,12 +104,14 @@ const StaticModal = (props) => {
 
     for (let i = 0; i < shocks.length; i++) {
       const shock = shocks[i];
-      shock.render(canvas, frame, tick, {
+      shock.render(canvas, tick, {
         mods,
-        staticAttrs: {
-          columnIdx: Math.floor(shock.measureIdx / measuresPerColumn),
-          columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-        },
+        columnIdx: Math.floor(shock.beatstamp / beatsPerColumn),
+        columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+        // staticAttrs: {
+        //   columnIdx: Math.floor(shock.measureIdx / measuresPerColumn),
+        //   columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
+        // },
       });
     }
 
