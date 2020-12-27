@@ -70,3 +70,6 @@ export const debugLogView = (text, viewNum = 1) => {
     debugDiv.textContent = text;
   }
 };
+
+// simplest way to temporarily suppress no-unused-vars warnings/errors
+export const noop = () => {};
