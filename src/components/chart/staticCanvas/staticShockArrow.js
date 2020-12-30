@@ -26,8 +26,6 @@ class StaticShockArrow {
     const { mods, columnIdx, columnHeight } = attrs;
     const { speed } = mods;
 
-    console.log("columnIdx", columnIdx);
-
     for (let i = 0; i < this.note.length; i++) {
       if (this.note[i] !== "M") continue;
       let frameX, frameY, destX, destY;

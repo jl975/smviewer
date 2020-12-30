@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Modal } from "semantic-ui-react";
 
+import { capitalize } from "../../utils";
 import { scaleCanvas } from "../../utils/canvasUtils";
 import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
+import { getChartLevel } from "../../utils/songUtils";
+import {} from "../../utils/engineUtils";
 import StaticArrow from "./staticCanvas/StaticArrow";
 import StaticShockArrow from "./staticCanvas/staticShockArrow";
 import StaticGuidelines from "./staticCanvas/StaticGuidelines";
@@ -17,18 +20,29 @@ const beatsPerColumn = measuresPerColumn * 4;
 
 const columnWidth = STATIC_ARROW_WIDTH * 4 * 2;
 
+const songDataSectionHeight = 50;
+
 const StaticModal = (props) => {
   const { modalOpen, setModalOpen, gameEngine } = props;
 
   const canvasRef = useRef(null);
+  const songDataCanvasRef = useRef(null);
+  const finalCanvasRef = useRef(null);
 
   const [canvasHeight, setCanvasHeight] = useState(0);
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasReady, setCanvasReady] = useState(false);
 
+  const chartData = {
+    title: props.song.title,
+    difficulty: props.difficulty,
+    mode: props.mode,
+    level: getChartLevel(props.song, props.difficulty, props.mode),
+  };
+
   useEffect(() => {
     if (!modalOpen) return;
-    console.log(gameEngine.globalParams);
+    // console.log(gameEngine.globalParams);
 
     const { bpmQueue, stopQueue } = gameEngine.globalParams;
 
@@ -77,10 +91,12 @@ const StaticModal = (props) => {
     setCanvasReady(true);
 
     // render the canvas
-    const canvas = canvasRef.current;
+    let canvas = canvasRef.current;
+
+    // let canvas = document.createElement("canvas");
     if (!canvas) return;
 
-    const c = canvas.getContext("2d");
+    let c = canvas.getContext("2d");
 
     // black background
     c.fillStyle = "black";
@@ -108,10 +124,6 @@ const StaticModal = (props) => {
         mods,
         columnIdx: Math.floor(shock.beatstamp / beatsPerColumn),
         columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-        // staticAttrs: {
-        //   columnIdx: Math.floor(shock.measureIdx / measuresPerColumn),
-        //   columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
-        // },
       });
     }
 
@@ -140,10 +152,43 @@ const StaticModal = (props) => {
     }
 
     scaleCanvas(canvas, canvasScaleFactor);
+
+    // render song data on second canvas
+    canvas = songDataCanvasRef.current;
+
+    c = canvas.getContext("2d");
+    c.fillStyle = "black";
+    c.fillRect(0, 0, canvasWidth * canvasScaleFactor, songDataSectionHeight);
+
+    c.font = "12px Arial";
+    c.fillStyle = "#fff";
+
+    let modsList = [];
+    modsList.push(`${mods.speed}x`);
+    if (mods.turn !== "off") {
+      let turn = capitalize(mods.turn);
+      if (mods.turn === "shuffle")
+        turn += `(${["LRDU", "UDRL", "LRUD", "DURL", "DLUR", "DULR", "RLUD", "RULD"][mods.shuffle - 1]})`;
+      modsList.push(turn);
+    }
+    if (mods.scroll !== "normal") modsList.push(capitalize(mods.scroll));
+
+    c.fillText(chartData.title, 10, 14);
+    c.fillText(`${capitalize(chartData.mode)} ${chartData.difficulty} ${chartData.level}`, 10, 28);
+    c.fillText(`Mods: ${modsList.join(", ")}`, 10, 42);
+
+    // final canvas
+    canvas = finalCanvasRef.current;
+    c = canvas.getContext("2d");
+    c.drawImage(songDataCanvasRef.current, 0, 0);
+    c.drawImage(canvasRef.current, 0, songDataSectionHeight);
+
+    canvasRef.current.remove();
+    songDataCanvasRef.current.remove();
   }, [modalOpen, canvasHeight, canvasWidth]);
 
   const onCanvasClick = (e) => {
-    const canvasRect = canvasRef.current.getBoundingClientRect();
+    const canvasRect = finalCanvasRef.current.getBoundingClientRect();
 
     const leftEdge = STATIC_ARROW_WIDTH * 2 * canvasScaleFactor + canvasRect.x;
 
@@ -159,7 +204,7 @@ const StaticModal = (props) => {
     const topEdge = (STATIC_ARROW_HEIGHT / 2) * canvasScaleFactor + canvasRect.y;
     if (e.clientY < topEdge) return;
 
-    const cy = e.clientY - topEdge;
+    const cy = e.clientY - topEdge - songDataSectionHeight - 4;
 
     const beatIdx = Math.floor(cy / (STATIC_ARROW_HEIGHT * canvasScaleFactor));
 
@@ -206,12 +251,26 @@ const StaticModal = (props) => {
       <Modal className="staticModal" open={modalOpen} onOpen={handleOpen} onClose={handleClose}>
         <div className="staticChart-container">
           <canvas
+            id="staticSongData"
+            ref={songDataCanvasRef}
+            height={songDataSectionHeight}
+            width={canvasWidth * canvasScaleFactor}
+          />
+          <canvas
             id="staticChart"
             ref={canvasRef}
             height={canvasHeight}
             width={canvasWidth}
             onClick={onCanvasClick}
           ></canvas>
+
+          <canvas
+            id="finalStaticChart"
+            ref={finalCanvasRef}
+            height={songDataSectionHeight + canvasHeight * canvasScaleFactor}
+            width={canvasWidth * canvasScaleFactor}
+            onClick={onCanvasClick}
+          />
         </div>
       </Modal>
     );

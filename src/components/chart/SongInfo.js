@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { SP_DIFFICULTIES, DP_DIFFICULTIES } from "../../constants";
+import { getChartLevel } from "../../utils/songUtils";
 
 // displays song information on the chart view
 const SongInfo = (props) => {
@@ -21,15 +21,7 @@ const SongInfo = (props) => {
           {selectedSong && (
             <>
               <div className="song-difficulty">{selectedDifficulty}</div>
-              <div className="song-level">
-                {
-                  selectedSong.levels[
-                    selectedMode === "double"
-                      ? DP_DIFFICULTIES.indexOf(selectedDifficulty) + 5
-                      : SP_DIFFICULTIES.indexOf(selectedDifficulty)
-                  ]
-                }
-              </div>
+              <div className="song-level">{getChartLevel(selectedSong, selectedDifficulty, selectedMode)}</div>
             </>
           )}
         </div>

@@ -402,7 +402,6 @@ class AudioPlayer {
   }
 
   play(loop = false) {
-    console.log(loop);
     if (this.getChartAudioStatus() === "pending") {
       return;
     }
