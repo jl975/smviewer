@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { Modal } from "semantic-ui-react";
+import { Modal, Icon, Button } from "semantic-ui-react";
 
 import { capitalize } from "../../utils";
 import { scaleCanvas } from "../../utils/canvasUtils";
 import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
 import { getChartLevel } from "../../utils/songUtils";
-import {} from "../../utils/engineUtils";
+import AudioPlayer from "../../core/AudioPlayer";
 import StaticArrow from "./staticCanvas/StaticArrow";
 import StaticShockArrow from "./staticCanvas/staticShockArrow";
 import StaticGuidelines from "./staticCanvas/StaticGuidelines";
-import AudioPlayer from "../../core/AudioPlayer";
+import HoldButton from "../ui/HoldButton";
 
 const canvasScaleFactor = 0.5;
 
@@ -25,6 +25,7 @@ const songDataSectionHeight = 50;
 const StaticModal = (props) => {
   const { modalOpen, setModalOpen, gameEngine } = props;
 
+  const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const songDataCanvasRef = useRef(null);
   const finalCanvasRef = useRef(null);
@@ -237,6 +238,20 @@ const StaticModal = (props) => {
     return arrows[arrows.length - 1].timestamp;
   };
 
+  const scrollIncrement = 5;
+
+  const scrollLeft = () => {
+    const container = containerRef.current;
+    container.scrollLeft = Math.max(container.scrollLeft - scrollIncrement, 0);
+  };
+  const scrollRight = () => {
+    const container = containerRef.current;
+    container.scrollLeft = Math.min(
+      container.scrollLeft + scrollIncrement,
+      container.scrollWidth - container.clientWidth
+    );
+  };
+
   const handleOpen = () => {
     setModalOpen(true);
   };
@@ -249,20 +264,9 @@ const StaticModal = (props) => {
   if (canvasReady) {
     return (
       <Modal className="staticModal" open={modalOpen} onOpen={handleOpen} onClose={handleClose}>
-        <div className="staticChart-container">
-          <canvas
-            id="staticSongData"
-            ref={songDataCanvasRef}
-            height={songDataSectionHeight}
-            width={canvasWidth * canvasScaleFactor}
-          />
-          <canvas
-            id="staticChart"
-            ref={canvasRef}
-            height={canvasHeight}
-            width={canvasWidth}
-            onClick={onCanvasClick}
-          ></canvas>
+        <div className="staticChart-container" ref={containerRef}>
+          <canvas ref={songDataCanvasRef} height={songDataSectionHeight} width={canvasWidth * canvasScaleFactor} />
+          <canvas ref={canvasRef} height={canvasHeight} width={canvasWidth} onClick={onCanvasClick}></canvas>
 
           <canvas
             id="finalStaticChart"
@@ -271,7 +275,21 @@ const StaticModal = (props) => {
             width={canvasWidth * canvasScaleFactor}
             onClick={onCanvasClick}
           />
+
+          {/* <div className="staticChart-overlay"> */}
+          <Button className="action-button close-icon" onClick={handleClose}>
+            <Icon name="close" />
+          </Button>
+          <div className="scroll-buttons">
+            <HoldButton className="action-button scroll-left" onClick={scrollLeft}>
+              <Icon name="angle left" />
+            </HoldButton>
+            <HoldButton className="action-button scroll-right" onClick={scrollRight}>
+              <Icon name="angle right" />
+            </HoldButton>
+          </div>
         </div>
+        {/* </div> */}
       </Modal>
     );
   }
