@@ -1,20 +1,87 @@
-.staticModal {
-  // min-height: 100%;
-  width: 100% !important;
-  padding: 10px;
-
+.staticModal.ui.modal {
+  position: absolute;
+  width: auto !important;
+  max-width: 100%;
+  background-color: #202225;
 }
 
 .staticChart-container {
-  // width: 100%;
-  height: 100vh;
+  // position: relative;
   overflow: scroll;
-  
-  #staticChart {
-    // background: black;
-    // border: 1px solid rgb(0, 255, 0);
-    // width: 200%;
-    // height: 50000px;
-    // transform: scale(0.25)
+  padding: 10px;
+
+  #finalStaticChart {
+    margin-bottom: 40px;
   }
+
+  .ui.button.action-button {
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    background: #ccc;
+    line-height: 0;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.1s;
+
+    .icon {
+      margin: 0 !important;
+      height: 0 !important;
+      opacity: 1;
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+  
+    .icon {
+      font-size: 26px;
+    }
+  }
+  
+  .scroll-buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    // background: rgba(120, 255, 255, 0.5);
+  
+    .scroll-left, .scroll-right {
+      width: 60px;
+      height: 60px;
+  
+      .icon {
+        font-size: 32px;
+      }
+    }
+  }
+
+}
+
+.staticChart-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  // background: pink;
+
+
 }

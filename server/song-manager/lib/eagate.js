@@ -106,15 +106,31 @@ const getSongPosition = async ({ title, id }) => {
   }
 
   if (songFound) {
+    console.log("followingSongFound", followingSongFound);
     console.log("\nSong position:");
-    console.log(orderedSongs[orderedSongs.length - 3].title);
-    console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
-    console.log(orderedSongs[orderedSongs.length - 1].title);
+
+    let previousSong, actualSong;
+
+    // if followingSongFound is false, it means songFound is the last element in orderedSongs
+    if (!followingSongFound) {
+      console.log(orderedSongs[orderedSongs.length - 3].title);
+      console.log(orderedSongs[orderedSongs.length - 2].title);
+      console.log(orderedSongs[orderedSongs.length - 1].title, "***<-- the new song");
+      previousSong = orderedSongs[orderedSongs.length - 2];
+      actualSong = orderedSongs[orderedSongs.length - 1];
+    }
+    // otherwise, songFound is the second to last element in orderedSongs
+    else {
+      console.log(orderedSongs[orderedSongs.length - 3].title);
+      console.log(orderedSongs[orderedSongs.length - 2].title, "***<-- the new song");
+      console.log(orderedSongs[orderedSongs.length - 1].title);
+      previousSong = orderedSongs[orderedSongs.length - 3];
+      actualSong = orderedSongs[orderedSongs.length - 2];
+    }
+
     console.log("\nDone. Please make sure the Title Sort field is correct if it was automatically filled out.\n");
 
-    const previousSong = orderedSongs[orderedSongs.length - 3];
-    const actualSong = orderedSongs[orderedSongs.length - 2];
-    const nextSong = orderedSongs[orderedSongs.length - 1];
+    // const nextSong = orderedSongs[orderedSongs.length - 1];
 
     const abcSort = parsedTsv.find((song) => song.hash === previousSong.id).abcSort;
 
@@ -123,8 +139,8 @@ const getSongPosition = async ({ title, id }) => {
       previousSongTitle: previousSong.title,
       songId: actualSong.id,
       songTitle: actualSong.title,
-      nextSongId: nextSong.id,
-      nextSongTitle: nextSong.title,
+      // nextSongId: nextSong.id,
+      // nextSongTitle: nextSong.title,
       abcSort,
     };
     return json;
