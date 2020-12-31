@@ -22,11 +22,9 @@ import {
 import AudioPlayer from "../../core/AudioPlayer";
 import { ReactComponent as AudioWave } from "../../svg/audiowave.svg";
 
-const userSettings = getUserSettings();
-
 const SongForm = (props) => {
   const { simfileList, selectedDifficulty, selectedMode, previewAudio } = props;
-  // console.log("SongForm props", props);
+  const userSettings = getUserSettings();
   const songGridContainer = useRef();
 
   const simfileOptions = simfileList.map((song) => {
@@ -122,7 +120,6 @@ const SongForm = (props) => {
       });
 
     setDisplayedSongs(songs);
-    // console.log(songs);
     songGridContainer.current.scrollTop = 0;
   }, [selectedFilters, selectedMode]);
 
@@ -152,8 +149,9 @@ const SongForm = (props) => {
       audio seek time to 0 (a bug?). Force an interaction in the beginning to get this
       out of the way and prevent overwriting of the preset time
     */
-    document.body.click();
-
+    setTimeout(() => {
+      document.body.click();
+    });
     // Select a pre-selected song
     // Highest priority: song contained in share url
     if (presetParams.song) {
@@ -161,7 +159,7 @@ const SongForm = (props) => {
     }
     // Second highest priority: song saved from user's previous session
     else if (userSettings.song) {
-      onSongSelect(userSettings.song);
+      onSongSelect(userSettings.song, { difficulty: userSettings.difficulty });
     }
     // Lowest priority: arbitrary song chosen to be the default
     else {
@@ -174,7 +172,9 @@ const SongForm = (props) => {
     if (selectedSongOption) {
       const song = simfileList.find((song) => song.hash === selectedSongOption);
       setSelectedSong(song);
-      AudioPlayer.storeAudioSource(song);
+
+      // commented out because it was redundant and overriding initialProgress
+      // AudioPlayer.storeAudioSource(song);
     }
   }, [selectedSongOption]);
 
@@ -204,7 +204,8 @@ const SongForm = (props) => {
     let initialProgress = 0;
 
     // initialize progress only if this is the song being initialized on page load
-    if (!props.previousSong) {
+    // or if the previous song is the same as the current song (e.g. came from different route)
+    if (!props.previousSong || props.previousSong.hash === songId) {
       initialProgress = getSavedSongProgress();
     }
 
@@ -223,64 +224,74 @@ const SongForm = (props) => {
       return;
     }
 
-    // Auto-select the selected song's chart based on the applied level/difficulty filters.
-    // 4 possible cases
-
-    // Neither level nor difficulty filter applied
-    if (selectedFilters.level === "all" && selectedFilters.difficulty === "all") {
-      // select the chart corresponding to the selected difficulty option.
-      // if the song does not have a chart for that difficulty, choose the closest difficulty.
-      selectClosestDifficulty(song);
+    // If difficulty is specified, select this difficulty
+    if (params.difficulty) {
+      props.onDifficultySelect(params.difficulty);
     }
 
-    // Level filter applied but not difficulty
-    else if (selectedFilters.level !== "all" && selectedFilters.difficulty === "all") {
-      const levels = selectedMode === "double" ? song.levels.slice(5, 9) : song.levels.slice(0, 5);
+    // Otherwise, auto-select the selected song's chart based on the applied level/difficulty filters.
+    // Ignore if the previous song is the same as the selected song.
+    else if (!(props.previousSong && props.previousSong.hash === songId)) {
+      // short-circuit if difficulty is specified
 
-      // if the song has a chart that matches the level filter, choose that chart
-      if (levels.includes(selectedFilters.level)) {
-        for (let i = 0; i < levels.length; i++) {
-          const level = levels[i];
-          if (level === selectedFilters.level) {
-            const difficulties = selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
-            props.onDifficultySelect(difficulties[i]);
-            break;
+      // 4 possible cases of filter combinations
+
+      // Neither level nor difficulty filter applied
+      if (selectedFilters.level === "all" && selectedFilters.difficulty === "all") {
+        // select the chart corresponding to the selected difficulty option.
+        // if the song does not have a chart for that difficulty, choose the closest difficulty.
+        selectClosestDifficulty(song);
+      }
+
+      // Level filter applied but not difficulty
+      else if (selectedFilters.level !== "all" && selectedFilters.difficulty === "all") {
+        const levels = selectedMode === "double" ? song.levels.slice(5, 9) : song.levels.slice(0, 5);
+
+        // if the song has a chart that matches the level filter, choose that chart
+        if (levels.includes(selectedFilters.level)) {
+          for (let i = 0; i < levels.length; i++) {
+            const level = levels[i];
+            if (level === selectedFilters.level) {
+              const difficulties = selectedMode === "double" ? DP_DIFFICULTIES : SP_DIFFICULTIES;
+              props.onDifficultySelect(difficulties[i]);
+              break;
+            }
           }
+        }
+
+        // if the song does not have a chart that matches the level filter, go with the closest difficulty
+        else {
+          selectClosestDifficulty(song);
         }
       }
 
-      // if the song does not have a chart that matches the level filter, go with the closest difficulty
-      else {
-        selectClosestDifficulty(song);
+      // Difficulty filter applied but not level
+      else if (selectedFilters.difficulty !== "all" && selectedFilters.level === "all") {
+        let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
+        if (selectedMode === "double") difficultyIdx += 4;
+
+        // if the song has a chart that matches the difficulty filter, choose that chart
+        if (typeof song.levels[difficultyIdx] === "number") {
+          props.onDifficultySelect(selectedFilters.difficulty);
+        }
+
+        // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
+        else {
+          selectClosestDifficulty(song);
+        }
       }
-    }
 
-    // Difficulty filter applied but not level
-    else if (selectedFilters.difficulty !== "all" && selectedFilters.level === "all") {
-      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
-      if (selectedMode === "double") difficultyIdx += 4;
+      // Both level and difficulty filters applied
+      // equivalent to a regular else block but condition listed explicitly for clarity
+      else if (selectedFilters.difficulty !== "all" && selectedFilters.level !== "all") {
+        let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
+        if (selectedMode === "double") difficultyIdx += 4;
 
-      // if the song has a chart that matches the difficulty filter, choose that chart
-      if (typeof song.levels[difficultyIdx] === "number") {
-        props.onDifficultySelect(selectedFilters.difficulty);
-      }
-
-      // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
-      else {
-        selectClosestDifficulty(song);
-      }
-    }
-
-    // Both level and difficulty filters applied
-    // equivalent to a regular else block but condition listed explicitly for clarity
-    else if (selectedFilters.difficulty !== "all" && selectedFilters.level !== "all") {
-      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty);
-      if (selectedMode === "double") difficultyIdx += 4;
-
-      if (song.levels[difficultyIdx] === selectedFilters.level) {
-        props.onDifficultySelect(selectedFilters.difficulty);
-      } else {
-        selectClosestDifficulty(song);
+        if (song.levels[difficultyIdx] === selectedFilters.level) {
+          props.onDifficultySelect(selectedFilters.difficulty);
+        } else {
+          selectClosestDifficulty(song);
+        }
       }
     }
 

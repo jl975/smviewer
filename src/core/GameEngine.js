@@ -156,7 +156,9 @@ class GameEngine {
       }
       this.AudioPlayer.storePreviewSource(songSelect.song, simfile);
 
-      this.AudioPlayer.resync();
+      setTimeout(() => {
+        this.AudioPlayer.resync();
+      });
     }
   }
 
@@ -795,7 +797,6 @@ class GameEngine {
   }
 
   restartTl() {
-    // console.log("call restart");
     this.tl.restart();
   }
   pauseTl() {

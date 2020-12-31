@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "semantic-ui-react";
 import { connect } from "react-redux";
+// import {  } from 'react-router-dom'
 
 import AudioPlayer from "../../core/AudioPlayer";
 import { stopPreviewAudio } from "../../actions/AudioActions";
@@ -11,14 +12,14 @@ import { ReactComponent as SongIcon } from "../../svg/music_search.svg";
 // import { DEBUG_MODE } from "../../constants";
 
 const Navbar = (props) => {
-  const { activeView, chartAudio } = props;
+  const { activeView, chartAudio, history } = props;
 
   const navItems = [
-    { view: "song", icon: "music", svgIcon: SongIcon, text: "Song" },
-    { view: "mods", icon: "sidebar", svgIcon: ModsIcon, text: "Mods" },
-    { view: "chart", svgIcon: ChartIcon, text: "Chart" },
+    { view: "song", icon: "music", svgIcon: SongIcon, text: "Song", path: "/" },
+    { view: "mods", icon: "sidebar", svgIcon: ModsIcon, text: "Mods", path: "/" },
+    { view: "chart", svgIcon: ChartIcon, text: "Chart", path: "/" },
     { view: "settings", icon: "setting", text: "Settings" },
-    { view: "help", icon: "help circle", text: "Help" },
+    { view: "help", icon: "help circle", text: "Help", path: "/help" },
     // { view: DEBUG_MODE ? "logView1" : "", icon: "", text: "" },
     // { view: "3", icon: "", text: "" },
   ];
@@ -29,6 +30,11 @@ const Navbar = (props) => {
     }
     AudioPlayer.stopSongPreview();
     props.setActiveView(view);
+
+    const navItem = navItems.find((item) => item.view === view);
+    if (navItem && navItem.path) {
+      history.push(navItem.path);
+    }
   };
 
   const isDisabled = () => {

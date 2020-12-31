@@ -17,7 +17,8 @@ import { DEFAULT_OFFSET } from "../constants";
 import { debugLog } from "../utils/debugUtils";
 
 class AudioPlayer {
-  constructor() {
+  constructor(name) {
+    this.name = name;
     /*
       Trying to share the same audio source for both song and preview was causing too many
       issues. Sticking to keeping separate Howl objects for each even if means loading
@@ -168,6 +169,9 @@ class AudioPlayer {
       // });
 
       // console.log(`Added ${song.title} to AudioPlayer.sources`, this.sources);
+    } else {
+      this.setLoadingAudio(false);
+      this.seekProgress(initialProgress);
     }
   }
 
@@ -253,7 +257,6 @@ class AudioPlayer {
     // NOTE: the following block will run 10 times on every resync
     try {
       const currentTime = this.getCurrentTime();
-      // console.log("currentTime", currentTime);
       if (typeof currentTime === "number") {
         isAudioStable = true;
         // console.log(
@@ -271,6 +274,7 @@ class AudioPlayer {
           // currentTime + DEFAULT_OFFSET + currentSong.globalParams.offset
           currentTime + globalOffset + currentSong.globalParams.offset
         );
+
         this.updateProgressOnce();
 
         if (this.getChartAudioStatus() === "playing") {
@@ -461,7 +465,6 @@ class AudioPlayer {
       this.getCurrentPreview().audio.stop(this.currentPreviewId);
     }
 
-    // this.storeAudioSource(song);
     this.currentPreview = song.hash;
 
     const preview = this.getCurrentPreview().audio;
@@ -491,7 +494,6 @@ class AudioPlayer {
   }
 }
 
-export default new AudioPlayer();
+export default new AudioPlayer("main");
 
-export const OffsetAdjustAudioPlayer = new AudioPlayer();
-window.oaap = OffsetAdjustAudioPlayer;
+export const OffsetAdjustAudioPlayer = new AudioPlayer("offset");

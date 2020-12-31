@@ -31,6 +31,7 @@ const ChartArea = (props) => {
     setGameEngine,
   } = props;
 
+  const [mounted, setMounted] = useState(false);
   const [canvas, setCanvas] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
@@ -45,6 +46,7 @@ const ChartArea = (props) => {
     selectedDifficulty,
     selectedMode,
     mods,
+    mounted,
   });
 
   // define canvas and resize listener on mount
@@ -53,6 +55,7 @@ const ChartArea = (props) => {
     setCanvas(chartArea.current);
 
     Progress.initCanvas();
+    setMounted(true);
   }, []);
 
   // change chart dimensions depending on single or double
@@ -106,7 +109,7 @@ const ChartArea = (props) => {
 
   // reset chart if mode, difficulty, or mods change
   useEffect(() => {
-    const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods };
+    const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods, mounted };
 
     if (!canvas) return;
 
@@ -118,7 +121,7 @@ const ChartArea = (props) => {
 
     Object.keys(currentState).forEach((thing) => {
       if (prevState[thing] !== currentState[thing]) {
-        if (thing === "sm") {
+        if (thing === "sm" || thing === "mounted") {
           // console.log(
           //   `${thing} changed from ${
           //     prevState[thing]
@@ -126,7 +129,6 @@ const ChartArea = (props) => {
           //       : prevState[thing]
           //   } \n\nto ${currentState[thing].slice(0, 30)}`
           // );
-
           // flag the old game engine as killed, so any residual invocations
           // of its mainLoop can be squashed until it is garbage collected
           if (gameEngine) {
@@ -190,7 +192,7 @@ const ChartArea = (props) => {
     if (gameEngine) {
       gameEngine.updateExternalGlobalParams({ mods });
     }
-  }, [canvas, sm, selectedDifficulty, selectedMode, mods]);
+  }, [canvas, sm, selectedDifficulty, selectedMode, mods, props.location]);
 
   const shareParams = {
     song: selectedSong,
