@@ -8,6 +8,7 @@ body {
   // height: 20px;
   overflow: auto;
   min-width: 0;
+  // font-family: 'Barlow', 'Lato', sans-serif
 }
 
 #root {
@@ -21,6 +22,7 @@ body {
 // animated SVGs
 @import "./svg/svg.scss";
 
+@import './scss/fonts';
 @import "./scss/main";
 @import "./scss/mobile-nav";
 @import "./scss/song-view";
