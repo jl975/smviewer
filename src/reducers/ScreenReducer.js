@@ -6,12 +6,17 @@ const initialState = {
   innerWidth: window.innerWidth,
   innerHeight: window.innerHeight,
   activeView: userSettings.activeView || "song",
+  previousActiveView: null,
+  fullScreenModal: false,
   modalOpen: {
     welcome: false,
     offset: false,
     offsetConfirm: false,
+    settings: false,
   },
 };
+
+const fullScreenModals = ["welcome", "offset", "offsetConfirm"];
 
 export const screen = (state = initialState, action) => {
   switch (action.type) {
@@ -25,22 +30,35 @@ export const screen = (state = initialState, action) => {
     }
     case actions.SET_ACTIVE_VIEW: {
       const activeView = action.payload;
-      updateUserSettings({ activeView });
-      return { ...state, activeView };
+      const previousActiveView = state.activeView;
+      updateUserSettings({ activeView, previousActiveView });
+      return { ...state, activeView, previousActiveView };
     }
     case actions.SET_MODAL_OPEN: {
       const { modalName, isOpen } = action.payload;
       const newState = { ...state };
+      newState.fullScreenModal = false;
 
       // only one modal open at a time
       for (let key in newState.modalOpen) {
         newState.modalOpen[key] = key === modalName;
         if (key === modalName) {
           newState.modalOpen[key] = isOpen;
+          if (isOpen && fullScreenModals.includes(modalName)) {
+            newState.fullScreenModal = true;
+          }
         } else {
           newState.modalOpen[key] = false;
         }
       }
+      return newState;
+    }
+    case actions.CLOSE_ALL_MODALS: {
+      const newState = { ...state };
+      for (let key in newState.modalOpen) {
+        newState.modalOpen[key] = false;
+      }
+      newState.fullScreenModal = false;
       return newState;
     }
     default:

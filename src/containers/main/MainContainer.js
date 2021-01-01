@@ -4,15 +4,17 @@ import { connect } from "react-redux";
 import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
-import WelcomeModal from "../../components/welcome/WelcomeModal";
-import OffsetModal from "../../components/chart/OffsetModal";
-import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen, setModalOpen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
+
+import WelcomeModal from "../../components/welcome/WelcomeModal";
+import OffsetModal from "../../components/chart/OffsetModal";
+import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
+import SettingsModal from "../../components/settings/SettingsModal";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -101,6 +103,7 @@ const MainContainer = (props) => {
             <WelcomeModal modalOpen={modalOpen.welcome} />
             <OffsetModal modalOpen={modalOpen.offset} />
             <OffsetConfirmModal modalOpen={modalOpen.offsetConfirm} />
+            <SettingsModal modalOpen={modalOpen.settings} />
 
             {DEBUG_MODE && <LogView />}
           </div>

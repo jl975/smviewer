@@ -1,6 +1,7 @@
 export const RESIZE_SCREEN = "RESIZE_SCREEN";
 export const SET_ACTIVE_VIEW = "SET_ACTIVE_VIEW";
 export const SET_MODAL_OPEN = "SET_MODAL_OPEN";
+export const CLOSE_ALL_MODALS = "CLOSE_ALL_MODALS";
 
 export const resizeScreen = (e) => (dispatch) => {
   dispatch({
@@ -23,5 +24,11 @@ export const setModalOpen = (modalName, isOpen = true) => (dispatch) => {
       modalName,
       isOpen,
     },
+  });
+};
+
+export const closeAllModals = () => (dispatch) => {
+  dispatch({
+    type: CLOSE_ALL_MODALS,
   });
 };

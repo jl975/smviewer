@@ -74,3 +74,18 @@
   }
 }
 
+
+
+.ui.modal.page-modal {
+  height: 100vh;
+  margin: 0 !important;
+
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+  }
+}
+
+// semantic-ui overrides
+.ui.dimmer {
+  padding: 0;
+}

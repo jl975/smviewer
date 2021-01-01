@@ -1,11 +1,25 @@
-.navbar {
+.navbar-wrapper {
   position: fixed;
   bottom: 0;
-  height: 60px;
   width: 100%;
-  display: flex;
   background: rgba(250, 252, 255, 0.975);
-  z-index: 100;
+
+  // layer above semantic-ui modal by default
+  z-index: 1100;
+
+  // avoid iPhone X bottom notch area
+  padding-bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+
+  // layer behind semantic-ui modal if modal is full screen
+  &.behind-modal {
+    z-index: 900;
+  }
+}
+
+.navbar {
+  height: 60px;
+  display: flex;
 
   .navbar_item {
     height: 100%;
