@@ -14,7 +14,7 @@ const WelcomeModal = (props) => {
   return (
     <Modal open={modalOpen} className="information-modal welcomeModal">
       <div className="welcome-blurb">
-        <p>Welcome to SMViewer!</p>
+        <p>Welcome to {process.env.REACT_APP_TITLE}!</p>
         <p>First, calibrate the app&#39;s global offset to ensure the charts are in sync with the audio.</p>
       </div>
       <div className="modal-actions">

@@ -4,11 +4,11 @@ import { Modal } from "semantic-ui-react";
 
 import { setModalOpen } from "../../actions/ScreenActions";
 
-const HelpModal = () => {
-  // const { modalOpen } = props
+const HelpModal = (props) => {
+  const { modalOpen } = props;
 
   return (
-    <Modal open className="helpModal">
+    <Modal open={modalOpen} className="page-modal helpModal">
       <h3>Help</h3>
     </Modal>
   );

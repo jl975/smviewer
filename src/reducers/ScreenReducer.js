@@ -13,6 +13,7 @@ const initialState = {
     offset: false,
     offsetConfirm: false,
     settings: false,
+    help: false,
   },
 };
 

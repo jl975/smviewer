@@ -15,6 +15,7 @@ import WelcomeModal from "../../components/welcome/WelcomeModal";
 import OffsetModal from "../../components/chart/OffsetModal";
 import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
 import SettingsModal from "../../components/settings/SettingsModal";
+import HelpModal from "../../components/help/HelpModal";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -62,7 +63,7 @@ const MainContainer = (props) => {
 
     props.selectSong(song);
 
-    document.title = `${song.title} - SMViewer`;
+    document.title = `${song.title} - ${process.env.REACT_APP_TITLE}`;
 
     // retrieve audio file and simfile from song.simfilePath
 
@@ -104,6 +105,7 @@ const MainContainer = (props) => {
             <OffsetModal modalOpen={modalOpen.offset} />
             <OffsetConfirmModal modalOpen={modalOpen.offsetConfirm} />
             <SettingsModal modalOpen={modalOpen.settings} />
+            <HelpModal modalOpen={modalOpen.help} />
 
             {DEBUG_MODE && <LogView />}
           </div>
