@@ -1,3 +1,32 @@
+.ui.selection.dropdown {
+  background-color: var(--background-input);
+  color: var(--text-input);
+
+  .menu {
+    background-color: var(--background-dropdown-option);
+
+    >.item {
+      background-color: var(--background-dropdown-option);
+
+      > .description {
+        color: var(--text-input-placeholder);
+      }
+      > .text {
+        color: var(--text-input);
+      }
+
+      &:hover {
+        background-color: var(--background-hover-dropdown-option);
+      }
+    }
+  }
+
+  &.selected, .selected.item {
+    background-color: var(--background-dropdown-option-selected);
+  }
+
+}
+
 .toggleSwitch-wrapper {
   display: flex;
   align-items: center;
@@ -50,8 +79,7 @@
 
     &.selected {
       color: #fff;
-      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
-        -1px -1px 0 #000;
+      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
     }
   }
 }
@@ -63,29 +91,4 @@
   font-family: inherit;
   color: #0080ff;
   text-decoration: underline;
-}
-
-.information-modal {
-  padding: 15px;
-
-  .modal-actions {
-    margin-top: 20px;
-    text-align: center;
-  }
-}
-
-
-
-.ui.modal.page-modal {
-  height: 100vh;
-  margin: 0 !important;
-
-  @media only screen and (max-width: 767px) {
-    width: 100%;
-  }
-}
-
-// semantic-ui overrides
-.ui.dimmer {
-  padding: 0;
 }

@@ -1,0 +1,28 @@
+:root {
+  --text-normal: rgba(0,0,0,.87);
+  --text-input: rgba(0,0,0,.87);
+  --text-input-placeholder: rgba(0,0,0,.4);
+  --modal-background: #fff;
+  --modal-heading: #000;
+  --background-primary: #fff;
+  --background-input: rgba(250, 252, 255, 0.975);
+  --background-dropdown-option: rgba(255,255,255,1);
+  --background-dropdown-option-selected: rgba(0,0,0,0.03);
+  --background-hover-dropdown-option: rgba(0,0,0,.05);
+}
+
+:root {
+  // --text-normal: pink;
+  // --background-primary: red;
+  // --background-input: pink;
+  // --text-input: red;
+  // --text-input-placeholder: maroon;
+  // --background-dropdown-option: rgb(0, 128, 0);
+  //   --background-dropdown-option-selected: rgba(0, 128, 0,0.97);
+  // --background-hover-dropdown-option: blue;
+}
+
+.dark-theme {
+  --modal-background: #202225;
+  --modal-heading: #fff;
+}
