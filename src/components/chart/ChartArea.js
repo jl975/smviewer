@@ -6,6 +6,7 @@ import "inobounce";
 import { presetParams, getJacketPath } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
+import { setModalOpen } from "../../actions/ScreenActions";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
 import ShareModal from "./ShareModal";
@@ -33,12 +34,9 @@ const ChartArea = (props) => {
 
   const [mounted, setMounted] = useState(false);
   const [canvas, setCanvas] = useState(null);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
-
-  const [staticModalOpen, setStaticModalOpen] = useState(false);
 
   const prevState = usePrevious({
     canvas,
@@ -244,22 +242,23 @@ const ChartArea = (props) => {
           </div>
         </div>
         <div className="row">
-          <PlayControls controlsDisabled={!gameEngine || loadingAudio} setShareModalOpen={setShareModalOpen} />
+          <PlayControls
+            controlsDisabled={!gameEngine || loadingAudio}
+            setShareModalOpen={() => props.setModalOpen("share", true)}
+          />
         </div>
         <div className="row song-info-area">
           <SongInfo />
           {selectedSong && (
             <div>
-              <Button className="view-static-btn" onClick={() => setStaticModalOpen(true)}>
+              <Button className="view-static-btn" onClick={() => props.setModalOpen("staticChart", true)}>
                 View static chart
               </Button>
             </div>
           )}
         </div>
-        <ShareModal modalOpen={shareModalOpen} setModalOpen={setShareModalOpen} data={shareParams} />
-        {gameEngine && (
-          <StaticModal modalOpen={staticModalOpen} setModalOpen={setStaticModalOpen} gameEngine={gameEngine} />
-        )}
+        <ShareModal modalOpen={screen.modalOpen.share} data={shareParams} />
+        {gameEngine && <StaticModal modalOpen={screen.modalOpen.staticChart} gameEngine={gameEngine} />}
       </div>
     </div>
   );
@@ -277,8 +276,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);

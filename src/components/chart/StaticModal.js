@@ -6,6 +6,7 @@ import { capitalize } from "../../utils";
 import { scaleCanvas } from "../../utils/canvasUtils";
 import { STATIC_ARROW_HEIGHT, STATIC_ARROW_WIDTH } from "../../constants";
 import { getChartLevel } from "../../utils/songUtils";
+import { setModalOpen } from "../../actions/ScreenActions";
 import AudioPlayer from "../../core/AudioPlayer";
 import StaticArrow from "./staticCanvas/StaticArrow";
 import StaticShockArrow from "./staticCanvas/staticShockArrow";
@@ -253,10 +254,10 @@ const StaticModal = (props) => {
   };
 
   const handleOpen = () => {
-    setModalOpen(true);
+    setModalOpen("staticChart", true);
   };
   const handleClose = () => {
-    setModalOpen(false);
+    setModalOpen("staticChart", false);
     setCanvasReady(false);
     setCanvasHeight(0);
   };
@@ -310,8 +311,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StaticModal);
