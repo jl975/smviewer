@@ -68,7 +68,7 @@ const ShareModal = (props) => {
   };
 
   return (
-    <Modal className="shareModal" size="fullscreen" open={modalOpen} onClose={() => setModalOpen("share", false)}>
+    <Modal className="information-modal shareModal" open={modalOpen} onClose={() => setModalOpen("share", false)}>
       <Modal.Header>Share link to chart</Modal.Header>
       <Modal.Content>
         <Input type="text" className="share-url-input" value={shareUrl.current} action>

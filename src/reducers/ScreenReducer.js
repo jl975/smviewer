@@ -19,7 +19,7 @@ const initialState = {
   },
 };
 
-const fullScreenModals = ["welcome", "offset", "offsetConfirm"];
+const fullScreenModals = ["welcome", "offset", "offsetConfirm", "staticChart"];
 
 export const screen = (state = initialState, action) => {
   switch (action.type) {
