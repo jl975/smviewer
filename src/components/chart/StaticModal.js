@@ -276,20 +276,20 @@ const StaticModal = (props) => {
             onClick={onCanvasClick}
           />
 
-          {/* <div className="staticChart-overlay"> */}
           <Button className="action-button close-icon" onClick={handleClose}>
             <Icon name="close" />
           </Button>
           <div className="scroll-buttons">
-            <HoldButton className="action-button scroll-left" onClick={scrollLeft}>
-              <Icon name="angle left" />
-            </HoldButton>
-            <HoldButton className="action-button scroll-right" onClick={scrollRight}>
-              <Icon name="angle right" />
-            </HoldButton>
+            <div className="scroll-buttons-wrapper">
+              <HoldButton className="action-button scroll-left" onClick={scrollLeft}>
+                <Icon name="angle left" />
+              </HoldButton>
+              <HoldButton className="action-button scroll-right" onClick={scrollRight}>
+                <Icon name="angle right" />
+              </HoldButton>
+            </div>
           </div>
         </div>
-        {/* </div> */}
       </Modal>
     );
   }
