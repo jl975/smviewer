@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { connect } from "react-redux";
 import { Modal, Button, Input } from "semantic-ui-react";
 import copy from "copy-to-clipboard";
 
 import { getOriginPath } from "../../utils";
 import Progress from "./canvas/Progress";
+import { setModalOpen } from "../../actions/ScreenActions";
 
 const difficulties = {
   Beginner: "b",
@@ -66,20 +68,10 @@ const ShareModal = (props) => {
   };
 
   return (
-    <Modal
-      className="shareModal"
-      size="fullscreen"
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-    >
+    <Modal className="shareModal" size="fullscreen" open={modalOpen} onClose={() => setModalOpen("share", false)}>
       <Modal.Header>Share link to chart</Modal.Header>
       <Modal.Content>
-        <Input
-          type="text"
-          className="share-url-input"
-          value={shareUrl.current}
-          action
-        >
+        <Input type="text" className="share-url-input" value={shareUrl.current} action>
           <input />
           <Button onClick={copyShareUrl}>Copy</Button>
         </Input>
@@ -89,4 +81,10 @@ const ShareModal = (props) => {
   );
 };
 
-export default ShareModal;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ShareModal);

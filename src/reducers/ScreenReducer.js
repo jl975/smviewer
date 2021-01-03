@@ -12,6 +12,8 @@ const initialState = {
     welcome: false,
     offset: false,
     offsetConfirm: false,
+    share: false,
+    staticChart: false,
     settings: false,
     help: false,
   },
