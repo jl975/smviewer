@@ -256,8 +256,8 @@ const StaticModal = (props) => {
   const handleOpen = () => {
     setModalOpen("staticChart", true);
   };
-  const handleClose = () => {
-    setModalOpen("staticChart", false);
+  const handleClose = async () => {
+    await setModalOpen("staticChart", false);
     setCanvasReady(false);
     setCanvasHeight(0);
   };
