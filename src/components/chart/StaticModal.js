@@ -253,6 +253,12 @@ const StaticModal = (props) => {
     );
   };
 
+  const showScrollButtons = () => {
+    const container = containerRef.current;
+    if (!container) return false;
+    return container.clientWidth < container.scrollWidth;
+  };
+
   const handleOpen = () => {
     setModalOpen("staticChart", true);
   };
@@ -260,6 +266,29 @@ const StaticModal = (props) => {
     await setModalOpen("staticChart", false);
     setCanvasReady(false);
     setCanvasHeight(0);
+  };
+
+  const saveAsImage = () => {
+    const canvas = finalCanvasRef.current;
+    const dataUrl = canvas.toDataURL("image/png", 1.0);
+    const a = document.createElement("a");
+    a.href = dataUrl;
+
+    let filename = `${props.song.title} `;
+    filename += props.difficulty === "Beginner" ? "b" : props.difficulty.slice(0, 1);
+    filename += props.mode.slice(0, 1).toUpperCase();
+    filename += "P.png";
+
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  const copyImage = () => {
+    const canvas = finalCanvasRef.current;
+
+    canvas.toBlob((blob) => navigator.clipboard.write([new window.ClipboardItem({ "image/png": blob })]));
   };
 
   if (canvasReady) {
@@ -277,19 +306,31 @@ const StaticModal = (props) => {
             onClick={onCanvasClick}
           />
 
-          <Button className="action-button close-icon" onClick={handleClose}>
-            <Icon name="close" />
-          </Button>
-          <div className="scroll-buttons">
-            <div className="scroll-buttons-wrapper">
-              <HoldButton className="action-button scroll-left" onClick={scrollLeft}>
-                <Icon name="angle left" />
-              </HoldButton>
-              <HoldButton className="action-button scroll-right" onClick={scrollRight}>
-                <Icon name="angle right" />
-              </HoldButton>
-            </div>
+          <div className="top-actions">
+            {navigator.clipboard && window.ClipboardItem && (
+              <Button className="action-button" onClick={copyImage}>
+                <Icon name="copy" />
+              </Button>
+            )}
+            <Button className="action-button" onClick={saveAsImage}>
+              <Icon name="save" />
+            </Button>
+            <Button className="action-button close-icon" onClick={handleClose}>
+              <Icon name="close" />
+            </Button>
           </div>
+          {showScrollButtons() && (
+            <div className="scroll-buttons">
+              <div className="scroll-buttons-wrapper">
+                <HoldButton className="action-button scroll-left" onClick={scrollLeft}>
+                  <Icon name="angle left" />
+                </HoldButton>
+                <HoldButton className="action-button scroll-right" onClick={scrollRight}>
+                  <Icon name="angle right" />
+                </HoldButton>
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
     );
