@@ -1,6 +1,7 @@
 .chartArea-wrapper {
   margin: 0 auto;
   display: flex;
+  user-select: none;
 
   .bpm-display {
     order: 1;

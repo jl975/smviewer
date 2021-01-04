@@ -9,7 +9,7 @@ import { usePrevious } from "../../hooks";
 import { setModalOpen } from "../../actions/ScreenActions";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
-import ShareModal from "./ShareModal";
+import ShareModal from "../share/ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";

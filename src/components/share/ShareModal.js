@@ -4,7 +4,7 @@ import { Modal, Button, Input } from "semantic-ui-react";
 import copy from "copy-to-clipboard";
 
 import { getOriginPath } from "../../utils";
-import Progress from "./canvas/Progress";
+import Progress from "../chart/canvas/Progress";
 import { setModalOpen } from "../../actions/ScreenActions";
 
 const difficulties = {
@@ -67,6 +67,24 @@ const ShareModal = (props) => {
     setMessage("Copied link to clipboard");
   };
 
+  const downloadScreenshot = () => {
+    const canvas = document.getElementById("chartArea");
+    const dataUrl = canvas.toDataURL("image/png", 1.0);
+    const a = document.createElement("a");
+    a.href = dataUrl;
+
+    // let filename = `${props.song.title} `;
+    // filename += props.difficulty === "Beginner" ? "b" : props.difficulty.slice(0, 1);
+    // filename += props.mode.slice(0, 1).toUpperCase();
+    // filename += "P.png";
+
+    const filename = "screenshot.png";
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
   return (
     <Modal className="information-modal shareModal" open={modalOpen} onClose={() => setModalOpen("share", false)}>
       <Modal.Header>Share link to chart</Modal.Header>
@@ -76,6 +94,9 @@ const ShareModal = (props) => {
           <Button onClick={copyShareUrl}>Copy</Button>
         </Input>
         <p>{message}</p>
+        <div>
+          <Button onClick={downloadScreenshot}>Download chart screenshot</Button>
+        </div>
       </Modal.Content>
     </Modal>
   );
