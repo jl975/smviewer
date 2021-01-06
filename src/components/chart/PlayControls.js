@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
 
@@ -7,6 +7,15 @@ import HoldButton from "../ui/HoldButton";
 
 const PlayControls = (props) => {
   const { audio, controlsDisabled, setShareModalOpen } = props;
+
+  useEffect(() => {
+    // pause audio and chart when app is minimized
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        AudioPlayer.pause();
+      }
+    });
+  }, []);
 
   const togglePlay = () => {
     if (controlsDisabled) return;
@@ -24,26 +33,16 @@ const PlayControls = (props) => {
 
   return (
     <div className="play-controls">
-      <HoldButton
-        onClick={() => AudioPlayer.goBack(20)}
-        className="play-control"
-      >
+      <HoldButton onClick={() => AudioPlayer.goBack(20)} className="play-control">
         <Icon name="backward" />
       </HoldButton>
-      <Button
-        onClick={togglePlay}
-        disabled={controlsDisabled}
-        className="play-control"
-      >
+      <Button onClick={togglePlay} disabled={controlsDisabled} className="play-control">
         <Icon name={audio.status === "playing" ? "pause" : "play"} />
       </Button>
       <Button onClick={restart} className="play-control">
         <Icon name="stop" />
       </Button>
-      <HoldButton
-        onClick={() => AudioPlayer.goForward(20)}
-        className="play-control"
-      >
+      <HoldButton onClick={() => AudioPlayer.goForward(20)} className="play-control">
         <Icon name="forward" />
       </HoldButton>
 
