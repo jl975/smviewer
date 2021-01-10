@@ -1,0 +1,45 @@
+// mobile first variables
+:root {
+  --page-modal-width: 100%;
+  --page-modal-height: 100vh;
+}
+
+// desktop
+@media screen and (min-width: 768px) {
+  :root {
+    --page-modal-width: 90%;
+    --page-modal-height: 80%;
+  }
+}
+
+// semantic-ui overrides
+.ui.dimmer {
+  padding: 0;
+}
+
+.ui.modal.page-modal {
+  height: var(--page-modal-height);
+  width: var(--page-modal-width);
+  margin: 0 !important;
+  padding: 20px;
+  background-color: var(--modal-background);
+  color: var(--modal-heading);
+
+  @media only screen and (min-width: 768px) {
+    max-width: 900px;
+  }
+}
+
+.ui.modal.information-modal {
+  padding: 15px;
+  max-width: 600px;
+
+  .modal-actions {
+    margin-top: 20px;
+    text-align: center;
+  }
+}
+
+
+
+

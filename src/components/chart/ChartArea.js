@@ -6,9 +6,10 @@ import "inobounce";
 import { presetParams, getJacketPath } from "../../utils";
 import parseSimfile from "../../utils/parseSimfile";
 import { usePrevious } from "../../hooks";
+import { setModalOpen } from "../../actions/ScreenActions";
 import GameEngine from "../../core/GameEngine";
 import AudioPlayer from "../../core/AudioPlayer";
-import ShareModal from "./ShareModal";
+import ShareModal from "../share/ShareModal";
 import Progress from "./canvas/Progress";
 import PlayControls from "./PlayControls";
 import SongInfo from "./SongInfo";
@@ -31,13 +32,11 @@ const ChartArea = (props) => {
     setGameEngine,
   } = props;
 
+  const [mounted, setMounted] = useState(false);
   const [canvas, setCanvas] = useState(null);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
   const chartArea = useRef();
   const canvasContainer = useRef();
   const chartLoadingScreen = useRef();
-
-  const [staticModalOpen, setStaticModalOpen] = useState(false);
 
   const prevState = usePrevious({
     canvas,
@@ -45,6 +44,7 @@ const ChartArea = (props) => {
     selectedDifficulty,
     selectedMode,
     mods,
+    mounted,
   });
 
   // define canvas and resize listener on mount
@@ -53,6 +53,7 @@ const ChartArea = (props) => {
     setCanvas(chartArea.current);
 
     Progress.initCanvas();
+    setMounted(true);
   }, []);
 
   // change chart dimensions depending on single or double
@@ -106,7 +107,7 @@ const ChartArea = (props) => {
 
   // reset chart if mode, difficulty, or mods change
   useEffect(() => {
-    const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods };
+    const currentState = { canvas, sm, selectedDifficulty, selectedMode, mods, mounted };
 
     if (!canvas) return;
 
@@ -118,7 +119,7 @@ const ChartArea = (props) => {
 
     Object.keys(currentState).forEach((thing) => {
       if (prevState[thing] !== currentState[thing]) {
-        if (thing === "sm") {
+        if (thing === "sm" || thing === "mounted") {
           // console.log(
           //   `${thing} changed from ${
           //     prevState[thing]
@@ -126,7 +127,6 @@ const ChartArea = (props) => {
           //       : prevState[thing]
           //   } \n\nto ${currentState[thing].slice(0, 30)}`
           // );
-
           // flag the old game engine as killed, so any residual invocations
           // of its mainLoop can be squashed until it is garbage collected
           if (gameEngine) {
@@ -190,7 +190,7 @@ const ChartArea = (props) => {
     if (gameEngine) {
       gameEngine.updateExternalGlobalParams({ mods });
     }
-  }, [canvas, sm, selectedDifficulty, selectedMode, mods]);
+  }, [canvas, sm, selectedDifficulty, selectedMode, mods, props.location]);
 
   const shareParams = {
     song: selectedSong,
@@ -242,22 +242,23 @@ const ChartArea = (props) => {
           </div>
         </div>
         <div className="row">
-          <PlayControls controlsDisabled={!gameEngine || loadingAudio} setShareModalOpen={setShareModalOpen} />
+          <PlayControls
+            controlsDisabled={!gameEngine || loadingAudio}
+            setShareModalOpen={() => props.setModalOpen("share", true)}
+          />
         </div>
         <div className="row song-info-area">
           <SongInfo />
           {selectedSong && (
             <div>
-              <Button className="view-static-btn" onClick={() => setStaticModalOpen(true)}>
+              <Button className="view-static-btn" onClick={() => props.setModalOpen("staticChart", true)}>
                 View static chart
               </Button>
             </div>
           )}
         </div>
-        <ShareModal modalOpen={shareModalOpen} setModalOpen={setShareModalOpen} data={shareParams} />
-        {gameEngine && (
-          <StaticModal modalOpen={staticModalOpen} setModalOpen={setStaticModalOpen} gameEngine={gameEngine} />
-        )}
+        <ShareModal modalOpen={screen.modalOpen.share} data={shareParams} />
+        {gameEngine && <StaticModal modalOpen={screen.modalOpen.staticChart} gameEngine={gameEngine} />}
       </div>
     </div>
   );
@@ -275,8 +276,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartArea);

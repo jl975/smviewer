@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { connect } from "react-redux";
 import { Modal, Button, Input } from "semantic-ui-react";
 import copy from "copy-to-clipboard";
 
 import { getOriginPath } from "../../utils";
-import Progress from "./canvas/Progress";
+import Progress from "../chart/canvas/Progress";
+import { setModalOpen } from "../../actions/ScreenActions";
 
 const difficulties = {
   Beginner: "b",
@@ -65,28 +67,45 @@ const ShareModal = (props) => {
     setMessage("Copied link to clipboard");
   };
 
+  const downloadScreenshot = () => {
+    const canvas = document.getElementById("chartArea");
+    const dataUrl = canvas.toDataURL("image/png", 1.0);
+    const a = document.createElement("a");
+    a.href = dataUrl;
+
+    // let filename = `${props.song.title} `;
+    // filename += props.difficulty === "Beginner" ? "b" : props.difficulty.slice(0, 1);
+    // filename += props.mode.slice(0, 1).toUpperCase();
+    // filename += "P.png";
+
+    const filename = "screenshot.png";
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
   return (
-    <Modal
-      className="shareModal"
-      size="fullscreen"
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-    >
+    <Modal className="information-modal shareModal" open={modalOpen} onClose={() => setModalOpen("share", false)}>
       <Modal.Header>Share link to chart</Modal.Header>
       <Modal.Content>
-        <Input
-          type="text"
-          className="share-url-input"
-          value={shareUrl.current}
-          action
-        >
+        <Input type="text" className="share-url-input" value={shareUrl.current} action>
           <input />
           <Button onClick={copyShareUrl}>Copy</Button>
         </Input>
         <p>{message}</p>
+        <div>
+          <Button onClick={downloadScreenshot}>Download chart screenshot</Button>
+        </div>
       </Modal.Content>
     </Modal>
   );
 };
 
-export default ShareModal;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ShareModal);

@@ -91,7 +91,7 @@ class StaticArrow {
       arrowWidth,
       partialHeight,
       partialDestX,
-      (partialDestY + arrowHeight / 2) % columnHeight,
+      (partialDestY % columnHeight) + arrowHeight / 2,
       arrowWidth,
       partialHeight
     );

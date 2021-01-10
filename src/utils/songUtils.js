@@ -1,5 +1,10 @@
 import { SP_DIFFICULTIES, DP_DIFFICULTIES, BPM_RANGES } from "../constants";
 
+// shortcut method to find the level/rating of a chart given the song, difficulty, and mode
+export const getChartLevel = (song, difficulty, mode) => {
+  return song.levels[mode === "double" ? DP_DIFFICULTIES.indexOf(difficulty) + 5 : SP_DIFFICULTIES.indexOf(difficulty)];
+};
+
 /*
   If the song does not have a chart corresponding to the chosen difficulty option,
   pick whatever is *closest*
@@ -32,8 +37,8 @@ export const isInBpmRange = (song, bpmRangeValue, difficulty) => {
   const bpm = song.displayBpm;
 
   // split bpm (this is the only case where difficulty matters)
-  if (bpm.includes(",")) {
-    console.log("do something with difficulty to handle split bpm", difficulty);
+  if (bpm.includes(",") && difficulty) {
+    // console.log("do something with difficulty to handle split bpm", difficulty);
     return false;
   } else {
     const bpms = song.displayBpm.split("-");

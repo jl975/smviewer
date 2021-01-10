@@ -4,16 +4,18 @@ import { connect } from "react-redux";
 import ChartArea from "../../components/chart/ChartArea";
 import SongForm from "../../components/form/SongForm";
 import ModsForm from "../../components/form/ModsForm";
-import Navbar from "../../components/navigation/Navbar";
-import WelcomeModal from "../../components/welcome/WelcomeModal";
-import OffsetModal from "../../components/chart/OffsetModal";
-import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
 import AudioPlayer from "../../core/AudioPlayer";
 import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
 import { resizeScreen, setModalOpen } from "../../actions/ScreenActions";
 import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
 import { DEBUG_MODE } from "../../constants";
 import LogView from "../../components/debug/LogView";
+
+import WelcomeModal from "../../components/welcome/WelcomeModal";
+import OffsetModal from "../../components/chart/OffsetModal";
+import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
+import SettingsModal from "../../components/settings/SettingsModal";
+import HelpModal from "../../components/help/HelpModal";
 
 const MainContainer = (props) => {
   const [loadingSimfiles, setLoadingSimfiles] = useState(true);
@@ -23,22 +25,26 @@ const MainContainer = (props) => {
   const [loadingAudio, setLoadingAudio] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const init = async () => {
+      setLoadingSimfiles(true);
+      setLoadingAudio(true);
+      setGameEngine(null);
       await fetchSimfiles();
       setLoadingSimfiles(false);
+
+      AudioPlayer.setLoadingAudio = setLoadingAudio;
+
+      window.addEventListener("resize", props.resizeScreen);
+
+      // prompt user to adjust global offset on first visit
+      const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
+      if (!adjustedGlobalOffset) {
+        // props.setModalOpen("offset");
+        props.setModalOpen("welcome");
+      }
     };
-    fetchData();
 
-    AudioPlayer.setLoadingAudio = setLoadingAudio;
-
-    window.addEventListener("resize", props.resizeScreen);
-
-    // prompt user to adjust global offset on first visit
-    const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
-    if (!adjustedGlobalOffset) {
-      // props.setModalOpen("offset");
-      props.setModalOpen("welcome");
-    }
+    init();
   }, []);
 
   const fetchSimfiles = async () => {
@@ -57,7 +63,7 @@ const MainContainer = (props) => {
 
     props.selectSong(song);
 
-    document.title = `${song.title} - SMViewer`;
+    document.title = `${song.title} - ${process.env.REACT_APP_TITLE}`;
 
     // retrieve audio file and simfile from song.simfilePath
 
@@ -78,9 +84,14 @@ const MainContainer = (props) => {
     <div className="main-container">
       {!loadingSimfiles && (
         <>
-          <Navbar />
+          {/* <Navbar history={props.history} /> */}
           <div className="view-container">
-            <ChartArea loadingAudio={loadingAudio} gameEngine={gameEngine} setGameEngine={setGameEngine} />
+            <ChartArea
+              location={props.location}
+              loadingAudio={loadingAudio}
+              gameEngine={gameEngine}
+              setGameEngine={setGameEngine}
+            />
             <ModsForm />
             <SongForm
               onSongSelect={onSongSelect}
@@ -93,6 +104,8 @@ const MainContainer = (props) => {
             <WelcomeModal modalOpen={modalOpen.welcome} />
             <OffsetModal modalOpen={modalOpen.offset} />
             <OffsetConfirmModal modalOpen={modalOpen.offsetConfirm} />
+            <SettingsModal modalOpen={modalOpen.settings} />
+            <HelpModal modalOpen={modalOpen.help} />
 
             {DEBUG_MODE && <LogView />}
           </div>

@@ -8,6 +8,8 @@ body {
   // height: 20px;
   overflow: auto;
   min-width: 0;
+  // font-family: 'Barlow', 'Lato', sans-serif
+  color: var(--text-normal);
 }
 
 #root {
@@ -21,6 +23,9 @@ body {
 // animated SVGs
 @import "./svg/svg.scss";
 
+@import './scss/variables.scss';
+@import './scss/theme.scss';
+@import './scss/fonts';
 @import "./scss/main";
 @import "./scss/mobile-nav";
 @import "./scss/song-view";
@@ -28,3 +33,4 @@ body {
 @import "./scss/share-modal";
 @import "./scss/ui";
 @import "./scss/chart/chart";
+@import './scss/modal/modal';
