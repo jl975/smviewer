@@ -17,7 +17,7 @@ if (typeof importScripts === "function") {
     cacheJackets();
     cacheGraphics();
     cacheSimfiles();
-    cacheAudio();
+    // cacheAudio();
     // googleFontsCache();
     //  workbox.routing.registerRoute(
     //   new workbox.routing.NavigationRoute(
@@ -31,60 +31,47 @@ if (typeof importScripts === "function") {
   }
 }
 
-function getLocalDirectory(data) {
-  const { request, url } = data;
+// function getLocalDirectory(data) {
+//   const { request, url } = data;
 
-  // only allow same-origin requests
-  if (request.referrer.indexOf(url.origin) === -1) {
-    return null;
-  }
+//   // only allow same-origin requests
+//   if (request.referrer.indexOf(url.origin) === -1) {
+//     return null;
+//   }
 
-  const directory = /^\/([a-z]+)\//.exec(url.pathname);
-  if (directory) {
-    return directory[1];
-  }
-  return null;
-}
+//   const directory = /^\/([a-z]+)\//.exec(url.pathname);
+//   if (directory) {
+//     return directory[1];
+//   }
+//   return null;
+// }
 
-function cacheAudio() {
-  const { registerRoute } = workbox.routing;
+// function cacheAudio() {
+//   const { registerRoute } = workbox.routing;
 
-  const matchCallback = (data) => {
-    console.log("matchCallback data", data);
-    return data.request.destination === "audio";
-  };
+//   const matchCallback = (data) => {
+//     console.log("matchCallback data", data);
+//     return data.request.destination === "audio";
+//   };
 
-  const handlerCallback = async (data) => {
-    console.log("handlerCallback data", data);
+//   const handlerCallback = async (data) => {
+//     console.log("handlerCallback data", data);
 
-    // loadAudio(data.request.url);
+//     // loadAudio(data.request.url);
 
-    // const response = await fetch(data.request);
-    // console.log("handlerCallback response", response);
+//     // const response = await fetch(data.request);
+//     // console.log("handlerCallback response", response);
 
-    // const resBlob = await response.blob();
-    // console.log("resBlob", resBlob);
+//     // const resBlob = await response.blob();
+//     // console.log("resBlob", resBlob);
 
-    // return new Response(resBlob);
+//     // return new Response(resBlob);
 
-    return new Response("lolol");
-  };
+//     return new Response("lolol");
+//   };
 
-  registerRoute(matchCallback, handlerCallback);
-}
-
-function loadAudio(url) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.withCredentials = false;
-  xhr.responseType = "arraybuffer";
-
-  xhr.onload = function () {
-    console.log("xhr.response", xhr.response);
-    // const code = xhr.status.toString()[0]
-    // if (code )
-  };
-}
+//   registerRoute(matchCallback, handlerCallback);
+// }
 
 function cacheSimfiles() {
   const { registerRoute } = workbox.routing;
@@ -94,13 +81,14 @@ function cacheSimfiles() {
 
   const cacheName = "simfiles";
 
-  const matchCallback = (data) => {
-    console.log("matchCallback data", data);
-    return getLocalDirectory(data) === "simfiles";
-  };
+  // const matchCallback = (data) => {
+  //   console.log("matchCallback data", data);
+  //   return getLocalDirectory(data) === "simfiles";
+  // };
 
   registerRoute(
-    matchCallback,
+    // matchCallback,
+    new RegExp("/simfiles/.*\\.[sm|ssc]"),
     new StaleWhileRevalidate({
       cacheName,
       plugins: [
@@ -123,13 +111,13 @@ function cacheJackets() {
 
   const cacheName = "jackets";
 
-  const matchCallback = (data) => {
-    return getLocalDirectory(data) === "jackets" && data.request.destination === "image";
-  };
+  // const matchCallback = (data) => {
+  //   return getLocalDirectory(data) === "jackets" && data.request.destination === "image";
+  // };
 
   registerRoute(
-    // new RegExp('/jackets/.*\\.png'),
-    matchCallback,
+    // matchCallback,
+    new RegExp("/jackets/.*\\.png"),
     new CacheFirst({
       cacheName,
       plugins: [
@@ -152,12 +140,13 @@ function cacheGraphics() {
 
   const cacheName = "graphics";
 
-  const matchCallback = (data) => {
-    return getLocalDirectory(data) === "assets" && data.request.destination === "image";
-  };
+  // const matchCallback = (data) => {
+  //   return getLocalDirectory(data) === "assets" && data.request.destination === "image";
+  // };
 
   registerRoute(
-    matchCallback,
+    // matchCallback,
+    new RegExp("/assets/.*\\.png"),
     new CacheFirst({
       cacheName,
       plugins: [
