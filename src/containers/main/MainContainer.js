@@ -58,7 +58,6 @@ const MainContainer = (props) => {
 
   const onSongSelect = async (song, initialProgress = 0) => {
     // console.log("MainContainer selected song", song);
-    AudioPlayer.selectSong(song, initialProgress);
     // setSelectedSong(song);
 
     props.selectSong(song);
@@ -68,6 +67,7 @@ const MainContainer = (props) => {
     // retrieve audio file and simfile from song.simfilePath
 
     props.loadSimfile(song);
+    await AudioPlayer.selectSong(song, initialProgress);
   };
 
   const onDifficultySelect = (difficulty) => {

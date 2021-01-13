@@ -172,9 +172,6 @@ const SongForm = (props) => {
     if (selectedSongOption) {
       const song = simfileList.find((song) => song.hash === selectedSongOption);
       setSelectedSong(song);
-
-      // commented out because it was redundant and overriding initialProgress
-      // AudioPlayer.storeAudioSource(song);
     }
   }, [selectedSongOption]);
 
@@ -382,6 +379,7 @@ const SongForm = (props) => {
   };
 
   const toggleSongPreview = () => {
+    console.log("click jacket");
     const oldSongHash = AudioPlayer.currentPreview;
 
     // toggle start/stop of the same song

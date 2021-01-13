@@ -1,5 +1,6 @@
 import { Howl } from "howler";
 import { gsap } from "gsap";
+import localforage from "localforage";
 
 import store from "../store";
 import * as actions from "../actions/AudioActions";
@@ -60,21 +61,86 @@ class AudioPlayer {
   }
 
   getCurrentTime() {
-    return this.getCurrentSong().audio.seek();
+    // if (!this.getCurrentSong() || !this.getCurrentSong().audio) return;
+    return this.getCurrentSong()?.audio?.seek();
+  }
+
+  // intercept the arraybuffer so it can be cached in IndexedDB
+  async loadAudioBuffer(song) {
+    // let src = song.dAudioUrl
+    //   ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
+    //   : getAssetPath("audio/" + song.audioUrl);
+
+    let src;
+
+    // retrieve audio from IndexedDB if available
+    const cachedAudioBuffer = await localforage.getItem(`audio_${song.hash}`);
+    if (cachedAudioBuffer) {
+      console.log(`retrieve cached audio for ${song.title}`);
+      const blob = new Blob([cachedAudioBuffer], { type: "audio/mpeg" });
+      src = URL.createObjectURL(blob);
+    }
+    // if not, fetch audio via xhr as an arraybuffer
+    // then store in IndexedDB and use the resulting blob
+    else {
+      src = await new Promise((resolve, reject) => {
+        const url = song.dAudioUrl
+          ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
+          : getAssetPath("audio/" + song.audioUrl);
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.withCredentials = false;
+        xhr.responseType = "arraybuffer";
+
+        xhr.onload = function () {
+          const buffer = xhr.response;
+          console.log("audio buffer", buffer);
+          console.log(song);
+          if (this.status >= 200 && this.status < 300) {
+            // asynchronously store audio buffer in IndexedDB
+            localforage.setItem(`audio_${song.hash}`, buffer);
+
+            // synchronously return blob response
+            const blob = new Blob([buffer], { type: "audio/mpeg" });
+            resolve(URL.createObjectURL(blob));
+          } else {
+            reject({
+              status: this.status,
+              statusText: xhr.statusText,
+            });
+          }
+        };
+        xhr.onerror = function () {
+          console.log("error");
+          reject({
+            status: this.status,
+            statusText: xhr.statusText,
+          });
+        };
+        xhr.send();
+      });
+    }
+
+    return src;
   }
 
   // when loading a song file for the first time, save it as two separate Howls:
   // one for the full song and one for the preview sample
-  storeAudioSource(song, initialProgress = 0) {
+  async storeAudioSource(song, initialProgress = 0) {
     if (!this.sources.song[song.hash]) {
       this.setLoadingAudio(true);
 
       const thisSong = (this.sources.song[song.hash] = { title: song.title });
 
+      let src;
+      try {
+        src = await this.loadAudioBuffer(song);
+      } catch (err) {
+        throw new Error(`Failed to load audio for ${song.title}`);
+      }
+
       thisSong.audio = new Howl({
-        src: song.dAudioUrl
-          ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
-          : getAssetPath("audio/" + song.audioUrl),
+        src,
         format: ["mp3"],
         html5: true,
         onload: () => {
@@ -124,50 +190,6 @@ class AudioPlayer {
         },
       });
 
-      // const thisPreview = (this.sources.preview[song.hash] = {
-      //   title: song.title,
-      // });
-      // thisPreview.audio = new Howl({
-      //   src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
-      //   format: ["mp3"],
-      //   html5: true,
-      //   sprite: {
-      //     sample: [
-      //       parseFloat((song.sampleStart - DEFAULT_OFFSET) * 1000),
-      //       parseFloat((song.sampleLength - DEFAULT_OFFSET) * 1000),
-      //     ],
-      //   },
-      //   onload: () => {
-      //     // thisPreview.audio.volume(0);
-      //   },
-      //   onplay: () => {
-      //     // const preview = this.getCurrentPreview().audio;
-      //     thisPreview.audio.volume(1);
-
-      //     const fadeinTime = 0;
-      //     const fadeoutTime = 2000;
-      //     // thisPreview.audio.fade(0, 1, fadeinTime);
-
-      //     this.previewFadeTimeout = setTimeout(() => {
-      //       thisPreview.audio.fade(1, 0, fadeoutTime);
-      //     }, song.sampleLength * 1000 - fadeoutTime);
-
-      //     store.dispatch(actions.playPreviewAudio());
-      //   },
-      //   onstop: () => {
-      //     clearTimeout(this.previewFadeTimeout);
-      //     // thisPreview.audio.volume(0);
-      //     this.currentPreviewId = null;
-      //     store.dispatch(actions.stopPreviewAudio());
-      //   },
-      //   onend: () => {
-      //     clearTimeout(this.previewFadeTimeout);
-      //     // thisPreview.audio.volume(0);
-      //     this.currentPreviewId = null;
-      //     store.dispatch(actions.stopPreviewAudio());
-      //   },
-      // });
-
       // console.log(`Added ${song.title} to AudioPlayer.sources`, this.sources);
     } else {
       this.setLoadingAudio(false);
@@ -175,12 +197,23 @@ class AudioPlayer {
     }
   }
 
-  storePreviewSource(song, simfile) {
+  async storePreviewSource(song, simfile) {
     const thisPreview = (this.sources.preview[song.hash] = {
       title: song.title,
     });
+    this.currentPreview = song.hash;
+    console.log("storePreviewSource this.getCurrentPreview()", this.getCurrentPreview());
+
+    let src;
+    try {
+      src = await this.loadAudioBuffer(song);
+    } catch (err) {
+      throw new Error(`Failed to load preview audio for ${song.title}`);
+    }
+    console.log("load preview audio buffer");
+
     thisPreview.audio = new Howl({
-      src: `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`,
+      src,
       format: ["mp3"],
       html5: true,
       sprite: {
@@ -222,13 +255,13 @@ class AudioPlayer {
     });
   }
 
-  selectSong(song, initialProgress = 0) {
+  async selectSong(song, initialProgress = 0) {
     if (this.currentSong) {
       this.getCurrentSong().audio.stop(this.currentSongId);
     }
 
-    this.storeAudioSource(song, initialProgress);
     this.currentSong = song.hash;
+    await this.storeAudioSource(song, initialProgress);
   }
 
   resync() {
@@ -311,7 +344,7 @@ class AudioPlayer {
   }
 
   seekTime(timestamp) {
-    this.getCurrentSong().audio.seek(timestamp);
+    this.getCurrentSong()?.audio?.seek(timestamp);
     this.resync();
   }
   goBack(ms) {
@@ -458,14 +491,23 @@ class AudioPlayer {
   }
 
   playSongPreview(song) {
-    if (this.getPreviewAudioStatus() === "pending") {
+    if (
+      this.getPreviewAudioStatus() === "pending" ||
+      this.currentPreview !== song.hash ||
+      !this.getCurrentPreview().audio
+    ) {
       return;
     }
     if (this.currentPreview) {
       this.getCurrentPreview().audio.stop(this.currentPreviewId);
     }
 
-    this.currentPreview = song.hash;
+    // getCurrentPreview() {
+    //   return this.sources.preview[this.currentPreview];
+    // }
+
+    // this.currentPreview = song.hash;
+    console.log("this.sources.preview", this.sources.preview);
 
     const preview = this.getCurrentPreview().audio;
 

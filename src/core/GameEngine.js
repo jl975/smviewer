@@ -98,7 +98,8 @@ class GameEngine {
   }
 
   resetChart({ mode, difficulty, mods }) {
-    const { audio, songSelect } = store.getState();
+    const { audio } = store.getState();
+    // const { audio, songSelect } = store.getState();
 
     // kill the previous gsap timeline before creating a new one
     if (this.tl) {
@@ -154,7 +155,7 @@ class GameEngine {
       if (audio.chartAudio.status !== "playing") {
         this.pauseTl();
       }
-      this.AudioPlayer.storePreviewSource(songSelect.song, simfile);
+      // this.AudioPlayer.storePreviewSource(songSelect.song, simfile);
 
       setTimeout(() => {
         this.AudioPlayer.resync();

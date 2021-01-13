@@ -141,6 +141,9 @@ const ChartArea = (props) => {
 
           // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType);
+          console.log("simfiles parsed", simfiles, selectedMode, selectedDifficulty);
+          const simfile = simfiles[`${selectedMode}_${selectedDifficulty}`];
+          AudioPlayer.storePreviewSource(selectedSong, simfile);
 
           // const numSongLevels = selectedSong.levels.filter((a) => a).length;
           // console.log("available song levels:", numSongLevels);

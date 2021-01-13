@@ -50,7 +50,7 @@ const OffsetModal = (props) => {
       hash: "OFFSET_ADJUST_AUDIO",
     };
     OffsetAdjustAudioPlayer.setLoadingAudio = setLoadingAudio;
-    OffsetAdjustAudioPlayer.selectSong(song);
+    await OffsetAdjustAudioPlayer.selectSong(song);
 
     // prepare chart
     const sm = await fetchDocument(`${getOriginPath()}simfiles/offset_adjust.sm`);

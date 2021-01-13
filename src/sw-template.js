@@ -1,5 +1,8 @@
 if (typeof importScripts === "function") {
   importScripts("https://storage.googleapis.com/workbox-cdn/releases/5.0.0/workbox-sw.js");
+  importScripts("https://cdnjs.cloudflare.com/ajax/libs/localforage/1.9.0/localforage.js");
+
+  console.log("localforage", localforage);
 
   /* global workbox */
   if (workbox) {
@@ -14,6 +17,7 @@ if (typeof importScripts === "function") {
     cacheJackets();
     cacheGraphics();
     cacheSimfiles();
+    cacheAudio();
     // googleFontsCache();
     //  workbox.routing.registerRoute(
     //   new workbox.routing.NavigationRoute(
@@ -42,6 +46,46 @@ function getLocalDirectory(data) {
   return null;
 }
 
+function cacheAudio() {
+  const { registerRoute } = workbox.routing;
+
+  const matchCallback = (data) => {
+    console.log("matchCallback data", data);
+    return data.request.destination === "audio";
+  };
+
+  const handlerCallback = async (data) => {
+    console.log("handlerCallback data", data);
+
+    // loadAudio(data.request.url);
+
+    // const response = await fetch(data.request);
+    // console.log("handlerCallback response", response);
+
+    // const resBlob = await response.blob();
+    // console.log("resBlob", resBlob);
+
+    // return new Response(resBlob);
+
+    return new Response("lolol");
+  };
+
+  registerRoute(matchCallback, handlerCallback);
+}
+
+function loadAudio(url) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.withCredentials = false;
+  xhr.responseType = "arraybuffer";
+
+  xhr.onload = function () {
+    console.log("xhr.response", xhr.response);
+    // const code = xhr.status.toString()[0]
+    // if (code )
+  };
+}
+
 function cacheSimfiles() {
   const { registerRoute } = workbox.routing;
   const { StaleWhileRevalidate } = workbox.strategies;
@@ -51,6 +95,7 @@ function cacheSimfiles() {
   const cacheName = "simfiles";
 
   const matchCallback = (data) => {
+    console.log("matchCallback data", data);
     return getLocalDirectory(data) === "simfiles";
   };
 
@@ -83,6 +128,7 @@ function cacheJackets() {
   };
 
   registerRoute(
+    // new RegExp('/jackets/.*\\.png'),
     matchCallback,
     new CacheFirst({
       cacheName,
