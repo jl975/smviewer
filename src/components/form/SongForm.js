@@ -43,7 +43,7 @@ const SongForm = (props) => {
   const [selectedFilters, setSelectedFilters] = useState(
     userSettings.filters || {
       title: "all",
-      version: 16,
+      version: 17,
       level: "all",
       difficulty: "all",
       bpm: "all",
