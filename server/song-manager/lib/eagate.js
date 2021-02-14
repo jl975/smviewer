@@ -3,7 +3,7 @@ const tough = require("tough-cookie");
 const cheerio = require("cheerio");
 const encoding = require("encoding-japanese");
 const token573 = require("../../../config/m573ssid");
-const dancerId = require("../../../config/dancerIds")[0];
+const { dancerId, dancerName } = require("../../../config/dancerIds")[0];
 
 const { getSimfilesTsv } = require("./songs");
 
@@ -98,7 +98,7 @@ const getSongPosition = async ({ title, id }) => {
   followingSongFound = false;
   orderedSongs = [];
 
-  console.log(`scraping ${dancerId}`);
+  console.log(`scraping ${dancerId} (${dancerName})`);
   while (currentPage < totalPages && !songFound && !followingSongFound) {
     console.log(`traversing page ${currentPage} of ${totalPages === 69 ? "?" : totalPages}`);
     await traversePage(currentPage, { title, id });
