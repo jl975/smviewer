@@ -1,23 +1,23 @@
-import Head from "next/head";
-import Link from "next/link";
+import Head from 'next/head'
+import Link from 'next/link'
 
-import Layout from "../shared/Layout";
-import { getSimfilesTsv } from "../lib/songs";
+import Layout from '../shared/Layout'
+import { getSimfilesTsv } from '../lib/songs'
 
-import Table from "../components/Table";
-import styles from "./index.module.scss";
+import Table from '../components/Table'
+import styles from './index.module.scss'
 
 export async function getStaticProps() {
-  const songs = getSimfilesTsv();
+  const songs = getSimfilesTsv()
   return {
     props: {
       songs,
     },
-  };
+  }
 }
 
 export default function Home(props) {
-  const { songs } = props;
+  const { songs } = props
 
   return (
     <Layout>
@@ -30,5 +30,5 @@ export default function Home(props) {
 
       <Table songs={songs} />
     </Layout>
-  );
+  )
 }

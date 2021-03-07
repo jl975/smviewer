@@ -1,35 +1,23 @@
-import Head from "next/head";
-import Link from "next/link";
+import Head from 'next/head'
+import Link from 'next/link'
 
-import Layout from "../../shared/Layout";
+import Layout from '../../shared/Layout'
 
-import Form from "../../components/Form";
-
-// import { getSongPosition } from "../../lib/eagate";
-
-// export async function getStaticProps({ params }) {
-//   const json = await getSongPosition({
-//     // id: "61oIP0QIlO90d18ObDP1Dii6PoIQoOD8",
-//     title: "東京神話",
-//   });
-//   console.log(json);
-
-//   return { props: {} };
-// }
+import Form from '../../components/Form'
 
 export default function AddSong(props) {
   const formInitialState = {
-    hash: "",
-    title: "",
-    smName: "",
-    artist: "",
-    version: "",
-    levels: ",,,,,,,,",
-    displayBpm: "",
-    abcSort: "",
-    dAudioUrl: "",
-    missingDifficulties: "",
-  };
+    hash: '',
+    title: '',
+    smName: '',
+    artist: '',
+    version: '',
+    levels: ',,,,,,,,',
+    displayBpm: '',
+    abcSort: '',
+    dAudioUrl: '',
+    missingDifficulties: '',
+  }
 
   return (
     <Layout>
@@ -43,5 +31,5 @@ export default function AddSong(props) {
         <a>Back to table</a>
       </Link>
     </Layout>
-  );
+  )
 }

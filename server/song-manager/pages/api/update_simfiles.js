@@ -1,16 +1,16 @@
-const { updateSimfiles } = require("../../lib/songs");
+const { updateSimfiles } = require('../../lib/songs')
 
 export default async (req, res) => {
-  console.log(req.body);
+  console.log(req.body)
 
   try {
-    const data = await updateSimfiles(req.body);
+    const data = await updateSimfiles(req.body)
 
-    res.statusCode = 200;
-    res.json(data);
+    res.statusCode = 200
+    res.json(data)
   } catch (err) {
-    console.log(err);
-    res.statusCode = 500;
-    res.send(err);
+    console.log(err)
+    res.statusCode = 500
+    res.send(err)
   }
-};
+}
