@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios'
 
 export default async (req, res) => {
-  const { smUrl } = req.query;
-  const { data } = await axios.get(smUrl);
+  const { smUrl } = req.query
+  const { data } = await axios.get(smUrl)
 
-  res.statusCode = 200;
-  res.json(data);
-};
+  res.statusCode = 200
+  res.json(data)
+}

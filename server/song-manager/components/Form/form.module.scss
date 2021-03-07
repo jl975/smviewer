@@ -17,7 +17,7 @@
     border-radius: 2px;
   }
 
-  input[type="text"] {
+  input[type='text'] {
     padding: 0 10px;
     width: 425px;
   }
@@ -26,7 +26,7 @@
     width: 170px;
   }
 
-  input[type="file"] {
+  input[type='file'] {
     border: none;
     padding: 0;
     width: 425px;
@@ -40,10 +40,10 @@
     text-align: right;
   }
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     margin-left: 6px;
   }
-  label[for="isLineout"] {
+  label[for='isLineout'] {
     width: auto;
     text-align: left;
     display: flex;
@@ -57,7 +57,7 @@
   display: flex;
   flex-direction: column;
   text-align: right;
-  
+
   small {
     margin-right: 20px;
     margin-top: -2px;
