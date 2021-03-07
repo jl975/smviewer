@@ -1,29 +1,29 @@
-import { ARROW_WIDTH } from "../../../constants";
-import { getAssetPath } from "../../../utils";
-import { getReverseCoord } from "../../../utils/engineUtils";
+import { ARROW_WIDTH } from '../../../constants'
+import { getAssetPath } from '../../../utils'
+import { getReverseCoord } from '../../../utils/engineUtils'
 
-const images = {};
+const images = {}
 
-images.upper = new Image();
-images.upper.src = getAssetPath("upper_lanecover.png");
-images.lower = new Image();
-images.lower.src = getAssetPath("lower_lanecover.png");
+images.upper = new Image()
+images.upper.src = getAssetPath('upper_lanecover.png')
+images.lower = new Image()
+images.lower.src = getAssetPath('lower_lanecover.png')
 
-const appearanceIdx = ["hidden", "sudden", "hiddensudden"];
+const appearanceIdx = ['hidden', 'sudden', 'hiddensudden']
 
 class LaneCover {
   render(canvas, attrs) {
-    const c = canvas.getContext("2d");
+    const c = canvas.getContext('2d')
 
-    const { mods, mode } = attrs;
-    const { appearance, scroll } = mods;
-    const laneCoverHeight = mods.laneCoverHeight[appearanceIdx.indexOf(appearance)];
+    const { mods, mode } = attrs
+    const { appearance, scroll } = mods
+    const laneCoverHeight = mods.laneCoverHeight[appearanceIdx.indexOf(appearance)]
 
     if (
-      (appearance.includes("hidden") && scroll === "normal") ||
-      (appearance.includes("sudden") && scroll === "reverse")
+      (appearance.includes('hidden') && scroll === 'normal') ||
+      (appearance.includes('sudden') && scroll === 'reverse')
     ) {
-      let img = images.upper;
+      let img = images.upper
       c.drawImage(
         img,
         0,
@@ -34,9 +34,9 @@ class LaneCover {
         0,
         img.width,
         laneCoverHeight
-      );
+      )
 
-      if (mode === "double") {
+      if (mode === 'double') {
         c.drawImage(
           img,
           0,
@@ -47,14 +47,14 @@ class LaneCover {
           0,
           img.width,
           laneCoverHeight
-        );
+        )
       }
     }
     if (
-      (appearance.includes("sudden") && scroll === "normal") ||
-      (appearance.includes("hidden") && scroll === "reverse")
+      (appearance.includes('sudden') && scroll === 'normal') ||
+      (appearance.includes('hidden') && scroll === 'reverse')
     ) {
-      let img = images.lower;
+      let img = images.lower
       c.drawImage(
         img,
         0,
@@ -65,9 +65,9 @@ class LaneCover {
         getReverseCoord(laneCoverHeight, 0, canvas),
         img.width,
         laneCoverHeight
-      );
+      )
 
-      if (mode === "double") {
+      if (mode === 'double') {
         c.drawImage(
           img,
           0,
@@ -78,10 +78,10 @@ class LaneCover {
           getReverseCoord(laneCoverHeight, 0, canvas),
           img.width,
           laneCoverHeight
-        );
+        )
       }
     }
   }
 }
 
-export default LaneCover;
+export default LaneCover

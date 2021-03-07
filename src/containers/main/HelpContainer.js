@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
 
 const HelpContainer = (props) => {
-  console.log("HelpContainer props", props);
-  return <div className="help-container">Help</div>;
-};
+  console.log('HelpContainer props', props)
+  return <div className="help-container">Help</div>
+}
 
-export default connect(null, null)(HelpContainer);
+export default connect(null, null)(HelpContainer)

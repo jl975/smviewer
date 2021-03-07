@@ -1,21 +1,21 @@
-import { Howl } from "howler"
-import { gsap } from "gsap"
-import localforage from "localforage"
+import { Howl } from 'howler'
+import { gsap } from 'gsap'
+import localforage from 'localforage'
 
-import store from "../store"
-import * as actions from "../actions/AudioActions"
-import Progress from "../components/chart/canvas/Progress"
-import { getAssetPath } from "../utils"
-import { saveSongProgress } from "../utils/userSettings"
+import store from '../store'
+import * as actions from '../actions/AudioActions'
+import Progress from '../components/chart/canvas/Progress'
+import { getAssetPath } from '../utils'
+import { saveSongProgress } from '../utils/userSettings'
 import {
   getCurrentBpm,
   changeActiveBpm,
   getCurrentCombo,
   getFullCombo,
   initializeBeatWindow,
-} from "../utils/engineUtils"
-import { DEFAULT_OFFSET } from "../constants"
-import { debugLog } from "../utils/debugUtils"
+} from '../utils/engineUtils'
+import { DEFAULT_OFFSET } from '../constants'
+import { debugLog } from '../utils/debugUtils'
 
 class AudioPlayer {
   constructor(name) {
@@ -77,7 +77,7 @@ class AudioPlayer {
     const cachedAudioBuffer = await localforage.getItem(`audio_${song.hash}`)
     if (cachedAudioBuffer) {
       console.log(`retrieve cached audio for ${song.title}`)
-      const blob = new Blob([cachedAudioBuffer], { type: "audio/mpeg" })
+      const blob = new Blob([cachedAudioBuffer], { type: 'audio/mpeg' })
       src = URL.createObjectURL(blob)
     }
     // if not, fetch audio via xhr as an arraybuffer
@@ -86,22 +86,20 @@ class AudioPlayer {
       src = await new Promise((resolve, reject) => {
         const url = song.dAudioUrl
           ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
-          : getAssetPath("audio/" + song.audioUrl)
+          : getAssetPath('audio/' + song.audioUrl)
         const xhr = new XMLHttpRequest()
-        xhr.open("GET", url, true)
+        xhr.open('GET', url, true)
         xhr.withCredentials = false
-        xhr.responseType = "arraybuffer"
+        xhr.responseType = 'arraybuffer'
 
         xhr.onload = function () {
           const buffer = xhr.response
-          console.log("audio buffer", buffer)
-          console.log(song)
           if (this.status >= 200 && this.status < 300) {
             // asynchronously store audio buffer in IndexedDB
             localforage.setItem(`audio_${song.hash}`, buffer)
 
             // synchronously return blob response
-            const blob = new Blob([buffer], { type: "audio/mpeg" })
+            const blob = new Blob([buffer], { type: 'audio/mpeg' })
             resolve(URL.createObjectURL(blob))
           } else {
             reject({
@@ -111,7 +109,7 @@ class AudioPlayer {
           }
         }
         xhr.onerror = function () {
-          console.log("error")
+          console.log('error')
           reject({
             status: this.status,
             statusText: xhr.statusText,
@@ -141,7 +139,7 @@ class AudioPlayer {
 
       thisSong.audio = new Howl({
         src,
-        format: ["mp3"],
+        format: ['mp3'],
         html5: true,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
@@ -203,7 +201,7 @@ class AudioPlayer {
       title: song.title,
     })
     this.currentPreview = song.hash
-    console.log("storePreviewSource this.getCurrentPreview()", this.getCurrentPreview())
+    console.log('storePreviewSource this.getCurrentPreview()', this.getCurrentPreview())
 
     let src
     try {
@@ -211,11 +209,11 @@ class AudioPlayer {
     } catch (err) {
       throw new Error(`Failed to load preview audio for ${song.title}`)
     }
-    console.log("load preview audio buffer")
+    console.log('load preview audio buffer')
 
     thisPreview.audio = new Howl({
       src,
-      format: ["mp3"],
+      format: ['mp3'],
       html5: true,
       sprite: {
         sample: [
@@ -291,7 +289,7 @@ class AudioPlayer {
     // NOTE: the following block will run 10 times on every resync
     try {
       const currentTime = this.getCurrentTime()
-      if (typeof currentTime === "number") {
+      if (typeof currentTime === 'number') {
         isAudioStable = true
         // console.log(
         //   "seek timeline to",
@@ -311,7 +309,7 @@ class AudioPlayer {
 
         this.updateProgressOnce()
 
-        if (this.getChartAudioStatus() === "playing") {
+        if (this.getChartAudioStatus() === 'playing') {
           currentSong.tl.play()
         }
         this.audioResyncFrames--
@@ -335,7 +333,7 @@ class AudioPlayer {
       // currentSong.globalParams.combo = currentCombo;
 
       // store.dispatch(setCombo(currentCombo));
-      const comboTemp = document.querySelector("#combo-temp .combo-num")
+      const comboTemp = document.querySelector('#combo-temp .combo-num')
       if (comboTemp) comboTemp.textContent = currentCombo
 
       // console.log("doOnce");
@@ -371,13 +369,13 @@ class AudioPlayer {
     if (deltaTime > 60) {
       // console.log(deltaTime);
       const currentTime = this.getCurrentTime()
-      console.log("frame skip", "deltaTime:", deltaTime, "currentTime:", currentTime)
-      if (typeof currentTime === "number") {
+      console.log('frame skip', 'deltaTime:', deltaTime, 'currentTime:', currentTime)
+      if (typeof currentTime === 'number') {
         const globalOffset = store.getState().mods.globalOffset
 
         currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.offset)
       } else {
-        console.log("audio unstable after frame skip, resyncing")
+        console.log('audio unstable after frame skip, resyncing')
         this.resync()
       }
     }
@@ -440,7 +438,7 @@ class AudioPlayer {
   }
 
   play(loop = false) {
-    if (this.getChartAudioStatus() === "pending") {
+    if (this.getChartAudioStatus() === 'pending') {
       return
     }
 
@@ -449,7 +447,7 @@ class AudioPlayer {
     currentSong.loop = loop
 
     debugLog(`last played: ${currentSong.title}`, 2)
-    store.dispatch(actions.setChartAudioStatus("pending"))
+    store.dispatch(actions.setChartAudioStatus('pending'))
   }
 
   pause() {
@@ -478,7 +476,7 @@ class AudioPlayer {
       }
       this.stop()
     }
-    store.dispatch(actions.setChartAudioStatus("stopped"))
+    store.dispatch(actions.setChartAudioStatus('stopped'))
   }
 
   isPlaying() {
@@ -494,8 +492,8 @@ class AudioPlayer {
 
   playSongPreview(song) {
     if (
-      this.getPreviewAudioStatus() === "pending" ||
-      this.getChartAudioStatus() === "playing" ||
+      this.getPreviewAudioStatus() === 'pending' ||
+      this.getChartAudioStatus() === 'playing' ||
       this.currentPreview !== song.hash ||
       !this.getCurrentPreview().audio
     ) {
@@ -507,8 +505,8 @@ class AudioPlayer {
 
     const preview = this.getCurrentPreview().audio
 
-    this.currentPreviewId = preview.play("sample")
-    store.dispatch(actions.setPreviewAudioStatus("pending"))
+    this.currentPreviewId = preview.play('sample')
+    store.dispatch(actions.setPreviewAudioStatus('pending'))
   }
 
   stopSongPreview() {
@@ -532,6 +530,6 @@ class AudioPlayer {
   }
 }
 
-export default new AudioPlayer("main")
+export default new AudioPlayer('main')
 
-export const OffsetAdjustAudioPlayer = new AudioPlayer("offset")
+export const OffsetAdjustAudioPlayer = new AudioPlayer('offset')

@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { Modal, Button } from "semantic-ui-react";
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { Modal, Button } from 'semantic-ui-react'
 
-import { setModalOpen } from "../../actions/ScreenActions";
-import { renderWithSign } from "../../utils";
+import { setModalOpen } from '../../actions/ScreenActions'
+import { renderWithSign } from '../../utils'
 
 const OffsetConfirmModal = (props) => {
-  const { modalOpen, setModalOpen, mods } = props;
+  const { modalOpen, setModalOpen, mods } = props
 
   useEffect(() => {
-    if (!modalOpen) return;
+    if (!modalOpen) return
 
-    window.localStorage.setItem("adjustedGlobalOffset", true);
-  }, [modalOpen]);
+    window.localStorage.setItem('adjustedGlobalOffset', true)
+  }, [modalOpen])
 
   const handleClose = () => {
-    setModalOpen("offsetConfirm", false);
-  };
+    setModalOpen('offsetConfirm', false)
+  }
 
   return (
     <Modal open={modalOpen} className="information-modal offsetConfirmModal">
@@ -28,18 +28,18 @@ const OffsetConfirmModal = (props) => {
         <Button onClick={handleClose}>OK</Button>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { mods, screen } = state;
-  return { mods, screen };
-};
+  const { mods, screen } = state
+  return { mods, screen }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(OffsetConfirmModal);
+export default connect(mapStateToProps, mapDispatchToProps)(OffsetConfirmModal)

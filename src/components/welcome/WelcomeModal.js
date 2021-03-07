@@ -1,15 +1,15 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Modal, Button } from "semantic-ui-react";
+import React from 'react'
+import { connect } from 'react-redux'
+import { Modal, Button } from 'semantic-ui-react'
 
-import { setModalOpen } from "../../actions/ScreenActions";
+import { setModalOpen } from '../../actions/ScreenActions'
 
 const WelcomeModal = (props) => {
-  const { modalOpen, setModalOpen } = props;
+  const { modalOpen, setModalOpen } = props
 
   const openOffsetModal = () => {
-    setModalOpen("offset", true);
-  };
+    setModalOpen('offset', true)
+  }
 
   return (
     <Modal open={modalOpen} className="information-modal welcomeModal">
@@ -21,13 +21,13 @@ const WelcomeModal = (props) => {
         <Button onClick={openOffsetModal}>OK</Button>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-  };
-};
+  }
+}
 
-export default connect(null, mapDispatchToProps)(WelcomeModal);
+export default connect(null, mapDispatchToProps)(WelcomeModal)
