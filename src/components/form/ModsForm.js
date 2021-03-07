@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { Radio, Checkbox, Input } from "semantic-ui-react";
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { Radio, Checkbox, Input } from 'semantic-ui-react'
 
-import { options } from "./options";
-import { SP_DIFFICULTIES, DEFAULT_CMOD } from "../../constants";
-import { capitalize } from "../../utils";
-import { updateMods } from "../../actions/ModsActions";
-import { setModalOpen } from "../../actions/ScreenActions";
+import { options } from './options'
+import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
+import { capitalize } from '../../utils'
+import { updateMods } from '../../actions/ModsActions'
+import { setModalOpen } from '../../actions/ScreenActions'
 
 const ModsForm = (props) => {
-  const { mods, updateMods, mode, song, difficulty } = props;
+  const { mods, updateMods, mode, song, difficulty } = props
 
   // // when switching between single and double, any mod set to a value incompatible
   // // with the new mode will be reset to its default value
@@ -23,44 +23,44 @@ const ModsForm = (props) => {
   // revert any applied turn mods to normal turn when the chart is changed
   useEffect(() => {
     // console.log("mode, song, or difficulty changed");
-    updateMods({ turn: "off" });
-  }, [mode, song, difficulty]);
+    updateMods({ turn: 'off' })
+  }, [mode, song, difficulty])
 
   const getEffectiveScrollSpeed = () => {
-    if (!song) return null;
+    if (!song) return null
 
-    let displayBpm;
-    if (mods.speed === "cmod") {
+    let displayBpm
+    if (mods.speed === 'cmod') {
       if (mods.cmod < 100 || mods.cmod > 1000) {
-        displayBpm = DEFAULT_CMOD;
-      } else displayBpm = mods.cmod;
-      return <strong>{displayBpm}</strong>;
+        displayBpm = DEFAULT_CMOD
+      } else displayBpm = mods.cmod
+      return <strong>{displayBpm}</strong>
     }
 
-    displayBpm = song.displayBpm;
-    if (displayBpm.includes(",")) {
-      let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty);
-      if (mode === "double") difficultyIdx += 4;
-      displayBpm = displayBpm.split(",")[difficultyIdx];
+    displayBpm = song.displayBpm
+    if (displayBpm.includes(',')) {
+      let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty)
+      if (mode === 'double') difficultyIdx += 4
+      displayBpm = displayBpm.split(',')[difficultyIdx]
     }
 
-    const [lowBpm, highBpm] = displayBpm.split("-");
+    const [lowBpm, highBpm] = displayBpm.split('-')
     if (!highBpm) {
-      return <strong>{Math.round(lowBpm * mods.speed)}</strong>;
+      return <strong>{Math.round(lowBpm * mods.speed)}</strong>
     } else {
-      return <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(highBpm * mods.speed)}`}</strong>;
+      return <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(highBpm * mods.speed)}`}</strong>
     }
-  };
+  }
 
   const resetCmodIfInvalid = (e) => {
-    const fieldValue = e.target.value;
+    const fieldValue = e.target.value
     if (!fieldValue || parseInt(fieldValue) < 100 || parseInt(fieldValue) > 1000) {
-      updateMods({ cmod: DEFAULT_CMOD });
+      updateMods({ cmod: DEFAULT_CMOD })
     }
-  };
+  }
 
   return (
-    <div className={`view-section modsView ${props.activeView === "mods" ? "active" : ""}`}>
+    <div className={`view-section modsView ${props.activeView === 'mods' ? 'active' : ''}`}>
       <div className="view-wrapper">
         <form className="modsForm" onSubmit={(e) => e.preventDefault()}>
           <div className="form-field">
@@ -82,7 +82,7 @@ const ModsForm = (props) => {
                   checked={mods.speed === speed}
                   onChange={() => updateMods({ speed })}
                 />
-              );
+              )
             })}
             <div>
               <Radio
@@ -90,12 +90,12 @@ const ModsForm = (props) => {
                 label="Cmod"
                 name="speed"
                 value="cmod"
-                checked={mods.speed === "cmod"}
-                onChange={() => updateMods({ speed: "cmod" })}
+                checked={mods.speed === 'cmod'}
+                onChange={() => updateMods({ speed: 'cmod' })}
               />
               <Input
                 type="number"
-                disabled={mods.speed !== "cmod"}
+                disabled={mods.speed !== 'cmod'}
                 min={100}
                 max={1000}
                 name="cmod"
@@ -113,13 +113,13 @@ const ModsForm = (props) => {
               return (
                 <Radio
                   key={`appearance_${appearance}`}
-                  label={["Visible", "Hidden+", "Sudden+", "Hidden+ / Sudden+", "Stealth"][i]}
+                  label={['Visible', 'Hidden+', 'Sudden+', 'Hidden+ / Sudden+', 'Stealth'][i]}
                   name="appearance"
                   value={appearance}
                   checked={mods.appearance === appearance}
                   onChange={() => updateMods({ appearance })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -135,7 +135,7 @@ const ModsForm = (props) => {
                   checked={mods.noteskin === noteskin}
                   onChange={() => updateMods({ noteskin })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -143,8 +143,8 @@ const ModsForm = (props) => {
             <h4 className="form-label">Turn</h4>
             {options.mods.turn
               .filter((turn) => {
-                if (mode === "double") return turn === "off" || turn === "mirror";
-                return true;
+                if (mode === 'double') return turn === 'off' || turn === 'mirror'
+                return true
               })
               .map((turn) => {
                 return (
@@ -156,10 +156,10 @@ const ModsForm = (props) => {
                     checked={mods.turn === turn}
                     onChange={() => updateMods({ turn })}
                   />
-                );
+                )
               })}
           </div>
-          {mods.turn === "shuffle" && (
+          {mods.turn === 'shuffle' && (
             <div className="form-field">
               <h4 className="form-label">
                 Shuffle pattern
@@ -169,13 +169,13 @@ const ModsForm = (props) => {
                 return (
                   <Radio
                     key={`shuffle_${shuffle}`}
-                    label={["LRDU", "UDRL", "LRUD", "DURL", "DLUR", "DULR", "RLUD", "RULD"][i]}
+                    label={['LRDU', 'UDRL', 'LRUD', 'DURL', 'DLUR', 'DULR', 'RLUD', 'RULD'][i]}
                     name="shuffle"
                     value={shuffle}
                     checked={mods.shuffle === shuffle}
                     onChange={() => updateMods({ shuffle })}
                   />
-                );
+                )
               })}
             </div>
           )}
@@ -192,7 +192,7 @@ const ModsForm = (props) => {
                   checked={mods.stepZone === stepZone}
                   onChange={() => updateMods({ stepZone })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -208,7 +208,7 @@ const ModsForm = (props) => {
                   checked={mods.scroll === scroll}
                   onChange={() => updateMods({ scroll })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -218,13 +218,13 @@ const ModsForm = (props) => {
               return (
                 <Radio
                   key={`comboDisplay_${comboDisplay}`}
-                  label={["Behind arrows", "In front of arrows", "Hidden"][i]}
+                  label={['Behind arrows', 'In front of arrows', 'Hidden'][i]}
                   name="comboDisplay"
                   value={comboDisplay}
                   checked={mods.comboDisplay === comboDisplay}
                   onChange={() => updateMods({ comboDisplay })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -240,7 +240,7 @@ const ModsForm = (props) => {
                   checked={mods.comboFont === comboFont}
                   onChange={() => updateMods({ comboFont })}
                 />
-              );
+              )
             })}
           </div>
 
@@ -284,32 +284,32 @@ const ModsForm = (props) => {
               onChange={(_, data) => updateMods({ globalOffset: parseFloat(data.value) })}
             />
             <span>{mods.globalOffset}</span> */}
-            <button type="button" className="link-button" onClick={() => props.setModalOpen("offset", true)}>
+            <button type="button" className="link-button" onClick={() => props.setModalOpen('offset', true)}>
               Set global offset
             </button>
           </div>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { mods, songSelect, screen } = state;
+  const { mods, songSelect, screen } = state
   return {
     mods,
     mode: songSelect.mode,
     song: songSelect.song,
     difficulty: songSelect.difficulty,
     activeView: screen.activeView,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModsForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ModsForm)

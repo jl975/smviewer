@@ -1,12 +1,12 @@
-import React from "react";
-import { Route, Switch, withRouter, useHistory } from "react-router-dom";
+import React from 'react'
+import { Route, Switch, withRouter, useHistory } from 'react-router-dom'
 
-import MainContainer from "./containers/main/MainContainer";
-import HelpContainer from "./containers/main/HelpContainer";
-import Navbar from "./components/navigation/Navbar";
+import MainContainer from './containers/main/MainContainer'
+import HelpContainer from './containers/main/HelpContainer'
+import Navbar from './components/navigation/Navbar'
 
 function App() {
-  const history = useHistory();
+  const history = useHistory()
 
   return (
     <div className="app-container">
@@ -21,7 +21,7 @@ function App() {
       </Switch>
       <Navbar history={history} />
     </div>
-  );
+  )
 }
 
-export default withRouter(App);
+export default withRouter(App)

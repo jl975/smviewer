@@ -1,84 +1,84 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 
-import ChartArea from "../../components/chart/ChartArea";
-import SongForm from "../../components/form/SongForm";
-import ModsForm from "../../components/form/ModsForm";
-import AudioPlayer from "../../core/AudioPlayer";
-import { selectSong, selectDifficulty, selectMode } from "../../actions/SongSelectActions";
-import { resizeScreen, setModalOpen } from "../../actions/ScreenActions";
-import { getSimfileList, loadSimfile } from "../../actions/SimfileActions";
-import { DEBUG_MODE } from "../../constants";
-import LogView from "../../components/debug/LogView";
+import ChartArea from '../../components/chart/ChartArea'
+import SongForm from '../../components/form/SongForm'
+import ModsForm from '../../components/form/ModsForm'
+import AudioPlayer from '../../core/AudioPlayer'
+import { selectSong, selectDifficulty, selectMode } from '../../actions/SongSelectActions'
+import { resizeScreen, setModalOpen } from '../../actions/ScreenActions'
+import { getSimfileList, loadSimfile } from '../../actions/SimfileActions'
+import { DEBUG_MODE } from '../../constants'
+import LogView from '../../components/debug/LogView'
 
-import WelcomeModal from "../../components/welcome/WelcomeModal";
-import OffsetModal from "../../components/chart/OffsetModal";
-import OffsetConfirmModal from "../../components/chart/OffsetConfirmModal";
-import SettingsModal from "../../components/settings/SettingsModal";
-import HelpModal from "../../components/help/HelpModal";
+import WelcomeModal from '../../components/welcome/WelcomeModal'
+import OffsetModal from '../../components/chart/OffsetModal'
+import OffsetConfirmModal from '../../components/chart/OffsetConfirmModal'
+import SettingsModal from '../../components/settings/SettingsModal'
+import HelpModal from '../../components/help/HelpModal'
 
 const MainContainer = (props) => {
-  const [loadingSimfiles, setLoadingSimfiles] = useState(true);
+  const [loadingSimfiles, setLoadingSimfiles] = useState(true)
 
-  const [gameEngine, setGameEngine] = useState(null);
+  const [gameEngine, setGameEngine] = useState(null)
 
-  const [loadingAudio, setLoadingAudio] = useState(false);
+  const [loadingAudio, setLoadingAudio] = useState(false)
 
   useEffect(() => {
     const init = async () => {
-      setLoadingSimfiles(true);
-      setLoadingAudio(true);
-      setGameEngine(null);
-      await fetchSimfiles();
-      setLoadingSimfiles(false);
+      setLoadingSimfiles(true)
+      setLoadingAudio(true)
+      setGameEngine(null)
+      await fetchSimfiles()
+      setLoadingSimfiles(false)
 
-      AudioPlayer.setLoadingAudio = setLoadingAudio;
+      AudioPlayer.setLoadingAudio = setLoadingAudio
 
-      window.addEventListener("resize", props.resizeScreen);
+      window.addEventListener('resize', props.resizeScreen)
 
       // prompt user to adjust global offset on first visit
-      const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
+      const adjustedGlobalOffset = window.localStorage.getItem('adjustedGlobalOffset')
       if (!adjustedGlobalOffset) {
         // props.setModalOpen("offset");
-        props.setModalOpen("welcome");
+        props.setModalOpen('welcome')
       }
-    };
+    }
 
-    init();
-  }, []);
+    init()
+  }, [])
 
   const fetchSimfiles = async () => {
     try {
-      await props.getSimfileList();
+      await props.getSimfileList()
     } catch (error) {
-      console.error(error);
-      return null;
+      console.error(error)
+      return null
     }
-  };
+  }
 
   const onSongSelect = async (song, initialProgress = 0) => {
     // console.log("MainContainer selected song", song);
-    AudioPlayer.selectSong(song, initialProgress);
+    AudioPlayer.selectSong(song, initialProgress)
     // setSelectedSong(song);
 
-    props.selectSong(song);
+    props.selectSong(song)
 
-    document.title = `${song.title} - ${process.env.REACT_APP_TITLE}`;
+    document.title = `${song.title} - ${process.env.REACT_APP_TITLE}`
 
     // retrieve audio file and simfile from song.simfilePath
 
-    props.loadSimfile(song);
-  };
+    props.loadSimfile(song)
+  }
 
   const onDifficultySelect = (difficulty) => {
     // setSelectedDifficulty(difficulty);
-    props.selectDifficulty(difficulty);
-  };
+    props.selectDifficulty(difficulty)
+  }
   const onModeSelect = (mode) => {
-    props.selectMode(mode);
-  };
+    props.selectMode(mode)
+  }
 
-  const modalOpen = props.screen.modalOpen;
+  const modalOpen = props.screen.modalOpen
 
   return (
     <div className="main-container">
@@ -121,15 +121,15 @@ const MainContainer = (props) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { screen } = state;
+  const { screen } = state
   return {
     screen,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -140,7 +140,7 @@ const mapDispatchToProps = (dispatch) => {
     getSimfileList: () => dispatch(getSimfileList()),
     loadSimfile: (song) => dispatch(loadSimfile(song)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)

@@ -1,11 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { getChartLevel } from "../../utils/songUtils";
+import { getChartLevel } from '../../utils/songUtils'
 
 // displays song information on the chart view
 const SongInfo = (props) => {
-  const { selectedSong, selectedDifficulty, selectedMode } = props;
+  const { selectedSong, selectedDifficulty, selectedMode } = props
   return (
     <>
       <div className="song-info-row">
@@ -27,16 +27,16 @@ const SongInfo = (props) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { songSelect } = state;
+  const { songSelect } = state
   return {
     selectedSong: songSelect.song,
     selectedDifficulty: songSelect.difficulty,
     selectedMode: songSelect.mode,
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, null)(SongInfo);
+export default connect(mapStateToProps, null)(SongInfo)

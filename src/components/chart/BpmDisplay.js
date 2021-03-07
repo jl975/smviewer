@@ -1,5 +1,5 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
 
 const BpmDisplay = () => {
   return (
@@ -12,12 +12,12 @@ const BpmDisplay = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { mods, songSelect } = state;
-  return { mods, songSelect };
-};
+  const { mods, songSelect } = state
+  return { mods, songSelect }
+}
 
-export default connect(mapStateToProps, null)(BpmDisplay);
+export default connect(mapStateToProps, null)(BpmDisplay)

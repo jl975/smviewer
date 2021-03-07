@@ -1,38 +1,38 @@
 export const getUserSettings = () => {
   try {
-    const settings = window.localStorage.getItem("userSettings");
+    const settings = window.localStorage.getItem('userSettings')
     if (settings) {
-      return JSON.parse(settings);
+      return JSON.parse(settings)
     }
-    return {};
+    return {}
   } catch (err) {
-    console.error(err);
-    return {};
+    console.error(err)
+    return {}
   }
-};
+}
 
 export const updateUserSettings = (newSettings) => {
-  let settings = window.localStorage.getItem("userSettings");
+  let settings = window.localStorage.getItem('userSettings')
   try {
     if (settings) {
-      settings = JSON.parse(settings);
+      settings = JSON.parse(settings)
     } else {
-      settings = {};
+      settings = {}
     }
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 
   Object.keys(newSettings).forEach((key) => {
-    settings[key] = newSettings[key];
-  });
-  window.localStorage.setItem("userSettings", JSON.stringify(settings));
-};
+    settings[key] = newSettings[key]
+  })
+  window.localStorage.setItem('userSettings', JSON.stringify(settings))
+}
 
 export const getSavedSongProgress = () => {
-  return window.localStorage.getItem("progress") || 0;
-};
+  return window.localStorage.getItem('progress') || 0
+}
 
 export const saveSongProgress = (progress) => {
-  window.localStorage.setItem("progress", progress);
-};
+  window.localStorage.setItem('progress', progress)
+}

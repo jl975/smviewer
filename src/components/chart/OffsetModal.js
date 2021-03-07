@@ -1,118 +1,118 @@
-import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
-import { Modal, Input, Button, Icon } from "semantic-ui-react";
+import React, { useState, useEffect, useRef } from 'react'
+import { connect } from 'react-redux'
+import { Modal, Input, Button, Icon } from 'semantic-ui-react'
 
-import { OffsetAdjustAudioPlayer } from "../../core/AudioPlayer";
-import { updateMods } from "../../actions/ModsActions";
-import { setModalOpen } from "../../actions/ScreenActions";
-import { getOriginPath, fetchDocument, renderWithSign } from "../../utils";
-import parseSimfile from "../../utils/parseSimfile";
-import GameEngine from "../../core/GameEngine";
+import { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
+import { updateMods } from '../../actions/ModsActions'
+import { setModalOpen } from '../../actions/ScreenActions'
+import { getOriginPath, fetchDocument, renderWithSign } from '../../utils'
+import parseSimfile from '../../utils/parseSimfile'
+import GameEngine from '../../core/GameEngine'
 
 const OffsetModal = (props) => {
-  const { modalOpen, setModalOpen, mods, updateMods } = props;
-  const [gameEngine, setGameEngine] = useState(null);
-  const [loadingAudio, setLoadingAudio] = useState(false);
+  const { modalOpen, setModalOpen, mods, updateMods } = props
+  const [gameEngine, setGameEngine] = useState(null)
+  const [loadingAudio, setLoadingAudio] = useState(false)
 
-  const [canvas, setCanvas] = useState(null);
-  const canvasRef = useRef(null);
+  const [canvas, setCanvas] = useState(null)
+  const canvasRef = useRef(null)
 
-  const adjustedGlobalOffset = window.localStorage.getItem("adjustedGlobalOffset");
+  const adjustedGlobalOffset = window.localStorage.getItem('adjustedGlobalOffset')
 
-  const originalOffsetValue = useRef(mods.globalOffset);
+  const originalOffsetValue = useRef(mods.globalOffset)
 
   useEffect(() => {
-    if (!modalOpen) return;
+    if (!modalOpen) return
 
-    canvasRef.current = document.querySelector("#offsetChart");
-    setCanvas(canvasRef.current);
+    canvasRef.current = document.querySelector('#offsetChart')
+    setCanvas(canvasRef.current)
 
-    if (!canvas) return;
+    if (!canvas) return
 
-    loadSimfile();
+    loadSimfile()
 
     // if a value for preconfirmOffset exists, it means the user did not confirm
     // whatever value is currently stored as the global offset.
     // reset the global offset to the preconfirmOffset value and delete preconfirmOffset
-    if (typeof mods.preconfirmOffset === "number") {
+    if (typeof mods.preconfirmOffset === 'number') {
       console.log(`user did not confirm the globalOffset value of ${mods.globalOffset},
-      switching to preconfirmOffset value of ${mods.preconfirmOffset}`);
-      originalOffsetValue.current = mods.preconfirmOffset;
-      updateMods({ globalOffset: mods.preconfirmOffset, preconfirmOffset: null });
+      switching to preconfirmOffset value of ${mods.preconfirmOffset}`)
+      originalOffsetValue.current = mods.preconfirmOffset
+      updateMods({ globalOffset: mods.preconfirmOffset, preconfirmOffset: null })
     }
-  }, [canvas, modalOpen]);
+  }, [canvas, modalOpen])
 
   const loadSimfile = async () => {
     // prepare audio
     const song = {
-      title: "",
-      audioUrl: "offset_adjust.mp3",
-      hash: "OFFSET_ADJUST_AUDIO",
-    };
-    OffsetAdjustAudioPlayer.setLoadingAudio = setLoadingAudio;
-    OffsetAdjustAudioPlayer.selectSong(song);
+      title: '',
+      audioUrl: 'offset_adjust.mp3',
+      hash: 'OFFSET_ADJUST_AUDIO',
+    }
+    OffsetAdjustAudioPlayer.setLoadingAudio = setLoadingAudio
+    OffsetAdjustAudioPlayer.selectSong(song)
 
     // prepare chart
-    const sm = await fetchDocument(`${getOriginPath()}simfiles/offset_adjust.sm`);
-    const simfileObj = parseSimfile(sm, "sm");
+    const sm = await fetchDocument(`${getOriginPath()}simfiles/offset_adjust.sm`)
+    const simfileObj = parseSimfile(sm, 'sm')
     const chartParams = {
-      difficulty: "Basic",
-      mode: "single",
+      difficulty: 'Basic',
+      mode: 'single',
       mods,
-    };
+    }
 
     let ge = new GameEngine(canvas, simfileObj, chartParams, {
       mainEngine: false,
       AudioPlayer: OffsetAdjustAudioPlayer,
-    });
-    setGameEngine(ge);
+    })
+    setGameEngine(ge)
 
-    OffsetAdjustAudioPlayer.play(true);
-  };
+    OffsetAdjustAudioPlayer.play(true)
+  }
 
   const handleClose = async () => {
-    await setModalOpen("offset", false);
-    OffsetAdjustAudioPlayer.stop();
+    await setModalOpen('offset', false)
+    OffsetAdjustAudioPlayer.stop()
     if (gameEngine) {
-      gameEngine.killed = true;
+      gameEngine.killed = true
     }
-  };
+  }
 
   const handleOffsetChange = async (newOffset) => {
     await updateMods({
       globalOffset: newOffset,
       preconfirmOffset: originalOffsetValue.current,
-    });
-    OffsetAdjustAudioPlayer.resync();
-  };
+    })
+    OffsetAdjustAudioPlayer.resync()
+  }
 
   const incrementOffset = () => {
-    const newOffset = Math.round((mods.globalOffset + 0.01) * 100) / 100;
-    handleOffsetChange(newOffset);
-  };
+    const newOffset = Math.round((mods.globalOffset + 0.01) * 100) / 100
+    handleOffsetChange(newOffset)
+  }
   const decrementOffset = () => {
-    const newOffset = Math.round((mods.globalOffset - 0.01) * 100) / 100;
-    handleOffsetChange(newOffset);
-  };
+    const newOffset = Math.round((mods.globalOffset - 0.01) * 100) / 100
+    handleOffsetChange(newOffset)
+  }
 
   const handleCancel = async () => {
     await updateMods({
       globalOffset: originalOffsetValue.current,
       preconfirmOffset: null,
-    });
-    handleClose();
-  };
+    })
+    handleClose()
+  }
 
   const confirmOffset = async () => {
-    originalOffsetValue.current = mods.globalOffset;
-    await updateMods({ preconfirmOffset: null });
+    originalOffsetValue.current = mods.globalOffset
+    await updateMods({ preconfirmOffset: null })
 
-    await handleClose();
+    await handleClose()
 
     if (!adjustedGlobalOffset) {
-      setModalOpen("offsetConfirm");
+      setModalOpen('offsetConfirm')
     }
-  };
+  }
 
   return (
     <Modal open={modalOpen} className="offsetModal">
@@ -137,7 +137,7 @@ const OffsetModal = (props) => {
             step="0.01"
             value={mods.globalOffset}
             onChange={(_, data) => {
-              handleOffsetChange(parseFloat(data.value));
+              handleOffsetChange(parseFloat(data.value))
             }}
           />
           <div className="offset-value">
@@ -161,22 +161,22 @@ const OffsetModal = (props) => {
         <Button onClick={confirmOffset}>Confirm</Button>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => {
-  const { mods, screen } = state;
+  const { mods, screen } = state
   return {
     mods,
     screen,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(OffsetModal);
+export default connect(mapStateToProps, mapDispatchToProps)(OffsetModal)

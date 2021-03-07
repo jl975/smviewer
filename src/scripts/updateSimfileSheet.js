@@ -1,57 +1,57 @@
-const fs = require("fs");
+const fs = require('fs')
 
-const simfileTsvPath = "../../public/data/simfiles.tsv";
+const simfileTsvPath = '../../public/data/simfiles.tsv'
 
-const { getMetadataFromSM } = require("./smParser");
+const { getMetadataFromSM } = require('./smParser')
 
 const parseSimfileTsv = () => {
-  let tsv = fs.readFileSync(simfileTsvPath, "utf-8").split("\n");
+  let tsv = fs.readFileSync(simfileTsvPath, 'utf-8').split('\n')
 
-  const headers = tsv[0].split("\t");
+  const headers = tsv[0].split('\t')
 
-  const output = [];
+  const output = []
   for (let i = 1; i < tsv.length; i++) {
-    const values = tsv[i].split("\t");
-    const row = {};
-    row.index = i - 1; // way to keep track of the original eamuse song order
+    const values = tsv[i].split('\t')
+    const row = {}
+    row.index = i - 1 // way to keep track of the original eamuse song order
     values.forEach((value, col) => {
-      if (value === "") value = null;
-      const header = headers[col];
-      row[header] = value;
-    });
-    output.push(row);
+      if (value === '') value = null
+      const header = headers[col]
+      row[header] = value
+    })
+    output.push(row)
   }
 
-  return output;
-};
+  return output
+}
 
 const writeSimfileTsv = (json) => {
-  let output = "";
+  let output = ''
 
   // console.log(json);
-  const headers = Object.keys(json[0]);
+  const headers = Object.keys(json[0])
 
-  output += headers.join("\t");
+  output += headers.join('\t')
 
   json.forEach((song) => {
-    let row = "\n";
+    let row = '\n'
     headers.forEach((header) => {
-      let value = song[header];
-      if (value === null) value = "";
-      row += value + "\t";
-    });
-    output += row;
-  });
+      let value = song[header]
+      if (value === null) value = ''
+      row += value + '\t'
+    })
+    output += row
+  })
 
-  fs.writeFile(simfileTsvPath, output, "utf8", (err) => {
-    if (err) console.log(err);
-  });
-};
+  fs.writeFile(simfileTsvPath, output, 'utf8', (err) => {
+    if (err) console.log(err)
+  })
+}
 
 const init = async () => {
-  let parsedTsv = parseSimfileTsv();
+  let parsedTsv = parseSimfileTsv()
 
-  parsedTsv = getMetadataFromSM(parsedTsv);
+  parsedTsv = getMetadataFromSM(parsedTsv)
 
   // console.log(parsedTsv);
   // console.log(chartLevels);
@@ -72,12 +72,10 @@ const init = async () => {
   //   }
   // });
 
-  await writeSimfileTsv(parsedTsv);
-};
+  await writeSimfileTsv(parsedTsv)
+}
 
-init();
-
-const getDisplayBpm = () => {};
+init()
 
 /* one-time scripts for initial population of new columns */
 // const hashVersion = require("./hash_version.json");
