@@ -1,4 +1,5 @@
 import { DEFAULT_OFFSET, ARROW_HEIGHT } from '../constants'
+import store from '../store'
 
 export const applyTurnMods = (chart, mods, mode) => {
   const { turn, shuffle } = mods
@@ -59,6 +60,13 @@ export const getCurrentBpm = (params) => {
 }
 
 /*
+  Get the global offset value
+*/
+export const getGlobalOffset = () => {
+  return store.getState().mods.globalOffset
+}
+
+/*
   Change current displayed bpm. Going with direct DOM text manipulation
   rather than dispatching an action
 */
@@ -85,7 +93,7 @@ export const changeActiveBpm = (bpmValue, globalParams) => {
   every time the audio is resynced.
 */
 
-export const getCurrentCombo = (song) => {
+export const getCurrentPosition = (song) => {
   const { audio, globalParams } = song
   const { allArrows } = globalParams
   if (!allArrows.length) return 0
@@ -101,16 +109,29 @@ export const getCurrentCombo = (song) => {
   //   return 0;
   // }
 
-  let currentCombo
+  const positionObj = {}
+  let currentCombo, nextNotePtr
 
   // Go through the chart until the arrow following the current timestamp is reached,
   // then set the combo to one less than that arrow's combo
   for (let i = 0; i < allArrows.length; i++) {
     const arrow = allArrows[i]
-    if (arrow.combo && arrow.timestamp > currentTime + DEFAULT_OFFSET) {
-      currentCombo = arrow.combo - 1
-      // console.log(currentCombo);
-      return currentCombo
+
+    if (arrow.timestamp > currentTime + DEFAULT_OFFSET) {
+      if (arrow.combo) {
+        currentCombo = arrow.combo - 1
+        positionObj.currentCombo = currentCombo
+      }
+
+      // only regular arrows and freeze heads count as "notes" for the purpose of assist tick
+      if (arrow.note.includes('1') || arrow.note.includes('2')) {
+        nextNotePtr = i
+        positionObj.nextNotePtr = nextNotePtr
+      }
+
+      if (typeof positionObj.currentCombo !== 'undefined' && typeof positionObj.nextNotePtr !== 'undefined') {
+        return positionObj
+      }
     }
   }
 
@@ -121,11 +142,11 @@ export const getCurrentCombo = (song) => {
     const arrow = allArrows[i]
     if (arrow.combo) {
       currentCombo = arrow.combo
-      return currentCombo
+      return { currentCombo, nextNotePtr: null }
     }
   }
 
-  return -1 // should never reach this. return -1 to make debugging easier
+  return { currentCombo: -1 } // should never reach this. return -1 to make debugging easier
 }
 
 export const getFullCombo = (song) => {

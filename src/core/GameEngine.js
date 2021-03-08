@@ -67,6 +67,11 @@ class GameEngine {
 
       targetFlashes: {},
 
+      /*
+        Parameters related tp scheduling the assist tick
+      */
+      assist: {},
+
       // "global" variables for creating the timeline
       /*
         lol for lack of a better word. Refers to the last arrow or last bpm change/stop event,
@@ -134,9 +139,17 @@ class GameEngine {
     this.globalParams.timeWindowStartPtr = {}
     this.globalParams.timeWindowEndPtr = {}
 
+    this.globalParams.assist = {
+      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
+      notesInQueue: [],
+      nextNotePtr: null,
+    }
+
     this.globalParams.targetFlashes = {}
     this.globalParams.mods = mods
     this.AudioPlayer.setGlobalParams(this.globalParams)
+
+    this.AudioPlayer.initializeAssistTick()
 
     // debugging
     // window.globalParams = this.globalParams;
@@ -588,6 +601,47 @@ class GameEngine {
     this.updateLoopOnce()
   }
 
+  // test assist tick code
+  scheduler() {
+    const { assist, allArrows } = this.globalParams
+    const { audioContext, audioStartContextTime, audioStartProgressTime, nextNotePtr } = assist
+    const scheduleAheadTime = 0.2
+
+    const audioContextDiff = audioStartContextTime - audioStartProgressTime
+
+    let nextNote = allArrows[nextNotePtr]
+
+    // short-circuit if no future note is detected
+    if (!nextNote) return
+
+    let nextNoteTime = allArrows[nextNotePtr].timestamp
+    let nextNoteContextTime = nextNoteTime + audioContextDiff
+
+    // while there are notes that will need to play before the next interval,
+    // schedule them and advance the pointer.
+    while (nextNoteContextTime < audioContext.currentTime + scheduleAheadTime) {
+      this.scheduleNote(nextNote)
+
+      this.AudioPlayer.playAssistTick(nextNoteContextTime)
+
+      // look for the next assist tick note to schedule, and short-circuit if end is reached
+      assist.nextNotePtr++
+      nextNote = allArrows[assist.nextNotePtr]
+      if (!nextNote) return
+
+      while (!nextNote.note.includes('1') && !nextNote.note.includes('2')) {
+        assist.nextNotePtr++
+        nextNote = allArrows[assist.nextNotePtr]
+        if (!nextNote) return
+      }
+
+      nextNoteTime = allArrows[assist.nextNotePtr].timestamp
+      nextNoteContextTime = nextNoteTime + audioContextDiff
+    }
+  }
+
+  scheduleNote() {}
+
   mainLoop(loop = true) {
     // if this gameEngine is replaced and flagged for garbage deletion, squash any residual
     // attempts to invoke its mainLoop
@@ -611,6 +665,9 @@ class GameEngine {
 
     const { songSelect, mods } = store.getState()
     const { mode } = songSelect
+
+    // schedule assist tick sounds in advance
+    this.scheduler()
 
     if (mods.cmod < 100 || mods.cmod > 1000) {
       mods.cmod = DEFAULT_CMOD

@@ -8,13 +8,13 @@ import Progress from '../components/chart/canvas/Progress'
 import { getAssetPath } from '../utils'
 import { saveSongProgress } from '../utils/userSettings'
 import {
+  getGlobalOffset,
   getCurrentBpm,
   changeActiveBpm,
-  getCurrentCombo,
+  getCurrentPosition,
   getFullCombo,
   initializeBeatWindow,
 } from '../utils/engineUtils'
-import { DEFAULT_OFFSET } from '../constants'
 import { debugLog } from '../utils/debugUtils'
 
 class AudioPlayer {
@@ -30,10 +30,13 @@ class AudioPlayer {
       preview: {},
       // assistTick: {
       //   audio: new Howl({
-      //     src: getAssetPath("sounds/assist_tick.wav"),
+      //     src: getAssetPath('sounds/assist_tick.wav'),
       //     // format: ["wav"],
       //     // html5: true,
       //   }),
+      //   context: new (window.AudioContext || window.webkitAudioContext)(),
+      //   buffer: null,
+      //   unlocked: false,
       // },
     } // map of song hash to associated Howl object
 
@@ -50,6 +53,47 @@ class AudioPlayer {
     this.updateTimeline = this.updateTimeline.bind(this)
     this.updateProgress = this.updateProgress.bind(this)
     this.audioResyncFrames = 0
+  }
+
+  initializeAssistTick() {
+    const currentSong = this.getCurrentSong()
+    const assist = currentSong.globalParams.assist
+    const audioContext = assist.audioContext
+
+    const request = new XMLHttpRequest()
+    request.open('GET', getAssetPath('sounds/assist_tick.wav'), true)
+    request.responseType = 'arraybuffer'
+    request.onload = function () {
+      audioContext.decodeAudioData(request.response, (buffer) => {
+        assist.buffer = buffer
+      })
+    }
+    request.send()
+  }
+
+  playAssistTick(time) {
+    const currentSong = this.getCurrentSong()
+    // if (!currentSong.globalParams.mods.assistTick) return
+
+    const assist = currentSong.globalParams.assist
+
+    if (!this.isAudioStable) return
+    if (this.getChartAudioStatus() !== 'playing') return
+
+    const audioContext = currentSong.globalParams.assist.audioContext
+    const currentTime = audioContext.currentTime
+
+    // don't retroactively play ticks that were backed up past the lookahead window
+    if (time < currentTime) return
+
+    if (assist.buffer) {
+      const bufferSource = audioContext.createBufferSource()
+      bufferSource.buffer = assist.buffer
+      bufferSource.connect(audioContext.destination)
+      // bufferSource.start(audioContext.currentTime);
+      bufferSource.start(time - getGlobalOffset())
+      // console.log(audioContext.currentTime);
+    }
   }
 
   getCurrentSong() {
@@ -141,6 +185,7 @@ class AudioPlayer {
         src,
         format: ['mp3'],
         html5: true,
+        volume: 0.5,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false)
@@ -217,8 +262,8 @@ class AudioPlayer {
       html5: true,
       sprite: {
         sample: [
-          parseFloat((simfile.sampleStart - DEFAULT_OFFSET) * 1000),
-          parseFloat((simfile.sampleLength - DEFAULT_OFFSET) * 1000),
+          parseFloat((simfile.sampleStart - getGlobalOffset()) * 1000),
+          parseFloat((simfile.sampleLength - getGlobalOffset()) * 1000),
         ],
       },
       onload: () => {
@@ -273,6 +318,11 @@ class AudioPlayer {
     // this needs to be done after (/in addition to) the audio restabilizing
     this.audioResyncFrames = 10
 
+    const currentSong = this.getCurrentSong()
+    if (currentSong?.globalParams) {
+      currentSong.globalParams.assist.nextNotePtr = null
+    }
+
     gsap.ticker.add(this.updateTimeline)
     // this.updateProgressOnce();
   }
@@ -284,13 +334,13 @@ class AudioPlayer {
     const currentSong = this.getCurrentSong()
     if (!currentSong.tl || !currentSong.globalParams) return
 
-    let isAudioStable = false
+    this.isAudioStable = false
 
     // NOTE: the following block will run 10 times on every resync
     try {
       const currentTime = this.getCurrentTime()
       if (typeof currentTime === 'number') {
-        isAudioStable = true
+        this.isAudioStable = true
         // console.log(
         //   "seek timeline to",
         //   currentTime,
@@ -323,20 +373,26 @@ class AudioPlayer {
     }
 
     // This block will only run once on every resync
-    if (isAudioStable && this.audioResyncFrames <= 0) {
+    if (this.isAudioStable && this.audioResyncFrames <= 0) {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(currentSong.globalParams)
       changeActiveBpm(currentBpm, currentSong.globalParams)
       // document.querySelector(".bpm-value").textContent = Math.round(currentBpm);
 
-      const currentCombo = getCurrentCombo(currentSong)
+      const { currentCombo, nextNotePtr } = getCurrentPosition(currentSong)
       // currentSong.globalParams.combo = currentCombo;
 
       // store.dispatch(setCombo(currentCombo));
       const comboTemp = document.querySelector('#combo-temp .combo-num')
       if (comboTemp) comboTemp.textContent = currentCombo
 
-      // console.log("doOnce");
+      const assist = currentSong.globalParams.assist
+      const audioContext = assist.audioContext
+      const progressTime = this.getCurrentTime()
+
+      assist.audioStartContextTime = audioContext.currentTime
+      assist.audioStartProgressTime = progressTime
+      assist.nextNotePtr = nextNotePtr
 
       gsap.ticker.remove(this.updateTimeline)
     }
@@ -354,6 +410,7 @@ class AudioPlayer {
   }
 
   seekProgress(value) {
+    if (!this.getCurrentSong()?.audio) return
     const audioDuration = this.getCurrentSong().audio.duration()
     this.seekTime(value * audioDuration)
   }
@@ -414,7 +471,9 @@ class AudioPlayer {
     this.updateProgress(null, null, 0)
 
     const currentSong = this.getCurrentSong()
-    const currentCombo = getCurrentCombo(currentSong)
+    const { currentCombo } = getCurrentPosition(currentSong)
+
+    // const audioContext = currentSong.globalParams.assist.audioContext
 
     // const comboDebug = document.querySelector("#combo-debug .combo-debug-num");
     // if (comboDebug) {
@@ -484,10 +543,6 @@ class AudioPlayer {
   }
   isPaused() {
     return this.getCurrentSong() && !this.getCurrentSong().audio.playing(this.currentSongId)
-  }
-
-  playAssistTick() {
-    this.sources.assistTick.audio.play()
   }
 
   playSongPreview(song) {
