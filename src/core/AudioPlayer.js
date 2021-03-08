@@ -459,7 +459,7 @@ class AudioPlayer {
   }
 
   stop() {
-    if (!this.getCurrentSong()) {
+    if (!this.getCurrentSong() || !this.getCurrentSong().audio) {
       return
     }
     this.getCurrentSong().audio.stop(this.currentSongId)
@@ -512,6 +512,7 @@ class AudioPlayer {
   stopSongPreview() {
     if (!this.currentPreview) return
     const preview = this.getCurrentPreview().audio
+    if (!preview) return
 
     preview.stop(this.currentPreviewId)
 

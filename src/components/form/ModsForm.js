@@ -29,15 +29,13 @@ const ModsForm = (props) => {
   const getEffectiveScrollSpeed = () => {
     if (!song) return null
 
-    let displayBpm
-    if (mods.speed === 'cmod' || mods.speed === 'mmod') {
-      if (mods.cmod < 100 || mods.cmod > 1000) {
-        displayBpm = DEFAULT_CMOD
-      } else displayBpm = mods.cmod
-      return <strong>{displayBpm}</strong>
+    const cmodValue = isNaN(mods.cmod) || mods.cmod < 100 || mods.cmod > 1000 ? DEFAULT_CMOD : mods.cmod
+
+    if (mods.speed === 'cmod') {
+      return <strong>{cmodValue}</strong>
     }
 
-    displayBpm = song.displayBpm
+    let displayBpm = song.displayBpm
     if (displayBpm.includes(',')) {
       let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty)
       if (mode === 'double') difficultyIdx += 4
@@ -46,9 +44,18 @@ const ModsForm = (props) => {
 
     const [lowBpm, highBpm] = displayBpm.split('-')
     if (!highBpm) {
-      return <strong>{Math.round(lowBpm * mods.speed)}</strong>
+      const scrollSpeed = mods.speed === 'mmod' ? cmodValue : Math.round(lowBpm * mods.speed)
+      return <strong>{scrollSpeed}</strong>
     } else {
-      return <strong>{`${Math.round(lowBpm * mods.speed)} - ${Math.round(highBpm * mods.speed)}`}</strong>
+      let lowScrollSpeed, highScrollSpeed
+      if (mods.speed === 'mmod') {
+        highScrollSpeed = cmodValue
+        lowScrollSpeed = Math.round((lowBpm / highBpm) * cmodValue)
+      } else {
+        lowScrollSpeed = Math.round(lowBpm * mods.speed)
+        highScrollSpeed = Math.round(highBpm * mods.speed)
+      }
+      return <strong>{`${lowScrollSpeed} - ${highScrollSpeed}`}</strong>
     }
   }
 

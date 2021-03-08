@@ -89,6 +89,8 @@ class Arrow {
         destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60)
       } else {
         destY = this.currentBeatPosition(beatTick) * arrowHeight * speedMod
+        // prevent edge case rounding errors that leave destY a tiny fraction above 0
+        destY = Math.floor(destY * 10000) / 10000
       }
 
       // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
