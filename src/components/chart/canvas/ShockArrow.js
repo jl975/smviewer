@@ -25,11 +25,16 @@ class ShockArrow {
     return this.timestamp - timeTick
   }
 
-  render(canvas, frame, { beatTick, timeTick }, attrs) {
+  render(canvas, frame, { beatTick, timeTick, mBpm }, attrs) {
     const c = canvas.getContext('2d')
 
     const { mods } = attrs
     const { speed, cmod, scroll, appearance } = mods
+
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
 
     if (appearance === 'stealth') return
 
@@ -48,7 +53,7 @@ class ShockArrow {
       if (speed === 'cmod') {
         destY = this.currentTimePosition(timeTick) * ARROW_HEIGHT * (cmod / 60)
       } else {
-        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speed
+        destY = this.currentBeatPosition(beatTick) * ARROW_HEIGHT * speedMod
       }
 
       if (destY > topBoundary && destY < bottomBoundary) {
