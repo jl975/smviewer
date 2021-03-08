@@ -30,7 +30,7 @@ const ModsForm = (props) => {
     if (!song) return null
 
     let displayBpm
-    if (mods.speed === 'cmod') {
+    if (mods.speed === 'cmod' || mods.speed === 'mmod') {
       if (mods.cmod < 100 || mods.cmod > 1000) {
         displayBpm = DEFAULT_CMOD
       } else displayBpm = mods.cmod
@@ -93,9 +93,17 @@ const ModsForm = (props) => {
                 checked={mods.speed === 'cmod'}
                 onChange={() => updateMods({ speed: 'cmod' })}
               />
+              <Radio
+                key="speed_mmod"
+                label="Mmod"
+                name="speed"
+                value="mmod"
+                checked={mods.speed === 'mmod'}
+                onChange={() => updateMods({ speed: 'mmod' })}
+              />
               <Input
                 type="number"
-                disabled={mods.speed !== 'cmod'}
+                disabled={mods.speed !== 'cmod' && mods.speed !== 'mmod'}
                 min={100}
                 max={1000}
                 name="cmod"
@@ -273,17 +281,6 @@ const ModsForm = (props) => {
             />
           </div>
           <div className="form-field">
-            {/* <h4 className="form-label">Global offset</h4>
-            <Input
-              type="range"
-              name="globalOffset"
-              min="-0.20"
-              max="0.20"
-              step="0.01"
-              value={mods.globalOffset}
-              onChange={(_, data) => updateMods({ globalOffset: parseFloat(data.value) })}
-            />
-            <span>{mods.globalOffset}</span> */}
             <button type="button" className="link-button" onClick={() => props.setModalOpen('offset', true)}>
               Set global offset
             </button>

@@ -55,3 +55,14 @@ export const isInBpmRange = (song, bpmRangeValue, difficulty) => {
     return bpmRangeValue <= maxBpm && maxBpm < nextHighestBpm
   }
 }
+
+export const getDisplayBpm = (song, difficulty, mode) => {
+  if (!song) return null
+  let displayBpm = song.displayBpm
+  if (displayBpm.includes(',')) {
+    let difficultyIdx = SP_DIFFICULTIES.indexOf(difficulty)
+    if (mode === 'double') difficultyIdx += 4
+    displayBpm = displayBpm.split(',')[difficultyIdx]
+  }
+  return displayBpm
+}

@@ -10,9 +10,9 @@ const DOT_WIDTH = 3
 const DIGIT_HEIGHT = 19
 
 class BpmAndStopDisplay {
-  renderBpm(bpmReel, bpm, { beatTick, timeTick }, { mods }) {
+  renderBpm(bpmReel, bpm, { beatTick, timeTick, mBpm }, { mods }) {
     const c = bpmReel.getContext('2d')
-    const pxPosition = getPxPosition(bpm, { beatTick, timeTick }, mods, bpmReel)
+    const pxPosition = getPxPosition(bpm, { beatTick, timeTick, mBpm }, mods, bpmReel)
 
     const topBoundary = -DIGIT_HEIGHT
     const bottomBoundary = bpmReel.height
@@ -47,9 +47,9 @@ class BpmAndStopDisplay {
     }
   }
 
-  renderStop(stopReel, stop, { beatTick, timeTick }, { mods }) {
+  renderStop(stopReel, stop, { beatTick, timeTick, mBpm }, { mods }) {
     const c = stopReel.getContext('2d')
-    const pxPosition = getPxPosition(stop, { beatTick, timeTick }, mods, stopReel)
+    const pxPosition = getPxPosition(stop, { beatTick, timeTick, mBpm }, mods, stopReel)
 
     const topBoundary = -DIGIT_HEIGHT
     const bottomBoundary = stopReel.height
@@ -73,9 +73,6 @@ class BpmAndStopDisplay {
           imageX = DIGIT_WIDTH * parseInt(digit)
           imageWidth = DIGIT_WIDTH
         }
-        // console.log(
-        //   `digit ${digit}: imageX ${imageX}, imageY ${imageY}, imageWidth ${imageWidth}, imageHeight ${imageHeight}, destX ${destX}`
-        // );
         c.drawImage(image, imageX, imageY, imageWidth, imageHeight, destX, destY, imageWidth, imageHeight)
 
         destX += digit === '.' ? DOT_WIDTH : DIGIT_WIDTH
@@ -84,14 +81,18 @@ class BpmAndStopDisplay {
   }
 }
 
-const getPxPosition = (event, { beatTick, timeTick }, mods, reel) => {
+const getPxPosition = (event, { beatTick, timeTick, mBpm }, mods, reel) => {
   let pxPosition
   if (mods.speed === 'cmod') {
     const timeDiff = event.timestamp - timeTick
     pxPosition = timeDiff * ARROW_HEIGHT * (mods.cmod / 60)
   } else {
     const beatDiff = event.beat - beatTick
-    pxPosition = beatDiff * ARROW_HEIGHT * mods.speed
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
+    pxPosition = beatDiff * ARROW_HEIGHT * speedMod
   }
   pxPosition += ARROW_HEIGHT / 2
 

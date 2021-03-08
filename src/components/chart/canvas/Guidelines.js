@@ -6,7 +6,7 @@ class Guidelines {
     this.finalBeat = finalBeat
   }
 
-  render(canvas, { beatTick }, attrs) {
+  render(canvas, { beatTick, mBpm }, attrs) {
     const { mods } = attrs
     const { speed, scroll } = mods
 
@@ -22,8 +22,13 @@ class Guidelines {
     const topBoundary = 0
     const bottomBoundary = canvas.height
 
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
+
     for (let beat = 0; beat <= this.finalBeat; beat++) {
-      let destY = (beat - beatTick) * ARROW_HEIGHT * speed + ARROW_HEIGHT / 2
+      let destY = (beat - beatTick) * ARROW_HEIGHT * speedMod + ARROW_HEIGHT / 2
       // let destY = (beat - beatTick) * ARROW_HEIGHT * speed;
 
       destY = (destY + 0.5) | 0

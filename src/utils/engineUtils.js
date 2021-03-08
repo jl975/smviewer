@@ -168,7 +168,7 @@ export const clearBpmAndStopDisplay = () => {
   arrow to fall within the visible beat window
 */
 export const initializeBeatWindow = (globalParams) => {
-  const { arrows, freezes, shocks, chartAreaHeight, mods } = globalParams
+  const { arrows, freezes, shocks, chartAreaHeight, mBpm, mods } = globalParams
 
   let timestamp = mods.speed === 'cmod' ? 'timestamp' : 'beatstamp'
 
@@ -188,9 +188,13 @@ export const initializeBeatWindow = (globalParams) => {
     windowEnd = globalParams.timeTick + visibleTime
   } else {
     let numVisibleBeats = chartAreaHeight / ARROW_HEIGHT
-    numVisibleBeats /= mods.speed
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
 
-    windowStart = globalParams.beatTick - 1 / mods.speed
+    numVisibleBeats /= speedMod
+    windowStart = globalParams.beatTick - 1 / speedMod
     windowEnd = globalParams.beatTick + numVisibleBeats
   }
 
@@ -398,7 +402,7 @@ export const initializeBeatWindow = (globalParams) => {
   to be shifted
 */
 export const updateBeatWindow = (globalParams) => {
-  const { arrows, freezes, shocks, chartAreaHeight, mods } = globalParams
+  const { arrows, freezes, shocks, chartAreaHeight, mBpm, mods } = globalParams
 
   const bpmStopEvents = ['bpm', 'stop']
 
@@ -434,9 +438,13 @@ export const updateBeatWindow = (globalParams) => {
     globalParams.currentTimeWindow = [windowStart, windowEnd]
   } else {
     let numVisibleBeats = chartAreaHeight / ARROW_HEIGHT
-    numVisibleBeats /= mods.speed
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
 
-    windowStart = globalParams.beatTick - 1 / mods.speed
+    numVisibleBeats /= speedMod
+    windowStart = globalParams.beatTick - 1 / speedMod
     windowEnd = globalParams.beatTick + numVisibleBeats
     globalParams.currentBeatWindow = [windowStart, windowEnd]
   }

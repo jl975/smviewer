@@ -9,6 +9,7 @@ import ComboDisplay from '../components/chart/canvas/ComboDisplay'
 import BpmAndStopDisplay from '../components/chart/canvas/BpmAndStopDisplay'
 import LaneCover from '../components/chart/canvas/LaneCover'
 import { applyTurnMods, initializeBeatWindow, updateBeatWindow, changeActiveBpm } from '../utils/engineUtils'
+import { getDisplayBpm } from '../utils/songUtils'
 import { END_EXTRA_BEATS, MARVELOUS_FLASH_FRAMES, DEFAULT_CMOD } from '../constants'
 import store from '../store'
 import { debugSimfileChart } from '../utils/debugUtils'
@@ -98,8 +99,10 @@ class GameEngine {
   }
 
   resetChart({ mode, difficulty, mods }) {
-    const { audio } = store.getState()
+    const { audio, songSelect } = store.getState()
     // const { audio, songSelect } = store.getState();
+
+    console.log('store.getState', store.getState())
 
     // kill the previous gsap timeline before creating a new one
     if (this.tl) {
@@ -147,6 +150,11 @@ class GameEngine {
 
       this.globalParams.offset = simfile.offset
 
+      const displayBpm = getDisplayBpm(songSelect.song, songSelect.difficulty, songSelect.mode)
+      const displayBpms = displayBpm.split('-')
+      const maxBpm = displayBpms[displayBpms.length - 1]
+      this.globalParams.mBpm = parseInt(maxBpm)
+
       this.generateEventList(simfile)
       this.generateArrows(simfile, mods)
       this.generateTimestamps()
@@ -156,6 +164,8 @@ class GameEngine {
         this.pauseTl()
       }
       // this.AudioPlayer.storePreviewSource(songSelect.song, simfile);
+
+      console.log(this.globalParams)
 
       setTimeout(() => {
         this.AudioPlayer.resync()
@@ -606,7 +616,7 @@ class GameEngine {
       mods.cmod = DEFAULT_CMOD
     }
 
-    const { beatTick, timeTick } = this.globalParams
+    const { beatTick, timeTick, mBpm } = this.globalParams
 
     if (this.stepZone && mods.stepZone !== 'off') {
       t0 = performance.now()
@@ -623,7 +633,7 @@ class GameEngine {
     }
     if (this.guidelines) {
       t0 = performance.now()
-      this.guidelines.render(this.canvas, { beatTick, timeTick }, { mods })
+      this.guidelines.render(this.canvas, { beatTick, timeTick, mBpm }, { mods })
       t1 = performance.now()
       // console.log(`guidelines.render: ${(t1 - t0).toFixed(3)} ms`);
     }
@@ -666,11 +676,11 @@ class GameEngine {
 
       for (let i = windowStartPtr.bpm; i <= windowEndPtr.bpm; i++) {
         const bpm = this.globalParams.bpmQueue[i]
-        this.bpmAndStopDisplay.renderBpm(this.bpmReel, bpm, { beatTick, timeTick }, { mods })
+        this.bpmAndStopDisplay.renderBpm(this.bpmReel, bpm, { beatTick, timeTick, mBpm }, { mods })
       }
       for (let i = windowStartPtr.stop; i <= windowEndPtr.stop; i++) {
         const stop = this.globalParams.stopQueue[i]
-        this.bpmAndStopDisplay.renderStop(this.stopReel, stop, { beatTick, timeTick }, { mods })
+        this.bpmAndStopDisplay.renderStop(this.stopReel, stop, { beatTick, timeTick, mBpm }, { mods })
       }
       // window.bpmAndStopDisplay = this.bpmAndStopDisplay;
     }
@@ -685,26 +695,26 @@ class GameEngine {
     // ]);
     for (let i = windowEndPtr.shock; i >= windowStartPtr.shock; i--) {
       const shockArrow = this.globalParams.shocks[i]
-      shockArrow.render(this.canvas, this.globalParams.frame, { beatTick, timeTick }, { mods })
+      shockArrow.render(this.canvas, this.globalParams.frame, { beatTick, timeTick, mBpm }, { mods })
     }
 
     for (let i = windowEndPtr.freeze; i >= windowStartPtr.freeze; i--) {
       const freeze = this.globalParams.freezes[i]
       notUpArrows.forEach((directionIdx) => {
-        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick }, directionIdx, { mods })
+        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick, mBpm }, directionIdx, { mods })
       })
     }
     for (let i = windowStartPtr.freeze; i <= windowEndPtr.freeze; i++) {
       const freeze = this.globalParams.freezes[i]
       upArrows.forEach((directionIdx) => {
-        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick }, directionIdx, { mods })
+        freeze.renderFreezeBody(this.canvas, { beatTick, timeTick, mBpm }, directionIdx, { mods })
       })
     }
 
     for (let i = windowEndPtr.arrow; i >= windowStartPtr.arrow; i--) {
       const arrow = this.globalParams.arrows[i]
       notUpArrows.forEach((directionIdx) => {
-        arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
+        arrow.renderArrow(this.canvas, { beatTick, timeTick, mBpm }, directionIdx, {
           mods,
         })
       })
@@ -714,7 +724,7 @@ class GameEngine {
     for (let i = windowStartPtr.arrow; i <= windowEndPtr.arrow; i++) {
       const arrow = this.globalParams.arrows[i]
       upArrows.forEach((directionIdx) => {
-        arrow.renderArrow(this.canvas, { beatTick, timeTick }, directionIdx, {
+        arrow.renderArrow(this.canvas, { beatTick, timeTick, mBpm }, directionIdx, {
           mods,
         })
       })
@@ -751,24 +761,6 @@ class GameEngine {
     }
     t1 = performance.now()
     // console.log(`targetFlash render: ${(t1 - t0).toFixed(3)} ms`);
-
-    /* Manual css property updates for DOM-based components */
-
-    // if (!this.bpmReel) {
-    //   this.bpmReel = document.getElementById("bpmReel");
-    // }
-    // if (!this.stopReel) {
-    //   this.stopReel = document.getElementById("stopReel");
-    // }
-    // if (mods.speed !== "cmod" && mods.bpmStopDisplay) {
-    //   [this.bpmReel, this.stopReel].forEach((reel) => {
-    //     reel.style.height =
-    //       this.globalParams.finalBeat * ARROW_HEIGHT * mods.speed;
-    //     reel.style.transform = `translateY(-${
-    //       this.globalParams.beatTick * ARROW_HEIGHT * mods.speed
-    //     }px)`;
-    //   });
-    // }
 
     // if (this.globalParams.beatTick) {
     //   console.log(this.globalParams.beatTick);

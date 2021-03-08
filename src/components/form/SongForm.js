@@ -6,7 +6,7 @@ import * as actions from '../../actions/SongSelectActions'
 import SongSearch from './SongSearch'
 import SongGrid from './SongGrid'
 import { getJacketPath, presetParams } from '../../utils'
-import { getClosestDifficulty, isInBpmRange } from '../../utils/songUtils'
+import { getClosestDifficulty, isInBpmRange, getDisplayBpm } from '../../utils/songUtils'
 import { clearBpmAndStopDisplay } from '../../utils/engineUtils'
 import { getUserSettings, updateUserSettings, getSavedSongProgress } from '../../utils/userSettings'
 import loadStore from '../../utils/loadStore'
@@ -350,15 +350,9 @@ const SongForm = (props) => {
     })
   }
 
-  const getDisplayBpm = () => {
+  const renderDisplayBpm = () => {
     if (!selectedSong) return null
-    let displayBpm = selectedSong.displayBpm
-    if (displayBpm.includes(',')) {
-      let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedDifficulty)
-      if (selectedMode === 'double') difficultyIdx += 4
-      displayBpm = displayBpm.split(',')[difficultyIdx]
-    }
-    return displayBpm
+    return getDisplayBpm(selectedSong, selectedDifficulty, selectedMode)
   }
 
   const isModeToggleDisabled = () => {
@@ -438,7 +432,7 @@ const SongForm = (props) => {
 
                 <div className="bpm-display-container">
                   <div className="bpm-display-label">BPM</div>
-                  <div className="bpm-display-value">{getDisplayBpm()}</div>
+                  <div className="bpm-display-value">{renderDisplayBpm()}</div>
                 </div>
               </div>
             </div>

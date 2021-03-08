@@ -54,11 +54,16 @@ class Arrow {
     return this.timestamp - timeTick
   }
 
-  renderFreezeBody(canvas, { beatTick, timeTick }, directionIdx, attrs) {
+  renderFreezeBody(canvas, { beatTick, timeTick, mBpm }, directionIdx, attrs) {
     const c = canvas.getContext('2d')
 
     const { mods, staticAttrs } = attrs
     const { speed, cmod, scroll, appearance } = mods
+
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
 
     const topBoundary = 0
     const bottomBoundary = canvas.height
@@ -83,7 +88,7 @@ class Arrow {
       if (speed === 'cmod') {
         destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60)
       } else {
-        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speedMod
       }
 
       // Bottom of freeze body must be the bottom of the body image (yellow part of gradient)
@@ -99,7 +104,8 @@ class Arrow {
           arrowHeight / 2
       } else {
         totalBodyHeight =
-          (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed - arrowHeight / 2
+          (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speedMod -
+          arrowHeight / 2
       }
       const repetitions = Math.floor(totalBodyHeight / freezeBodyHeight)
       let partialHeight = totalBodyHeight % freezeBodyHeight
@@ -179,7 +185,7 @@ class Arrow {
       if (speed === 'cmod') {
         bodyDistance = (this.holdEndTimes[directionIdx] - this.holdStartTimes[directionIdx]) * arrowHeight * (cmod / 60)
       } else {
-        bodyDistance = (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speed
+        bodyDistance = (this.holdEndBeats[directionIdx] - this.holdStartBeats[directionIdx]) * arrowHeight * speedMod
       }
 
       if (bodyDistance < arrowHeight / 2) {
@@ -227,11 +233,16 @@ class Arrow {
     }
   }
 
-  renderArrow(canvas, { beatTick, timeTick }, directionIdx, attrs) {
+  renderArrow(canvas, { beatTick, timeTick, mBpm }, directionIdx, attrs) {
     const c = canvas.getContext('2d')
 
     const { mods, staticAttrs } = attrs
     const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods
+
+    let speedMod = mods.speed
+    if (mods.speed === 'mmod') {
+      speedMod = mods.cmod / mBpm
+    }
 
     let topBoundary = 0 // used to simulate the arrows being hit and disappearing
     if (staticAttrs) topBoundary = -1 // if rendering on static chart, arrow on the first measure should be visible
@@ -335,7 +346,7 @@ class Arrow {
       if (speed === 'cmod') {
         destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60)
       } else {
-        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speedMod
 
         if (staticAttrs) {
           destY = destY % staticAttrs.columnHeight
@@ -369,7 +380,7 @@ class Arrow {
       if (speed === 'cmod') {
         destY = this.currentTimePosition(timeTick) * arrowHeight * (cmod / 60)
       } else {
-        destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
+        destY = this.currentBeatPosition(beatTick) * arrowHeight * speedMod
       }
       destY = (destY + 0.5) | 0
 
