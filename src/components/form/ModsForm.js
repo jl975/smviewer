@@ -31,8 +31,10 @@ const ModsForm = (props) => {
 
     const cmodValue = isNaN(mods.cmod) || mods.cmod < 100 || mods.cmod > 1000 ? DEFAULT_CMOD : mods.cmod
 
+    const rate = mods.rate || 1
+
     if (mods.speed === 'cmod') {
-      return <strong>{cmodValue}</strong>
+      return <strong>{cmodValue * rate}</strong>
     }
 
     let displayBpm = song.displayBpm
@@ -45,7 +47,7 @@ const ModsForm = (props) => {
     const [lowBpm, highBpm] = displayBpm.split('-')
     if (!highBpm) {
       const scrollSpeed = mods.speed === 'mmod' ? cmodValue : Math.round(lowBpm * mods.speed)
-      return <strong>{scrollSpeed}</strong>
+      return <strong>{scrollSpeed * rate}</strong>
     } else {
       let lowScrollSpeed, highScrollSpeed
       if (mods.speed === 'mmod') {
@@ -55,7 +57,7 @@ const ModsForm = (props) => {
         lowScrollSpeed = Math.round(lowBpm * mods.speed)
         highScrollSpeed = Math.round(highBpm * mods.speed)
       }
-      return <strong>{`${lowScrollSpeed} - ${highScrollSpeed}`}</strong>
+      return <strong>{`${lowScrollSpeed * rate} - ${highScrollSpeed * rate}`}</strong>
     }
   }
 
@@ -120,6 +122,22 @@ const ModsForm = (props) => {
               />
             </div>
             <small>(Valid range: 100-1000)</small>
+          </div>
+
+          <div className="form-field">
+            <h4 className="form-label">Rate</h4>
+            {options.mods.rate.map((rate) => {
+              return (
+                <Radio
+                  key={`rate_${rate}`}
+                  label={`${rate}x`}
+                  name="rate"
+                  value={rate}
+                  checked={mods.rate === rate}
+                  onChange={() => updateMods({ rate })}
+                />
+              )
+            })}
           </div>
 
           <div className="form-field">

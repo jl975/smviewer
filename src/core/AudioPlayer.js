@@ -141,6 +141,7 @@ class AudioPlayer {
         src,
         format: ['mp3'],
         html5: true,
+        rate: store?.getState()?.mods?.rate || 1,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false)
@@ -271,7 +272,7 @@ class AudioPlayer {
 
     // arbitrary number of frames chosen to tell timeline to resync with the audio
     // this needs to be done after (/in addition to) the audio restabilizing
-    this.audioResyncFrames = 10
+    this.audioResyncFrames = 100
 
     gsap.ticker.add(this.updateTimeline)
     // this.updateProgressOnce();
@@ -443,6 +444,9 @@ class AudioPlayer {
     }
 
     const currentSong = this.getCurrentSong()
+
+    // currentSong.tl.timeScale(1.5)
+
     this.currentSongId = currentSong.audio.play()
     currentSong.loop = loop
 
@@ -528,6 +532,13 @@ class AudioPlayer {
   }
   getPreviewAudioStatus() {
     return store.getState().audio.previewAudio.status
+  }
+
+  changeMusicRate(rate) {
+    const currentSong = this.getCurrentSong()
+    if (!currentSong || !currentSong.tl || !currentSong.audio) return
+    currentSong.tl.timeScale(rate)
+    currentSong.audio.rate(rate)
   }
 }
 
