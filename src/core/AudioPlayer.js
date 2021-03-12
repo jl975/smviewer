@@ -1,4 +1,4 @@
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
 import { gsap } from 'gsap'
 import localforage from 'localforage'
 
@@ -197,11 +197,17 @@ class AudioPlayer {
   }
 
   async storePreviewSource(song, simfile) {
+    // preemptively stop any existing lagging previews
+    for (let songId in this.sources.preview) {
+      if (this.sources.preview[songId].audio) {
+        this.sources.preview[songId].audio.stop()
+      }
+    }
+
     const thisPreview = (this.sources.preview[song.hash] = {
       title: song.title,
     })
     this.currentPreview = song.hash
-    console.log('storePreviewSource this.getCurrentPreview()', this.getCurrentPreview())
 
     let src
     try {
@@ -516,7 +522,11 @@ class AudioPlayer {
     const preview = this.getCurrentPreview().audio
     if (!preview) return
 
-    preview.stop(this.currentPreviewId)
+    // preview.stop(this.currentPreviewId)
+
+    preview.stop()
+    // Howler.stop()
+    Howler
 
     // clearTimeout(this.previewFadeTimeout);
   }
