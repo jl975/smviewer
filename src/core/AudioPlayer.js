@@ -381,6 +381,8 @@ class AudioPlayer {
     }
     if (frame % 15 === 0) {
       const audio = currentSong.audio
+      if (!audio) return
+
       const progress = audio.seek() / audio.duration()
 
       // eslint-disable-next-line no-unused-vars
