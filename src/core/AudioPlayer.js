@@ -272,7 +272,7 @@ class AudioPlayer {
 
     // arbitrary number of frames chosen to tell timeline to resync with the audio
     // this needs to be done after (/in addition to) the audio restabilizing
-    this.audioResyncFrames = 100
+    this.audioResyncFrames = 10
 
     gsap.ticker.add(this.updateTimeline)
     // this.updateProgressOnce();
@@ -382,6 +382,8 @@ class AudioPlayer {
     }
     if (frame % 15 === 0) {
       const audio = currentSong.audio
+      if (!audio) return
+
       const progress = audio.seek() / audio.duration()
 
       // eslint-disable-next-line no-unused-vars
