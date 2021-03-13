@@ -52,12 +52,12 @@ const ModsForm = (props) => {
       let lowScrollSpeed, highScrollSpeed
       if (mods.speed === 'mmod') {
         highScrollSpeed = cmodValue
-        lowScrollSpeed = Math.round((lowBpm / highBpm) * cmodValue)
+        lowScrollSpeed = (lowBpm / highBpm) * cmodValue
       } else {
-        lowScrollSpeed = Math.round(lowBpm * mods.speed)
-        highScrollSpeed = Math.round(highBpm * mods.speed)
+        lowScrollSpeed = lowBpm * mods.speed
+        highScrollSpeed = highBpm * mods.speed
       }
-      return <strong>{`${lowScrollSpeed * rate} - ${highScrollSpeed * rate}`}</strong>
+      return <strong>{`${Math.round(lowScrollSpeed * rate)} - ${Math.round(highScrollSpeed * rate)}`}</strong>
     }
   }
 
