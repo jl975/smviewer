@@ -34,7 +34,7 @@ const ModsForm = (props) => {
     const rate = mods.rate || 1
 
     if (mods.speed === 'cmod') {
-      return <strong>{cmodValue * rate}</strong>
+      return <strong>{Math.round(cmodValue * rate)}</strong>
     }
 
     let displayBpm = song.displayBpm
@@ -47,7 +47,7 @@ const ModsForm = (props) => {
     const [lowBpm, highBpm] = displayBpm.split('-')
     if (!highBpm) {
       const scrollSpeed = mods.speed === 'mmod' ? cmodValue : Math.round(lowBpm * mods.speed)
-      return <strong>{scrollSpeed * rate}</strong>
+      return <strong>{Math.round(scrollSpeed * rate)}</strong>
     } else {
       let lowScrollSpeed, highScrollSpeed
       if (mods.speed === 'mmod') {

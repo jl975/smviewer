@@ -21,7 +21,10 @@ class BpmAndStopDisplay {
     destY = (destY + 0.5) | 0
     const imageHeight = DIGIT_HEIGHT
 
-    const digits = bpm.value.toString()
+    let value = bpm.value * (mods.rate || 1)
+    value = Math.round(value * 1000) / 1000
+
+    const digits = value.toString()
     const numDigits = digits.length
     const imageY = 0
 
@@ -57,7 +60,10 @@ class BpmAndStopDisplay {
     const destY = pxPosition - 10
     const imageHeight = DIGIT_HEIGHT
 
-    const digits = stop.value.toString()
+    let value = stop.value / (mods.rate || 1)
+    value = Math.round(value * 1000) / 1000
+
+    const digits = value.toString()
     const numDigits = digits.length
     const imageY = DIGIT_HEIGHT
 
