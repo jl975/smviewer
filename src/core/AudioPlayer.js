@@ -198,11 +198,17 @@ class AudioPlayer {
   }
 
   async storePreviewSource(song, simfile) {
+    // preemptively stop any existing lagging previews
+    for (let songId in this.sources.preview) {
+      if (this.sources.preview[songId].audio) {
+        this.sources.preview[songId].audio.stop()
+      }
+    }
+
     const thisPreview = (this.sources.preview[song.hash] = {
       title: song.title,
     })
     this.currentPreview = song.hash
-    console.log('storePreviewSource this.getCurrentPreview()', this.getCurrentPreview())
 
     let src
     try {
@@ -447,8 +453,6 @@ class AudioPlayer {
 
     const currentSong = this.getCurrentSong()
 
-    // currentSong.tl.timeScale(1.5)
-
     this.currentSongId = currentSong.audio.play()
     currentSong.loop = loop
 
@@ -519,10 +523,7 @@ class AudioPlayer {
     if (!this.currentPreview) return
     const preview = this.getCurrentPreview().audio
     if (!preview) return
-
-    preview.stop(this.currentPreviewId)
-
-    // clearTimeout(this.previewFadeTimeout);
+    preview.stop()
   }
 
   isPreviewPlaying() {
@@ -539,8 +540,16 @@ class AudioPlayer {
   changeMusicRate(rate) {
     const currentSong = this.getCurrentSong()
     if (!currentSong || !currentSong.tl || !currentSong.audio) return
+
+    // adjust visuals rate
     currentSong.tl.timeScale(rate)
+
+    // adjust audio rate
     currentSong.audio.rate(rate)
+
+    // adjust displayed bpm value to account for rate
+    const currentBpm = getCurrentBpm(currentSong.globalParams)
+    changeActiveBpm(currentBpm, { ...currentSong.globalParams, mods: { rate } })
   }
 }
 
