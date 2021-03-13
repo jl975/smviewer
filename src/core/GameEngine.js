@@ -114,6 +114,8 @@ class GameEngine {
       this.tl.kill()
     }
     this.tl = gsap.timeline()
+    this.tl.timeScale(mods.rate || 1)
+    this.AudioPlayer.changeMusicRate(mods.rate || 1)
 
     // reinitialize all chart-specific values
     this.eventList.length = 0

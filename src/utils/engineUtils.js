@@ -74,7 +74,7 @@ export const changeActiveBpm = (bpmValue, globalParams) => {
   const currentBpmEl = document.querySelector('.current-bpm-value')
   if (!currentBpmEl) return
 
-  const { bpmQueue, beatTick } = globalParams
+  const { bpmQueue, beatTick, mods } = globalParams
 
   // Several charts start with an "offset" bpm on the first measure and are corrected
   // to the "real" bpm on the second measure. If the chart follows this pattern,
@@ -82,7 +82,10 @@ export const changeActiveBpm = (bpmValue, globalParams) => {
   if (beatTick < 4 && bpmQueue.length >= 2 && bpmQueue[0].beat === 0 && bpmQueue[1].beat === 4) {
     currentBpmEl.textContent = ''
   } else {
-    currentBpmEl.textContent = Math.round(bpmValue)
+    // adjust bpm to reflect rate mod, if applicable
+    currentBpmEl.textContent = Math.round(bpmValue * (mods.rate || 1))
+    // asterisk to indicate that this is not the real bpm
+    if (mods.rate !== 1) currentBpmEl.textContent += '*'
   }
 
   // console.log("globalParams", globalParams);

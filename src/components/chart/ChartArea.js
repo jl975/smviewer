@@ -172,6 +172,10 @@ const ChartArea = (props) => {
                 gameEngine.stopReel = currentState.mods[mod] ? document.getElementById('stopReel') : null
               }
 
+              if (mod === 'rate') {
+                AudioPlayer.changeMusicRate(mods.rate)
+              }
+
               if (['turn', 'shuffle'].includes(mod)) {
                 gameEngine.resetChart(chartParams)
               } else {

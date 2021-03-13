@@ -32,6 +32,7 @@ export const options = {
       7.5,
       8,
     ],
+    rate: [0.5, 0.8, 1, 1.2, 1.5],
     appearance: ['visible', 'hidden', 'sudden', 'hiddensudden', 'stealth'],
     turn: ['off', 'mirror', 'left', 'right', 'shuffle'],
     shuffle: [1, 2, 3, 4, 5, 6, 7, 8],
@@ -50,6 +51,7 @@ const optionDefaultValues = {
   mods: {
     speed: 2.5,
     cmod: DEFAULT_CMOD,
+    rate: 1,
     appearance: 'visible',
     laneCoverHeight: [8, 8, 8],
     laneCoverVisible: true,

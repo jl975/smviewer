@@ -186,6 +186,7 @@ class AudioPlayer {
         format: ['mp3'],
         html5: true,
         volume: 0.5,
+        rate: store?.getState()?.mods?.rate || 1,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
           this.setLoadingAudio(false)
@@ -242,11 +243,17 @@ class AudioPlayer {
   }
 
   async storePreviewSource(song, simfile) {
+    // preemptively stop any existing lagging previews
+    for (let songId in this.sources.preview) {
+      if (this.sources.preview[songId].audio) {
+        this.sources.preview[songId].audio.stop()
+      }
+    }
+
     const thisPreview = (this.sources.preview[song.hash] = {
       title: song.title,
     })
     this.currentPreview = song.hash
-    console.log('storePreviewSource this.getCurrentPreview()', this.getCurrentPreview())
 
     let src
     try {
@@ -438,6 +445,8 @@ class AudioPlayer {
     }
     if (frame % 15 === 0) {
       const audio = currentSong.audio
+      if (!audio) return
+
       const progress = audio.seek() / audio.duration()
 
       // eslint-disable-next-line no-unused-vars
@@ -502,6 +511,7 @@ class AudioPlayer {
     }
 
     const currentSong = this.getCurrentSong()
+
     this.currentSongId = currentSong.audio.play()
     currentSong.loop = loop
 
@@ -568,10 +578,7 @@ class AudioPlayer {
     if (!this.currentPreview) return
     const preview = this.getCurrentPreview().audio
     if (!preview) return
-
-    preview.stop(this.currentPreviewId)
-
-    // clearTimeout(this.previewFadeTimeout);
+    preview.stop()
   }
 
   isPreviewPlaying() {
@@ -583,6 +590,21 @@ class AudioPlayer {
   }
   getPreviewAudioStatus() {
     return store.getState().audio.previewAudio.status
+  }
+
+  changeMusicRate(rate) {
+    const currentSong = this.getCurrentSong()
+    if (!currentSong || !currentSong.tl || !currentSong.audio) return
+
+    // adjust visuals rate
+    currentSong.tl.timeScale(rate)
+
+    // adjust audio rate
+    currentSong.audio.rate(rate)
+
+    // adjust displayed bpm value to account for rate
+    const currentBpm = getCurrentBpm(currentSong.globalParams)
+    changeActiveBpm(currentBpm, { ...currentSong.globalParams, mods: { rate } })
   }
 }
 
