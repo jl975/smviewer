@@ -7,7 +7,7 @@ class StaticGuidelines {
   }
 
   render(canvas, { beatTick }, attrs) {
-    const { mods, columnIdx, columnWidth, measuresPerColumn, bpmQueue = [], stopQueue = [] } = attrs
+    const { mods, mode, columnIdx, columnWidth, measuresPerColumn, bpmQueue = [], stopQueue = [] } = attrs
     const { speed } = mods
 
     const c = canvas.getContext('2d')
@@ -15,8 +15,8 @@ class StaticGuidelines {
 
     const beatsPerColumn = measuresPerColumn * 4
 
-    const columnStart = columnIdx * columnWidth + STATIC_ARROW_WIDTH * 2
-    const columnEnd = columnStart + STATIC_ARROW_WIDTH * 4
+    const columnStart = columnIdx * (columnWidth + STATIC_ARROW_WIDTH * 4) + STATIC_ARROW_WIDTH * 2
+    const columnEnd = columnStart + STATIC_ARROW_WIDTH * (mode === 'double' ? 8 : 4)
     const beatZero = measuresPerColumn * 4 * columnIdx
     const nextBeatZero = measuresPerColumn * 4 * (columnIdx + 1)
     noop(columnEnd)
@@ -39,7 +39,7 @@ class StaticGuidelines {
       // guidelines
       c.beginPath()
       c.moveTo(columnStart, destY)
-      c.lineTo(columnStart + columnWidth / 2, destY)
+      c.lineTo(columnStart + columnWidth, destY)
       c.lineWidth = lineWidth
       c.stroke()
 
@@ -94,7 +94,7 @@ class StaticGuidelines {
         // stop beat line
         c.beginPath()
         c.moveTo(columnStart, destY)
-        c.lineTo(columnStart + columnWidth / 2, destY)
+        c.lineTo(columnStart + columnWidth, destY)
         c.lineWidth = 2
         c.stroke()
       }

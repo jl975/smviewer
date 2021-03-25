@@ -15,6 +15,8 @@ const LEFT_PADDING = STATIC_ARROW_WIDTH * 2
 const COLUMN_WIDTH = STATIC_ARROW_WIDTH * 4
 const COLUMN_SPACING = STATIC_ARROW_WIDTH * 4
 
+noop(COLUMN_WIDTH)
+
 class StaticArrow {
   constructor(arrow) {
     this.key = arrow.key // arrow index
@@ -35,7 +37,7 @@ class StaticArrow {
   renderFreezeBody(canvas, { beatTick }, directionIdx, attrs) {
     const c = canvas.getContext('2d')
 
-    const { mods, columnIdx, columnHeight, measuresPerColumn } = attrs
+    const { mods, mode, columnIdx, columnHeight, measuresPerColumn } = attrs
     const { speed } = mods
 
     const topBoundary = -1
@@ -50,13 +52,14 @@ class StaticArrow {
     const arrowWidth = STATIC_ARROW_WIDTH
     const arrowHeight = STATIC_ARROW_HEIGHT
     const freezeBodyHeight = STATIC_FREEZE_BODY_HEIGHT
+    const columnWidth = STATIC_ARROW_WIDTH * (mode === 'double' ? 8 : 4)
 
     frameX = (directionIdx % 4) * arrowWidth
     frameY = 0
 
     destX = directionIdx * arrowWidth
     // calculate column offset
-    destX += columnIdx * (arrowWidth * 4 * 2) + LEFT_PADDING
+    destX += columnIdx * (arrowWidth * 4 * (mode === 'double' ? 3 : 2)) + LEFT_PADDING
 
     destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
 
@@ -80,7 +83,7 @@ class StaticArrow {
     // (not necessarily the same column as the tail)
     const holdStartBeat = this.holdStartBeats[directionIdx]
     const partialColumnIdx = Math.floor(holdStartBeat / 4 / measuresPerColumn)
-    const partialDestX = directionIdx * arrowWidth + partialColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING
+    const partialDestX = directionIdx * arrowWidth + partialColumnIdx * (columnWidth + COLUMN_SPACING) + LEFT_PADDING
 
     noop(partialDestX)
 
@@ -112,7 +115,7 @@ class StaticArrow {
         bodyDestY = 0
       }
       const bodyColumnIdx = Math.floor(bodyDestY / columnHeight)
-      const bodyDestX = directionIdx * arrowWidth + bodyColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING
+      const bodyDestX = directionIdx * arrowWidth + bodyColumnIdx * (columnWidth + COLUMN_SPACING) + LEFT_PADDING
 
       // if the freeze head and tail are on different columns, the freeze body must wrap around
       if (partialColumnIdx < columnIdx) {
@@ -121,7 +124,7 @@ class StaticArrow {
         const bodyBottomColumnIdx = Math.floor(bodyBottomDestY / columnHeight)
         const bodyTopDestX = bodyDestX
         const bodyBottomDestX =
-          directionIdx * arrowWidth + bodyBottomColumnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING
+          directionIdx * arrowWidth + bodyBottomColumnIdx * (columnWidth + COLUMN_SPACING) + LEFT_PADDING
 
         // if freeze body does not wrap, draw as normal
         if (bodyTopDestX === bodyBottomDestX) {
@@ -236,7 +239,7 @@ class StaticArrow {
   renderArrow(canvas, { beatTick }, directionIdx, attrs) {
     const c = canvas.getContext('2d')
 
-    const { mods, columnIdx, columnHeight } = attrs
+    const { mods, mode, columnIdx, columnHeight } = attrs
     const { speed } = mods
 
     if (this.note[directionIdx] !== '1' && this.note[directionIdx] !== '2') return
@@ -245,6 +248,7 @@ class StaticArrow {
     const direction = DIRECTIONS[directionIdx % 4]
     const arrowWidth = STATIC_ARROW_WIDTH
     const arrowHeight = STATIC_ARROW_HEIGHT
+    const columnWidth = STATIC_ARROW_WIDTH * (mode === 'double' ? 8 : 4)
 
     frameX = DIRECTIONS.indexOf(direction) * arrowWidth
 
@@ -263,7 +267,7 @@ class StaticArrow {
 
     destX = directionIdx * arrowWidth
     // calculate column offset
-    destX += columnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING
+    destX += columnIdx * (columnWidth + COLUMN_SPACING) + LEFT_PADDING
 
     destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
     // calculate row wraparound
