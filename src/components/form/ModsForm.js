@@ -126,7 +126,8 @@ const ModsForm = (props) => {
 
           <div className="form-field">
             <h4 className="form-label">Rate</h4>
-            {options.mods.rate.map((rate) => {
+            <div>{Math.round(mods.rate * 100) / 100}</div>
+            {/* {options.mods.rate.map((rate) => {
               return (
                 <Radio
                   key={`rate_${rate}`}
@@ -137,7 +138,16 @@ const ModsForm = (props) => {
                   onChange={() => updateMods({ rate })}
                 />
               )
-            })}
+            })} */}
+            <Input
+              type="range"
+              name="rate"
+              min="-1"
+              max="1"
+              step="0.025"
+              value={Math.log2(mods.rate)}
+              onChange={(_, data) => updateMods({ rate: Math.pow(2, data.value) })}
+            />
           </div>
 
           <div className="form-field">
