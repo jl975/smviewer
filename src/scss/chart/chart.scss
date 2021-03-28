@@ -130,9 +130,14 @@
   .bpm-display,
   .stop-display {
     display: none;
+
+    // tablets and up
+    @media only screen and (min-width: 768px) {
+      display: block;
+    }
   }
 }
 
-@import "./cab-buttons";
+@import './cab-buttons';
 @import './static-modal';
 @import './offset-modal';

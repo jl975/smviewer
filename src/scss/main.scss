@@ -7,8 +7,8 @@
   position: relative;
 
   // prevent mobile devices from zooming in
-  input[type="text"],
-  input[type="number"],
+  input[type='text'],
+  input[type='number'],
   textarea {
     font-size: 16px;
   }
@@ -126,7 +126,7 @@
       height: auto;
       right: 0;
       // transform: translateX(50%) scale(0.75) translateY(12.5%);
-      transform: translateX(50%);
+      transform: translateX(100%);
     }
   }
 }
@@ -234,7 +234,6 @@
   flex-direction: column;
 
   .view-static-btn {
-
   }
 }
 
@@ -318,9 +317,11 @@
   cursor: pointer;
 }
 
+// screens larger than portrait phones?
 @media only screen and (min-width: 426px) {
   .chartArea-container {
-    padding: 30px;
+    // padding: 30px;
+    padding: 0;
   }
   .main-container {
     display: flex;
@@ -328,7 +329,7 @@
 }
 
 // tablets and up
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 768px) {
   body {
     background-color: #d7e2ed;
   }
@@ -341,7 +342,7 @@
   .view-container {
     display: flex;
     width: 100%;
-    flex-direction: column;
+    // flex-direction: column;
     flex-wrap: wrap;
     min-height: 960px;
   }
@@ -360,16 +361,19 @@
   }
 
   .songView {
-    order: 1;
+    order: 2;
     width: 400px;
+    padding: 0 10px 15px;
   }
   .chartView {
-    order: 2;
-    width: calc(100% - 400px);
+    order: 1;
+    // width: calc(100% - 400px);
+    width: 100%;
     height: auto;
     overflow: visible;
 
     .view-wrapper {
+      padding: 0;
       padding-top: 5px;
     }
     .row {
@@ -401,6 +405,9 @@
   }
 }
 
+@media only screen and (min-width: 1100px) {
+}
+
 @media only screen and (min-width: 1370px) {
   .view-container {
     flex-direction: row;
@@ -412,15 +419,18 @@
     padding: 15px 10px;
   }
   .songView {
+    order: 1;
     width: 440px;
   }
   .chartView {
+    order: 2;
     width: auto;
     height: 100%;
     flex: 1 1;
     border-radius: 10px;
   }
   .modsView {
+    order: 3;
     width: 360px;
     height: 100%;
     flex: none;

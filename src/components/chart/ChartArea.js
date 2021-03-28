@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import 'inobounce'
 
+import { ARROW_WIDTH, SIDE_REEL_WIDTH } from '../../constants'
 import { presetParams, getJacketPath } from '../../utils'
 import parseSimfile from '../../utils/parseSimfile'
 import { usePrevious } from '../../hooks'
@@ -65,7 +66,7 @@ const ChartArea = (props) => {
 
   const resizeChartArea = () => {
     if (selectedMode === 'single') {
-      chartArea.current.width = 256
+      chartArea.current.width = ARROW_WIDTH * 4
       chartArea.current.style.transform = 'none'
       chartArea.current.style.left = 0
       chartArea.current.style.top = 0
@@ -76,12 +77,12 @@ const ChartArea = (props) => {
         chartArea.current.style.position = 'relative'
       })
     } else if (selectedMode === 'double') {
-      chartArea.current.width = 512
+      chartArea.current.width = ARROW_WIDTH * 8
 
       const wrapper = canvasContainer.current.getBoundingClientRect()
 
-      if (wrapper.width < 512) {
-        const scaleFactor = wrapper.width / chartArea.current.width
+      if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
+        const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
         const xOffset = (chartArea.current.width - wrapper.width) / 2
         const yOffset = xOffset * (7 / 8)
         chartArea.current.style.transform = `scale(${scaleFactor}) translate(-50%)`

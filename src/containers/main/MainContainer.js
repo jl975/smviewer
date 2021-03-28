@@ -42,6 +42,8 @@ const MainContainer = (props) => {
         // props.setModalOpen("offset");
         props.setModalOpen('welcome')
       }
+
+      return () => window.removeEventListener('resize', props.resizeScreen)
     }
 
     init()

@@ -24,6 +24,7 @@ const SongSearch = (props) => {
       options={simfileOptions}
       selectOnBlur={false}
       selectOnNavigation={false}
+      upward={false}
     />
   )
 }
