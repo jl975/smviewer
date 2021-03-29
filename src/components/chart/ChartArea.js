@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import 'inobounce'
 
-import { ARROW_WIDTH, SIDE_REEL_WIDTH } from '../../constants'
+import { ARROW_WIDTH, SIDE_REEL_WIDTH, LANDSCAPE_MAX_HEIGHT } from '../../constants'
 import { presetParams, getJacketPath } from '../../utils'
 import parseSimfile from '../../utils/parseSimfile'
 import { usePrevious } from '../../hooks'
@@ -37,6 +37,7 @@ const ChartArea = (props) => {
   const [canvas, setCanvas] = useState(null)
   const chartArea = useRef()
   const canvasContainer = useRef()
+  const canvasWrapper = useRef()
   const chartLoadingScreen = useRef()
 
   const prevState = usePrevious({
@@ -99,6 +100,11 @@ const ChartArea = (props) => {
           chartArea.current.style.position = 'relative'
         })
       }
+    }
+
+    // landscape orientation
+    if (window.innerHeight <= LANDSCAPE_MAX_HEIGHT) {
+      console.log('scale down chart area for landscape')
     }
 
     if (gameEngine) {
@@ -216,7 +222,7 @@ const ChartArea = (props) => {
     <div className={`view-section chartView ${screen.activeView === 'chart' ? 'active' : ''}`}>
       <div className="view-wrapper chartArea-container">
         <div className={`canvas-container ${selectedMode} ${mods.scroll}`} ref={canvasContainer}>
-          <div className="chartArea-wrapper">
+          <div className="chartArea-wrapper" ref={canvasWrapper}>
             {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
             {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
             <div className="canvas-wrapper">

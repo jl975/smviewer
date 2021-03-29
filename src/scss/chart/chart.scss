@@ -124,15 +124,20 @@
   }
 }
 
-// come up with a better way to detect if there is enough
-// space to show these on doubles. for now, just hide
 .canvas-container.double {
+  /* Bpm and stop display for Doubles */
   .bpm-display,
   .stop-display {
+    // hide on portrait phone
     display: none;
 
-    // tablets and up
+    // show on tablets and up
     @media only screen and (min-width: 768px) {
+      display: block;
+    }
+
+    // show on landscape phone
+    @media only screen and (max-height: 420px) {
       display: block;
     }
   }

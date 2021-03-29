@@ -17,6 +17,9 @@ export const LANE_COVER_INCREMENT = 4
 /* Width of the bpm reel or stop reel */
 export const SIDE_REEL_WIDTH = 60
 
+/* Screen breakpoints */
+export const LANDSCAPE_MAX_HEIGHT = 420
+
 export const DIRECTIONS = ['left', 'down', 'up', 'right']
 
 /* 
