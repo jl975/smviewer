@@ -115,6 +115,7 @@
   position: relative;
   display: flex;
   height: 448px;
+  transform-origin: top;
 
   &.double {
     #combo-temp {
@@ -129,6 +130,9 @@
       transform: translateX(100%);
     }
   }
+}
+.chartArea-wrapper {
+  transform-origin: left top;
 }
 // .chartArea-wrapper {
 //   margin: 0 auto;
@@ -268,6 +272,9 @@
 }
 .level-information {
   padding: 0 5px;
+}
+
+.below-chart-area {
 }
 
 .progress-container {
@@ -472,6 +479,35 @@
       padding-top: 0;
       width: calc(100% - 64px);
       margin-left: 64px;
+    }
+
+    &.chartView {
+      .chartArea-container {
+        display: block;
+      }
+      .canvas-container {
+        transform-origin: top;
+      }
+      .below-chart-area {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 5px auto;
+        width: 90%;
+      }
+      .progress-container {
+        width: 50%;
+        margin: 0;
+      }
+      .progress-wrapper {
+        margin: 0;
+      }
+      .play-controls-row {
+        width: 50%;
+        margin: auto 0;
+      }
+      .song-info-area {
+        display: none;
+      }
     }
 
     &.songView {

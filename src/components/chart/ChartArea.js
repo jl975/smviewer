@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react'
 import 'inobounce'
 
 import { ARROW_WIDTH, SIDE_REEL_WIDTH, LANDSCAPE_MAX_HEIGHT } from '../../constants'
-import { presetParams, getJacketPath } from '../../utils'
+import { presetParams, getJacketPath, noop } from '../../utils'
 import parseSimfile from '../../utils/parseSimfile'
 import { usePrevious } from '../../hooks'
 import { setModalOpen } from '../../actions/ScreenActions'
@@ -66,47 +66,68 @@ const ChartArea = (props) => {
   }, [canvas, selectedMode, screen])
 
   const resizeChartArea = () => {
-    if (selectedMode === 'single') {
-      chartArea.current.width = ARROW_WIDTH * 4
-      chartArea.current.style.transform = 'none'
-      chartArea.current.style.left = 0
-      chartArea.current.style.top = 0
+    // if (selectedMode === 'single') {
+    //   chartArea.current.width = ARROW_WIDTH * 4
+    //   canvasWrapper.current.style.transform = 'none'
+    // } else if (selectedMode === 'double' && window.innerHeight > LANDSCAPE_MAX_HEIGHT) {
+    //   chartArea.current.width = ARROW_WIDTH * 8
 
-      // hack to resolve positioning issues
-      chartArea.current.style.position = 'static'
-      setTimeout(() => {
-        chartArea.current.style.position = 'relative'
-      })
-    } else if (selectedMode === 'double') {
-      chartArea.current.width = ARROW_WIDTH * 8
+    //   const wrapper = canvasContainer.current.getBoundingClientRect()
 
-      const wrapper = canvasContainer.current.getBoundingClientRect()
+    //   if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
+    //     const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
+    //     canvasWrapper.current.style.transform = `scale(${scaleFactor})`
+    //   } else {
+    //     canvasWrapper.current.style.transform = 'none'
+    //   }
+    // }
 
-      if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
-        const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
-        const xOffset = (chartArea.current.width - wrapper.width) / 2
-        const yOffset = xOffset * (7 / 8)
-        chartArea.current.style.transform = `scale(${scaleFactor}) translate(-50%)`
-        chartArea.current.style.position = 'absolute'
-        chartArea.current.style.left = `-${xOffset}px`
-        chartArea.current.style.top = `-${yOffset}px`
-      } else {
-        chartArea.current.style.transform = 'none'
-        chartArea.current.style.left = 0
-        chartArea.current.style.top = 0
-
-        chartArea.current.style.position = 'static'
-        setTimeout(() => {
-          chartArea.current.style.position = 'relative'
-        })
-      }
-    }
+    noop()
+    console.log('resize, window.innerHeight', window.innerHeight)
 
     // landscape orientation
     if (window.innerHeight <= LANDSCAPE_MAX_HEIGHT) {
-      console.log('scale down chart area for landscape')
-    }
+      console.log('switched to landscape')
 
+      const subChartAreaHeight = 60
+
+      canvasWrapper.current.style.transform = 'none'
+
+      if (selectedMode === 'single') {
+        chartArea.current.width = ARROW_WIDTH * 4
+      } else if (selectedMode === 'double') {
+        chartArea.current.width = ARROW_WIDTH * 8
+      }
+
+      canvasContainer.current.style.height = `${window.innerHeight - subChartAreaHeight}px`
+      const scaleFactor = (window.innerHeight - subChartAreaHeight) / 448
+      canvasContainer.current.style.transform = `scale(${scaleFactor})`
+    }
+    // portrait orientation
+    else {
+      console.log('switched to portrait')
+
+      if (selectedMode === 'single') {
+        chartArea.current.width = ARROW_WIDTH * 4
+        canvasWrapper.current.style.transform = 'none'
+      } else if (selectedMode === 'double') {
+        chartArea.current.width = ARROW_WIDTH * 8
+
+        const wrapper = canvasContainer.current.getBoundingClientRect()
+
+        if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
+          const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
+          canvasWrapper.current.style.transform = `scale(${scaleFactor})`
+        } else {
+          canvasWrapper.current.style.transform = 'none'
+        }
+      }
+
+      // setTimeout(() => {
+      canvasContainer.current.style.height = '448px'
+      canvasContainer.current.style.transform = 'none'
+      // }, 0)
+    }
     if (gameEngine) {
       gameEngine.updateLoopOnce()
     }
@@ -144,11 +165,7 @@ const ChartArea = (props) => {
 
           const simfileType = selectedSong.useSsc ? 'ssc' : 'sm'
 
-          // console.log(selectedSong);
-
-          // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType)
-          console.log('simfiles parsed', simfiles, selectedMode, selectedDifficulty)
 
           const simfile = simfiles[`${selectedMode}_${selectedDifficulty}`]
           if (simfile) {
@@ -246,35 +263,37 @@ const ChartArea = (props) => {
             </div>
           </div>
         </div>
-        <div className="progress-container">
-          <div className="progress-wrapper">
-            <canvas id="progress" />
-            {presetParams.progress ? (
-              <div
-                className="preset-marker-wrapper"
-                onClick={Progress.jumpToPresetStart.bind(Progress)}
-                onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
-              >
-                <div className="preset-marker" />
-              </div>
-            ) : null}
-          </div>
-        </div>
-        <div className="row">
-          <PlayControls
-            controlsDisabled={!gameEngine || loadingAudio}
-            setShareModalOpen={() => props.setModalOpen('share', true)}
-          />
-        </div>
-        <div className="row song-info-area">
-          <SongInfo />
-          {selectedSong && (
-            <div>
-              <Button className="view-static-btn" onClick={() => props.setModalOpen('staticChart', true)}>
-                View static chart
-              </Button>
+        <div className="below-chart-area">
+          <div className="progress-container">
+            <div className="progress-wrapper">
+              <canvas id="progress" />
+              {presetParams.progress ? (
+                <div
+                  className="preset-marker-wrapper"
+                  onClick={Progress.jumpToPresetStart.bind(Progress)}
+                  onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
+                >
+                  <div className="preset-marker" />
+                </div>
+              ) : null}
             </div>
-          )}
+          </div>
+          <div className="row play-controls-row">
+            <PlayControls
+              controlsDisabled={!gameEngine || loadingAudio}
+              setShareModalOpen={() => props.setModalOpen('share', true)}
+            />
+          </div>
+          <div className="row song-info-area">
+            <SongInfo />
+            {selectedSong && (
+              <div>
+                <Button className="view-static-btn" onClick={() => props.setModalOpen('staticChart', true)}>
+                  View static chart
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
         <ShareModal modalOpen={screen.modalOpen.share} data={shareParams} />
         {gameEngine && <StaticModal modalOpen={screen.modalOpen.staticChart} gameEngine={gameEngine} />}

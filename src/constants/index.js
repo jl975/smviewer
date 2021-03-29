@@ -20,6 +20,9 @@ export const SIDE_REEL_WIDTH = 60
 /* Screen breakpoints */
 export const LANDSCAPE_MAX_HEIGHT = 420
 
+export const PORTRAIT_NAVBAR_HEIGHT = 60
+export const LANDSCAPE_NAVBAR_WIDTH = 64
+
 export const DIRECTIONS = ['left', 'down', 'up', 'right']
 
 /* 
