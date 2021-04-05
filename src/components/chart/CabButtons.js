@@ -91,32 +91,34 @@ const CabButtons = (props) => {
 
   return (
     <div className="cab-buttons-container">
-      <HoldButton
-        className="directional-button"
-        onClick={(e) => {
-          e.keyCode = 38
-          adjustLaneCoverHeight(e)
-        }}
-      >
-        <img src={getAssetPath(`directional_button.png`)} alt="up directional cab button" />
-      </HoldButton>
-      <Button
-        className="center-button"
-        onClick={(e) => {
-          toggleLaneCover(e)
-        }}
-      >
-        <img src={getAssetPath(`center_button.png`)} alt="center cab button" />
-      </Button>
-      <HoldButton
-        className="directional-button"
-        onClick={(e) => {
-          e.keyCode = 40
-          adjustLaneCoverHeight(e)
-        }}
-      >
-        <img src={getAssetPath(`directional_button.png`)} alt="down directional cab button" />
-      </HoldButton>
+      <div className="cab-buttons-wrapper">
+        <HoldButton
+          className="directional-button"
+          onClick={(e) => {
+            e.keyCode = 38
+            adjustLaneCoverHeight(e)
+          }}
+        >
+          <img src={getAssetPath(`directional_button.png`)} alt="up directional cab button" />
+        </HoldButton>
+        <Button
+          className="center-button"
+          onClick={(e) => {
+            toggleLaneCover(e)
+          }}
+        >
+          <img src={getAssetPath(`center_button.png`)} alt="center cab button" />
+        </Button>
+        <HoldButton
+          className="directional-button"
+          onClick={(e) => {
+            e.keyCode = 40
+            adjustLaneCoverHeight(e)
+          }}
+        >
+          <img src={getAssetPath(`directional_button.png`)} alt="down directional cab button" />
+        </HoldButton>
+      </div>
     </div>
   )
 }

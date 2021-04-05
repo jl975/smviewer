@@ -1,10 +1,19 @@
 .cab-buttons-container {
   position: absolute;
-  // height: 200px;
+  bottom: 0;
+  display: flex;
+  width: 60px;
+  height: 448px;
+  flex-direction: column;
+  justify-content: flex-end;
+  order: 4;
+}
+
+.cab-buttons-wrapper {
+  position: relative;
+  height: 172px;
   width: 60px;
   bottom: 0;
-  right: 0;
-  transform: translateX(100%) translateZ(0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,11 +48,5 @@
     img {
       width: 30px;
     }
-  }
-
-  display: none;
-  // tablets and up
-  @media only screen and (min-width: 768px) {
-    display: flex;
   }
 }

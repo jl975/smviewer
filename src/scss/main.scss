@@ -121,26 +121,13 @@
     #combo-temp {
       display: none;
     }
-
-    // hide on doubles for now until I figure out where to put it
-    .cab-buttons-container {
-      height: auto;
-      right: 0;
-      // transform: translateX(50%) scale(0.75) translateY(12.5%);
-      transform: translateX(100%);
-    }
   }
 }
 .chartArea-wrapper {
   transform-origin: left top;
 }
-// .chartArea-wrapper {
-//   margin: 0 auto;
-//   display: flex;
-// }
 .canvas-wrapper {
   position: relative;
-  // margin: 0 auto;
   outline: none;
   background-color: #000;
 }
@@ -518,6 +505,24 @@
     }
     &.active {
       transform: translateY(0%);
+    }
+  }
+}
+
+// hacks to fix js resize/transform not working on iOS landscape -> portrait
+@media only screen and (min-height: 421px) {
+  .canvas-container.single {
+    transform: none !important;
+    height: 448px !important;
+    // width: 256px !important;
+  }
+  .canvas-container.double {
+    // transform: none !important;
+    // width: 512px !important;
+    // transform-origin: left top;
+
+    #chartArea {
+      width: 512px !important;
     }
   }
 }

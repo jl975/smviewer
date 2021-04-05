@@ -66,29 +66,10 @@ const ChartArea = (props) => {
   }, [canvas, selectedMode, screen])
 
   const resizeChartArea = () => {
-    // if (selectedMode === 'single') {
-    //   chartArea.current.width = ARROW_WIDTH * 4
-    //   canvasWrapper.current.style.transform = 'none'
-    // } else if (selectedMode === 'double' && window.innerHeight > LANDSCAPE_MAX_HEIGHT) {
-    //   chartArea.current.width = ARROW_WIDTH * 8
-
-    //   const wrapper = canvasContainer.current.getBoundingClientRect()
-
-    //   if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
-    //     const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
-    //     canvasWrapper.current.style.transform = `scale(${scaleFactor})`
-    //   } else {
-    //     canvasWrapper.current.style.transform = 'none'
-    //   }
-    // }
-
     noop()
-    console.log('resize, window.innerHeight', window.innerHeight)
 
     // landscape orientation
     if (window.innerHeight <= LANDSCAPE_MAX_HEIGHT) {
-      console.log('switched to landscape')
-
       const subChartAreaHeight = 60
 
       canvasWrapper.current.style.transform = 'none'
@@ -105,28 +86,25 @@ const ChartArea = (props) => {
     }
     // portrait orientation
     else {
-      console.log('switched to portrait')
-
       if (selectedMode === 'single') {
         chartArea.current.width = ARROW_WIDTH * 4
         canvasWrapper.current.style.transform = 'none'
       } else if (selectedMode === 'double') {
         chartArea.current.width = ARROW_WIDTH * 8
 
-        const wrapper = canvasContainer.current.getBoundingClientRect()
+        const wrapper = canvasContainer.current
 
-        if (wrapper.width < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
-          const scaleFactor = Math.min(wrapper.width / chartArea.current.width, 1)
+        if (wrapper.clientWidth < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
+          const scaleFactor = Math.min(wrapper.clientWidth / chartArea.current.width, 1)
           canvasWrapper.current.style.transform = `scale(${scaleFactor})`
+          console.log('scaleFactor', scaleFactor)
         } else {
           canvasWrapper.current.style.transform = 'none'
         }
       }
 
-      // setTimeout(() => {
       canvasContainer.current.style.height = '448px'
       canvasContainer.current.style.transform = 'none'
-      // }, 0)
     }
     if (gameEngine) {
       gameEngine.updateLoopOnce()
@@ -240,8 +218,15 @@ const ChartArea = (props) => {
       <div className="view-wrapper chartArea-container">
         <div className={`canvas-container ${selectedMode} ${mods.scroll}`} ref={canvasContainer}>
           <div className="chartArea-wrapper" ref={canvasWrapper}>
-            {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
-            {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
+            <div className="chartArea-left-wrapper">
+              {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
+            </div>
+            <div className="chartArea-right-wrapper">
+              {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
+              {selectedSong && !loadingAudio && ['hidden', 'sudden', 'hiddensudden'].includes(mods.appearance) && (
+                <CabButtons mods={mods} canvas={canvas} />
+              )}
+            </div>
             <div className="canvas-wrapper">
               <canvas id="chartArea" width="256" height="448" />
               <div
@@ -257,9 +242,6 @@ const ChartArea = (props) => {
                 )}
                 <div className="chart-loading-message">Loading chart...</div>
               </div>
-              {selectedSong && !loadingAudio && ['hidden', 'sudden', 'hiddensudden'].includes(mods.appearance) && (
-                <CabButtons mods={mods} canvas={canvas} />
-              )}
             </div>
           </div>
         </div>
