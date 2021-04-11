@@ -180,7 +180,7 @@
     align-items: center;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     z-index: 5;
-    font-family: "Trebuchet MS";
+    font-family: 'Trebuchet MS';
     transition: box-shadow 0.15s;
     cursor: pointer;
 
@@ -240,8 +240,7 @@
       line-height: 12px;
       color: rgba(255, 255, 255, 0.75);
       font-weight: 800;
-      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
-        -1px -1px 0 #000;
+      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
       transition: font-size 0.15s, line-height 0.15s, color 0.15s;
     }
     .level {
@@ -250,8 +249,7 @@
       font-size: 16px;
       line-height: 18px;
       margin-bottom: 2px;
-      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
-        -1px -1px 0 #000;
+      text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
       transition: font-size 0.15s, line-height 0.15s, color 0.15s;
     }
   }
@@ -376,4 +374,33 @@
 }
 
 @media only screen and (min-width: 1410px) {
+}
+
+// show on landscape phone
+@media only screen and (max-height: 420px) {
+  .songView {
+    .form-inner-wrapper {
+      display: flex;
+
+      .selectedSong {
+        width: 50%;
+      }
+      .songForm-filters {
+        width: 50%;
+      }
+    }
+
+    .songGrid {
+      width: auto;
+      display: flex;
+      flex-wrap: wrap;
+      padding-left: 20px;
+      // justify-content: center;
+
+      .songTile-wrapper {
+        width: 106px;
+        margin-bottom: 7px;
+      }
+    }
+  }
 }

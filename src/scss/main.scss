@@ -466,6 +466,8 @@
       padding-top: 0;
       width: calc(100% - 64px);
       margin-left: 64px;
+      border-radius: 0;
+      background-color: #fff;
     }
 
     &.chartView {
@@ -502,6 +504,9 @@
     }
     &.modsView {
       transform: translateY(100%);
+      .view-wrapper {
+        padding-top: 20px;
+      }
     }
     &.active {
       transform: translateY(0%);
