@@ -381,12 +381,43 @@
   .songView {
     .form-inner-wrapper {
       display: flex;
+      height: auto;
+      background-color: inherit;
 
       .selectedSong {
         width: 50%;
+        margin-top: 0;
+      }
+
+      .selectedSong-info {
+        position: absolute;
+        right: 0;
+        width: calc(100% - 120px);
+        height: 100%;
+        padding-right: 0;
+
+        .song-difficulty {
+          flex-shrink: 0;
+        }
+      }
+
+      .selectedSong-jacket-wrapper {
+        width: 120px;
+        height: 120px;
+        min-width: 120px;
+        min-height: 120px;
+        margin-left: 0;
       }
       .songForm-filters {
         width: 50%;
+        padding: 5px 5px 0;
+
+        .form-field {
+          padding: 0 5px;
+        }
+      }
+      .songForm-filters-row {
+        border-bottom: 1px solid #d7e2ed;
       }
     }
 
@@ -402,5 +433,8 @@
         margin-bottom: 7px;
       }
     }
+  }
+  .view-wrapper .songGrid-container {
+    margin-bottom: 0;
   }
 }

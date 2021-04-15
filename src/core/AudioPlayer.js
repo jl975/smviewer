@@ -263,7 +263,7 @@ class AudioPlayer {
 
   async selectSong(song, initialProgress = 0) {
     if (this.currentSong) {
-      this.getCurrentSong().audio.stop(this.currentSongId)
+      this.getCurrentSong().audio?.stop(this.currentSongId)
     }
 
     this.currentSong = song.hash
@@ -361,8 +361,10 @@ class AudioPlayer {
   }
 
   seekProgress(value) {
-    const audioDuration = this.getCurrentSong().audio.duration()
-    this.seekTime(value * audioDuration)
+    const audioDuration = this.getCurrentSong().audio?.duration()
+    if (typeof audioDuration === 'number') {
+      this.seekTime(value * audioDuration)
+    }
   }
 
   // gsap ticker method for regularly updating progress bar, not called manually
