@@ -76,50 +76,62 @@ class AudioPlayer {
     // retrieve audio from IndexedDB if available
     const cachedAudioBuffer = await localforage.getItem(`audio_${song.hash}`)
     if (cachedAudioBuffer) {
-      console.log(`retrieve cached audio for ${song.title}`)
-      const blob = new Blob([cachedAudioBuffer], { type: 'audio/mpeg' })
-      src = URL.createObjectURL(blob)
+      const pathId = song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl
+      if (cachedAudioBuffer.pathId === pathId) {
+        console.log(`matching pathId, retrieve cached audio for ${song.title}`)
+        const blob = new Blob([cachedAudioBuffer.buffer], { type: 'audio/mpeg' })
+        src = URL.createObjectURL(blob)
+      } else {
+        console.log(`no matching pathId, cached audio may be out of date. request for new one`)
+      }
     }
     // if not, fetch audio via xhr as an arraybuffer
     // then store in IndexedDB and use the resulting blob
+    // Use the audio url as part of the identifier
     else {
-      src = await new Promise((resolve, reject) => {
-        const url = song.dAudioUrl
-          ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
-          : getAssetPath('audio/' + song.audioUrl)
-        const xhr = new XMLHttpRequest()
-        xhr.open('GET', url, true)
-        xhr.withCredentials = false
-        xhr.responseType = 'arraybuffer'
+      src = await this.requestAudioFile(song)
+    }
+    return src
+  }
 
-        xhr.onload = function () {
-          const buffer = xhr.response
-          if (this.status >= 200 && this.status < 300) {
-            // asynchronously store audio buffer in IndexedDB
-            localforage.setItem(`audio_${song.hash}`, buffer)
+  async requestAudioFile(song) {
+    return new Promise((resolve, reject) => {
+      const url = song.dAudioUrl
+        ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
+        : getAssetPath('audio/' + song.audioUrl)
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', url, true)
+      xhr.withCredentials = false
+      xhr.responseType = 'arraybuffer'
 
-            // synchronously return blob response
-            const blob = new Blob([buffer], { type: 'audio/mpeg' })
-            resolve(URL.createObjectURL(blob))
-          } else {
-            reject({
-              status: this.status,
-              statusText: xhr.statusText,
-            })
-          }
-        }
-        xhr.onerror = function () {
-          console.log('error')
+      xhr.onload = function () {
+        const buffer = xhr.response
+        if (this.status >= 200 && this.status < 300) {
+          // asynchronously store audio buffer in IndexedDB with dAudioUrl identifier
+          localforage.setItem(`audio_${song.hash}`, {
+            pathId: song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl,
+            buffer,
+          })
+
+          // synchronously return blob response
+          const blob = new Blob([buffer], { type: 'audio/mpeg' })
+          resolve(URL.createObjectURL(blob))
+        } else {
           reject({
             status: this.status,
             statusText: xhr.statusText,
           })
         }
-        xhr.send()
-      })
-    }
-
-    return src
+      }
+      xhr.onerror = function () {
+        console.log('error')
+        reject({
+          status: this.status,
+          statusText: xhr.statusText,
+        })
+      }
+      xhr.send()
+    })
   }
 
   // when loading a song file for the first time, save it as two separate Howls:
