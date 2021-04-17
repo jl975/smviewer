@@ -76,16 +76,21 @@ class AudioPlayer {
     // retrieve audio from IndexedDB if available
     const cachedAudioBuffer = await localforage.getItem(`audio_${song.hash}`)
     if (cachedAudioBuffer) {
+      // If cached pathId matches the song audioUrl, use the cached audio
       const pathId = song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl
       if (cachedAudioBuffer.pathId === pathId) {
         console.log(`matching pathId, retrieve cached audio for ${song.title}`)
         const blob = new Blob([cachedAudioBuffer.buffer], { type: 'audio/mpeg' })
         src = URL.createObjectURL(blob)
-      } else {
-        console.log(`no matching pathId, cached audio may be out of date. request for new one`)
+      }
+      // If cached pathId does not match, the audio may be out of date.
+      // Make a new request for the audio and write over the stored entry in IndexedDB
+      else {
+        console.log(`no matching pathId, cached audio may be out of date`)
+        src = await this.requestAudioFile(song)
       }
     }
-    // if not, fetch audio via xhr as an arraybuffer
+    // If audio hash is not found in IndexedDB, fetch audio via xhr as an arraybuffer
     // then store in IndexedDB and use the resulting blob
     // Use the audio url as part of the identifier
     else {
@@ -112,6 +117,7 @@ class AudioPlayer {
             pathId: song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl,
             buffer,
           })
+          console.log(`requesting latest version of audio for ${song.title} and storing in cache`)
 
           // synchronously return blob response
           const blob = new Blob([buffer], { type: 'audio/mpeg' })
