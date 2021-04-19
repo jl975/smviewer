@@ -158,15 +158,31 @@ const ModsForm = (props) => {
 
           <div className="form-field">
             <h4 className="form-label">Arrow color</h4>
-            {options.mods.noteskin.map((noteskin) => {
+            {options.mods.noteColor.map((noteColor) => {
               return (
                 <Radio
-                  key={`noteskin_${noteskin}`}
-                  label={capitalize(noteskin)}
-                  name="noteskin"
-                  value={noteskin}
-                  checked={mods.noteskin === noteskin}
-                  onChange={() => updateMods({ noteskin })}
+                  key={`noteColor_${noteColor}`}
+                  label={capitalize(noteColor)}
+                  name="noteColor"
+                  value={noteColor}
+                  checked={mods.noteColor === noteColor}
+                  onChange={() => updateMods({ noteColor })}
+                />
+              )
+            })}
+          </div>
+
+          <div className="form-field">
+            <h4 className="form-label">Arrow shape</h4>
+            {options.mods.noteShape.map((noteShape) => {
+              return (
+                <Radio
+                  key={`noteShape_${noteShape}`}
+                  label={capitalize(noteShape)}
+                  name="noteShape"
+                  value={noteShape}
+                  checked={mods.noteShape === noteShape}
+                  onChange={() => updateMods({ noteShape })}
                 />
               )
             })}

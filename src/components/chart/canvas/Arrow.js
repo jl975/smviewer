@@ -239,7 +239,7 @@ class Arrow {
     const c = canvas.getContext('2d')
 
     const { mods, staticAttrs } = attrs
-    const { speed, cmod, noteskin, colorFreezes, scroll, appearance } = mods
+    const { speed, cmod, noteColor, colorFreezes, scroll, appearance } = mods
 
     let speedMod = mods.speed
     if (mods.speed === 'mmod') {
@@ -266,7 +266,7 @@ class Arrow {
 
     // regular note
     if (this.note[directionIdx] === '1' || (this.note[directionIdx] === '2' && colorFreezes)) {
-      arrowImg = arrowImages[`${noteskin}_${direction}`]
+      arrowImg = arrowImages[`${noteColor}_${direction}`]
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
       if (this.note.includes('2') && !colorFreezes) {
@@ -274,7 +274,7 @@ class Arrow {
         frameX = DIRECTIONS.indexOf(direction) * arrowWidth
         frameY = 0
       } else {
-        if (noteskin === 'rainbow') {
+        if (noteColor === 'rainbow') {
           frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth
 
           const beatD = this.measureD / 4
@@ -291,7 +291,7 @@ class Arrow {
             frameY = 0
           }
           frameY *= arrowHeight
-        } else if (noteskin === 'note') {
+        } else if (noteColor === 'note') {
           frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth
 
           /* 
@@ -313,7 +313,7 @@ class Arrow {
             frameY = 2
           }
           frameY *= arrowHeight
-        } else if (noteskin === 'vivid') {
+        } else if (noteColor === 'vivid') {
           frameX = (Math.floor(beatTick * 4) % 4) * arrowWidth
 
           const beatD = this.measureD / 4
@@ -332,7 +332,7 @@ class Arrow {
             frameY = 0
           }
           frameY = ((frameY + noteOffset) % 4) * arrowHeight
-        } else if (noteskin === 'flat') {
+        } else if (noteColor === 'flat') {
           arrowImg = arrowImages[`vivid_${direction}`]
 
           frameX = (Math.floor(beatTick * 4) % 4) * arrowWidth
