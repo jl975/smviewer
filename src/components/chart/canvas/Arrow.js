@@ -1,5 +1,6 @@
 import {
   DIRECTIONS,
+  ARROW_SHAPES,
   ARROW_WIDTH,
   ARROW_HEIGHT,
   STATIC_ARROW_WIDTH,
@@ -11,14 +12,16 @@ import { getReverseCoord } from '../../../utils/engineUtils'
 
 const arrowImages = {}
 DIRECTIONS.forEach((direction) => {
-  arrowImages[`rainbow_${direction}`] = new Image()
-  arrowImages[`rainbow_${direction}`].src = getAssetPath(`rainbow_${direction}.png`)
-  arrowImages[`note_${direction}`] = new Image()
-  arrowImages[`note_${direction}`].src = getAssetPath(`note_${direction}.png`)
-  arrowImages[`vivid_${direction}`] = new Image()
-  arrowImages[`vivid_${direction}`].src = getAssetPath(`vivid_${direction}.png`)
-  arrowImages[`flat_${direction}`] = new Image()
-  arrowImages[`flat_${direction}`].src = getAssetPath(`vivid_${direction}.png`)
+  ARROW_SHAPES.forEach((shape) => {
+    arrowImages[`${shape}_rainbow_${direction}`] = new Image()
+    arrowImages[`${shape}_rainbow_${direction}`].src = getAssetPath(`arrow_${shape}_rainbow_${direction}.png`)
+    arrowImages[`${shape}_note_${direction}`] = new Image()
+    arrowImages[`${shape}_note_${direction}`].src = getAssetPath(`arrow_${shape}_note_${direction}.png`)
+    arrowImages[`${shape}_vivid_${direction}`] = new Image()
+    arrowImages[`${shape}_vivid_${direction}`].src = getAssetPath(`arrow_${shape}_vivid_${direction}.png`)
+    arrowImages[`${shape}_flat_${direction}`] = new Image()
+    arrowImages[`${shape}_flat_${direction}`].src = getAssetPath(`arrow_${shape}_vivid_${direction}.png`)
+  })
 })
 
 const freezeImages = [
@@ -32,6 +35,17 @@ const freezeImages = [
 freezeImages.forEach((imageName) => {
   arrowImages[imageName] = new Image()
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`)
+})
+
+ARROW_SHAPES.forEach((shape) => {
+  arrowImages[`freeze_${shape}_body_active`] = new Image()
+  arrowImages[`freeze_${shape}_body_active`].src = getAssetPath(`freeze_${shape}_body_active.png`)
+  arrowImages[`freeze_${shape}_body_inactive`] = new Image()
+  arrowImages[`freeze_${shape}_body_inactive`].src = getAssetPath(`freeze_${shape}_body_inactive.png`)
+  arrowImages[`freeze_${shape}_tail_active`] = new Image()
+  arrowImages[`freeze_${shape}_tail_active`].src = getAssetPath(`freeze_${shape}_tail_active.png`)
+  arrowImages[`freeze_${shape}_tail_inactive`] = new Image()
+  arrowImages[`freeze_${shape}_tail_inactive`].src = getAssetPath(`freeze_${shape}_tail_inactive.png`)
 })
 
 class Arrow {
@@ -58,7 +72,7 @@ class Arrow {
     const c = canvas.getContext('2d')
 
     const { mods, staticAttrs } = attrs
-    const { speed, cmod, scroll, appearance } = mods
+    const { speed, noteShape, cmod, scroll, appearance } = mods
 
     let speedMod = mods.speed
     if (mods.speed === 'mmod') {
@@ -78,7 +92,7 @@ class Arrow {
 
     // freeze body and tail
     if (this.note[directionIdx] === '3') {
-      arrowImg = arrowImages[`freeze_tail_inactive`]
+      arrowImg = arrowImages[`freeze_${noteShape}_tail_inactive`]
 
       frameX = ((directionIdx % 4) + (scroll === 'reverse' ? 4 : 0)) * arrowWidth
       frameY = 0
@@ -97,7 +111,7 @@ class Arrow {
       // and line up with the top of the freeze tail.
       // Extend the freeze body upwards using as many repetitions of the 128px height image as needed.
       // Top of freeze body is cut off at the midpoint of the freeze head.
-      let arrowBodyImg = arrowImages[`freeze_body_inactive`]
+      let arrowBodyImg = arrowImages[`freeze_${noteShape}_body_inactive`]
 
       let totalBodyHeight
       if (speed === 'cmod') {
@@ -121,8 +135,8 @@ class Arrow {
       if (partialDestY <= 0) {
         partialHeight += partialDestY
         partialDestY = 0
-        arrowImg = arrowImages[`freeze_tail_active`]
-        arrowBodyImg = arrowImages[`freeze_body_active`]
+        arrowImg = arrowImages[`freeze_${noteShape}_tail_active`]
+        arrowBodyImg = arrowImages[`freeze_${noteShape}_body_active`]
 
         if (destY > 0) {
           freezeBeingHeld = true
@@ -239,7 +253,7 @@ class Arrow {
     const c = canvas.getContext('2d')
 
     const { mods, staticAttrs } = attrs
-    const { speed, cmod, noteColor, colorFreezes, scroll, appearance } = mods
+    const { speed, cmod, noteColor, noteShape, colorFreezes, scroll, appearance } = mods
 
     let speedMod = mods.speed
     if (mods.speed === 'mmod') {
@@ -266,7 +280,7 @@ class Arrow {
 
     // regular note
     if (this.note[directionIdx] === '1' || (this.note[directionIdx] === '2' && colorFreezes)) {
-      arrowImg = arrowImages[`${noteColor}_${direction}`]
+      arrowImg = arrowImages[`${noteShape}_${noteColor}_${direction}`]
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
       if (this.note.includes('2') && !colorFreezes) {
@@ -275,7 +289,7 @@ class Arrow {
         frameY = 0
       } else {
         if (noteColor === 'rainbow') {
-          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth
+          frameX = (Math.floor(beatTick * 4) % 8) * arrowWidth
 
           const beatD = this.measureD / 4
           const beatN = this.measureN % beatD
@@ -292,7 +306,7 @@ class Arrow {
           }
           frameY *= arrowHeight
         } else if (noteColor === 'note') {
-          frameX = ((Math.floor(beatTick * 4) + 3) % 8) * arrowWidth
+          frameX = (Math.floor(beatTick * 4) % 8) * arrowWidth
 
           /* 
               NOTE: In the future, if we want to support color codes for 12ths, 24ths, etc.
@@ -333,7 +347,7 @@ class Arrow {
           }
           frameY = ((frameY + noteOffset) % 4) * arrowHeight
         } else if (noteColor === 'flat') {
-          arrowImg = arrowImages[`vivid_${direction}`]
+          arrowImg = arrowImages[`${noteShape}_vivid_${direction}`]
 
           frameX = (Math.floor(beatTick * 4) % 4) * arrowWidth
           frameY = (Math.floor(beatTick) % 4) * arrowHeight
