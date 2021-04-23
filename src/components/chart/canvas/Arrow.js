@@ -25,12 +25,12 @@ DIRECTIONS.forEach((direction) => {
 })
 
 const freezeImages = [
-  'freeze_head',
+  // 'freeze_head',
   'tap_explosion',
-  'freeze_tail_active',
-  'freeze_tail_inactive',
-  'freeze_body_active',
-  'freeze_body_inactive',
+  // 'freeze_tail_active',
+  // 'freeze_tail_inactive',
+  // 'freeze_body_active',
+  // 'freeze_body_inactive',
 ]
 freezeImages.forEach((imageName) => {
   arrowImages[imageName] = new Image()
@@ -38,6 +38,8 @@ freezeImages.forEach((imageName) => {
 })
 
 ARROW_SHAPES.forEach((shape) => {
+  arrowImages[`freeze_${shape}_head`] = new Image()
+  arrowImages[`freeze_${shape}_head`].src = getAssetPath(`freeze_${shape}_head.png`)
   arrowImages[`freeze_${shape}_body_active`] = new Image()
   arrowImages[`freeze_${shape}_body_active`].src = getAssetPath(`freeze_${shape}_body_active.png`)
   arrowImages[`freeze_${shape}_body_inactive`] = new Image()
@@ -233,7 +235,7 @@ class Arrow {
 
       // render head of held freeze arrow on top of the arrow body
       if (freezeBeingHeld) {
-        const arrowHeadImg = arrowImages.freeze_head
+        const arrowHeadImg = arrowImages[`freeze_${noteShape}_head`]
         c.drawImage(
           arrowHeadImg,
           DIRECTIONS.indexOf(direction) * arrowWidth,
@@ -284,7 +286,7 @@ class Arrow {
 
       // color as freeze head if it is hit simultaneously with a freeze arrow
       if (this.note.includes('2') && !colorFreezes) {
-        arrowImg = arrowImages.freeze_head
+        arrowImg = arrowImages[`freeze_${noteShape}_head`]
         frameX = DIRECTIONS.indexOf(direction) * arrowWidth
         frameY = 0
       } else {
@@ -388,7 +390,7 @@ class Arrow {
 
     // freeze note
     else if (this.note[directionIdx] === '2') {
-      arrowImg = arrowImages.freeze_head
+      arrowImg = arrowImages[`freeze_${noteShape}_head`]
       frameX = DIRECTIONS.indexOf(direction) * arrowWidth
       frameY = 0
 
