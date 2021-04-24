@@ -24,14 +24,7 @@ DIRECTIONS.forEach((direction) => {
   })
 })
 
-const freezeImages = [
-  // 'freeze_head',
-  'tap_explosion',
-  // 'freeze_tail_active',
-  // 'freeze_tail_inactive',
-  // 'freeze_body_active',
-  // 'freeze_body_inactive',
-]
+const freezeImages = ['tap_explosion']
 freezeImages.forEach((imageName) => {
   arrowImages[imageName] = new Image()
   arrowImages[imageName].src = getAssetPath(`${imageName}.png`)
