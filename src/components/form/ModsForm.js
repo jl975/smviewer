@@ -4,7 +4,7 @@ import { Radio, Checkbox, Input } from 'semantic-ui-react'
 
 import { options } from './options'
 import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
-import { capitalize } from '../../utils'
+import { capitalize, renderWithSign } from '../../utils'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 
@@ -309,6 +309,13 @@ const ModsForm = (props) => {
             <button type="button" className="link-button" onClick={() => props.setModalOpen('offset', true)}>
               Set global offset
             </button>
+          </div>
+
+          {/* for admin use only; app-adjusted offset */}
+          <div className="form-field">
+            <h4 className="form-label">App-adjusted offset</h4>
+            <Input type="range" min="-0.20" max="0.20" step="0.01" />
+            <span>{song && renderWithSign(song.appOffset)}</span>
           </div>
         </form>
       </div>

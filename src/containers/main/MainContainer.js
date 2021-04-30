@@ -42,6 +42,8 @@ const MainContainer = (props) => {
         // props.setModalOpen("offset");
         props.setModalOpen('welcome')
       }
+
+      return () => window.removeEventListener('resize', props.resizeScreen)
     }
 
     init()
@@ -57,7 +59,7 @@ const MainContainer = (props) => {
   }
 
   const onSongSelect = async (song, initialProgress = 0) => {
-    // console.log("MainContainer selected song", song);
+    console.log('MainContainer selected song', song)
     // setSelectedSong(song);
 
     props.selectSong(song)

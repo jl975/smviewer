@@ -4,9 +4,9 @@
 #BACKGROUND:Lightspeed-bg.png;
 #CDTITLE:./CDTitles/DDR A20 PLUS.png;
 #MUSIC:Lightspeed.ogg;
-#SAMPLESTART:69.15;
+#SAMPLESTART:69.195;
 #SAMPLELENGTH:15;
-#BPMS:0=199.99;
+#BPMS:0=200;
 
 //---------------dance-single - ----------------
 #NOTES:

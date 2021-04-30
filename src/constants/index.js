@@ -14,6 +14,15 @@ export const STATIC_FREEZE_BODY_HEIGHT = 64
 /* Amount of pixels the Hidden+ and Sudden+ lane covers are moved with one nudge */
 export const LANE_COVER_INCREMENT = 4
 
+/* Width of the bpm reel or stop reel */
+export const SIDE_REEL_WIDTH = 60
+
+/* Screen breakpoints */
+export const LANDSCAPE_MAX_HEIGHT = 420
+
+export const PORTRAIT_NAVBAR_HEIGHT = 60
+export const LANDSCAPE_NAVBAR_WIDTH = 64
+
 export const DIRECTIONS = ['left', 'down', 'up', 'right']
 
 /* 

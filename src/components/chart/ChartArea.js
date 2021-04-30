@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 import 'inobounce'
 
-import { presetParams, getJacketPath } from '../../utils'
+import { ARROW_WIDTH, SIDE_REEL_WIDTH, LANDSCAPE_MAX_HEIGHT } from '../../constants'
+import { presetParams, getJacketPath, noop } from '../../utils'
 import parseSimfile from '../../utils/parseSimfile'
 import { usePrevious } from '../../hooks'
 import { setModalOpen } from '../../actions/ScreenActions'
@@ -36,6 +37,7 @@ const ChartArea = (props) => {
   const [canvas, setCanvas] = useState(null)
   const chartArea = useRef()
   const canvasContainer = useRef()
+  const canvasWrapper = useRef()
   const chartLoadingScreen = useRef()
 
   const prevState = usePrevious({
@@ -64,42 +66,46 @@ const ChartArea = (props) => {
   }, [canvas, selectedMode, screen])
 
   const resizeChartArea = () => {
-    if (selectedMode === 'single') {
-      chartArea.current.width = 256
-      chartArea.current.style.transform = 'none'
-      chartArea.current.style.left = 0
-      chartArea.current.style.top = 0
+    noop()
 
-      // hack to resolve positioning issues
-      chartArea.current.style.position = 'static'
-      setTimeout(() => {
-        chartArea.current.style.position = 'relative'
-      })
-    } else if (selectedMode === 'double') {
-      chartArea.current.width = 512
+    // landscape orientation
+    if (window.innerHeight <= LANDSCAPE_MAX_HEIGHT) {
+      const subChartAreaHeight = 60
 
-      const wrapper = canvasContainer.current.getBoundingClientRect()
+      canvasWrapper.current.style.transform = 'none'
 
-      if (wrapper.width < 512) {
-        const scaleFactor = wrapper.width / chartArea.current.width
-        const xOffset = (chartArea.current.width - wrapper.width) / 2
-        const yOffset = xOffset * (7 / 8)
-        chartArea.current.style.transform = `scale(${scaleFactor}) translate(-50%)`
-        chartArea.current.style.position = 'absolute'
-        chartArea.current.style.left = `-${xOffset}px`
-        chartArea.current.style.top = `-${yOffset}px`
-      } else {
-        chartArea.current.style.transform = 'none'
-        chartArea.current.style.left = 0
-        chartArea.current.style.top = 0
-
-        chartArea.current.style.position = 'static'
-        setTimeout(() => {
-          chartArea.current.style.position = 'relative'
-        })
+      if (selectedMode === 'single') {
+        chartArea.current.width = ARROW_WIDTH * 4
+      } else if (selectedMode === 'double') {
+        chartArea.current.width = ARROW_WIDTH * 8
       }
-    }
 
+      canvasContainer.current.style.height = `${window.innerHeight - subChartAreaHeight}px`
+      const scaleFactor = (window.innerHeight - subChartAreaHeight) / 448
+      canvasContainer.current.style.transform = `scale(${scaleFactor})`
+    }
+    // portrait orientation
+    else {
+      if (selectedMode === 'single') {
+        chartArea.current.width = ARROW_WIDTH * 4
+        canvasWrapper.current.style.transform = 'none'
+      } else if (selectedMode === 'double') {
+        chartArea.current.width = ARROW_WIDTH * 8
+
+        const wrapper = canvasContainer.current
+
+        if (wrapper.clientWidth < ARROW_WIDTH * 8 + SIDE_REEL_WIDTH * 2) {
+          const scaleFactor = Math.min(wrapper.clientWidth / chartArea.current.width, 1)
+          canvasWrapper.current.style.transform = `scale(${scaleFactor})`
+          console.log('scaleFactor', scaleFactor)
+        } else {
+          canvasWrapper.current.style.transform = 'none'
+        }
+      }
+
+      canvasContainer.current.style.height = '448px'
+      canvasContainer.current.style.transform = 'none'
+    }
     if (gameEngine) {
       gameEngine.updateLoopOnce()
     }
@@ -137,11 +143,7 @@ const ChartArea = (props) => {
 
           const simfileType = selectedSong.useSsc ? 'ssc' : 'sm'
 
-          // console.log(selectedSong);
-
-          // console.log(sm);
           const simfiles = parseSimfile(sm, simfileType)
-          console.log('simfiles parsed', simfiles, selectedMode, selectedDifficulty)
 
           const simfile = simfiles[`${selectedMode}_${selectedDifficulty}`]
           if (simfile) {
@@ -215,9 +217,16 @@ const ChartArea = (props) => {
     <div className={`view-section chartView ${screen.activeView === 'chart' ? 'active' : ''}`}>
       <div className="view-wrapper chartArea-container">
         <div className={`canvas-container ${selectedMode} ${mods.scroll}`} ref={canvasContainer}>
-          <div className="chartArea-wrapper">
-            {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
-            {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
+          <div className="chartArea-wrapper" ref={canvasWrapper}>
+            <div className="chartArea-left-wrapper">
+              {gameEngine && <BpmDisplay bpmQueue={gameEngine.globalParams.bpmQueue} />}
+            </div>
+            <div className="chartArea-right-wrapper">
+              {gameEngine && <StopDisplay stopQueue={gameEngine.globalParams.stopQueue} />}
+              {selectedSong && !loadingAudio && ['hidden', 'sudden', 'hiddensudden'].includes(mods.appearance) && (
+                <CabButtons mods={mods} canvas={canvas} />
+              )}
+            </div>
             <div className="canvas-wrapper">
               <canvas id="chartArea" width="256" height="448" />
               <div
@@ -233,41 +242,40 @@ const ChartArea = (props) => {
                 )}
                 <div className="chart-loading-message">Loading chart...</div>
               </div>
-              {selectedSong && !loadingAudio && ['hidden', 'sudden', 'hiddensudden'].includes(mods.appearance) && (
-                <CabButtons mods={mods} canvas={canvas} />
-              )}
             </div>
           </div>
         </div>
-        <div className="progress-container">
-          <div className="progress-wrapper">
-            <canvas id="progress" />
-            {presetParams.progress ? (
-              <div
-                className="preset-marker-wrapper"
-                onClick={Progress.jumpToPresetStart.bind(Progress)}
-                onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
-              >
-                <div className="preset-marker" />
+        <div className="below-chart-area">
+          <div className="progress-container">
+            <div className="progress-wrapper">
+              <canvas id="progress" />
+              {presetParams.progress ? (
+                <div
+                  className="preset-marker-wrapper"
+                  onClick={Progress.jumpToPresetStart.bind(Progress)}
+                  onTouchStart={Progress.jumpToPresetStart.bind(Progress)}
+                >
+                  <div className="preset-marker" />
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="row play-controls-row">
+            <PlayControls
+              controlsDisabled={!gameEngine || loadingAudio}
+              setShareModalOpen={() => props.setModalOpen('share', true)}
+            />
+          </div>
+          <div className="row song-info-area">
+            <SongInfo />
+            {selectedSong && (
+              <div>
+                <Button className="view-static-btn" onClick={() => props.setModalOpen('staticChart', true)}>
+                  View static chart
+                </Button>
               </div>
-            ) : null}
+            )}
           </div>
-        </div>
-        <div className="row">
-          <PlayControls
-            controlsDisabled={!gameEngine || loadingAudio}
-            setShareModalOpen={() => props.setModalOpen('share', true)}
-          />
-        </div>
-        <div className="row song-info-area">
-          <SongInfo />
-          {selectedSong && (
-            <div>
-              <Button className="view-static-btn" onClick={() => props.setModalOpen('staticChart', true)}>
-                View static chart
-              </Button>
-            </div>
-          )}
         </div>
         <ShareModal modalOpen={screen.modalOpen.share} data={shareParams} />
         {gameEngine && <StaticModal modalOpen={screen.modalOpen.staticChart} gameEngine={gameEngine} />}

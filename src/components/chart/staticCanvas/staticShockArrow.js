@@ -6,7 +6,6 @@ arrowImg.src = getAssetPath('static_arrows.png')
 
 // const TOP_PADDING = STATIC_ARROW_HEIGHT / 2;
 const LEFT_PADDING = STATIC_ARROW_WIDTH * 2
-const COLUMN_WIDTH = STATIC_ARROW_WIDTH * 4
 const COLUMN_SPACING = STATIC_ARROW_WIDTH * 4
 
 class StaticShockArrow {
@@ -23,8 +22,10 @@ class StaticShockArrow {
   render(canvas, { beatTick }, attrs) {
     const c = canvas.getContext('2d')
 
-    const { mods, columnIdx, columnHeight } = attrs
+    const { mods, mode, columnIdx, columnHeight } = attrs
     const { speed } = mods
+
+    const columnWidth = STATIC_ARROW_WIDTH * (mode === 'double' ? 8 : 4)
 
     for (let i = 0; i < this.note.length; i++) {
       if (this.note[i] !== 'M') continue
@@ -38,7 +39,7 @@ class StaticShockArrow {
 
       destX = i * arrowWidth
       // calculate column offset
-      destX += columnIdx * (COLUMN_WIDTH + COLUMN_SPACING) + LEFT_PADDING
+      destX += columnIdx * (columnWidth + COLUMN_SPACING) + LEFT_PADDING
 
       destY = this.currentBeatPosition(beatTick) * arrowHeight * speed
       // calculate row wraparound

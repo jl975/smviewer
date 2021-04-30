@@ -8,14 +8,16 @@ import HoldButton from '../ui/HoldButton'
 const PlayControls = (props) => {
   const { audio, controlsDisabled, setShareModalOpen } = props
 
+  const pauseWhenMinimized = () => {
+    if (document.hidden) {
+      AudioPlayer.pause()
+    }
+  }
+
   useEffect(() => {
     // pause audio and chart when app is minimized
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        AudioPlayer.pause()
-      }
-    })
-  }, [])
+    document.addEventListener('visibilitychange', pauseWhenMinimized)
+  }, [pauseWhenMinimized])
 
   const togglePlay = () => {
     if (controlsDisabled) return

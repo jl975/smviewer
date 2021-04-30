@@ -24,6 +24,13 @@ export const songSelect = (state = initialState, action) => {
       updateUserSettings({ mode })
       return { ...state, mode }
     }
+    case actions.UPDATE_SONG_APP_OFFSET: {
+      const offset = action.payload
+      return {
+        ...state,
+        song: { ...state.song, appOffset: offset },
+      }
+    }
     default:
       return state
   }

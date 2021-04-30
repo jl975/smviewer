@@ -7,8 +7,8 @@
   position: relative;
 
   // prevent mobile devices from zooming in
-  input[type="text"],
-  input[type="number"],
+  input[type='text'],
+  input[type='number'],
   textarea {
     font-size: 16px;
   }
@@ -115,28 +115,19 @@
   position: relative;
   display: flex;
   height: 448px;
+  transform-origin: top;
 
   &.double {
     #combo-temp {
       display: none;
     }
-
-    // hide on doubles for now until I figure out where to put it
-    .cab-buttons-container {
-      height: auto;
-      right: 0;
-      // transform: translateX(50%) scale(0.75) translateY(12.5%);
-      transform: translateX(50%);
-    }
   }
 }
-// .chartArea-wrapper {
-//   margin: 0 auto;
-//   display: flex;
-// }
+.chartArea-wrapper {
+  transform-origin: left top;
+}
 .canvas-wrapper {
   position: relative;
-  // margin: 0 auto;
   outline: none;
   background-color: #000;
 }
@@ -234,7 +225,6 @@
   flex-direction: column;
 
   .view-static-btn {
-
   }
 }
 
@@ -269,6 +259,9 @@
 }
 .level-information {
   padding: 0 5px;
+}
+
+.below-chart-area {
 }
 
 .progress-container {
@@ -318,9 +311,11 @@
   cursor: pointer;
 }
 
+// screens larger than portrait phones?
 @media only screen and (min-width: 426px) {
   .chartArea-container {
-    padding: 30px;
+    // padding: 30px;
+    padding: 0;
   }
   .main-container {
     display: flex;
@@ -328,7 +323,7 @@
 }
 
 // tablets and up
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 768px) {
   body {
     background-color: #d7e2ed;
   }
@@ -341,15 +336,20 @@
   .view-container {
     display: flex;
     width: 100%;
-    flex-direction: column;
+    // flex-direction: column;
     flex-wrap: wrap;
     min-height: 960px;
   }
   .view-section {
     position: relative;
-    transform: none !important;
     background: none;
     padding: 15px 10px;
+
+    &.songView,
+    &.chartView,
+    &.modsView {
+      transform: none;
+    }
   }
   .view-wrapper {
     padding: 20px 25px;
@@ -360,16 +360,19 @@
   }
 
   .songView {
-    order: 1;
+    order: 2;
     width: 400px;
+    padding: 0 10px 15px;
   }
   .chartView {
-    order: 2;
-    width: calc(100% - 400px);
+    order: 1;
+    // width: calc(100% - 400px);
+    width: 100%;
     height: auto;
     overflow: visible;
 
     .view-wrapper {
+      padding: 0;
       padding-top: 5px;
     }
     .row {
@@ -401,6 +404,9 @@
   }
 }
 
+@media only screen and (min-width: 1100px) {
+}
+
 @media only screen and (min-width: 1370px) {
   .view-container {
     flex-direction: row;
@@ -412,15 +418,18 @@
     padding: 15px 10px;
   }
   .songView {
+    order: 1;
     width: 440px;
   }
   .chartView {
+    order: 2;
     width: auto;
     height: 100%;
     flex: 1 1;
     border-radius: 10px;
   }
   .modsView {
+    order: 3;
     width: 360px;
     height: 100%;
     flex: none;
@@ -432,6 +441,95 @@
     padding: 20px 25px;
     border-radius: 8px;
     height: 100%;
+  }
+}
+
+// max height for landscape orientation phone
+// if height is this small, assume landscape view regardless of screen width
+@media only screen and (max-height: 420px) {
+  .main-container {
+    overflow: hidden;
+  }
+  .view-container {
+    display: block;
+  }
+
+  .view-section {
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    .view-wrapper {
+      // padding-top: 0;
+      width: calc(100% - 64px);
+      margin-left: 64px;
+      border-radius: 0;
+      background-color: #fff;
+    }
+
+    &.chartView {
+      .chartArea-container {
+        display: block;
+      }
+      .canvas-container {
+        transform-origin: top;
+      }
+      .below-chart-area {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 5px auto;
+        width: 90%;
+      }
+      .progress-container {
+        width: 50%;
+        margin: 0;
+      }
+      .progress-wrapper {
+        margin: 0;
+      }
+      .play-controls-row {
+        width: 50%;
+        margin: auto 0;
+      }
+      .song-info-area {
+        display: none;
+      }
+    }
+
+    &.songView {
+      padding-top: 0;
+      transform: translateY(-100%);
+    }
+    &.modsView {
+      transform: translateY(100%);
+      .view-wrapper {
+        padding: 20px 25px;
+      }
+    }
+    &.active {
+      transform: translateY(0%);
+    }
+  }
+}
+
+// hacks to fix js resize/transform not working on iOS landscape -> portrait
+@media only screen and (min-height: 421px) {
+  .canvas-container.single {
+    transform: none !important;
+    height: 448px !important;
+    // width: 256px !important;
+  }
+  .canvas-container.double {
+    // transform: none !important;
+    // width: 512px !important;
+    // transform-origin: left top;
+
+    #chartArea {
+      width: 512px !important;
+    }
   }
 }
 

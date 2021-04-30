@@ -120,50 +120,68 @@ class AudioPlayer {
     // retrieve audio from IndexedDB if available
     const cachedAudioBuffer = await localforage.getItem(`audio_${song.hash}`)
     if (cachedAudioBuffer) {
-      console.log(`retrieve cached audio for ${song.title}`)
-      const blob = new Blob([cachedAudioBuffer], { type: 'audio/mpeg' })
-      src = URL.createObjectURL(blob)
+      // If cached pathId matches the song audioUrl, use the cached audio
+      const pathId = song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl
+      if (cachedAudioBuffer.pathId === pathId) {
+        console.log(`matching pathId, retrieve cached audio for ${song.title}`)
+        const blob = new Blob([cachedAudioBuffer.buffer], { type: 'audio/mpeg' })
+        src = URL.createObjectURL(blob)
+      }
+      // If cached pathId does not match, the audio may be out of date.
+      // Make a new request for the audio and write over the stored entry in IndexedDB
+      else {
+        console.log(`no matching pathId, cached audio may be out of date`)
+        src = await this.requestAudioFile(song)
+      }
     }
-    // if not, fetch audio via xhr as an arraybuffer
+    // If audio hash is not found in IndexedDB, fetch audio via xhr as an arraybuffer
     // then store in IndexedDB and use the resulting blob
+    // Use the audio url as part of the identifier
     else {
-      src = await new Promise((resolve, reject) => {
-        const url = song.dAudioUrl
-          ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
-          : getAssetPath('audio/' + song.audioUrl)
-        const xhr = new XMLHttpRequest()
-        xhr.open('GET', url, true)
-        xhr.withCredentials = false
-        xhr.responseType = 'arraybuffer'
+      src = await this.requestAudioFile(song)
+    }
+    return src
+  }
 
-        xhr.onload = function () {
-          const buffer = xhr.response
-          if (this.status >= 200 && this.status < 300) {
-            // asynchronously store audio buffer in IndexedDB
-            localforage.setItem(`audio_${song.hash}`, buffer)
+  async requestAudioFile(song) {
+    return new Promise((resolve, reject) => {
+      const url = song.dAudioUrl
+        ? `https://dl.dropboxusercontent.com/s/${song.dAudioUrl}`
+        : getAssetPath('audio/' + song.audioUrl)
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', url, true)
+      xhr.withCredentials = false
+      xhr.responseType = 'arraybuffer'
 
-            // synchronously return blob response
-            const blob = new Blob([buffer], { type: 'audio/mpeg' })
-            resolve(URL.createObjectURL(blob))
-          } else {
-            reject({
-              status: this.status,
-              statusText: xhr.statusText,
-            })
-          }
-        }
-        xhr.onerror = function () {
-          console.log('error')
+      xhr.onload = function () {
+        const buffer = xhr.response
+        if (this.status >= 200 && this.status < 300) {
+          // asynchronously store audio buffer in IndexedDB with dAudioUrl identifier
+          localforage.setItem(`audio_${song.hash}`, {
+            pathId: song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl,
+            buffer,
+          })
+          console.log(`requesting latest version of audio for ${song.title} and storing in cache`)
+
+          // synchronously return blob response
+          const blob = new Blob([buffer], { type: 'audio/mpeg' })
+          resolve(URL.createObjectURL(blob))
+        } else {
           reject({
             status: this.status,
             statusText: xhr.statusText,
           })
         }
-        xhr.send()
-      })
-    }
-
-    return src
+      }
+      xhr.onerror = function () {
+        console.log('error')
+        reject({
+          status: this.status,
+          statusText: xhr.statusText,
+        })
+      }
+      xhr.send()
+    })
   }
 
   // when loading a song file for the first time, save it as two separate Howls:
@@ -308,7 +326,7 @@ class AudioPlayer {
 
   async selectSong(song, initialProgress = 0) {
     if (this.currentSong) {
-      this.getCurrentSong().audio.stop(this.currentSongId)
+      this.getCurrentSong().audio?.stop(this.currentSongId)
     }
 
     this.currentSong = song.hash
@@ -417,9 +435,10 @@ class AudioPlayer {
   }
 
   seekProgress(value) {
-    if (!this.getCurrentSong()?.audio) return
-    const audioDuration = this.getCurrentSong().audio.duration()
-    this.seekTime(value * audioDuration)
+    const audioDuration = this.getCurrentSong().audio?.duration()
+    if (typeof audioDuration === 'number') {
+      this.seekTime(value * audioDuration)
+    }
   }
 
   // gsap ticker method for regularly updating progress bar, not called manually

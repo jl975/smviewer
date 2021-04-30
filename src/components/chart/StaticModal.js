@@ -19,12 +19,12 @@ const canvasScaleFactor = 0.5
 const measuresPerColumn = 8
 const beatsPerColumn = measuresPerColumn * 4
 
-const columnWidth = STATIC_ARROW_WIDTH * 4 * 2
+// const columnWidth = STATIC_ARROW_WIDTH * 4 * 2
 
 const songDataSectionHeight = 50
 
 const StaticModal = (props) => {
-  const { modalOpen, setModalOpen, gameEngine } = props
+  const { modalOpen, setModalOpen, gameEngine, mode } = props
 
   const containerRef = useRef(null)
   const canvasRef = useRef(null)
@@ -34,6 +34,8 @@ const StaticModal = (props) => {
   const [canvasHeight, setCanvasHeight] = useState(0)
   const [canvasWidth, setCanvasWidth] = useState(0)
   const [canvasReady, setCanvasReady] = useState(false)
+
+  const columnWidth = STATIC_ARROW_WIDTH * 4 * (mode === 'double' ? 3 : 2)
 
   const chartData = {
     title: props.song.title,
@@ -104,6 +106,10 @@ const StaticModal = (props) => {
     c.fillStyle = 'black'
     c.fillRect(0, 0, calcCanvasWidth, calcCanvasHeight)
 
+    console.log('props', props)
+
+    const directions = mode === 'double' ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3]
+
     // draw each column
     for (let i = 0; i < numColumns; i++) {
       const columnStart = i * columnWidth + STATIC_ARROW_WIDTH * 2
@@ -112,8 +118,9 @@ const StaticModal = (props) => {
       const guidelines = new StaticGuidelines(gameEngine.globalParams.finalBeat)
       guidelines.render(canvas, tick, {
         mods,
+        mode,
         columnIdx: i,
-        columnWidth,
+        columnWidth: STATIC_ARROW_WIDTH * (mode === 'double' ? 8 : 4),
         measuresPerColumn,
         bpmQueue,
         stopQueue,
@@ -124,6 +131,7 @@ const StaticModal = (props) => {
       const shock = shocks[i]
       shock.render(canvas, tick, {
         mods,
+        mode,
         columnIdx: Math.floor(shock.beatstamp / beatsPerColumn),
         columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
       })
@@ -131,9 +139,10 @@ const StaticModal = (props) => {
 
     for (let i = 0; i < freezes.length; i++) {
       const freeze = freezes[i]
-      ;[0, 1, 2, 3].forEach((directionIdx) => {
+      directions.forEach((directionIdx) => {
         freeze.renderFreezeBody(canvas, tick, directionIdx, {
           mods,
+          mode,
           columnIdx: Math.floor(freeze.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
           measuresPerColumn,
@@ -143,9 +152,10 @@ const StaticModal = (props) => {
 
     for (let i = 0; i < arrows.length; i++) {
       const arrow = arrows[i]
-      ;[0, 1, 2, 3].forEach((directionIdx) => {
+      directions.forEach((directionIdx) => {
         arrow.renderArrow(canvas, tick, directionIdx, {
           mods,
+          mode,
           columnIdx: Math.floor(arrow.measureIdx / measuresPerColumn),
           columnHeight: STATIC_ARROW_HEIGHT * 4 * speedMod * measuresPerColumn,
           measuresPerColumn,
