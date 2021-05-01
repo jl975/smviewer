@@ -7,6 +7,8 @@ import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
 import { capitalize, renderWithSign } from '../../utils'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
+import { updateSongAppOffset } from '../../actions/SongSelectActions'
+import AudioPlayer from '../../core/AudioPlayer'
 
 const ModsForm = (props) => {
   const { mods, updateMods, mode, song, difficulty } = props
@@ -66,6 +68,12 @@ const ModsForm = (props) => {
     if (!fieldValue || parseInt(fieldValue) < 100 || parseInt(fieldValue) > 1000) {
       updateMods({ cmod: DEFAULT_CMOD })
     }
+  }
+
+  const handleSongAppOffsetChange = async (newOffset) => {
+    console.log('newOffset', newOffset)
+    await props.updateSongAppOffset(newOffset)
+    AudioPlayer.resync()
   }
 
   return (
@@ -330,8 +338,16 @@ const ModsForm = (props) => {
           {/* for admin use only; app-adjusted offset */}
           <div className="form-field">
             <h4 className="form-label">App-adjusted offset</h4>
-            <Input type="range" min="-0.20" max="0.20" step="0.01" />
-            <span>{song && renderWithSign(song.appOffset)}</span>
+            <Input
+              type="range"
+              min="-0.20"
+              max="0.20"
+              step="0.01"
+              onChange={(_, data) => {
+                handleSongAppOffsetChange(parseFloat(data.value))
+              }}
+            />
+            <span>{song && renderWithSign(song.appOffset || 0, 2)}</span>
           </div>
         </form>
       </div>
@@ -354,6 +370,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     updateMods: (mods) => dispatch(updateMods(mods)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
+    updateSongAppOffset: (offset) => dispatch(updateSongAppOffset(offset)),
   }
 }
 

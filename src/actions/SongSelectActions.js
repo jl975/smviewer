@@ -25,9 +25,9 @@ export const selectMode = (mode) => (dispatch) => {
   })
 }
 
-export const updateSongAppOffset = (payload) => (dispatch) => {
+export const updateSongAppOffset = (offset) => (dispatch) => {
   dispatch({
     type: UPDATE_SONG_APP_OFFSET,
-    payload,
+    payload: offset,
   })
 }

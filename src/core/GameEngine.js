@@ -160,7 +160,7 @@ class GameEngine {
     if (simfile) {
       debugSimfileChart(simfile)
 
-      this.globalParams.offset = simfile.offset
+      this.globalParams.simfileOffset = simfile.offset
 
       const displayBpm = getDisplayBpm(songSelect.song, songSelect.difficulty, songSelect.mode)
       const displayBpms = displayBpm.split('-')

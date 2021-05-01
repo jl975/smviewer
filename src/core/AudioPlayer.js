@@ -91,7 +91,9 @@ class AudioPlayer {
       bufferSource.buffer = assist.buffer
       bufferSource.connect(audioContext.destination)
       // bufferSource.start(audioContext.currentTime);
-      bufferSource.start(time - getGlobalOffset())
+
+      const songAppOffset = store.getState().songSelect.song.appOffset || 0
+      bufferSource.start(time - getGlobalOffset() - songAppOffset)
       // console.log(audioContext.currentTime);
     }
   }
@@ -376,11 +378,9 @@ class AudioPlayer {
         // console.log("stabilized to", currentTime);
 
         const globalOffset = store.getState().mods.globalOffset
+        const songAppOffset = store.getState().songSelect.song.appOffset || 0
 
-        currentSong.tl.seek(
-          // currentTime + DEFAULT_OFFSET + currentSong.globalParams.offset
-          currentTime + globalOffset + currentSong.globalParams.offset
-        )
+        currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.simfileOffset + songAppOffset)
 
         this.updateProgressOnce()
 
@@ -455,8 +455,9 @@ class AudioPlayer {
       console.log('frame skip', 'deltaTime:', deltaTime, 'currentTime:', currentTime)
       if (typeof currentTime === 'number') {
         const globalOffset = store.getState().mods.globalOffset
+        const songAppOffset = store.getState().songSelect.song.appOffset || 0
 
-        currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.offset)
+        currentSong.tl.seek(currentTime + globalOffset + currentSong.globalParams.simfileOffset + songAppOffset)
       } else {
         console.log('audio unstable after frame skip, resyncing')
         this.resync()
