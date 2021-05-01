@@ -25,6 +25,8 @@ export const LANDSCAPE_NAVBAR_WIDTH = 64
 
 export const DIRECTIONS = ['left', 'down', 'up', 'right']
 
+export const ARROW_SHAPES = ['normal', 'classic', 'cyber', 'x']
+
 /* 
   Offset of the visuals (i.e. chart, gsap timeline) relative to the audio.
   Positive value represents notes being earlier (have to hit earlier than the music)

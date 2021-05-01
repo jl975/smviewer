@@ -1,11 +1,13 @@
-import { DIRECTIONS, ARROW_WIDTH, ARROW_HEIGHT } from '../../../constants'
+import { DIRECTIONS, ARROW_SHAPES, ARROW_WIDTH, ARROW_HEIGHT } from '../../../constants'
 import { getAssetPath } from '../../../utils'
 import { getReverseCoord } from '../../../utils/engineUtils'
 
 const arrowImages = {}
 DIRECTIONS.forEach((direction) => {
-  arrowImages[`shock_${direction}`] = new Image()
-  arrowImages[`shock_${direction}`].src = getAssetPath(`shock_${direction}.png`)
+  ARROW_SHAPES.forEach((shape) => {
+    arrowImages[`shock_${shape}_${direction}`] = new Image()
+    arrowImages[`shock_${shape}_${direction}`].src = getAssetPath(`shock_${shape}_${direction}.png`)
+  })
 })
 
 class ShockArrow {
@@ -29,7 +31,7 @@ class ShockArrow {
     const c = canvas.getContext('2d')
 
     const { mods } = attrs
-    const { speed, cmod, scroll, appearance } = mods
+    const { speed, cmod, noteShape, scroll, appearance } = mods
 
     let speedMod = mods.speed
     if (mods.speed === 'mmod') {
@@ -45,7 +47,7 @@ class ShockArrow {
     for (let i = 0; i < this.note.length; i++) {
       if (this.note[i] !== 'M') continue
       const direction = DIRECTIONS[i % 4]
-      const arrowImg = arrowImages[`shock_${direction}`]
+      const arrowImg = arrowImages[`shock_${noteShape}_${direction}`]
       const frameX = (frame % 4) * ARROW_WIDTH
       const frameY = Math.floor(frame / 4) * ARROW_HEIGHT
       const destX = i * ARROW_WIDTH
