@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Radio, Checkbox, Input } from 'semantic-ui-react'
+import { Radio, Checkbox, Input, Button } from 'semantic-ui-react'
 
+import { putToSongManager } from '../../api'
 import { options } from './options'
 import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
 import { capitalize, renderWithSign } from '../../utils'
@@ -74,6 +75,13 @@ const ModsForm = (props) => {
     console.log('newOffset', newOffset)
     await props.updateSongAppOffset(newOffset)
     AudioPlayer.resync()
+  }
+
+  const saveSongAppOffset = () => {
+    putToSongManager('update_song_app_offset', {
+      songId: song.hash,
+      offset: song.appOffset || 0,
+    })
   }
 
   return (
@@ -336,19 +344,34 @@ const ModsForm = (props) => {
           </div>
 
           {/* for admin use only; app-adjusted offset */}
-          <div className="form-field">
-            <h4 className="form-label">App-adjusted offset</h4>
-            <Input
-              type="range"
-              min="-0.20"
-              max="0.20"
-              step="0.01"
-              onChange={(_, data) => {
-                handleSongAppOffsetChange(parseFloat(data.value))
-              }}
-            />
-            <span>{song && renderWithSign(song.appOffset || 0, 2)}</span>
-          </div>
+          {song && (
+            <div className="form-field">
+              <h4 className="form-label">App-adjusted offset</h4>
+              <div className="app-offset-adjust">
+                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset - 0.01)}>
+                  Later
+                </Button>
+                <Input
+                  className="form-field-slider"
+                  type="range"
+                  min="-0.20"
+                  max="0.20"
+                  step="0.01"
+                  value={song.appOffset}
+                  onChange={(_, data) => {
+                    handleSongAppOffsetChange(parseFloat(data.value))
+                  }}
+                />
+                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset + 0.01)}>
+                  Earlier
+                </Button>
+              </div>
+              <div className="app-offset-value">{renderWithSign(song.appOffset || 0, 2)}</div>
+              <div>
+                <Button onClick={saveSongAppOffset}>Save offset</Button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>

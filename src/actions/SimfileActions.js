@@ -16,6 +16,11 @@ export const getSimfileList = () => async (dispatch) => {
     } else {
       row.missingDifficulties = []
     }
+    if (row.appOffset) {
+      row.appOffset = parseFloat(row.appOffset)
+    } else {
+      row.appOffset = 0
+    }
   })
 
   dispatch({

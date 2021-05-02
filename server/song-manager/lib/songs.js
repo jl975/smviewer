@@ -157,6 +157,7 @@ export const updateSimfiles = (payload) => {
     useSsc,
     isLineout,
     missingDifficulties,
+    appOffset,
   } = payload
 
   // find the existing song object in the list and replace it with the relevant parts of the payload
@@ -174,6 +175,7 @@ export const updateSimfiles = (payload) => {
     useSsc,
     isLineout,
     missingDifficulties: missingDifficulties || '',
+    appOffset,
   }
 
   for (let i = 0; i < songList.length; i++) {
@@ -251,6 +253,21 @@ const writeSimfileToTsv = (json) => {
   fs.writeFile(simfileTsvPath, output, 'utf8', (err) => {
     if (err) console.log(err)
   })
+
+  return output
+}
+
+/* APIs accessible from (locally running) A20Viewer app */
+export const updateSongAppOffset = (songId, offset) => {
+  const songList = getSimfilesTsv()
+  offset = Math.round(offset * 100) / 100
+  for (let i = 0; i < songList.length; i++) {
+    if (songList[i].hash === songId) {
+      songList[i].appOffset = offset
+      console.log(songList[i])
+    }
+  }
+  const output = writeSimfileToTsv(songList)
 
   return output
 }
