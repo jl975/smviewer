@@ -205,7 +205,7 @@ class AudioPlayer {
         src,
         format: ['mp3'],
         html5: true,
-        volume: 0.5,
+        volume: 0.55,
         rate: store?.getState()?.mods?.rate || 1,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
@@ -532,7 +532,7 @@ class AudioPlayer {
 
     const currentSong = this.getCurrentSong()
 
-    this.currentSongId = currentSong.audio.play()
+    this.currentSongId = currentSong.audio?.play()
     currentSong.loop = loop
 
     debugLog(`last played: ${currentSong.title}`, 2)
@@ -540,7 +540,7 @@ class AudioPlayer {
   }
 
   pause() {
-    this.getCurrentSong().audio.pause(this.currentSongId)
+    this.getCurrentSong().audio?.pause(this.currentSongId)
 
     const audio = this.getCurrentSong().audio
     const progress = audio.seek() / audio.duration()
@@ -551,7 +551,7 @@ class AudioPlayer {
     if (!this.getCurrentSong() || !this.getCurrentSong().audio) {
       return
     }
-    this.getCurrentSong().audio.stop(this.currentSongId)
+    this.getCurrentSong().audio?.stop(this.currentSongId)
     this.stopAnimationLoop()
     setTimeout(() => this.seekTime(0))
     this.currentSongId = null
