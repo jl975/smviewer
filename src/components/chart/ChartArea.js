@@ -103,7 +103,7 @@ const ChartArea = (props) => {
         }
       }
 
-      canvasContainer.current.style.height = '448px'
+      canvasContainer.current.style.height = '436px'
       canvasContainer.current.style.transform = 'none'
     }
     if (gameEngine) {
@@ -228,7 +228,7 @@ const ChartArea = (props) => {
               )}
             </div>
             <div className="canvas-wrapper">
-              <canvas id="chartArea" width="256" height="448" />
+              <canvas id="chartArea" width="256" height="436" />
               <div
                 className={`chart-loading-screen ${selectedMode} ${loadingAudio ? 'loading' : ''} `}
                 ref={chartLoadingScreen}
