@@ -19,6 +19,7 @@ import StaticModal from './StaticModal'
 import CabButtons from './CabButtons'
 import BpmDisplay from './BpmDisplay'
 import StopDisplay from './StopDisplay'
+import ModDisplay from './ModDisplay'
 
 const ChartArea = (props) => {
   const {
@@ -242,6 +243,7 @@ const ChartArea = (props) => {
                 )}
                 <div className="chart-loading-message">Loading chart...</div>
               </div>
+              <ModDisplay mods={mods} />
             </div>
           </div>
         </div>
