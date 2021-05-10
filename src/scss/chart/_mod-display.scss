@@ -9,5 +9,16 @@
   display: flex;
 }
 .mod-wrapper {
+  position: relative;
   width: 36px;
+}
+.custom-mod {
+  position: absolute;
+  top: 8px;
+  width: 100%;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  text-align: center;
+  font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
 }
