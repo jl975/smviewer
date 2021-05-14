@@ -39,6 +39,38 @@ export const applyTurnMods = (chart, mods, mode) => {
   }
 }
 
+export const applyAssistMods = (chart, mods) => {
+  const { freezes, jumps } = mods
+
+  if (freezes === 'off') {
+    chart = chart.map((row) => {
+      const modifiedNote = row.note.join('').replace(/2/g, '1').replace(/3/g, '0').split('')
+      return { ...row, note: modifiedNote }
+    })
+  }
+  if (jumps === 'off') {
+    chart = chart.map((row) => {
+      let modifiedNote = row.note
+
+      let numTapNotes = 0
+      row.note.forEach((n) => {
+        if (n === '1' || n === '2') numTapNotes++
+      })
+      if (numTapNotes >= 2) {
+        // replace freeze heads with 'h' so they can be detected by the corresponding tail notes as removed
+        modifiedNote = row.note.map((n) => {
+          if (n === '1') return 'n'
+          if (n === '2') return 'h'
+          return n
+        })
+      }
+      return { ...row, note: modifiedNote }
+    })
+  }
+
+  return chart
+}
+
 /*
   Given the bpmQueue and the current beat tick, find the latest bpm
   change event that happened before the current beat and set the current bpm

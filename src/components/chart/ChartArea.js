@@ -22,17 +22,8 @@ import StopDisplay from './StopDisplay'
 import ModDisplay from './ModDisplay'
 
 const ChartArea = (props) => {
-  const {
-    selectedDifficulty,
-    selectedMode,
-    selectedSong,
-    sm,
-    mods,
-    screen,
-    loadingAudio,
-    gameEngine,
-    setGameEngine,
-  } = props
+  const { selectedDifficulty, selectedMode, selectedSong, sm, mods, screen, loadingAudio, gameEngine, setGameEngine } =
+    props
 
   const [mounted, setMounted] = useState(false)
   const [canvas, setCanvas] = useState(null)
@@ -179,7 +170,7 @@ const ChartArea = (props) => {
                 AudioPlayer.changeMusicRate(mods.rate)
               }
 
-              if (['turn', 'shuffle'].includes(mod)) {
+              if (['turn', 'shuffle', 'cut', 'freezes', 'jumps'].includes(mod)) {
                 gameEngine.resetChart(chartParams)
               } else {
                 // console.log(prev, curr);

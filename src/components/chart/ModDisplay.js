@@ -21,7 +21,6 @@ options.mods.turn.forEach((turnMod) => {
 
 const ModDisplay = (props) => {
   const { mods } = props
-  console.log(mods)
 
   const renderSpeedMod = () => {
     if (mods.speed === 'cmod' || mods.speed === 'mmod') {
