@@ -54,7 +54,11 @@ const ModDisplay = (props) => {
   }
 
   const renderCutMod = () => {
-    return null
+    if (mods.cut === 'on1') {
+      return <img src={icons['cut1'].src} />
+    } else if (mods.cut === 'on2') {
+      return <img src={icons['cut1'].src} />
+    }
   }
   const renderFreezesMod = () => {
     if (mods.freezes === 'off') {

@@ -40,8 +40,22 @@ export const applyTurnMods = (chart, mods, mode) => {
 }
 
 export const applyAssistMods = (chart, mods) => {
-  const { freezes, jumps } = mods
+  const { cut, freezes, jumps } = mods
 
+  if (cut.includes('on')) {
+    chart = chart.map((row) => {
+      let modifiedNote = row.note
+      const denom = cut === 'on2' ? 8 : 4
+      if (row.measureN % (row.measureD / denom) !== 0) {
+        modifiedNote = row.note.map((n) => {
+          if (n === '1') return 'n'
+          if (n === '2') return 'h'
+          return n
+        })
+      }
+      return { ...row, note: modifiedNote }
+    })
+  }
   if (freezes === 'off') {
     chart = chart.map((row) => {
       const modifiedNote = row.note.join('').replace(/2/g, '1').replace(/3/g, '0').split('')
