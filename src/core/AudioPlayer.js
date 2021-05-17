@@ -473,7 +473,7 @@ class AudioPlayer {
 
     const currentSong = this.getCurrentSong()
 
-    this.currentSongId = currentSong.audio.play()
+    this.currentSongId = currentSong.audio?.play()
     currentSong.loop = loop
 
     debugLog(`last played: ${currentSong.title}`, 2)
@@ -481,7 +481,7 @@ class AudioPlayer {
   }
 
   pause() {
-    this.getCurrentSong().audio.pause(this.currentSongId)
+    this.getCurrentSong().audio?.pause(this.currentSongId)
 
     const audio = this.getCurrentSong().audio
     const progress = audio.seek() / audio.duration()
