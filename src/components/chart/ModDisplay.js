@@ -19,7 +19,9 @@ options.mods.turn.forEach((turnMod) => {
   icons[turnMod].src = getAssetPath(`mods/${imageName}.png`)
 })
 icons['cut1'] = new Image()
-icons['cut1'].src = getAssetPath(`mods/cut_on.png`)
+icons['cut1'].src = getAssetPath(`mods/cut_on1.png`)
+icons['cut2'] = new Image()
+icons['cut2'].src = getAssetPath(`mods/cut_on2.png`)
 icons['freezesOff'] = new Image()
 icons['freezesOff'].src = getAssetPath(`mods/freeze_arrow_off.png`)
 icons['jumpsOff'] = new Image()
@@ -57,7 +59,7 @@ const ModDisplay = (props) => {
     if (mods.cut === 'on1') {
       return <img src={icons['cut1'].src} />
     } else if (mods.cut === 'on2') {
-      return <img src={icons['cut1'].src} />
+      return <img src={icons['cut2'].src} />
     }
   }
   const renderFreezesMod = () => {
