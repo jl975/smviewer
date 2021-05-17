@@ -19,19 +19,11 @@ import StaticModal from './StaticModal'
 import CabButtons from './CabButtons'
 import BpmDisplay from './BpmDisplay'
 import StopDisplay from './StopDisplay'
+import ModDisplay from './ModDisplay'
 
 const ChartArea = (props) => {
-  const {
-    selectedDifficulty,
-    selectedMode,
-    selectedSong,
-    sm,
-    mods,
-    screen,
-    loadingAudio,
-    gameEngine,
-    setGameEngine,
-  } = props
+  const { selectedDifficulty, selectedMode, selectedSong, sm, mods, screen, loadingAudio, gameEngine, setGameEngine } =
+    props
 
   const [mounted, setMounted] = useState(false)
   const [canvas, setCanvas] = useState(null)
@@ -103,7 +95,7 @@ const ChartArea = (props) => {
         }
       }
 
-      canvasContainer.current.style.height = '448px'
+      canvasContainer.current.style.height = '436px'
       canvasContainer.current.style.transform = 'none'
     }
     if (gameEngine) {
@@ -178,7 +170,7 @@ const ChartArea = (props) => {
                 AudioPlayer.changeMusicRate(mods.rate)
               }
 
-              if (['turn', 'shuffle'].includes(mod)) {
+              if (['turn', 'shuffle', 'cut', 'freezes', 'jumps'].includes(mod)) {
                 gameEngine.resetChart(chartParams)
               } else {
                 // console.log(prev, curr);
@@ -228,7 +220,7 @@ const ChartArea = (props) => {
               )}
             </div>
             <div className="canvas-wrapper">
-              <canvas id="chartArea" width="256" height="448" />
+              <canvas id="chartArea" width="256" height="436" />
               <div
                 className={`chart-loading-screen ${selectedMode} ${loadingAudio ? 'loading' : ''} `}
                 ref={chartLoadingScreen}
@@ -242,6 +234,7 @@ const ChartArea = (props) => {
                 )}
                 <div className="chart-loading-message">Loading chart...</div>
               </div>
+              <ModDisplay mods={mods} />
             </div>
           </div>
         </div>

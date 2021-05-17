@@ -185,6 +185,9 @@ const StaticModal = (props) => {
     }
     if (mods.scroll !== 'normal') modsList.push(capitalize(mods.scroll))
 
+    if (mods.freezes === 'off') modsList.push('Freezes Off')
+    if (mods.jumps === 'off') modsList.push('Jumps Off')
+
     c.fillText(chartData.title, 10, 14)
     c.fillText(`${capitalize(chartData.mode)} ${chartData.difficulty} ${chartData.level}`, 10, 28)
     c.fillText(`Mods: ${modsList.join(', ')}`, 10, 42)

@@ -8,7 +8,13 @@ import TargetFlash from '../components/chart/canvas/TargetFlash'
 import ComboDisplay from '../components/chart/canvas/ComboDisplay'
 import BpmAndStopDisplay from '../components/chart/canvas/BpmAndStopDisplay'
 import LaneCover from '../components/chart/canvas/LaneCover'
-import { applyTurnMods, initializeBeatWindow, updateBeatWindow, changeActiveBpm } from '../utils/engineUtils'
+import {
+  applyTurnMods,
+  applyAssistMods,
+  initializeBeatWindow,
+  updateBeatWindow,
+  changeActiveBpm,
+} from '../utils/engineUtils'
 import { getDisplayBpm } from '../utils/songUtils'
 import { END_EXTRA_BEATS, MARVELOUS_FLASH_FRAMES, DEFAULT_CMOD } from '../constants'
 import store from '../store'
@@ -283,6 +289,7 @@ class GameEngine {
     }
 
     chart = applyTurnMods(chart, mods, mode)
+    chart = applyAssistMods(chart, mods)
 
     // calculate beat positions for each arrow
     chart.forEach((note) => {
@@ -301,12 +308,19 @@ class GameEngine {
         this.shocks.push(shockArrow)
         this.allArrows.push(shockArrow)
       }
-      if (note.note.includes('1') || note.note.includes('2') || note.note.includes('3')) {
+      if (
+        note.note.includes('1') ||
+        note.note.includes('2') ||
+        note.note.includes('3') ||
+        note.note.includes('n') ||
+        note.note.includes('h') ||
+        note.note.includes('t')
+      ) {
         const arrow = new Arrow({ key, ...note })
         this.arrows.push(arrow)
         this.allArrows.push(arrow)
 
-        if (note.note.includes('2') || note.note.includes('3')) {
+        if (note.note.includes('2') || note.note.includes('3') || note.note.includes('h') || note.note.includes('t')) {
           this.freezes.push(arrow)
         }
       }
@@ -424,7 +438,7 @@ class GameEngine {
       // If the note is the tail of a freeze arrow, calculate the number of beats
       // from the head of the freeze arrow
       for (let i = 0; i < arrow.note.length; i++) {
-        if (arrow.note[i] !== '3') continue
+        if (arrow.note[i] !== '3' && arrow.note[i] !== 't') continue
 
         // Find the most recent freeze head on the same direction as the tail
         // and retroactively fill in the beats of the head and tail
@@ -432,7 +446,12 @@ class GameEngine {
 
         const arrowsDuringFreeze = []
 
+        // console.log('this.allArrows', this.allArrows)
+        // console.log('arrow.key', arrow.key)
+
         for (let j = arrow.key - 1; j >= 0; j--) {
+          if (!this.allArrows[j]) continue
+
           if (!this.allArrows[j].holdStartBeats) {
             this.allArrows[j].holdStartBeats = []
             this.allArrows[j].holdEndBeats = []
@@ -441,7 +460,7 @@ class GameEngine {
           }
           arrowsDuringFreeze.push(this.allArrows[j])
 
-          if (this.allArrows[j].note[i] === '2') {
+          if (this.allArrows[j].note[i] === '2' || this.allArrows[j].note[i] === 'h') {
             const freezeHead = this.allArrows[j]
             const freezeTail = arrow
 
@@ -459,6 +478,11 @@ class GameEngine {
               arrowDuringFreeze.holdStartTimes[i] = freezeHead.timestamp
               arrowDuringFreeze.holdEndTimes[i] = freezeTail.timestamp
             })
+
+            if (this.allArrows[j].note[i] === 'h') {
+              arrow.note[i] = 't'
+            }
+
             break
           }
         }

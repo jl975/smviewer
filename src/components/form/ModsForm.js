@@ -278,6 +278,54 @@ const ModsForm = (props) => {
           </div>
 
           <div className="form-field">
+            <h4 className="form-label">Cut</h4>
+            {options.mods.cut.map((cut) => {
+              return (
+                <Radio
+                  key={`cut_${cut}`}
+                  label={capitalize(cut)}
+                  name="cut"
+                  value={cut}
+                  checked={mods.cut === cut}
+                  onChange={() => updateMods({ cut })}
+                />
+              )
+            })}
+          </div>
+
+          <div className="form-field">
+            <h4 className="form-label">Freezes</h4>
+            {options.mods.freezes.map((freezes) => {
+              return (
+                <Radio
+                  key={`freezes_${freezes}`}
+                  label={capitalize(freezes)}
+                  name="freezes"
+                  value={freezes}
+                  checked={mods.freezes === freezes}
+                  onChange={() => updateMods({ freezes })}
+                />
+              )
+            })}
+          </div>
+
+          <div className="form-field">
+            <h4 className="form-label">Jumps</h4>
+            {options.mods.jumps.map((jumps) => {
+              return (
+                <Radio
+                  key={`jumps_${jumps}`}
+                  label={capitalize(jumps)}
+                  name="jumps"
+                  value={jumps}
+                  checked={mods.jumps === jumps}
+                  onChange={() => updateMods({ jumps })}
+                />
+              )
+            })}
+          </div>
+
+          <div className="form-field">
             <h4 className="form-label">Combo display</h4>
             {options.mods.comboDisplay.map((comboDisplay, i) => {
               return (
