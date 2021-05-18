@@ -293,7 +293,20 @@ class GameEngine {
       if (note.note[0] === 'M' || note.note[4] === 'M') {
         const shockArrow = new ShockArrow({ key, ...note })
         this.shocks.push(shockArrow)
-        this.allArrows.push(shockArrow)
+
+        // don't double count notes that have regular arrow and shock arrow simultaneously
+        if (
+          !(
+            note.note.includes('1') ||
+            note.note.includes('2') ||
+            note.note.includes('3') ||
+            note.note.includes('n') ||
+            note.note.includes('h') ||
+            note.note.includes('t')
+          )
+        ) {
+          this.allArrows.push(shockArrow)
+        }
       }
       if (
         note.note.includes('1') ||
@@ -415,6 +428,12 @@ class GameEngine {
       // combo arrows (includes regular notes and freeze heads)
       if (arrow.note.includes('1') || arrow.note.includes('2') || arrow.note.includes('M')) {
         currentCombo++
+
+        // count simultaneous regular arrow and shock arrow as two notes
+        if ((arrow.note.includes('1') || arrow.note.includes('2')) && arrow.note.includes('M')) {
+          currentCombo++
+        }
+
         arrow.combo = currentCombo
 
         this.comboArrows.push(arrow)
@@ -460,6 +479,8 @@ class GameEngine {
             arrowsDuringFreeze.push(freezeTail)
 
             arrowsDuringFreeze.forEach((arrowDuringFreeze) => {
+              if (arrowDuringFreeze.note[i] === 'M') return
+
               arrowDuringFreeze.holdStartBeats[i] = freezeHead.beatstamp
               arrowDuringFreeze.holdEndBeats[i] = freezeTail.beatstamp
               arrowDuringFreeze.holdStartTimes[i] = freezeHead.timestamp
