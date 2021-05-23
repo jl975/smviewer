@@ -472,8 +472,10 @@ class AudioPlayer {
     }
 
     const currentSong = this.getCurrentSong()
+    const audio = currentSong.audio
+    if (!audio) return
 
-    this.currentSongId = currentSong.audio?.play()
+    this.currentSongId = audio.play()
     currentSong.loop = loop
 
     debugLog(`last played: ${currentSong.title}`, 2)
@@ -481,18 +483,19 @@ class AudioPlayer {
   }
 
   pause() {
-    this.getCurrentSong().audio?.pause(this.currentSongId)
-
     const audio = this.getCurrentSong().audio
+    if (!audio) return
+
+    audio.pause(this.currentSongId)
     const progress = audio.seek() / audio.duration()
     saveSongProgress(progress)
   }
 
   stop() {
-    if (!this.getCurrentSong() || !this.getCurrentSong().audio) {
-      return
-    }
-    this.getCurrentSong().audio.stop(this.currentSongId)
+    const audio = this.getCurrentSong().audio
+    if (!audio) return
+
+    audio.stop(this.currentSongId)
     this.stopAnimationLoop()
     setTimeout(() => this.seekTime(0))
     this.currentSongId = null
