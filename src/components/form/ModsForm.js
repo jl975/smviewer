@@ -9,7 +9,7 @@ import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 
 const ModsForm = (props) => {
-  const { mods, updateMods, mode, song, difficulty } = props
+  const { mods, updateMods, mode, song, difficulty, audio } = props
 
   // // when switching between single and double, any mod set to a value incompatible
   // // with the new mode will be reset to its default value
@@ -66,6 +66,11 @@ const ModsForm = (props) => {
     if (!fieldValue || parseInt(fieldValue) < 100 || parseInt(fieldValue) > 1000) {
       updateMods({ cmod: DEFAULT_CMOD })
     }
+  }
+
+  const openOffsetModal = () => {
+    if (audio.status === 'playing') return
+    props.setModalOpen('offset', true)
   }
 
   return (
@@ -386,7 +391,7 @@ const ModsForm = (props) => {
             />
           </div>
           <div className="form-field">
-            <button type="button" className="link-button" onClick={() => props.setModalOpen('offset', true)}>
+            <button type="button" className="link-button" onClick={openOffsetModal}>
               Set global offset
             </button>
           </div>
@@ -397,13 +402,14 @@ const ModsForm = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  const { mods, songSelect, screen } = state
+  const { mods, songSelect, screen, audio } = state
   return {
     mods,
     mode: songSelect.mode,
     song: songSelect.song,
     difficulty: songSelect.difficulty,
     activeView: screen.activeView,
+    audio: audio.chartAudio,
   }
 }
 
