@@ -125,14 +125,14 @@ class AudioPlayer {
       // If cached pathId matches the song audioUrl, use the cached audio
       const pathId = song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl
       if (cachedAudioBuffer.pathId === pathId) {
-        console.log(`matching pathId, retrieve cached audio for ${song.title}`)
+        // console.log(`matching pathId, retrieve cached audio for ${song.title}`)
         const blob = new Blob([cachedAudioBuffer.buffer], { type: 'audio/mpeg' })
         src = URL.createObjectURL(blob)
       }
       // If cached pathId does not match, the audio may be out of date.
       // Make a new request for the audio and write over the stored entry in IndexedDB
       else {
-        console.log(`no matching pathId, cached audio may be out of date`)
+        // console.log(`no matching pathId, cached audio may be out of date`)
         src = await this.requestAudioFile(song)
       }
     }
@@ -163,7 +163,7 @@ class AudioPlayer {
             pathId: song.dAudioUrl ? song.dAudioUrl.split('/')[0] : song.audioUrl,
             buffer,
           })
-          console.log(`requesting latest version of audio for ${song.title} and storing in cache`)
+          // console.log(`requesting latest version of audio for ${song.title} and storing in cache`)
 
           // synchronously return blob response
           const blob = new Blob([buffer], { type: 'audio/mpeg' })
@@ -281,7 +281,7 @@ class AudioPlayer {
     } catch (err) {
       throw new Error(`Failed to load preview audio for ${song.title}`)
     }
-    console.log('load preview audio buffer')
+    // console.log('load preview audio buffer')
 
     thisPreview.audio = new Howl({
       src,
@@ -531,8 +531,10 @@ class AudioPlayer {
     }
 
     const currentSong = this.getCurrentSong()
+    const audio = currentSong.audio
+    if (!audio) return
 
-    this.currentSongId = currentSong.audio?.play()
+    this.currentSongId = audio.play()
     currentSong.loop = loop
 
     debugLog(`last played: ${currentSong.title}`, 2)
@@ -540,18 +542,19 @@ class AudioPlayer {
   }
 
   pause() {
-    this.getCurrentSong().audio?.pause(this.currentSongId)
-
     const audio = this.getCurrentSong().audio
+    if (!audio) return
+
+    audio.pause(this.currentSongId)
     const progress = audio.seek() / audio.duration()
     saveSongProgress(progress)
   }
 
   stop() {
-    if (!this.getCurrentSong() || !this.getCurrentSong().audio) {
-      return
-    }
-    this.getCurrentSong().audio?.stop(this.currentSongId)
+    const audio = this.getCurrentSong().audio
+    if (!audio) return
+
+    audio.stop(this.currentSongId)
     this.stopAnimationLoop()
     setTimeout(() => this.seekTime(0))
     this.currentSongId = null

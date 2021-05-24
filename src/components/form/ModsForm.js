@@ -357,8 +357,24 @@ const ModsForm = (props) => {
             })}
           </div>
 
-          <h4>Miscellaneous</h4>
           <div className="form-field">
+            <h4 className="form-label">Guidelines</h4>
+            {options.mods.guidelines.map((guidelines) => {
+              return (
+                <Radio
+                  key={`guidelines_${guidelines}`}
+                  label={capitalize(guidelines)}
+                  name="guidelines"
+                  value={guidelines}
+                  checked={mods.guidelines === guidelines}
+                  onChange={() => updateMods({ guidelines })}
+                />
+              )
+            })}
+          </div>
+
+          <h4>Miscellaneous</h4>
+          {/* <div className="form-field">
             <Checkbox
               toggle
               label="Guidelines"
@@ -366,7 +382,7 @@ const ModsForm = (props) => {
               checked={mods.guidelines}
               onChange={() => updateMods({ guidelines: !mods.guidelines })}
             />
-          </div>
+          </div> */}
           <div className="form-field">
             <Checkbox
               toggle

@@ -10,8 +10,7 @@ class Guidelines {
     const { mods } = attrs
     const { speed, scroll } = mods
 
-    const showGuidelines = mods.guidelines
-    if (!showGuidelines) return
+    if (mods.guidelines !== 'border' && mods.guidelines !== 'center') return
 
     // FIXME: do an actual spacing calculation for cmod
     if (speed === 'cmod') return
@@ -28,7 +27,8 @@ class Guidelines {
     }
 
     for (let beat = 0; beat <= this.finalBeat; beat++) {
-      let destY = (beat - beatTick) * ARROW_HEIGHT * speedMod + ARROW_HEIGHT / 2
+      let destY = (beat - beatTick) * ARROW_HEIGHT * speedMod
+      if (mods.guidelines === 'center') destY += ARROW_HEIGHT / 2
       // let destY = (beat - beatTick) * ARROW_HEIGHT * speed;
 
       destY = (destY + 0.5) | 0

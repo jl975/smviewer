@@ -23,6 +23,7 @@ export const options = {
     noteShape: ['normal', 'cyber'],
     comboDisplay: ['behind', 'inFront', 'hidden'],
     comboFont: ['A20', 'A'],
+    guidelines: ['off', 'border', 'center'],
   },
 }
 
@@ -46,7 +47,7 @@ const optionDefaultValues = {
     jumps: 'on',
     noteColor: 'note',
     noteShape: 'normal',
-    guidelines: true,
+    guidelines: 'center',
     comboDisplay: 'behind',
     comboFont: 'A20',
     assistTick: false,
