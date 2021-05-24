@@ -23,7 +23,7 @@ import AudioPlayer from '../../core/AudioPlayer'
 import { ReactComponent as AudioWave } from '../../svg/audiowave.svg'
 
 const SongForm = (props) => {
-  const { simfileList, selectedDifficulty, selectedMode, previewAudio } = props
+  const { simfileList, selectedDifficulty, selectedMode, previewAudio, loadingAudio } = props
   const userSettings = getUserSettings()
   const songGridContainer = useRef()
 
@@ -38,7 +38,8 @@ const SongForm = (props) => {
 
   const [selectedSongOption, setSelectedSongOption] = useState('')
   const [selectedDifficultyOption, setSelectedDifficultyOption] = useState(selectedDifficulty)
-  // const [loadingFirstSong, setLoadingFirstSong] = useState(true);
+
+  const pendingManualDifficultySelection = useRef(null)
 
   const [selectedFilters, setSelectedFilters] = useState(
     userSettings.filters || {
@@ -184,6 +185,7 @@ const SongForm = (props) => {
     } else {
       difficultyToSelect = getClosestDifficulty(song, selectedDifficultyOption, mode)
     }
+
     props.onDifficultySelect(difficultyToSelect)
   }
 
@@ -221,76 +223,83 @@ const SongForm = (props) => {
       return
     }
 
-    // If difficulty is specified, select this difficulty
-    if (params.difficulty) {
-      props.onDifficultySelect(params.difficulty)
-    }
-
-    // Otherwise, auto-select the selected song's chart based on the applied level/difficulty filters.
-    // Ignore if the previous song is the same as the selected song.
-    else if (!(props.previousSong && props.previousSong.hash === songId)) {
-      // short-circuit if difficulty is specified
-
-      // 4 possible cases of filter combinations
-
-      // Neither level nor difficulty filter applied
-      if (selectedFilters.level === 'all' && selectedFilters.difficulty === 'all') {
-        // select the chart corresponding to the selected difficulty option.
-        // if the song does not have a chart for that difficulty, choose the closest difficulty.
-        selectClosestDifficulty(song)
+    // Auto-select the appropriate difficulty based on a number of factors.
+    // However, if the user manually selected a difficulty while the new song was loading,
+    // don't override it with an auto-selected difficulty.
+    if (!pendingManualDifficultySelection.current) {
+      // If difficulty is specified, select this difficulty
+      if (params.difficulty) {
+        props.onDifficultySelect(params.difficulty)
       }
 
-      // Level filter applied but not difficulty
-      else if (selectedFilters.level !== 'all' && selectedFilters.difficulty === 'all') {
-        const levels = selectedMode === 'double' ? song.levels.slice(5, 9) : song.levels.slice(0, 5)
+      // Otherwise, auto-select the selected song's chart based on the applied level/difficulty filters.
+      // Ignore if the previous song is the same as the selected song.
+      else if (!(props.previousSong && props.previousSong.hash === songId)) {
+        // short-circuit if difficulty is specified
 
-        // if the song has a chart that matches the level filter, choose that chart
-        if (levels.includes(selectedFilters.level)) {
-          for (let i = 0; i < levels.length; i++) {
-            const level = levels[i]
-            if (level === selectedFilters.level) {
-              const difficulties = selectedMode === 'double' ? DP_DIFFICULTIES : SP_DIFFICULTIES
-              props.onDifficultySelect(difficulties[i])
-              break
+        // 4 possible cases of filter combinations
+
+        // Neither level nor difficulty filter applied
+        if (selectedFilters.level === 'all' && selectedFilters.difficulty === 'all') {
+          // select the chart corresponding to the selected difficulty option.
+          // if the song does not have a chart for that difficulty, choose the closest difficulty.
+          selectClosestDifficulty(song)
+        }
+
+        // Level filter applied but not difficulty
+        else if (selectedFilters.level !== 'all' && selectedFilters.difficulty === 'all') {
+          const levels = selectedMode === 'double' ? song.levels.slice(5, 9) : song.levels.slice(0, 5)
+
+          // if the song has a chart that matches the level filter, choose that chart
+          if (levels.includes(selectedFilters.level)) {
+            for (let i = 0; i < levels.length; i++) {
+              const level = levels[i]
+              if (level === selectedFilters.level) {
+                const difficulties = selectedMode === 'double' ? DP_DIFFICULTIES : SP_DIFFICULTIES
+                props.onDifficultySelect(difficulties[i])
+                break
+              }
             }
+          }
+
+          // if the song does not have a chart that matches the level filter, go with the closest difficulty
+          else {
+            selectClosestDifficulty(song)
           }
         }
 
-        // if the song does not have a chart that matches the level filter, go with the closest difficulty
-        else {
-          selectClosestDifficulty(song)
+        // Difficulty filter applied but not level
+        else if (selectedFilters.difficulty !== 'all' && selectedFilters.level === 'all') {
+          let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty)
+          if (selectedMode === 'double') difficultyIdx += 4
+
+          // if the song has a chart that matches the difficulty filter, choose that chart
+          if (typeof song.levels[difficultyIdx] === 'number') {
+            props.onDifficultySelect(selectedFilters.difficulty)
+          }
+
+          // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
+          else {
+            selectClosestDifficulty(song)
+          }
         }
-      }
 
-      // Difficulty filter applied but not level
-      else if (selectedFilters.difficulty !== 'all' && selectedFilters.level === 'all') {
-        let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty)
-        if (selectedMode === 'double') difficultyIdx += 4
+        // Both level and difficulty filters applied
+        // equivalent to a regular else block but condition listed explicitly for clarity
+        else if (selectedFilters.difficulty !== 'all' && selectedFilters.level !== 'all') {
+          let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty)
+          if (selectedMode === 'double') difficultyIdx += 4
 
-        // if the song has a chart that matches the difficulty filter, choose that chart
-        if (typeof song.levels[difficultyIdx] === 'number') {
-          props.onDifficultySelect(selectedFilters.difficulty)
-        }
-
-        // if the song does not have a chart that matches the difficulty filter, go with the closest difficulty
-        else {
-          selectClosestDifficulty(song)
-        }
-      }
-
-      // Both level and difficulty filters applied
-      // equivalent to a regular else block but condition listed explicitly for clarity
-      else if (selectedFilters.difficulty !== 'all' && selectedFilters.level !== 'all') {
-        let difficultyIdx = SP_DIFFICULTIES.indexOf(selectedFilters.difficulty)
-        if (selectedMode === 'double') difficultyIdx += 4
-
-        if (song.levels[difficultyIdx] === selectedFilters.level) {
-          props.onDifficultySelect(selectedFilters.difficulty)
-        } else {
-          selectClosestDifficulty(song)
+          if (song.levels[difficultyIdx] === selectedFilters.level) {
+            props.onDifficultySelect(selectedFilters.difficulty)
+          } else {
+            selectClosestDifficulty(song)
+          }
         }
       }
     }
+
+    pendingManualDifficultySelection.current = null
 
     /* Miscellaneous side effects of selecting a song */
 
@@ -301,6 +310,13 @@ const SongForm = (props) => {
   }
 
   const handleDifficultySelect = (difficulty) => {
+    // If a new song is selected and the difficulty is manually changed before the audio is done loading,
+    // the difficulty auto-selection that happens after the audio is loaded will override the manually chosen difficulty.
+    // Use this state variable to keep track of whether a difficulty was manually selected during this loading period.
+    if (loadingAudio) {
+      pendingManualDifficultySelection.current = difficulty
+    }
+
     setSelectedDifficultyOption(difficulty)
     props.onDifficultySelect(difficulty)
   }
