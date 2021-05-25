@@ -303,6 +303,26 @@
       background-color: #dadada;
     }
   }
+  .progress-time {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 86px;
+    height: 30px;
+    background: rgba(240, 248, 255, 0.35);
+    border-top-left-radius: 3px;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+  }
+  #progressTimeMinutes {
+    margin-right: 3px;
+  }
+  #progressTimeSeconds {
+    margin-left: 3px;
+  }
 }
 
 #progress {
