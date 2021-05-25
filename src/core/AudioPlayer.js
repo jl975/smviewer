@@ -15,6 +15,7 @@ import {
   getFullCombo,
   initializeBeatWindow,
 } from '../utils/engineUtils'
+import { getAudioTimeDisplay } from '../utils/timeUtils'
 import { debugLog } from '../utils/debugUtils'
 
 class AudioPlayer {
@@ -467,7 +468,10 @@ class AudioPlayer {
       const audio = currentSong.audio
       if (!audio) return
 
-      const progress = audio.seek() / audio.duration()
+      const audioSeek = audio.seek()
+      const audioDuration = audio.duration()
+
+      const progress = audioSeek / audioDuration
 
       // eslint-disable-next-line no-unused-vars
       let t0, t1
@@ -493,6 +497,11 @@ class AudioPlayer {
       Progress.render(progress)
       t1 = performance.now()
       // console.log(`renderProgress ${(t1 - t0).toFixed(3)} ms`);
+
+      // console.log(`${getAudioTimeDisplay(audioSeek)} / ${getAudioTimeDisplay(audioDuration)}`)
+
+      document.getElementById('progressTimeMinutes').textContent = `${getAudioTimeDisplay(audioSeek)}`
+      document.getElementById('progressTimeSeconds').textContent = `${getAudioTimeDisplay(audioDuration)}`
     }
   }
 

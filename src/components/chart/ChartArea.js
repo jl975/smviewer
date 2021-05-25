@@ -251,6 +251,15 @@ const ChartArea = (props) => {
                   <div className="preset-marker" />
                 </div>
               ) : null}
+              <div className="progress-time">
+                {selectedSong && !loadingAudio && (
+                  <>
+                    <span id="progressTimeMinutes">0:00</span>
+                    <span>/</span>
+                    <span id="progressTimeSeconds">0:00</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div className="row play-controls-row">
