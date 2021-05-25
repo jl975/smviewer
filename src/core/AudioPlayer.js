@@ -441,10 +441,10 @@ class AudioPlayer {
       t1 = performance.now()
       // console.log(`renderProgress ${(t1 - t0).toFixed(3)} ms`);
 
-      // console.log(`${getAudioTimeDisplay(audioSeek)} / ${getAudioTimeDisplay(audioDuration)}`)
-
-      document.getElementById('progressTimeMinutes').textContent = `${getAudioTimeDisplay(audioSeek)}`
-      document.getElementById('progressTimeSeconds').textContent = `${getAudioTimeDisplay(audioDuration)}`
+      const $progressTimeMinutes = document.getElementById('progressTimeMinutes')
+      const $progressTimeSeconds = document.getElementById('progressTimeSeconds')
+      if ($progressTimeMinutes) $progressTimeMinutes.textContent = `${getAudioTimeDisplay(audioSeek)}`
+      if ($progressTimeSeconds) $progressTimeSeconds.textContent = `${getAudioTimeDisplay(audioDuration)}`
     }
   }
 

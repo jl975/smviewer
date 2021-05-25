@@ -144,21 +144,16 @@
   background-color: #000;
   margin: 0 auto;
   color: #fff;
+  height: 100%;
+  width: 100%;
 
   &:not(.loading) {
     display: none;
   }
 
   &.single {
-    height: 436px;
-    width: 256px;
   }
   &.double {
-    // height: 436px;
-    height: 100vw * (448/512);
-    width: 100vw;
-    transform: translateX(-50%);
-
     // @media only screen and (min-width: 982px) {
     @media only screen and (min-width: 512px) {
       height: 436px;
