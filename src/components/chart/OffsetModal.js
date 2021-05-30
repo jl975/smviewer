@@ -75,10 +75,9 @@ const OffsetModal = (props) => {
     OffsetAdjustAudioPlayer.stop()
 
     setTimeout(() => {
+      AudioPlayer.stop()
       AudioPlayer.updateProgressOnce()
     }, 500)
-
-    AudioPlayer
 
     if (gameEngine) {
       gameEngine.killed = true
@@ -164,8 +163,14 @@ const OffsetModal = (props) => {
         music.
       </p>
       <div className="modal-actions">
-        {adjustedGlobalOffset && <Button onClick={handleCancel}>Cancel</Button>}
-        <Button onClick={confirmOffset}>Confirm</Button>
+        {adjustedGlobalOffset && (
+          <Button onClick={handleCancel} disabled={loadingAudio}>
+            Cancel
+          </Button>
+        )}
+        <Button onClick={confirmOffset} disabled={loadingAudio}>
+          Confirm
+        </Button>
       </div>
     </Modal>
   )
