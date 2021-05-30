@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Input, Button, Icon } from 'semantic-ui-react'
 
-import { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
+import AudioPlayer, { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 import { getOriginPath, fetchDocument, renderWithSign } from '../../utils'
@@ -73,6 +73,13 @@ const OffsetModal = (props) => {
   const handleClose = async () => {
     await setModalOpen('offset', false)
     OffsetAdjustAudioPlayer.stop()
+
+    setTimeout(() => {
+      AudioPlayer.updateProgressOnce()
+    }, 500)
+
+    AudioPlayer
+
     if (gameEngine) {
       gameEngine.killed = true
     }
