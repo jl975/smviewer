@@ -58,7 +58,10 @@ const OffsetModal = (props) => {
     const chartParams = {
       difficulty: 'Basic',
       mode: 'single',
-      mods,
+      mods: {
+        ...mods,
+        speed: 3,
+      },
     }
 
     let ge = new GameEngine(canvas, simfileObj, chartParams, {
