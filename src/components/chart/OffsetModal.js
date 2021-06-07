@@ -70,7 +70,9 @@ const OffsetModal = (props) => {
     })
     setGameEngine(ge)
 
-    OffsetAdjustAudioPlayer.play(true)
+    setTimeout(() => {
+      OffsetAdjustAudioPlayer.play(true)
+    })
   }
 
   const handleClose = async () => {

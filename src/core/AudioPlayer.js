@@ -177,6 +177,9 @@ class AudioPlayer {
           store.dispatch(actions.playChartAudio())
           this.stopSongPreview()
         },
+        onplayerror: (id, error) => {
+          console.log('onplayerror', id, error)
+        },
         onpause: () => {
           thisSong.tl.pause()
           gsap.ticker.remove(this.updateTimeline)
@@ -482,6 +485,7 @@ class AudioPlayer {
 
     const currentSong = this.getCurrentSong()
     const audio = currentSong.audio
+
     if (!audio) return
 
     this.currentSongId = audio.play()

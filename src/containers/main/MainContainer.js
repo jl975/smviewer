@@ -103,7 +103,7 @@ const MainContainer = (props) => {
               location={props.location}
               gameEngine={gameEngine}
             />
-            <WelcomeModal modalOpen={modalOpen.welcome} />
+            <WelcomeModal modalOpen={modalOpen.welcome} loadingAudio={loadingAudio} />
             <OffsetModal modalOpen={modalOpen.offset} />
             <OffsetConfirmModal modalOpen={modalOpen.offsetConfirm} />
             <SettingsModal modalOpen={modalOpen.settings} />
