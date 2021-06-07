@@ -76,7 +76,7 @@ const ModDisplay = (props) => {
   }
 
   return (
-    <div className="mod-display-container">
+    <div className={`mod-display-container ${mods.scroll === 'reverse' ? 'reverse' : ''}`}>
       <div className="mods-list">
         <div className="mod-wrapper">{renderSpeedMod()}</div>
         <div className="mod-wrapper">{renderTurnMod()}</div>
