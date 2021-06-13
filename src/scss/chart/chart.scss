@@ -31,7 +31,7 @@
     background-color: black;
     font-size: 20px;
     text-align: center;
-    // transform: translateZ(0);  // hack to fix bpm container not showing up in certain browsers
+    transform: translateZ(0); // hack to fix bpm container not showing up in certain browsers
 
     .current-bpm-wrapper {
       position: absolute;
@@ -61,7 +61,6 @@
     width: 100%;
     top: 0;
     left: 0;
-    z-index: -1; // hack to fix bpm container not showing up in certain browsers
   }
   .bpm-value {
     position: absolute;
