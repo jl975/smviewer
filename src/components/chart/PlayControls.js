@@ -21,9 +21,11 @@ const PlayControls = (props) => {
 
   const togglePlay = () => {
     if (controlsDisabled) return
+
     if (props.audio.status === 'playing') {
       AudioPlayer.pause()
     } else {
+      AudioPlayer.initializeAssistTick()
       AudioPlayer.play()
     }
   }

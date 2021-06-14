@@ -9,7 +9,7 @@ import { capitalize, renderWithSign } from '../../utils'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 import { updateSongAppOffset } from '../../actions/SongSelectActions'
-import AudioPlayer from '../../core/AudioPlayer'
+import AudioPlayer, { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
 
 const ModsForm = (props) => {
   const { mods, updateMods, mode, song, difficulty, audio } = props
@@ -86,6 +86,9 @@ const ModsForm = (props) => {
   const openOffsetModal = () => {
     if (audio.status === 'playing') return
     props.setModalOpen('offset', true)
+
+    // assist tick AudioContext starts running in response to this click event
+    OffsetAdjustAudioPlayer.initializeAssistTick()
   }
 
   return (

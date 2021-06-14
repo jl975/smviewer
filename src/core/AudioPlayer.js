@@ -54,11 +54,18 @@ class AudioPlayer {
     this.updateTimeline = this.updateTimeline.bind(this)
     this.updateProgress = this.updateProgress.bind(this)
     this.audioResyncFrames = 0
+
+    this.assist = {
+      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
+      nextNotePtr: null,
+    }
   }
 
   initializeAssistTick() {
-    const currentSong = this.getCurrentSong()
-    const assist = currentSong.globalParams.assist
+    const assist = this.assist
+
+    if (assist.initialized) return
+
     const audioContext = assist.audioContext
 
     const request = new XMLHttpRequest()
@@ -70,18 +77,28 @@ class AudioPlayer {
       })
     }
     request.send()
+
+    console.log('assist tick audioContext', audioContext.state)
+    if (audioContext.state !== 'running') {
+      audioContext.resume()
+      audioContext.onstatechange = () => console.log('assist tick audioContext', audioContext.state)
+    }
+
+    assist.initialized = true
   }
 
   playAssistTick(time) {
-    const currentSong = this.getCurrentSong()
+    // const currentSong = this.getCurrentSong()
     // if (!currentSong.globalParams.mods.assistTick) return
 
-    const assist = currentSong.globalParams.assist
+    // const assist = currentSong.globalParams.assist
+    const assist = this.assist
 
     if (!this.isAudioStable) return
     if (this.getChartAudioStatus() !== 'playing') return
 
-    const audioContext = currentSong.globalParams.assist.audioContext
+    // const audioContext = currentSong.globalParams.assist.audioContext
+    const audioContext = this.assist.audioContext
     const currentTime = audioContext.currentTime
 
     // don't retroactively play ticks that were backed up past the lookahead window
@@ -415,7 +432,7 @@ class AudioPlayer {
       const comboTemp = document.querySelector('#combo-temp .combo-num')
       if (comboTemp) comboTemp.textContent = currentCombo
 
-      const assist = currentSong.globalParams.assist
+      const assist = this.assist
       const audioContext = assist.audioContext
       const progressTime = this.getCurrentTime()
 
@@ -547,11 +564,16 @@ class AudioPlayer {
 
     if (!audio) return
 
-    const audioContext = currentSong.globalParams.assist.audioContext
-    console.log(audioContext.state)
-    if (audioContext.state === 'suspended') {
-      audioContext.resume()
-    }
+    // const audioContext = currentSong.globalParams.assist.audioContext
+    // console.log(audioContext.state)
+    // if (audioContext.state === 'suspended') {
+    //   console.log('whyt')
+    //   console.log(audioContext.resume())
+    //   audioContext.onstatechange = () => console.log(audioContext.state)
+
+    //   // audioContext.createGain()
+    //   // console.log(audioContext.state)
+    // }
 
     this.currentSongId = audio.play()
     currentSong.loop = loop

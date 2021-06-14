@@ -144,18 +144,10 @@ class GameEngine {
     this.globalParams.timeWindowStartPtr = {}
     this.globalParams.timeWindowEndPtr = {}
 
-    this.globalParams.assist = {
-      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
-      notesInQueue: [],
-      nextNotePtr: null,
-    }
-
     this.globalParams.targetFlashes = {}
     this.globalParams.mods = mods
     this.globalParams.mode = mode
     this.AudioPlayer.setGlobalParams(this.globalParams)
-
-    this.AudioPlayer.initializeAssistTick()
 
     // debugging
     // window.globalParams = this.globalParams;
@@ -645,11 +637,17 @@ class GameEngine {
 
   // test assist tick code
   scheduler() {
-    const { assist, allArrows } = this.globalParams
-    const { audioContext, audioStartContextTime, audioStartProgressTime, nextNotePtr } = assist
+    const { allArrows } = this.globalParams
+    const { assist } = this.AudioPlayer
+    // const { nextNotePtr } = assist
+    const { audioStartContextTime, audioStartProgressTime, audioContext, nextNotePtr } = assist
     const scheduleAheadTime = 0.2
 
+    // console.log('assist', assist)
+
     const audioContextDiff = audioStartContextTime - audioStartProgressTime
+
+    // console.log('audioContextDiff', audioContextDiff)
 
     let nextNote = allArrows[nextNotePtr]
 

@@ -3,12 +3,16 @@ import { connect } from 'react-redux'
 import { Modal, Button } from 'semantic-ui-react'
 
 import { setModalOpen } from '../../actions/ScreenActions'
+import { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
 
 const WelcomeModal = (props) => {
   const { modalOpen, setModalOpen, loadingAudio } = props
 
   const openOffsetModal = () => {
     setModalOpen('offset', true)
+
+    // assist tick AudioContext starts running in response to this click event
+    OffsetAdjustAudioPlayer.initializeAssistTick()
   }
 
   return (

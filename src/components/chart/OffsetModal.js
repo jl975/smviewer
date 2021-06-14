@@ -61,6 +61,13 @@ const OffsetModal = (props) => {
       mods: {
         ...mods,
         speed: 3,
+        appearance: 'visible',
+        cut: 'off',
+        freezes: 'on',
+        jumps: 'on',
+        rate: 1,
+        stepZone: 'on',
+        turn: 'off',
       },
     }
 
