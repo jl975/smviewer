@@ -223,7 +223,7 @@ class AudioPlayer {
         src,
         format: ['mp3'],
         html5: true,
-        volume: 0.55,
+        volume: 0.65,
         rate: store?.getState()?.mods?.rate || 1,
         onload: () => {
           // console.log(`AudioPlayer song loaded: ${song.title}`);
