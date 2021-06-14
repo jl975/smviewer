@@ -381,15 +381,15 @@ const ModsForm = (props) => {
           </div>
 
           <h4>Miscellaneous</h4>
-          {/* <div className="form-field">
+          <div className="form-field">
             <Checkbox
               toggle
-              label="Guidelines"
-              name="guidelines"
-              checked={mods.guidelines}
-              onChange={() => updateMods({ guidelines: !mods.guidelines })}
+              label="Assist tick"
+              name="assistTick"
+              checked={mods.assistTick}
+              onChange={() => updateMods({ assistTick: !mods.assistTick })}
             />
-          </div> */}
+          </div>
           <div className="form-field">
             <Checkbox
               toggle

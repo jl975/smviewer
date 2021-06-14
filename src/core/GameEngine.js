@@ -635,19 +635,14 @@ class GameEngine {
     this.updateLoopOnce()
   }
 
-  // test assist tick code
+  // assist tick code
   scheduler() {
     const { allArrows } = this.globalParams
     const { assist } = this.AudioPlayer
-    // const { nextNotePtr } = assist
     const { audioStartContextTime, audioStartProgressTime, audioContext, nextNotePtr } = assist
     const scheduleAheadTime = 0.2
 
-    // console.log('assist', assist)
-
     const audioContextDiff = audioStartContextTime - audioStartProgressTime
-
-    // console.log('audioContextDiff', audioContextDiff)
 
     let nextNote = allArrows[nextNotePtr]
 
@@ -660,8 +655,6 @@ class GameEngine {
     // while there are notes that will need to play before the next interval,
     // schedule them and advance the pointer.
     while (nextNoteContextTime < audioContext.currentTime + scheduleAheadTime) {
-      this.scheduleNote(nextNote)
-
       this.AudioPlayer.playAssistTick(nextNoteContextTime)
 
       // look for the next assist tick note to schedule, and short-circuit if end is reached
@@ -679,8 +672,6 @@ class GameEngine {
       nextNoteContextTime = nextNoteTime + audioContextDiff
     }
   }
-
-  scheduleNote() {}
 
   mainLoop(loop = true) {
     // if this gameEngine is replaced and flagged for garbage deletion, squash any residual
@@ -709,7 +700,9 @@ class GameEngine {
     const { mods, mode } = this.globalParams
 
     // schedule assist tick sounds in advance
-    this.scheduler()
+    if (mods.assistTick) {
+      this.scheduler()
+    }
 
     if (mods.cmod < 100 || mods.cmod > 1000) {
       mods.cmod = DEFAULT_CMOD

@@ -68,6 +68,7 @@ const OffsetModal = (props) => {
         rate: 1,
         stepZone: 'on',
         turn: 'off',
+        assistTick: true,
       },
     }
 
