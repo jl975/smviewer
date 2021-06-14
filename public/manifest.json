@@ -1,6 +1,6 @@
 {
-  "short_name": "SMViewer",
-  "name": "SMViewer",
+  "short_name": "A20Viewer",
+  "name": "A20Viewer",
   "description": "A tool for studying charts in DanceDanceRevolution A20 PLUS.",
   "icons": [
     {

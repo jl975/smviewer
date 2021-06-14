@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Input, Button, Icon } from 'semantic-ui-react'
 
-import { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
+import AudioPlayer, { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 import { getOriginPath, fetchDocument, renderWithSign } from '../../utils'
@@ -58,7 +58,10 @@ const OffsetModal = (props) => {
     const chartParams = {
       difficulty: 'Basic',
       mode: 'single',
-      mods,
+      mods: {
+        ...mods,
+        speed: 3,
+      },
     }
 
     let ge = new GameEngine(canvas, simfileObj, chartParams, {
@@ -67,12 +70,20 @@ const OffsetModal = (props) => {
     })
     setGameEngine(ge)
 
-    OffsetAdjustAudioPlayer.play(true)
+    setTimeout(() => {
+      OffsetAdjustAudioPlayer.play(true)
+    })
   }
 
   const handleClose = async () => {
     await setModalOpen('offset', false)
     OffsetAdjustAudioPlayer.stop()
+
+    setTimeout(() => {
+      AudioPlayer.stop()
+      AudioPlayer.updateProgressOnce()
+    }, 500)
+
     if (gameEngine) {
       gameEngine.killed = true
     }
@@ -157,8 +168,14 @@ const OffsetModal = (props) => {
         music.
       </p>
       <div className="modal-actions">
-        {adjustedGlobalOffset && <Button onClick={handleCancel}>Cancel</Button>}
-        <Button onClick={confirmOffset}>Confirm</Button>
+        {adjustedGlobalOffset && (
+          <Button onClick={handleCancel} disabled={loadingAudio}>
+            Cancel
+          </Button>
+        )}
+        <Button onClick={confirmOffset} disabled={loadingAudio}>
+          Confirm
+        </Button>
       </div>
     </Modal>
   )

@@ -273,7 +273,7 @@ const ChartArea = (props) => {
             {selectedSong && (
               <div>
                 <Button className="view-static-btn" onClick={() => props.setModalOpen('staticChart', true)}>
-                  View static chart
+                  View static chart clap
                 </Button>
               </div>
             )}

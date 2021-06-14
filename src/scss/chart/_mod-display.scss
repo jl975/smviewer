@@ -1,9 +1,15 @@
 .mod-display-container {
-  // background: red;
   position: absolute;
   bottom: 0;
   height: 50px;
   width: 200px;
+  display: flex;
+  align-items: center;
+
+  &.reverse {
+    bottom: unset;
+    top: 0;
+  }
 }
 .mods-list {
   display: flex;

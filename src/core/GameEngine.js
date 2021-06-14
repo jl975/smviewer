@@ -152,6 +152,7 @@ class GameEngine {
 
     this.globalParams.targetFlashes = {}
     this.globalParams.mods = mods
+    this.globalParams.mode = mode
     this.AudioPlayer.setGlobalParams(this.globalParams)
 
     this.AudioPlayer.initializeAssistTick()
@@ -704,8 +705,10 @@ class GameEngine {
     t1 = performance.now()
     // console.log(`drawBackground: ${(t1 - t0).toFixed(3)} ms`);
 
-    const { songSelect, mods } = store.getState()
-    const { mode } = songSelect
+    // const { songSelect, mods } = store.getState()
+    // const { mode } = songSelect
+
+    const { mods, mode } = this.globalParams
 
     // schedule assist tick sounds in advance
     this.scheduler()
