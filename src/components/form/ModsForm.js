@@ -419,25 +419,25 @@ const ModsForm = (props) => {
             <div className="form-field">
               <h4 className="form-label">App-adjusted offset</h4>
               <div className="app-offset-adjust">
-                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset - 0.01)}>
+                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset - 0.005)}>
                   Later
                 </Button>
                 <Input
                   className="form-field-slider"
                   type="range"
-                  min="-0.20"
-                  max="0.20"
-                  step="0.01"
+                  min="-0.10"
+                  max="0.10"
+                  step="0.005"
                   value={song.appOffset}
                   onChange={(_, data) => {
                     handleSongAppOffsetChange(parseFloat(data.value))
                   }}
                 />
-                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset + 0.01)}>
+                <Button className="adjust-btn" onClick={() => handleSongAppOffsetChange(song.appOffset + 0.005)}>
                   Earlier
                 </Button>
               </div>
-              <div className="app-offset-value">{renderWithSign(song.appOffset || 0, 2)}</div>
+              <div className="app-offset-value">{renderWithSign(song.appOffset || 0, 3)}</div>
               <div>
                 <Button onClick={saveSongAppOffset}>Save offset</Button>
               </div>

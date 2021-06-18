@@ -260,7 +260,7 @@ const writeSimfileToTsv = (json) => {
 /* APIs accessible from (locally running) A20Viewer app */
 export const updateSongAppOffset = (songId, offset) => {
   const songList = getSimfilesTsv()
-  offset = Math.round(offset * 100) / 100
+  offset = Math.round(offset * 1000) / 1000
   for (let i = 0; i < songList.length; i++) {
     if (songList[i].hash === songId) {
       songList[i].appOffset = offset
