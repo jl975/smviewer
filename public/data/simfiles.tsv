@@ -28,7 +28,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 26	I96dOqqqQIi9oiqbqDPbQ8I8PQbqOb1o	朧	Oboro	HHH×MM×ST	15	3,6,8,11,13,6,10,12,14	149	あ	6m471h388ca3doz/Oboro.mp3					
 27	oPP1Pdl6Qdlb8oq10PP1doDibdbbl9bl	朧 (dj TAKA Remix)	Oboro (dj TAKA Remix)	HHH×MM×ST	15	3,5,8,12,,7,9,13,	149	あ	tbvdo0h7z3qkykz/Oboro%20%28dj%20TAKA%20Remix%29.mp3					
 28	0Ib6qIb0iPOoQqqDIl90dP0PI0o9QlDd	女言葉の消失	Onna kotoba no shoushitsu	Sota Fujimori	14	3,6,9,13,,6,9,12,	136	あ	gbv330v7jbr1m3h/Onna%20kotoba%20no%20shoushitsu.mp3					
-29	l9lq19DdiD8qQPoPOlboi1qQii0IQI86	革命	KAKUMEI	dj TAKA with NAOKI	6	3,5,9,12,11,4,8,11,11	83-148	か	oa16nfn9anngkq7/KAKUMEI.mp3					
+29	l9lq19DdiD8qQPoPOlboi1qQii0IQI86	革命	KAKUMEI	dj TAKA with NAOKI	6	3,5,9,12,11,4,8,11,11	83-148	か	oa16nfn9anngkq7/KAKUMEI.mp3				-0.03	
 30	qIqqdd1Odqi1Iiolq9qqPOi0bPPld8Pb	革命(X-Special)	KAKUMEI(X-Special)	dj TAKA with NAOKI	10	,,,,14,,,,14	83-148	か	5lu3q0389h5zrxs/KAKUMEI%28X-Special%29.mp3					
 31	l1lO999PqIboPQOD86PDQo1ol1iIiiOi	革命パッショネイト	Kakumei passionate	日向美ビタースイーツ♪	16	3,6,10,13,,5,9,13,	194	か	y9jyxj5xam9rgxl/Kakumei%20passionate.mp3					
 32	ql1Q8P100IIlbl0Pdi08I8qD900idqQq	カゲロウ	KAGEROW (Dragonfly)	Des-ROW・組スペシアルr	8	3,4,7,9,,4,6,9,	164	か	fulxkrw2f7wnuv1/KAGEROW%20%28Dragonfly%29.mp3					
@@ -217,7 +217,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 215	dbD8PlibPqqdI99901obObb6odqD8qDl	Amalgamation	Amalgamation	Mystic Moon	12	3,7,10,13,15,7,10,13,15	166	A	3tpl1ecgdycdhw5/Amalgamation.mp3					
 216	dq190Il9iO1bD698ll6ddObIlqdIQ1O9	AM-3P	AM-3P	kTz	1	3,7,8,11,,8,9,10,	130	A	x57nnphuibccm60/AM-3P.mp3				-0.03	
 217	Oo91QPdQDd1Od1oQI6IIldbQ1lQ88bO0	AM-3P ("CHAOS" Special)	AM-3P (CHAOS Special)	KTz	9	,,,,14,,,,13	130	A	xzis81mqsn3gvo2/AM-3P%20%28CHAOS%20Special%29.mp3					
-218	808dq8OIq16PP19i1bP0IDP1OqPOlo6q	AM-3P(AM EAST mix)	AM-3P (AM EAST mix)	KTz	6	,,,,10,,,,11	140	A	mtx33mvp8am7a7q/AM-3P%20%28AM%20EAST%20mix%29.mp3					
+218	808dq8OIq16PP19i1bP0IDP1OqPOlo6q	AM-3P(AM EAST mix)	AM-3P (AM EAST mix)	KTz	6	,,,,10,,,,11	140	A	mtx33mvp8am7a7q/AM-3P%20%28AM%20EAST%20mix%29.mp3				-0.025	
 219	dQ1oPoQqD0db8O19P1P0D1oq8I68i1Id	AM-3P -303 BASS MIX-	AM-3P -303 BASS MIX-	KTz (remixed by U1)	7	4,4,9,10,,5,8,10,	130	A	f78zcfum3zrc4c9/AM-3P%20-303%20BASS%20MIX-.mp3					
 220	9Q081Q0Do0IDDqQi9O61P111QIQd0oQ6	Angelic Jelly	Angelic Jelly	t+pazolite	15	4,6,11,13,,6,10,13,	100-200	A	ua6jwk6anfpr2b4/Angelic%20Jelly.mp3					
 221	Pq1O0qIiQII9PP1Qi6dbi9Pdo88dO8Dq	ANNIVERSARY ∴∵∴ ←↓↑→	ANNIVERSARY	BEMANI Sound Team "U1 overground"	15	4,7,12,16,,7,12,16,	180	A	5qy9f4hpiy2t3wx/ANNIVERSARY.mp3					
@@ -255,25 +255,25 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 253	QbD9QQP9bqoD00bQQl8obibP9PloQ9Qo	Boss Rush	Boss Rush	USAO	15	4,10,14,16,,10,14,16,	95-190	B	5z9ixnrpr5s2b1j/Boss%20Rush.mp3					
 254	l81l981iPod0PDIIObIldoQb6Ol9o1Iq	Bounce Trippy	Bounce Trippy	Dustvoxx	16	4,8,11,14,,8,11,14,	185	B	n1s309aedq7zwuw/Bounce%20Trippy.mp3					
 255	D0dI08oDqi11Oo819D6ob1dlDbPlIPl0	Brazilian Anthem	Brazilian Anthem	Berimbau '66	8	3,5,8,12,,5,8,10,	130	B	ne24ejbcijck9ge/Brazilian%20Anthem.mp3					
-256	bqQ1OQDidQD8QbIqql06O6o1QD6oOodP	BRE∀K DOWN！	BREAK DOWN!	BeForU	6	3,5,8,12,,5,8,13,	190	B	2g7cbsjj2iqthuc/BREAK%20DOWN%21.mp3					
+256	bqQ1OQDidQD8QbIqql06O6o1QD6oOodP	BRE∀K DOWN！	BREAK DOWN!	BeForU	6	3,5,8,12,,5,8,13,	190	B	2g7cbsjj2iqthuc/BREAK%20DOWN%21.mp3				-0.02	
 257	6DP8POdO1PiP0D8il08Po6iD8oI9Pidl	Break Free	Break Free	Ariana Grande feat. Zedd	15	3,6,9,11,,6,9,11,	130	B	diqeyyrqqsfd9id/Break%20Free.mp3					
 258	91ioD99OdDD9db8qilod818OPqb88idQ	BRIDAL FESTIVAL !!!	BRIDAL FESTIVAL !!!	S.S.D. with ななっち	17	2,5,10,13,,5,11,13,	138	B	i7h14trv3wqelxb/BRIDAL%20FESTIVAL%20%21%21%21.mp3					
 259	DblIbDd6lQQQoO9bloOI9iIqO1IiQoID	BRILLIANT 2U	BRILLIANT 2U	NAOKI	1	3,6,6,10,10,6,7,9,10	150	B	cnlzt0d3quionll/BRILLIANT%202U.mp3				-0.03	
 260	d11l6160iiP1bDbQPQl0Pi8lddlld80i	BRILLIANT 2U ("STREAM" Special)	BRILLIANT 2U (STREAM Special)	NAOKI	9	,,,,13,,,,13	150	B	95mos1cidafaenj/BRILLIANT%202U%20%28STREAM%20Special%29.mp3					
 261	6l0iQ18D0I00P89lIqI8bl9biIOi018O	BRILLIANT 2U (AKBK MIX)	BRILLIANT 2U (AKBK MIX)	NAOKI	12	3,7,11,15,,7,11,15,	162	B	xkem6rxkee71ekf/BRILLIANT%202U%20%28AKBK%20MIX%29.mp3					
-262	i18OPo6l8Q6bo9q0qP6889IDqoP8O0Qq	BRILLIANT 2U(K.O.G G3 MIX)	BRILLIANT 2U(K.O.G G3 MIX)	NAOKI	6	,,,,10,,,,9	170	B	d4bdh3q4mdx4mbx/BRILLIANT%202U%28K.O.G%20G3%20MIX%29.mp3					
+262	i18OPo6l8Q6bo9q0qP6889IDqoP8O0Qq	BRILLIANT 2U(K.O.G G3 MIX)	BRILLIANT 2U(K.O.G G3 MIX)	NAOKI	6	,,,,10,,,,9	170	B	d4bdh3q4mdx4mbx/BRILLIANT%202U%28K.O.G%20G3%20MIX%29.mp3				-0.03	
 263	DbPodlqiOQdD88bo8lPO9D6iql1DO8P0	BRILLIANT 2U(Orchestra Groove)	BRILLIANT 2U(Orchestra Groove)	NAOKI	1	4,6,8,9,12,6,8,9,12	150	B	g6cfn6odqfvvtlv/BRILLIANT%202U%28Orchestra%20Groove%29.mp3				-0.03	
 264	iIP09bOq1l1b9b1l011IDIQ6Iill90Io	BROKEN MY HEART	BROKEN MY HEART	NAOKI feat. PAULA TERRY	4	3,5,7,12,,5,9,12,	160	B	3elg6bwao29pjf0/BROKEN%20MY%20HEART.mp3				-0.04	
-265	i86qD6Pl61dPI0Q9db1P8bl1ii99q1lD	BURNING HEAT！（3 Option MIX）	BURNING HEAT! (3 Option MIX)	Mr.T with Motoaki. F	6	3,4,8,13,,4,7,12,	166	B	g1aqykbnfxvll1i/BURNING%20HEAT%21%20%283%20Option%20MIX%29.mp3					
+265	i86qD6Pl61dPI0Q9db1P8bl1ii99q1lD	BURNING HEAT！（3 Option MIX）	BURNING HEAT! (3 Option MIX)	Mr.T with Motoaki. F	6	3,4,8,13,,4,7,12,	166	B	g1aqykbnfxvll1i/BURNING%20HEAT%21%20%283%20Option%20MIX%29.mp3				-0.035	
 266	ii6Oooool0IoOqi1qdDo96QIil6IoOq0	BURNIN' THE FLOOR	BURNIN' THE FLOOR	NAOKI	3	3,5,8,10,,5,7,10,	155	B	vcocjoo7rkt7xrw/BURNIN%27%20THE%20FLOOR.mp3				-0.03	
-267	QdbPPPDlIQiI191qPdblO01O8P8o6D68	BURNIN' THE FLOOR(BLUE FIRE mix)	BURNIN' THE FLOOR (BLUE FIRE mix)	NAOKI	6	,,,,10,,,,10	155	B	sijm2nmlcgmldwo/BURNIN%27%20THE%20FLOOR%20%28BLUE%20FIRE%20mix%29.mp3					
+267	QdbPPPDlIQiI191qPdblO01O8P8o6D68	BURNIN' THE FLOOR(BLUE FIRE mix)	BURNIN' THE FLOOR (BLUE FIRE mix)	NAOKI	6	,,,,10,,,,10	155	B	sijm2nmlcgmldwo/BURNIN%27%20THE%20FLOOR%20%28BLUE%20FIRE%20mix%29.mp3				-0.045	
 268	6dQQd1d1OQlqQdQ98i01DQ1i9P6QDQdQ	BUTTERFLY (20th Anniversary Mix)	BUTTERFLY (20th Anniversary Mix)	BEMANI Sound Team "Sota F."	16	3,6,9,12,,6,10,12,	140	B	vjpqo0neh82lsfg/BUTTERFLY%20%2820th%20Anniversary%20Mix%29.mp3					
 269	6Qq1q91q8iIPlI89qDq96bO8QDD0qOql	B4U	B4U	NAOKI	3	3,5,7,10,,5,8,10,	155	B	sw751vp2q3iyuoo/B4U.mp3				-0.04	
 270	6boDb6Pdd6QDP1oPdlQ0Qo1ld0lQb6P6	B4U ("VOLTAGE" Special)	B4U (VOLTAGE Special)	NAOKI	9	,,,,14,,,,15	155	B	jj1069die8lme6t/B4U%20%28VOLTAGE%20Special%29.mp3					
-271	POIDil00didIo98D10loIObibPOob88O	B4U(B4 ZA BEAT MIX)	B4U(B4 ZA BEAT MIX)	NAOKI	6	,,,,10,,,,10	170	B	j4ppn3qktp2azw4/B4U%28B4%20ZA%20BEAT%20MIX%29.mp3					
+271	POIDil00didIo98D10loIObibPOob88O	B4U(B4 ZA BEAT MIX)	B4U(B4 ZA BEAT MIX)	NAOKI	6	,,,,10,,,,10	170	B	j4ppn3qktp2azw4/B4U%28B4%20ZA%20BEAT%20MIX%29.mp3				-0.03	
 272	DObld6O6OdblOo1di9dlP86DO909O6qI	cachaca	cachaca	Mokky de Yah Yah's	8	1,3,7,12,,4,9,11,	128	C	r2wjijzkpscdsjd/cachaca.mp3					
 273	68dqbIdOiiiiddlbb1OD66qq6d80I6D8	Can Be Real	Can Be Real	Vision F	8	3,4,6,10,,3,6,10,	132	C	u7az11rbzm21m7c/Can%20Be%20Real.mp3					
-274	1Qqo9bID18OdiI1Qb0lP9DIqIO6ldPOP	CANDY♡	CANDY HEART	小坂りゆ	6	4,5,7,10,,4,6,10,	180	C	chvugkb7zded69f/CANDY%20HEART.mp3					
+274	1Qqo9bID18OdiI1Qb0lP9DIqIO6ldPOP	CANDY♡	CANDY HEART	小坂りゆ	6	4,5,7,10,,4,6,10,	180	C	chvugkb7zded69f/CANDY%20HEART.mp3				-0.025	
 275	OPbqldiq0dQIo1011086IOl1qbOloOl9	CANDY☆	CANDY STAR	Luv UNLIMITED	5	4,6,7,11,,5,8,11,	192	C	0q10x1rey8ex0ib/CANDY%20STAR.mp3				-0.03	
 276	0qP01Q60boPPlQ8qO6O6q89iI91Pl0PP	CANDY☆(X-Special)	CANDY(X-Special)	Luv UNLIMITED	10	,,,,12,,,,13	192	C	yj5q2hg9eezqxka/CANDY%28X-Special%29.mp3					
 277	ioi6db99oOPPDd1db888D6oi6bb06o0P	CAN'T STOP FALLIN' IN LOVE	CAN'T STOP FALLIN' IN LOVE	NAOKI	3	3,5,6,11,,5,6,12,	155	C	5m6xv4mfarve3st/CAN%27T%20STOP%20FALLIN%27%20IN%20LOVE.mp3				-0.03	
@@ -283,7 +283,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 281	8Io6oi89Q8DblI8IPdPPI0q98Ql9o98Q	CARTOON HEROES (20th Anniversary Mix)	CARTOON HEROES (20th Anniversary Mix)	nc ft.Jasmine And DARIO TODA	16	4,9,14,16,,10,13,16,	170	C	7j8dm83ojymj3c1/CARTOON%20HEROES%20%2820th%20Anniversary%20Mix%29.mp3					
 282	P6id8qqolbP0oqO060OOqbl60DI9iQoQ	Catch Our Fire!	Catch Our Fire!	中島由貴	15	5,10,13,17,,9,14,18,	190	C	59wvbz82wn1pjnf/Catch%20Our%20Fire%21.mp3					
 283	i0bdP6II6dqb6lbQQ9q9OQq68i1qPddO	CELEBRATE NITE	CELEBRATE NITE	N.M.R	3	3,6,8,11,,6,8,10,	144	C	8scwl1jscqz41cy/CELEBRATE%20NITE.mp3				-0.03	
-284	O6q1o06Po9lQbqOl08Io1obqQ9QPi09b	CELEBRATE NITE(EURO TRANCE STYLE)	CELEBRATE NITE(EURO TRANCE STYLE)	N.M.R	6	,,,,11,,,,10	144	C	n2w204ave0dzxr7/CELEBRATE%20NITE%28EURO%20TRANCE%20STYLE%29.mp3					
+284	O6q1o06Po9lQbqOl08Io1obqQ9QPi09b	CELEBRATE NITE(EURO TRANCE STYLE)	CELEBRATE NITE(EURO TRANCE STYLE)	N.M.R	6	,,,,11,,,,10	144	C	n2w204ave0dzxr7/CELEBRATE%20NITE%28EURO%20TRANCE%20STYLE%29.mp3				-0.02	
 285	bd8o99iPI9lqOl1Q8P68lbQOlo8Oq1qO	CENTAUR	CENTAUR	Jimmy Weckl	8	4,6,9,12,,6,9,12,	140	C	icvbxtqudwdnyva/CENTAUR.mp3					
 286	qD8Q180QlIi11o1IiI6DPoqolqoD61Ib	CG Project	CG Project	Latenighters	11	3,5,9,12,,5,9,13,	200	C	04dqvnerz8jgyum/CG%20Project.mp3					
 287	q1q8IlPI1111D8IqiQ190qIoP0b0bIIo	Chance and Dice	Chance and Dice	日本少年	10	3,5,7,9,,4,7,10,	150	C	n3ranj57ec81n9l/Chance%20and%20Dice.mp3					
@@ -338,7 +338,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 336	QQldo10ObPPQPlliODiDIIl0Q1oPoo61	ΔMAX	deltaMAX	DM Ashura	11	3,5,13,17,17,8,14,17,18	100-573	D	wyd293b4q873rak/deltaMAX.mp3					
 337	PI1DiP0bIi8PodP6O1i8P0P1i8iI1oD8	Desert Journey	Desert Journey	dj TAKA	13	3,5,8,12,15,5,8,12,15	140	D	rxn0phonyqwvbgt/Desert%20Journey.mp3					
 338	9dD6dlq01qd80loD6OOQb60ql6P6068O	Destination	Destination	Sota F.	14	4,9,12,15,,9,12,15,	85-170	D	4xi45qyjfn0j5oy/Destination.mp3					
-339	98q8616ddDIqdo1dbqbO0Po96oldo1Oo	DESTINY	DESTINY	NAOKI feat. PAULA TERRY	6	3,3,7,10,,3,8,11,	155	D	rgs0f566vft8d2t/DESTINY.mp3					
+339	98q8616ddDIqdo1dbqbO0Po96oldo1Oo	DESTINY	DESTINY	NAOKI feat. PAULA TERRY	6	3,3,7,10,,3,8,11,	155	D	rgs0f566vft8d2t/DESTINY.mp3				-0.045	
 340	1diQi81loIodIdOlQ8Pd6Qd8b69Q1DP8	Destiny lovers	Destiny lovers	くにたけみゆき	7	3,4,7,13,,4,7,12,	170	D	9cxlqls3446rat9/Destiny%20lovers.mp3					
 341	Pi81dQi00lo9i1Pib91lQ01i0biIbPIP	DeStRuCtIvE FoRcE	DeStRuCtIvE FoRcE	BADMYTH	17	2,6,9,13,,6,9,13,	89-177	D	7w478sbfgh2tx1l/DeStRuCtIvE%20FoRcE.mp3					
 342	QPol19bIb009IDOPildbi1QPdPlO0dq9	Determination	Determination	柊木りお	15	2,5,8,14,,6,9,14,	230	D	dto3a8bvh1mgbk3/Determination.mp3					
@@ -350,7 +350,7 @@ index	hash	title	smName	artist	version	levels	displayBpm	abcSort	dAudioUrl	useSs
 348	I8b69IdbID0Di06ldo6o1lb1IdI89Iqo	dirty digital	dirty digital	kors k	11	1,4,7,11,13,4,7,11,13	140	D	ma38xwe0ysfvghz/dirty%20digital.mp3					
 349	6i000qlo9PD9oi9I9Qb990D6D9i19699	Dispersion Star	Dispersion Star	ZUKI	14	3,5,9,13,,5,9,14,	180	D	pfd3rssruhcphd6/Dispersion%20Star.mp3					
 350	0DODq0P9Qi6i6q8QPoPPOiOi6ib0188b	District of the Shadows	District of the Shadows	DJ Noriken	16	3,6,12,16,,7,12,16,	150	D	q5n14pyriv1a9ei/District%20of%20the%20Shadows.mp3					
-351	8Pb6oPdbO6lo8lbiQ181IDidI9ll8q80	DIVE TO THE NIGHT	DIVE TO THE NIGHT	小坂りゆ	6	3,4,8,11,,5,9,12,	155	D	iwo0x4630i9rk13/DIVE%20TO%20THE%20NIGHT.mp3					
+351	8Pb6oPdbO6lo8lbiQ181IDidI9ll8q80	DIVE TO THE NIGHT	DIVE TO THE NIGHT	小坂りゆ	6	3,4,8,11,,5,9,12,	155	D	iwo0x4630i9rk13/DIVE%20TO%20THE%20NIGHT.mp3				-0.02	
 352	OO0QbD9D6QQIb10Q9IDOQd8odb6ob6qP	DoLL	DoLL	TЁЯRA	8	4,5,8,12,13,5,8,12,14	170	D	676clk8zu6a60ms/DoLL.mp3					
 353	1q6obddbql8lQdPI19liD6PdQ0dPIODd	Don't Stop!～AMD 2nd MIX～	Don't Stop!~AMD 2nd MIX~	Dr.VIBE feat. JP Miles	3	3,5,6,10,,4,5,8,	130	D	r2molxgaga9gx80/Don%27t%20Stop%21~AMD%202nd%20MIX~.mp3				-0.03	
 354	lPDqbq6OIb810i8bqIo1i1olol1OlP9l	Do The Evolution	Do The Evolution	TAG feat. ERi	14	1,4,7,10,,5,9,13,	148	D	r42v7f688xf0lkd/Do%20The%20Evolution.mp3					
