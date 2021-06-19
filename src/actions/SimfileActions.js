@@ -7,8 +7,9 @@ export const GET_SIMFILE_LIST = 'GET_SIMFILE_LIST'
 export const LOAD_SIMFILE = 'LOAD_SIMFILE'
 
 export const getSimfileList = () => async (dispatch) => {
-  const parsedTsv = await tsv(getOriginPath() + 'data/simfiles.tsv')
+  let parsedTsv = await tsv(getOriginPath() + 'data/simfiles.tsv')
 
+  // reformat specific field values
   parsedTsv.forEach((row) => {
     row.levels = row.levels.split(',').map((level) => (level ? parseInt(level) : null))
     if (row.missingDifficulties) {
@@ -22,6 +23,9 @@ export const getSimfileList = () => async (dispatch) => {
       row.appOffset = 0
     }
   })
+
+  // remove objects with no values (bug that should be fixed server-side when generating simfiles.tsv)
+  parsedTsv = parsedTsv.filter((row) => !!row.hash)
 
   dispatch({
     type: GET_SIMFILE_LIST,
