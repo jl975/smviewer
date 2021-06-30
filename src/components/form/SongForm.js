@@ -48,6 +48,7 @@ const SongForm = (props) => {
       level: 'all',
       difficulty: 'all',
       bpm: 'all',
+      includeDeleted: true,
     }
   )
 
@@ -61,7 +62,7 @@ const SongForm = (props) => {
 
   // on filter or mode change
   useEffect(() => {
-    const { title, version, level, difficulty, bpm } = selectedFilters
+    const { title, version, level, difficulty, bpm, includeDeleted } = selectedFilters
 
     const songs = simfileList
       .filter((song) => {
@@ -74,6 +75,8 @@ const SongForm = (props) => {
           (version === 'all' || version === parseInt(song.version)) &&
           // song matches bpm range filter
           (bpm === 'all' || isInBpmRange(song, bpm, difficulty)) &&
+          // removed songs are included if toggle is on
+          (includeDeleted || !song.isDeleted) &&
           // if a level filter is selected, song matches level filter
           // if level is not being filtered, song has at least one chart on the chosen mode
           ((level === 'all' && selectedMode === 'single' && singleDiffs.some((level) => !!level)) ||

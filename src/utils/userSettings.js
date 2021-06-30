@@ -26,6 +26,9 @@ export const updateUserSettings = (newSettings) => {
   Object.keys(newSettings).forEach((key) => {
     settings[key] = newSettings[key]
   })
+
+  console.log('user settings updated to', settings)
+
   window.localStorage.setItem('userSettings', JSON.stringify(settings))
 }
 

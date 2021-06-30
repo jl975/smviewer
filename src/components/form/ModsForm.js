@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Radio, Checkbox, Input, Button } from 'semantic-ui-react'
 
@@ -6,6 +6,7 @@ import { putToSongManager } from '../../api'
 import { options } from './options'
 import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
 import { capitalize, renderWithSign } from '../../utils'
+import { getUserSettings, updateUserSettings } from '../../utils/userSettings'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 import { updateSongAppOffset } from '../../actions/SongSelectActions'
@@ -28,6 +29,14 @@ const ModsForm = (props) => {
     // console.log("mode, song, or difficulty changed");
     updateMods({ turn: 'off' })
   }, [mode, song, difficulty])
+
+  const userSettings = getUserSettings()
+
+  console.log('userSettings', userSettings)
+
+  const [userFilters, setUserFilters] = useState({
+    includeDeleted: userSettings.filters?.includeDeleted || false,
+  })
 
   const getEffectiveScrollSpeed = () => {
     if (!song) return null
@@ -443,6 +452,22 @@ const ModsForm = (props) => {
               </div>
             </div>
           )}
+
+          <h4>Other settings</h4>
+          <div className="form-field">
+            <Checkbox
+              toggle
+              label="Include removed songs"
+              name="includeDeleted"
+              checked={userFilters.includeDeleted}
+              onChange={(_, data) => {
+                setUserFilters({ ...userFilters, includeDeleted: data.checked })
+                updateUserSettings({
+                  filters: { ...userSettings.filters, includeDeleted: data.checked },
+                })
+              }}
+            />
+          </div>
         </form>
       </div>
     </div>
