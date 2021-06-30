@@ -36,6 +36,11 @@ const Table = (props) => {
         if (a.isLineout) return -1
         if (b.isLineout) return 1
       })
+    } else if (sort === 'isDeleted') {
+      rows.sort((a, b) => {
+        if (a.isDeleted) return -1
+        if (b.isDeleted) return 1
+      })
     }
 
     if (sortDir === 'desc') {
@@ -57,6 +62,7 @@ const Table = (props) => {
           <td>{song.version}</td>
           <td>{renderMissingDifficulties(song)}</td>
           <td>{song.isLineout}</td>
+          <td>{song.isDeleted}</td>
         </tr>
       )
     })
@@ -105,6 +111,9 @@ const Table = (props) => {
           </th>
           <th className={sort === 'isLineout' ? styles.sortedColumn : ''} onClick={() => toggleSort('isLineout')}>
             Lineout?
+          </th>
+          <th className={sort === 'isDeleted' ? styles.sortedColumn : ''} onClick={() => toggleSort('isDeleted')}>
+            Deleted?
           </th>
         </tr>
       </thead>

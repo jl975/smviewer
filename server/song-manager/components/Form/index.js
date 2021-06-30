@@ -35,6 +35,8 @@ export default function Form(props) {
 
     const initForm = { ...form, bSP, BSP, DSP, ESP, CSP, BDP, DDP, EDP, CDP }
 
+    console.log('initForm', initForm)
+
     // stringified booleans
     for (let key in initForm) {
       const value = initForm[key]
@@ -170,6 +172,7 @@ export default function Form(props) {
 
         <section className={styles.manualEntryFields}>
           <h3>Manual entry fields</h3>
+
           <div className={styles.formField}>
             {songInputType === 'id' && (
               <>
@@ -204,6 +207,7 @@ export default function Form(props) {
               </>
             )}
           </div>
+
           <div className={styles.formField}>
             {smInputType === 'url' && (
               <>
@@ -235,6 +239,7 @@ export default function Form(props) {
               </>
             )}
           </div>
+
           <div className={styles.formField}>
             <div className={styles.audioUrlLabel}>
               <label>Audio URL: </label>
@@ -267,6 +272,7 @@ export default function Form(props) {
             />
             <label htmlFor="isLineout">Lineout</label>
           </div>
+
           <div className={styles.formField}>
             <label>Version: </label>
             <select value={form.version} onChange={(e) => updateFields({ version: e.target.value })}>
@@ -281,6 +287,13 @@ export default function Form(props) {
                 )
               }).reverse()}
             </select>
+            <input
+              type="checkbox"
+              id="isDeleted"
+              checked={form.isDeleted}
+              onChange={(e) => updateFields({ isDeleted: e.target.checked })}
+            />
+            <label htmlFor="isDeleted">Deleted?</label>
           </div>
 
           {retrievingData ? (

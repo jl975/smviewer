@@ -34,8 +34,12 @@ const parseSimfileTsv = () => {
       if (!header) return
       row[header] = value
     })
-    output.push(row)
+    if (row.hash) {
+      output.push(row)
+    }
   }
+
+  console.log(output)
 
   return output
 }
@@ -112,6 +116,7 @@ export const addSimfile = (payload) => {
         missingDifficulties: payload.missingDifficulties,
         useSsc: null,
         isLineout: payload.isLineout,
+        isDeleted: payload.isDeleted,
       }
       console.log(newSongObj)
       songList.splice(index + 1, 0, newSongObj)
@@ -156,6 +161,7 @@ export const updateSimfiles = (payload) => {
     dAudioUrl,
     useSsc,
     isLineout,
+    isDeleted,
     missingDifficulties,
     appOffset,
   } = payload
@@ -174,6 +180,7 @@ export const updateSimfiles = (payload) => {
     dAudioUrl,
     useSsc,
     isLineout,
+    isDeleted,
     missingDifficulties: missingDifficulties || '',
     appOffset,
   }
@@ -233,6 +240,7 @@ const writeSimfileToTsv = (json) => {
 
   // console.log(json);
   const headers = Object.keys(json[0])
+  headers.push('isDeleted')
 
   console.log('headers', headers)
 

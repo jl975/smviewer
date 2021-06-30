@@ -17,6 +17,8 @@ export default function AddSong(props) {
     abcSort: '',
     dAudioUrl: '',
     missingDifficulties: '',
+    isLineout: false,
+    isDeleted: false,
   }
 
   return (

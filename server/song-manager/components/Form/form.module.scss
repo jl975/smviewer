@@ -43,7 +43,8 @@
   input[type='checkbox'] {
     margin-left: 6px;
   }
-  label[for='isLineout'] {
+  label[for='isLineout'],
+  label[for='isDeleted'] {
     width: auto;
     text-align: left;
     display: flex;
