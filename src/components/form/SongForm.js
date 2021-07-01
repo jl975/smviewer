@@ -8,7 +8,8 @@ import SongGrid from './SongGrid'
 import { getJacketPath, presetParams } from '../../utils'
 import { getClosestDifficulty, isInBpmRange, getDisplayBpm } from '../../utils/songUtils'
 import { clearBpmAndStopDisplay } from '../../utils/engineUtils'
-import { getUserSettings, updateUserSettings, getSavedSongProgress } from '../../utils/userSettings'
+import { getUserSettings, getSavedSongProgress } from '../../utils/userSettings'
+import { updateSettings } from '../../actions/SettingsActions'
 import loadStore from '../../utils/loadStore'
 import ToggleSwitch from '../ui/ToggleSwitch'
 import { SP_DIFFICULTIES, DP_DIFFICULTIES } from '../../constants'
@@ -23,7 +24,7 @@ import AudioPlayer from '../../core/AudioPlayer'
 import { ReactComponent as AudioWave } from '../../svg/audiowave.svg'
 
 const SongForm = (props) => {
-  const { simfileList, selectedDifficulty, selectedMode, previewAudio, loadingAudio } = props
+  const { simfileList, selectedDifficulty, selectedMode, previewAudio, loadingAudio, settings } = props
   const userSettings = getUserSettings()
   const songGridContainer = useRef()
 
@@ -41,28 +42,19 @@ const SongForm = (props) => {
 
   const pendingManualDifficultySelection = useRef(null)
 
-  const [selectedFilters, setSelectedFilters] = useState(
-    userSettings.filters || {
-      title: 'all',
-      version: 17,
-      level: 'all',
-      difficulty: 'all',
-      bpm: 'all',
-      includeDeleted: true,
-    }
-  )
+  const selectedFilters = settings.filters
 
   const updateSelectedFilters = (newFilters) => {
-    const filters = { ...selectedFilters, ...newFilters }
-    updateUserSettings({ filters })
-    setSelectedFilters(filters)
+    props.updateSettings({
+      filters: { ...selectedFilters, ...newFilters },
+    })
   }
 
   const [displayedSongs, setDisplayedSongs] = useState([])
 
   // on filter or mode change
   useEffect(() => {
-    const { title, version, level, difficulty, bpm, includeDeleted } = selectedFilters
+    const { title, version, level, difficulty, bpm } = selectedFilters
 
     const songs = simfileList
       .filter((song) => {
@@ -76,7 +68,7 @@ const SongForm = (props) => {
           // song matches bpm range filter
           (bpm === 'all' || isInBpmRange(song, bpm, difficulty)) &&
           // removed songs are included if toggle is on
-          (includeDeleted || !song.isDeleted) &&
+          (settings.filters.includeDeleted || !song.isDeleted) &&
           // if a level filter is selected, song matches level filter
           // if level is not being filtered, song has at least one chart on the chosen mode
           ((level === 'all' && selectedMode === 'single' && singleDiffs.some((level) => !!level)) ||
@@ -125,7 +117,7 @@ const SongForm = (props) => {
 
     setDisplayedSongs(songs)
     songGridContainer.current.scrollTop = 0
-  }, [selectedFilters, selectedMode])
+  }, [selectedFilters, selectedMode, settings])
 
   // object corresponding to the selected song option
   // NOT the song currently playing in the main view
@@ -552,7 +544,7 @@ const SongForm = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  const { audio, songSelect, screen, simfiles } = state
+  const { audio, songSelect, screen, simfiles, settings } = state
   const { previewAudio } = audio
   const { simfileList } = simfiles
   return {
@@ -562,12 +554,14 @@ const mapStateToProps = (state) => {
     selectedMode: songSelect.mode,
     previousSong: songSelect.song,
     activeView: screen.activeView,
+    settings,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     selectSong: (song) => dispatch(actions.selectSong(song)),
+    updateSettings: (settings) => dispatch(updateSettings(settings)),
   }
 }
 

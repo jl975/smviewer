@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Radio, Checkbox, Input, Button } from 'semantic-ui-react'
 
@@ -6,14 +6,14 @@ import { putToSongManager } from '../../api'
 import { options } from './options'
 import { SP_DIFFICULTIES, DEFAULT_CMOD } from '../../constants'
 import { capitalize, renderWithSign } from '../../utils'
-import { getUserSettings, updateUserSettings } from '../../utils/userSettings'
 import { updateMods } from '../../actions/ModsActions'
 import { setModalOpen } from '../../actions/ScreenActions'
 import { updateSongAppOffset } from '../../actions/SongSelectActions'
+import { updateSettings } from '../../actions/SettingsActions'
 import AudioPlayer, { OffsetAdjustAudioPlayer } from '../../core/AudioPlayer'
 
 const ModsForm = (props) => {
-  const { mods, updateMods, mode, song, difficulty, audio } = props
+  const { mods, updateMods, mode, song, difficulty, audio, userSettings } = props
 
   // // when switching between single and double, any mod set to a value incompatible
   // // with the new mode will be reset to its default value
@@ -30,13 +30,9 @@ const ModsForm = (props) => {
     updateMods({ turn: 'off' })
   }, [mode, song, difficulty])
 
-  const userSettings = getUserSettings()
-
-  console.log('userSettings', userSettings)
-
-  const [userFilters, setUserFilters] = useState({
-    includeDeleted: userSettings.filters?.includeDeleted || false,
-  })
+  // const [userFilters, setUserFilters] = useState({
+  //   includeDeleted: userSettings.filters?.includeDeleted || false,
+  // })
 
   const getEffectiveScrollSpeed = () => {
     if (!song) return null
@@ -459,10 +455,11 @@ const ModsForm = (props) => {
               toggle
               label="Include removed songs"
               name="includeDeleted"
-              checked={userFilters.includeDeleted}
+              // checked={userFilters.includeDeleted}
+              checked={userSettings.filters.includeDeleted}
               onChange={(_, data) => {
-                setUserFilters({ ...userFilters, includeDeleted: data.checked })
-                updateUserSettings({
+                // setUserFilters({ ...userFilters, includeDeleted: data.checked })
+                props.updateSettings({
                   filters: { ...userSettings.filters, includeDeleted: data.checked },
                 })
               }}
@@ -475,7 +472,7 @@ const ModsForm = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  const { mods, songSelect, screen, audio } = state
+  const { mods, songSelect, screen, audio, settings } = state
   return {
     mods,
     mode: songSelect.mode,
@@ -483,6 +480,7 @@ const mapStateToProps = (state) => {
     difficulty: songSelect.difficulty,
     activeView: screen.activeView,
     audio: audio.chartAudio,
+    userSettings: settings,
   }
 }
 
@@ -491,6 +489,7 @@ const mapDispatchToProps = (dispatch) => {
     updateMods: (mods) => dispatch(updateMods(mods)),
     setModalOpen: (modalName, isOpen) => dispatch(setModalOpen(modalName, isOpen)),
     updateSongAppOffset: (offset) => dispatch(updateSongAppOffset(offset)),
+    updateSettings: (settings) => dispatch(updateSettings(settings)),
   }
 }
 
