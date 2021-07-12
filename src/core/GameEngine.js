@@ -431,7 +431,7 @@ class GameEngine {
       const arrowTimestamp = bpmSectionStartTime + timeDiff + currentStopOffset
       arrow.timestamp = arrowTimestamp
 
-      // combo arrows (includes regular notes and freeze heads)
+      // Maintain list of arrows that count for combo (includes regular notes and freeze heads)
       if (arrow.note.includes('1') || arrow.note.includes('2') || arrow.note.includes('M')) {
         currentCombo++
 
@@ -446,6 +446,7 @@ class GameEngine {
       }
     })
 
+    // Calculate freeze arrow timestamps
     this.allArrows.forEach((arrow) => {
       // If the note is the tail of a freeze arrow, calculate the number of beats
       // from the head of the freeze arrow
@@ -457,9 +458,6 @@ class GameEngine {
         // Also apply this to every regular note that occurs during the freeze
 
         const arrowsDuringFreeze = []
-
-        // console.log('this.allArrows', this.allArrows)
-        // console.log('arrow.key', arrow.key)
 
         for (let j = arrow.key - 1; j >= 0; j--) {
           if (!this.allArrows[j]) continue
@@ -642,7 +640,7 @@ class GameEngine {
     const { audioStartContextTime, audioStartProgressTime, audioContext, nextNotePtr } = assist
     const scheduleAheadTime = 0.2
 
-    const audioContextDiff = audioStartContextTime - audioStartProgressTime
+    const rate = this.globalParams.mods.rate
 
     let nextNote = allArrows[nextNotePtr]
 
@@ -650,7 +648,11 @@ class GameEngine {
     if (!nextNote) return
 
     let nextNoteTime = allArrows[nextNotePtr].timestamp
-    let nextNoteContextTime = nextNoteTime + audioContextDiff
+
+    // Find the time (in the current audio context) that the next note falls on,
+    // relative to the time position that the progress was started at.
+    // The rate mod is applied to the difference between these two times.
+    let nextNoteContextTime = (nextNoteTime - audioStartProgressTime) / rate + audioStartContextTime
 
     // while there are notes that will need to play before the next interval,
     // schedule them and advance the pointer.
@@ -669,7 +671,7 @@ class GameEngine {
       }
 
       nextNoteTime = allArrows[assist.nextNotePtr].timestamp
-      nextNoteContextTime = nextNoteTime + audioContextDiff
+      nextNoteContextTime = (nextNoteTime - audioStartProgressTime) / rate + audioStartContextTime
     }
   }
 

@@ -170,7 +170,7 @@ const ChartArea = (props) => {
                 AudioPlayer.changeMusicRate(mods.rate)
               }
 
-              if (['turn', 'shuffle', 'cut', 'freezes', 'jumps'].includes(mod)) {
+              if (['turn', 'shuffle', 'cut', 'freezes', 'jumps', 'rate'].includes(mod)) {
                 gameEngine.resetChart(chartParams)
               } else {
                 // console.log(prev, curr);

@@ -423,12 +423,9 @@ class AudioPlayer {
       // recalculate current bpm (necessary if skipping progress)
       const currentBpm = getCurrentBpm(currentSong.globalParams)
       changeActiveBpm(currentBpm, currentSong.globalParams)
-      // document.querySelector(".bpm-value").textContent = Math.round(currentBpm);
 
       const { currentCombo, nextNotePtr } = getCurrentPosition(currentSong)
-      // currentSong.globalParams.combo = currentCombo;
 
-      // store.dispatch(setCombo(currentCombo));
       const comboTemp = document.querySelector('#combo-temp .combo-num')
       if (comboTemp) comboTemp.textContent = currentCombo
 
