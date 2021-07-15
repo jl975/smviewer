@@ -39,8 +39,6 @@ const parseSimfileTsv = () => {
     }
   }
 
-  console.log(output)
-
   return output
 }
 
